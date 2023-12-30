@@ -1,4 +1,4 @@
-import styles from "./classnames";
+import styles from "./styles";
 import { cn } from "@/lib/utils";
 
 export default function Logo() {

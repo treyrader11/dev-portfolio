@@ -6,7 +6,7 @@ import gsap from "gsap";
 import Image from "next/image";
 import Rounded from "@/common/Rounded";
 import Container from "@/common/Container";
-import styles from "./classnames";
+import styles from "./styles";
 import { cn } from "@/lib/utils";
 import Project from "./components/project";
 

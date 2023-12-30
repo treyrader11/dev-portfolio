@@ -7,7 +7,7 @@ import { menuSlide } from "../anim";
 import Link from "./Link";
 import Curve from "./Curve";
 import Footer from "./Footer";
-import styles from "./classnames";
+import styles from "./styles";
 import { routes } from "./routes";
 
 export default function Nav() {

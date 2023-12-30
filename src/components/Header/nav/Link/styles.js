@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
 
-export default {
+const styles = {
   link: cn("relative", "flex", "items-center"),
   indicator: cn(
     "w-[10px]",
@@ -11,3 +11,5 @@ export default {
     "-left-[30px]"
   ),
 };
+
+export default styles;

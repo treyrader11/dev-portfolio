@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
 
-export default {
+const styles = {
   description: cn("px-[200px]", "mt-[200px]", "flex", "justify-center"),
   container: cn("flex", "gap-[50px]", "relative"),
   mask: cn("relative", "overflow-hidden", "inline-flex"),
@@ -20,7 +20,7 @@ export default {
     "cursor-pointer"
   ),
   buttonText: cn("m-0", "text-[16px]", "font-light", "relative", "z-[1]"),
-  p: cn(
-    "m-0",
-  ),
+  p: cn("m-0"),
 };
+
+export default styles;

@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
 
-export default {
+const styles = {
   svgCurve: cn(
     "absolute",
     "top-0",
@@ -11,3 +11,5 @@ export default {
     "fill-dark-700"
   ),
 };
+
+export default styles;

@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import styles from "./classnames";
+import styles from "./styles";
 
 export default function Curve() {
   let initialPath;

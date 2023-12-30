@@ -1,6 +1,6 @@
 // import { scrollTo } from "@/lib/utils";
 import Link from "next/link";
-import styles from "./classnames";
+import styles from "./styles";
 import Magnetic from "@/common/Magnetic";
 import { routes } from "../nav/routes";
 

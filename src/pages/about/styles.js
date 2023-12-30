@@ -1,5 +1,7 @@
 import { cn } from "@/lib/utils";
 
-export default {
+const styles = {
   about: cn("flex", "gap-[40px]"),
 };
+
+export default styles;

@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
 
-export default {
+const styles = {
   project: cn(
     "group",
     "flex",
@@ -31,3 +31,5 @@ export default {
     "group-translate-x-[10px]"
   ),
 };
+
+export default styles;

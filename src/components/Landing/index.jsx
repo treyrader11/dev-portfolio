@@ -9,7 +9,7 @@ import portraitfb from "/public/images/portraits/fbProfile.jpeg";
 import portraitCoffee from "/public/images/portraits/coffeePortrait.jpeg";
 import { slideUp } from "./anim";
 import { motion } from "framer-motion";
-import styles from "./classnames";
+import styles from "./styles";
 import Slider from "@/common/Slider";
 import ArrowIcon from "@/icons/Arrow";
 import Container from "@/common/Container";

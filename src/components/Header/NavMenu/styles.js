@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
 
-export default {
+const styles = {
   el: cn(
     "group",
     "flex",
@@ -30,3 +30,5 @@ export default {
     "rounded-full"
   ),
 };
+
+export default styles;

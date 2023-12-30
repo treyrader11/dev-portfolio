@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
 
-export default {
+const styles = {
   roundedButton: cn(
     "rounded-[3em]",
     "border-light-200",
@@ -24,3 +24,5 @@ export default {
   ),
   circle: cn("w-full", "h-[150%]", "absolute", "rounded-full", "top-full"),
 };
+
+export default styles;

@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
 
-export default {
+const styles = {
   logo: cn("group", "flex", "cursor-pointer"),
   p: cn("m-0", "transition-all", "duration-500", "custom-ease-in-out"),
   name: cn(
@@ -24,3 +24,5 @@ export default {
     "custom-ease-in-out"
   ),
 };
+
+export default styles;

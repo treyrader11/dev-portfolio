@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
 
-export default {
+const styles = {
   projects: cn(
     "flex",
     "items-center",
@@ -61,3 +61,5 @@ export default {
     "hover:text-white"
   ),
 };
+
+export default styles;

@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
 
-export default {
+const styles = {
   header: cn(
     "absolute",
     "flex",
@@ -52,3 +52,5 @@ export default {
         : "after:-top-[5px]"
     ),
 };
+
+export default styles;

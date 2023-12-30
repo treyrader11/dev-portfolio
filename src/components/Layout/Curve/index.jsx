@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { useRouter } from "next/router";
 import { text, curve, translate } from "./anim";
-import styles from "./classnames";
+import styles from "./styles";
 // import { routes } from "@/components/Header/nav/routes";
 
 const routes = {

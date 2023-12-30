@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
 
-export default {
+const styles = {
   introduction: cn(
     "h-screen",
     "w-screen",
@@ -23,3 +23,5 @@ export default {
     "mr-[10px]"
   ),
 };
+
+export default styles;

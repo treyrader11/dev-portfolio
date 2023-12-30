@@ -3,7 +3,7 @@
 import { useRef } from "react";
 import { useScroll, useTransform, motion } from "framer-motion";
 import Image from "next/image";
-import styles from "./classnames";
+import styles from "./styles";
 import { slider1, slider2 } from "./sliders";
 
 export default function SlidingImages() {

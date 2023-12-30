@@ -1,5 +1,5 @@
 import Curve from "@/components/Layout/Curve";
-import styles from "./classnames";
+import styles from "./styles";
 
 export default function About() {
   return (

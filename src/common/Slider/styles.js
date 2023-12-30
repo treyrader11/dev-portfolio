@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
 
-export default {
+const styles = {
   slider: cn("relative", "whitespace-nowrap"),
   p: cn(
     "relative",
@@ -11,3 +11,5 @@ export default {
     "pr-[50px]"
   ),
 };
+
+export default styles;

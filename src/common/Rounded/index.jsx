@@ -3,7 +3,7 @@
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import Magnetic from "../Magnetic";
-import styles from "./classnames";
+import styles from "./styles";
 import { cn } from "@/lib/utils";
 
 export default function Rounded({

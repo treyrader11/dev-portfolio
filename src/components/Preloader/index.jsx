@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { opacity, slideUp } from "./anim";
-import styles from "./classnames";
+import styles from "./styles";
 
 const words = [
   "Hello",

@@ -1,6 +1,6 @@
 "use client";
 
-import styles from "./classnames";
+import styles from "./styles";
 import { useEffect, useRef, useState, useLayoutEffect } from "react";
 import { usePathname } from "next/navigation";
 import { AnimatePresence } from "framer-motion";

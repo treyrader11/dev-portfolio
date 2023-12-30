@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
 
-export default styles = {
+const styles = {
   contact: cn(
     "text-white",
     "flex",
@@ -67,3 +67,5 @@ export default styles = {
   infoheading: cn("m-0", "p-[2.5px]", "cursor-pointer"),
   span: cn("flex", "flex-col", "gap-[15px]"),
 };
+
+export default styles;

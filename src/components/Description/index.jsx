@@ -4,7 +4,7 @@ import { useInView, motion } from "framer-motion";
 import { useRef } from "react";
 import { slideUp, opacity } from "./anim";
 import Rounded from "@/common/Rounded";
-import styles from "./classnames";
+import styles from "./styles";
 import Container from "@/common/Container";
 import { cn } from "@/lib/utils";
 

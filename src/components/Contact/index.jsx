@@ -6,7 +6,7 @@ import { useScroll, motion, useTransform } from "framer-motion";
 import Rounded from "@/common/Rounded";
 import Magnetic from "@/common/Magnetic";
 import Container from "@/common/Container";
-import styles from "./classnames";
+import styles from "./styles";
 import portraitGrey from "/public/images/portraits/coffee-portrait-grey.png";
 
 export default function Contact() {

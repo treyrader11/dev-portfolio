@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
 
-export default {
+const styles = {
   menu: cn(
     "h-screen",
     "bg-dark-600",
@@ -22,3 +22,5 @@ export default {
   ),
   a: cn("no-underline", "text-white", "font-light"),
 };
+
+export default styles;

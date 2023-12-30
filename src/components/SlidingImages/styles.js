@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
 
-export default {
+const styles = {
   slidingImages: cn(
     "flex",
     "flex-col",
@@ -29,3 +29,5 @@ export default {
     "custom-shadow"
   ),
 };
+
+export default styles;

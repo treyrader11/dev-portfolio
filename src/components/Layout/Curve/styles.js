@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
 
-export default {
+const styles = {
   curve: cn("p-[40px]", "min-h-screen"),
   background: cn(
     "fixed",
@@ -28,3 +28,5 @@ export default {
     "translate-x-[-50%]"
   ),
 };
+
+export default styles;
