@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
 
-export default {
+export default styles = {
   contact: cn(
     "text-white",
     "flex",

@@ -1,4 +1,4 @@
-import { scrollTo } from "@/lib/utils";
+// import { scrollTo } from "@/lib/utils";
 import Link from "next/link";
 import styles from "./classnames";
 import Magnetic from "@/common/Magnetic";
@@ -8,7 +8,8 @@ export default function NavMenu({ className, currentPage }) {
   return (
     <nav className={className}>
       {routes.map(({ label, href }) => (
-        <Magnetic key={href} onClick={() => scrollTo(label)}>
+        // <Magnetic key={href} onClick={() => scrollTo(label)}>
+        <Magnetic key={href}>
           <div className={styles.el}>
             <Link href={href}>{label}</Link>
             {/* <a>{label}</a> */}
