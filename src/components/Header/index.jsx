@@ -21,7 +21,7 @@ export default function Header() {
 
   useEffect(() => {
     if (isActive) setIsActive(false);
-  }, [pathname]);
+  }, [pathname, isActive]);
 
   // useIsomorphicLayoutEffect(() => {
   useLayoutEffect(() => {
