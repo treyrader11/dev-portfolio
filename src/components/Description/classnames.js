@@ -1,0 +1,26 @@
+import { cn } from "@/lib/utils";
+
+export default {
+  description: cn("px-[200px]", "mt-[200px]", "flex", "justify-center"),
+  container: cn("flex", "gap-[50px]", "relative"),
+  mask: cn("relative", "overflow-hidden", "inline-flex"),
+  button: cn(
+    "top-[80%]",
+    "left-[clac(100%_-_400px)]",
+    // "left-[clac(100%_-_20%)]",
+    "w-[180px]",
+    "h-[180px]",
+    "bg-dark-400",
+    "text-white",
+    "rounded-full",
+    "absolute",
+    "flex",
+    "items-center",
+    "justify-center",
+    "cursor-pointer"
+  ),
+  buttonText: cn("m-0", "text-[16px]", "font-light", "relative", "z-[1]"),
+  p: cn(
+    "m-0",
+  ),
+};
