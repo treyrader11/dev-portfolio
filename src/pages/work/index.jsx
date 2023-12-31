@@ -1,8 +1,9 @@
 import Curve from "@/components/Layout/Curve";
 
-export default function About() {
+
+export default function Work() {
   return (
-    <Curve backgroundColor={"#BCF366"}>
+    <Curve backgroundColor={"pink"}>
       <h1>About</h1>
       <section className={""}>
         <p>

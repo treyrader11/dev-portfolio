@@ -1,10 +1,13 @@
-// import { scrollTo } from "@/lib/utils";
-import Link from "next/link";
+"use client";
+
+import { scrollTo } from "@/lib/utils";
 import styles from "./styles";
 import Magnetic from "@/common/Magnetic";
 import { routes } from "../nav/routes";
+import Link from "next/link";
 
 export default function NavMenu() {
+
   return (
     <nav className={styles.nav}>
       {routes.map(({ label, href }) => (
@@ -12,7 +15,6 @@ export default function NavMenu() {
         <Magnetic key={href}>
           <div className={styles.navItem}>
             <Link href={href}>{label}</Link>
-            {/* <a>{label}</a> */}
             <div className={styles.indicator}></div>
           </div>
         </Magnetic>
@@ -20,3 +22,4 @@ export default function NavMenu() {
     </nav>
   );
 }
+

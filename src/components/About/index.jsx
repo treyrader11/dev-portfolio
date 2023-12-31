@@ -8,16 +8,18 @@ import styles from "./styles";
 import Container from "@/common/Container";
 import { cn } from "@/lib/utils";
 
-export default function Description() {
+export default function About() {
   const phrase =
     "Helping brands to stand out in the digital era. Together we will set the new status quo. No nonsense, always on the cutting edge.";
   const description = useRef(null);
   const isInView = useInView(description);
   return (
-    <section ref={description} className={cn(styles.description)}>
+    <section ref={description} id="about" className={cn(styles.description)}>
       <Container maxWidth={1400} classname={styles.container}>
-      {/* <div classname={cn(styles.container, "max-w-[1400px]")}> */}
-        <p className={cn(styles.p, "text-[36px]", "gap-[8px]", "leading-[1.3]")}>
+        {/* <div classname={cn(styles.container, "max-w-[1400px]")}> */}
+        <p
+          className={cn(styles.p, "text-[36px]", "gap-[8px]", "leading-[1.3]")}
+        >
           {phrase.split(" ").map((word, index) => {
             return (
               <span key={index} className={styles.mask}>
@@ -48,7 +50,7 @@ export default function Description() {
             {/* <p>About me</p> */}
           </Rounded>
         </div>
-      {/* </div> */}
+        {/* </div> */}
       </Container>
     </section>
   );

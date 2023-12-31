@@ -19,7 +19,7 @@ export default function Contact() {
   const y = useTransform(scrollYProgress, [0, 1], [-500, 0]);
   const rotate = useTransform(scrollYProgress, [0, 1], [120, 90]);
   return (
-    <motion.div style={{ y }} ref={container} className={styles.contact}>
+    <motion.div style={{ y }} ref={container} id="contact" className={styles.contact}>
       <Container maxWidth={1800} classname={styles.container}>
         <div className={styles.title}>
           <span className="flex items-center">

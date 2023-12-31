@@ -12,7 +12,6 @@ const styles = {
     "items-center",
     "w-full"
   ),
-  nav: cn("flex", "items-center"),
   headerButtonContainer: cn(
     "fixed",
     "transform",

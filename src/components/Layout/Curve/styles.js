@@ -6,6 +6,7 @@ const styles = {
     "fixed",
     "left-0",
     "top-0",
+    "z-[999]",
     "w-screen",
     "h-[calc(100vh_+_600px)]",
     "pointer-events-none",
