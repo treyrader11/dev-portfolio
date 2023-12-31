@@ -24,10 +24,10 @@ export default function Landing() {
     >
        <Image
         // src={portraitBlack}
-        // src={portraitGrey}
+        src={portraitGrey}
         // src={portraitfb}
         // src={portraitGraySit}
-        src={portraitCoffee}
+        // src={portraitCoffee}
         fill={true}
         alt="background"
         priority

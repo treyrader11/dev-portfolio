@@ -27,6 +27,21 @@ export default function Slider({ text }) {
     xPercent.current += 0.1 * direction.current;
   }, [firstText, secondText, direction]);
 
+  // useIsomorphicLayoutEffect(() => {
+  //   gsap.registerPlugin(ScrollTrigger);
+  //   gsap.to(slider.current, {
+  //     scrollTrigger: {
+  //       trigger: document.documentElement,
+  //       scrub: 0.25,
+  //       start: 0,
+  //       end: window.innerHeight,
+  //       onUpdate: (e) => (direction.current = e.direction * -1),
+  //     },
+  //     x: "-500px",
+  //   });
+  //   requestAnimationFrame(animate);
+  // }, [animate]);
+
   useIsomorphicLayoutEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
     gsap.to(slider.current, {

@@ -2,9 +2,9 @@ import Curve from "@/components/Layout/Curve";
 
 export default function Contact() {
   return (
-    <Curve backgroundColor={"#BCF366"}>
+    <Curve backgroundColor={"#BCF366"} className="">
       <h1>About</h1>
-      <section className={""}>
+      <section className={"overflow-hidden relative"}>
         <p>
           Nullam mattis mattis dictum. Praesent sit amet condimentum mi, quis
           venenatis lectus. Phasellus ac ante id purus viverra hendrerit quis at

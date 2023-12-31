@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { useRouter } from "next/router";
 import { text, curve, translate } from "./anim";
 import styles from "./styles";
+import { cn } from "@/lib/utils";
 // import { routes } from "@/components/Header/nav/routes";
 
 const routes = {
@@ -22,7 +23,7 @@ const anim = (variants) => {
   };
 };
 
-export default function Curve({ children, backgroundColor }) {
+export default function Curve({ children, backgroundColor, className }) {
   const router = useRouter();
   const [dimensions, setDimensions] = useState({
     width: null,
@@ -44,7 +45,7 @@ export default function Curve({ children, backgroundColor }) {
   }, []);
 
   return (
-    <div className={styles.curve} style={{ backgroundColor }}>
+    <div className={cn(styles.curve, className)} style={{ backgroundColor }}>
       <div
         style={{ opacity: dimensions.width == null ? 1 : 0 }}
         className={styles.background}

@@ -1,3 +1,4 @@
+import { FuzzyOverlayExample } from "@/common/FuzzyOverlay";
 import Curve from "@/components/Layout/Curve";
 
 export default function About() {
@@ -5,6 +6,7 @@ export default function About() {
     <Curve backgroundColor={"#BCF366"}>
       <h1>About</h1>
       <section className={""}>
+        <FuzzyOverlayExample />
         <p>
           Nullam mattis mattis dictum. Praesent sit amet condimentum mi, quis
           venenatis lectus. Phasellus ac ante id purus viverra hendrerit quis at
