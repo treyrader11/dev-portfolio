@@ -8,6 +8,7 @@ import { AnimatePresence } from "framer-motion";
 import { useState, useEffect } from "react";
 import { Inter } from "next/font/google";
 import Curve from "@/components/Layout/Curve";
+import Stairs from "@/components/Layout/Stairs";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -32,13 +33,13 @@ export default function Home() {
       <AnimatePresence mode="wait">
         {isLoading && <Preloader />}
       </AnimatePresence>
-      <Curve>
+      <Stairs>
         <Landing />
         <About />
         <Projects />
         <SlidingImages />
         <Contact />
-      </Curve>
+      </Stairs>
     </main>
   );
 }
