@@ -1,7 +1,8 @@
 import { cn } from "@/lib/utils";
 
 const styles = {
-  el: cn(
+  nav: cn("flex", "items-center"),
+  navItem: cn(
     "group",
     "flex",
     "flex-col",
@@ -9,8 +10,6 @@ const styles = {
     "z-[1]",
     "p-[15px]",
     "cursor-pointer",
-    "hover:transform",
-    "hover:scale-100"
   ),
   indicator: cn(
     "top-[45px]",
@@ -22,12 +21,12 @@ const styles = {
     "duration-200",
     "custom-ease-in-out",
     "scale-0",
-    "group-hover:scale-2",
     "transform",
     "-translate-x-[50%]",
-    // "bg-white",
     "bg-dark",
-    "rounded-full"
+    "rounded-full",
+    "group-hover:scale-100",
+    "bg-white",
   ),
 };
 

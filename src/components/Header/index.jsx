@@ -55,7 +55,7 @@ export default function Header() {
     <>
       <div ref={header} className={styles.header}>
         <Logo />
-        <NavMenu className={styles.nav} />
+        <NavMenu />
 
         <div ref={button} className={styles.headerButtonContainer}>
           <Rounded onClick={handleClick} className={styles.button}>
