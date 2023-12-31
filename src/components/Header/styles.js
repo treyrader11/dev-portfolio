@@ -4,7 +4,7 @@ const styles = {
   header: cn(
     "absolute",
     "flex",
-    "z-[1]",
+    "z-[5]",
     "top-0",
     "text-white",
     "p-[35px]",
@@ -18,7 +18,7 @@ const styles = {
     "transform",
     "scale-0",
     "right-0",
-    "z-[999]"
+    "z-[4]"
   ),
   button: cn("m-5", "w-[80px]", "h-[80px]", "rounded-full", "bg-dark-400"),
 
