@@ -10,6 +10,7 @@ const styles = {
     "flex",
     "items-center",
     "justify-center",
+    // "flex-center-x",
     "py-[15px]",
     "px-[60px]"
   ),

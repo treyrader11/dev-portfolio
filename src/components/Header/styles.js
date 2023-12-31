@@ -18,26 +18,16 @@ const styles = {
     "transform",
     "scale-0",
     "right-0",
-    "z-[4]"
+    "z-[999]"
   ),
-  button: cn(
-    "relative",
-    "m-5",
-    "w-[80px]",
-    "h-[80px]",
-    "rounded-full",
-    "bg-dark-400",
-    "cursor-pointer",
-    "flex",
-    "items-center",
-    "justify-center"
-  ),
+  button: cn("m-5", "w-[80px]", "h-[80px]", "rounded-full", "bg-dark-400"),
 
-  burger: ({ isActive }) =>
+  burger: ({ isNavOpen }) =>
     cn(
       "relative",
       "w-full",
       "z-[1]",
+      // first line
       "after:block",
       "after:h-[1px]",
       "after:w-[40%]",
@@ -46,10 +36,24 @@ const styles = {
       "after:relative",
       "after:transition-transform",
       "after:duration-300",
-      "after:-top-[5px]",
-      isActive
-        ? "after:transform after:rotate-45 after:-top-[1px]"
-        : "after:-top-[5px]"
+      // second line
+      "before:block",
+      "before:h-[1px]",
+      "before:w-[40%]",
+      "before:m-auto",
+      "before:bg-white",
+      "before:relative",
+      "before:transition-transform",
+      "before:duration-300",
+      isNavOpen
+        ? cn(
+            "after:transform",
+            "after:rotate-45",
+            "after:-top-[1px]",
+            "before:-rotate-45",
+            "before:top-0"
+          )
+        : cn("after:-top-[5px]", "before:top-[5px]")
     ),
 };
 

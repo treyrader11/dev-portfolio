@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { usePathname } from "next/navigation";
 import { menuSlide } from "../anim";
@@ -13,7 +13,6 @@ import { routes } from "./routes";
 export default function Nav() {
   const pathname = usePathname();
   const [selectedIndicator, setSelectedIndicator] = useState(pathname);
-  console.log('pathname', pathname)
 
   return (
     <motion.div

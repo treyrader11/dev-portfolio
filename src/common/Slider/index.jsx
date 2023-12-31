@@ -1,11 +1,11 @@
 "use client";
 
-import { useRef, useLayoutEffect, useCallback } from "react";
+import { useRef, useCallback } from "react";
 import styles from "./styles";
 import gsap from "gsap";
 import ScrollTrigger from "gsap/dist/ScrollTrigger";
 import { cn } from "@/lib/utils";
-// import useIsomorphicLayoutEffect from "@/hooks/useIsomorphicLayoutEffect";
+import useIsomorphicLayoutEffect from "@/hooks/useIsomorphicLayoutEffect";
 
 export default function Slider({ text }) {
   const firstText = useRef(null);
@@ -27,8 +27,7 @@ export default function Slider({ text }) {
     xPercent.current += 0.1 * direction.current;
   }, [firstText, secondText, direction]);
 
-  // useIsomorphicLayoutEffect(() => {
-  useLayoutEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
     gsap.to(slider.current, {
       scrollTrigger: {

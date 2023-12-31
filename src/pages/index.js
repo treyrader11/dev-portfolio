@@ -29,9 +29,9 @@ export default function Home() {
 
   return (
     <main className={inter.className}>
-      {/* <AnimatePresence mode="wait">
+      <AnimatePresence mode="wait">
         {isLoading && <Preloader />}
-      </AnimatePresence> */}
+      </AnimatePresence>
       {/* <Curve backgroundColor={"#141516"}> */}
       <Curve>
         <Landing />

@@ -1,7 +1,7 @@
 "use client";
 
 import styles from "./styles";
-import { useEffect, useRef, useState, useLayoutEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import { AnimatePresence } from "framer-motion";
 import gsap from "gsap";
@@ -12,19 +12,21 @@ import NavMenu from "./NavMenu";
 import Logo from "../Logo";
 import useIsomorphicLayoutEffect from "@/hooks/useIsomorphicLayoutEffect";
 
-
 export default function Header() {
   const header = useRef(null);
-  const [isActive, setIsActive] = useState(false);
+  const [isNavOpen, setIsNavOpen] = useState(false);
   const pathname = usePathname();
   const button = useRef(null);
 
-  useEffect(() => {
-    if (isActive) setIsActive(false);
-  }, [pathname, isActive]);
+  const handleClick = () => {
+    setIsNavOpen(!isNavOpen);
+  };
 
-  // useIsomorphicLayoutEffect(() => {
-  useLayoutEffect(() => {
+  useEffect(() => {
+    if (isNavOpen) setIsNavOpen(false);
+  }, [pathname]);
+
+  useIsomorphicLayoutEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
     gsap.to(button.current, {
       scrollTrigger: {
@@ -42,7 +44,7 @@ export default function Header() {
           gsap.to(
             button.current,
             { scale: 0, duration: 0.25, ease: "power1.out" },
-            setIsActive(false)
+            setIsNavOpen(false)
           );
         },
       },
@@ -56,17 +58,12 @@ export default function Header() {
         <NavMenu className={styles.nav} />
 
         <div ref={button} className={styles.headerButtonContainer}>
-          <Rounded
-            onClick={() => {
-              setIsActive(!isActive);
-            }}
-            className={styles.button}
-          >
-            <div className={styles.burger({ isActive })}></div>
+          <Rounded onClick={handleClick} className={styles.button}>
+            <div className={styles.burger({ isNavOpen })}></div>
           </Rounded>
         </div>
       </div>
-      <AnimatePresence mode="wait">{isActive && <Nav />}</AnimatePresence>
+      <AnimatePresence mode="wait">{isNavOpen && <Nav />}</AnimatePresence>
     </>
   );
 }
