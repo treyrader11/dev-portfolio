@@ -13,7 +13,7 @@ const styles = {
     "duration-500",
     "custom-ease-in-out",
   ),
-  copyright: cn("group-hover:rotate-360"),
+  copyright: cn("group-hover:rotate-full"),
   codeBy: cn("group-hover:-translate-x-full"),
   trey: cn("group-hover:-translate-x-[65px]"),
   rader: cn("group-hover:-translate-x-[80px]"),

@@ -25,11 +25,12 @@ module.exports = {
       transitionTimingFunction: {
         "custom-ease-in-out": "cubic-bezier(0.76, 0, 0.24, 1)",
       },
-      theme: {
-        boxShadow: {
-          "custom-shadow": "0px 60px 50px rgba(0, 0, 0, 0.748)",
-        },
+      boxShadow: {
+        "custom-shadow": "0px 60px 50px rgba(0, 0, 0, 0.748)",
       },
+      rotate: {
+        "full": "360deg",
+      }
     },
   },
   plugins: [],

@@ -34,12 +34,12 @@ export default function Landing() {
         className={"object-cover"}
       />
 
-      {/* <Container className={styles.sliderContainer}>
+      <Container className={styles.sliderContainer}>
         <Slider text="Freelance Developer -" />
-      </Container> */}
-      <div className={styles.sliderContainer}>
+      </Container>
+      {/* <div className={styles.sliderContainer}>
         <Slider text="Freelance Developer -" />
-      </div>
+      </div> */}
 
       <div data-scroll data-scroll-speed={1} className={styles.description}>
         <ArrowIcon className={styles.svg} width={18} height={18} fill="white" />
