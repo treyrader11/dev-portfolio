@@ -33,17 +33,15 @@ export default function Nav() {
             <p>Navigation</p>
           </div>
           {routes.map((routes, index) => {
-            if (pathname !== routes.href) {
-              return (
-                <Link
-                  key={index}
-                  data={{ ...routes, index }}
-                  isActive={selectedIndicator == routes.href}
-                  setSelectedIndicator={setSelectedIndicator}
-                  className={styles.a}
-                />
-              );
-            }
+            return (
+              <Link
+                key={index}
+                data={{ ...routes, index }}
+                isActive={selectedIndicator == routes.href}
+                setSelectedIndicator={setSelectedIndicator}
+                className={styles.link}
+              />
+            );
           })}
         </div>
         <Footer />

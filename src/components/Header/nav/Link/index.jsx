@@ -4,13 +4,19 @@ import NextLink from "next/link";
 import { motion } from "framer-motion";
 import styles from "./styles";
 import { scale, slide } from "../../anim";
+import { cn } from "@/lib/utils";
 
-export default function Link({ data, isActive, setSelectedIndicator }) {
-  const { title, href, index } = data;
+export default function Link({
+  data,
+  isActive,
+  setSelectedIndicator,
+  className,
+}) {
+  const { label, href, index } = data;
 
   return (
     <motion.div
-      className={styles.link}
+      className={cn(styles.link, className)}
       onMouseEnter={() => {
         setSelectedIndicator(href);
       }}
@@ -24,8 +30,8 @@ export default function Link({ data, isActive, setSelectedIndicator }) {
         variants={scale}
         animate={isActive ? "open" : "closed"}
         className={styles.indicator}
-      ></motion.div>
-      <NextLink href={href}>{title}</NextLink>
+      />
+      <NextLink href={href}>{label}</NextLink>
     </motion.div>
   );
 }

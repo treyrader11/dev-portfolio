@@ -13,14 +13,14 @@ const styles = {
   body: cn("h-full", "p-[100px]", "flex", "flex-col", "justify-between"),
   nav: cn("flex", "flex-col", "text-[56px]", "gap-[12px]", "mt-[80px]"),
   header: cn(
-    "bg-light-100",
+    "text-light-100",
     "border-b-[1px]",
     "border-light-500",
     "uppercase",
     "text-[11px]",
     "mb-[40px]"
   ),
-  a: cn("no-underline", "text-white", "font-light"),
+  link: cn("no-underline", "text-white", "font-light"),
 };
 
 export default styles;
