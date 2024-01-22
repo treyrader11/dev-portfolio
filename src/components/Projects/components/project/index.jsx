@@ -6,6 +6,7 @@ import { useRef } from "react";
 import styles from "./styles";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import Card from "@/common/Card";
 
 export default function Project({
   index,
@@ -29,14 +30,7 @@ export default function Project({
 
   return (
     <div ref={container} className={styles.container}>
-      <motion.div
-        style={{
-          backgroundColor: color,
-          scale,
-          top: `calc(-5vh + ${index * 25}px)`,
-        }}
-        className={styles.card}
-      >
+      <Card isFolderShaped color={color} scale={scale} index={index}>
         <h2 className={cn(styles.h2, "custom-font")}>{title}</h2>
         <div className={styles.body}>
           <div className={styles.description}>
@@ -75,7 +69,7 @@ export default function Project({
             </motion.div>
           </div>
         </div>
-      </motion.div>
+      </Card>
     </div>
   );
 }
