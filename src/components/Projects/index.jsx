@@ -4,7 +4,6 @@ import { useScroll } from "framer-motion";
 import { useEffect, useRef } from "react";
 import Lenis from "@studio-freight/lenis";
 import { projects } from "./projects";
-import Container from "@/common/Container";
 import Project from "./components/Project";
 
 export default function Projects() {
@@ -27,7 +26,6 @@ export default function Projects() {
   });
 
   return (
-    // <Container maxWidth={1500} ref={container} className="relative mt-[20vh] px-2">
     <section ref={container} className="relative mt-[20vh] px-2">
       {projects.map((project, index) => {
         const targetScale = 1 - (projects.length - index) * 0.05;

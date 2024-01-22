@@ -5,7 +5,7 @@ import Inner from "@/components/Layout/Inner";
 export default function About() {
   return (
     // <Curve backgroundColor={"#BCF366"}>
-    <Inner className="bg-red-400">
+    <Inner className="">
       <h1>About</h1>
       <section className={""}>
         {/* <FuzzyOverlayExample /> */}

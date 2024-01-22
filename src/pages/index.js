@@ -1,4 +1,4 @@
-import Hero from "@/components/Hero";
+import HeroOld from "@/components/Hero";
 import About from "@/components/About";
 import ProjectsOld from "@/components/ProjectsOld";
 import Contact from "@/components/Contact";
@@ -11,6 +11,7 @@ import { Inter } from "next/font/google";
 // import Stairs from "@/components/Layout/Stairs";
 import Inner from "@/components/Layout/Inner";
 import Projects from "@/components/Projects";
+import Hero from "@/components/HeroCursor";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -35,9 +36,8 @@ export default function Home() {
       <AnimatePresence mode="wait">
         {isLoading && <Preloader />}
       </AnimatePresence>
-      {/* inline style overrides classname */}
-      {/* tailwind don't apply to inline style */}
       <Inner className="bg-red-400" backgroundColor="">
+        {/* <HeroOld /> */}
         <Hero />
         <About />
         <Projects />

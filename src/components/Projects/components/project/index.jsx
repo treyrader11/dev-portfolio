@@ -5,6 +5,7 @@ import { useTransform, motion, useScroll } from "framer-motion";
 import { useRef } from "react";
 import styles from "./styles";
 import Link from "next/link";
+import { cn } from "@/lib/utils";
 
 export default function Project({
   index,
@@ -36,7 +37,7 @@ export default function Project({
         }}
         className={styles.card}
       >
-        <h2 className={styles.h2}>{title}</h2>
+        <h2 className={cn(styles.h2, "custom-font")}>{title}</h2>
         <div className={styles.body}>
           <div className={styles.description}>
             <p className="text-[16px]">{description}</p>

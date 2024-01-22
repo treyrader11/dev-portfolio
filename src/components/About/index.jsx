@@ -15,7 +15,7 @@ export default function About() {
   const isInView = useInView(description);
   return (
     <section ref={description} id="about" className={cn(styles.description)}>
-      <Container maxWidth={1400} classname={cn(styles.container, "bg-red-500")}>
+      <Container maxWidth={1400} classname={cn(styles.container, "")}>
         {/* <div classname={cn(styles.container, "max-w-[1400px]")}> */}
         <p
           className={cn(styles.p, "text-[36px]", "gap-[8px]", "leading-[1.3]")}
