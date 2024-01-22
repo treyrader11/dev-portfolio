@@ -1,9 +1,9 @@
 import { cn } from "@/lib/utils";
 import styles from "./styles";
 
-export default function Container({ classname, children, maxWidth }) {
+export default function Container({ classname, children, maxWidth, ref }) {
   return (
-    <div className={classname} style={{ maxWidth }}>
+    <div ref={ref} className={classname} style={{ maxWidth }}>
       {children}
     </div>
   );

@@ -1,6 +1,6 @@
 import Hero from "@/components/Hero";
 import About from "@/components/About";
-import Projects from "@/components/Projects";
+import ProjectsOld from "@/components/ProjectsOld";
 import Contact from "@/components/Contact";
 import Preloader from "@/components/Preloader";
 import SlidingImages from "@/components/SlidingImages";
@@ -10,7 +10,7 @@ import { Inter } from "next/font/google";
 // import Curve from "@/components/Layout/Curve";
 // import Stairs from "@/components/Layout/Stairs";
 import Inner from "@/components/Layout/Inner";
-import ProjectsContainer from "@/components/ProjectsParallax";
+import Projects from "@/components/Projects";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -40,8 +40,7 @@ export default function Home() {
       <Inner className="bg-red-400" backgroundColor="">
         <Hero />
         <About />
-        {/* <Projects /> */}
-        <ProjectsContainer />
+        <Projects />
         <SlidingImages />
         <Contact />
       </Inner>

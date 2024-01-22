@@ -1,37 +1,36 @@
 import { cn } from "@/lib/utils";
 
 const styles = {
-  project: cn(
-    "group",
+  container: cn(
+    "h-screen",
     "flex",
-    "w-full",
-    "justify-between",
     "items-center",
-    "py-[50px]",
-    "px-[100px]",
-    "cursor-pointer",
-    "transition-all",
-    "duration-200",
-    "hover:opacity-50",
-    "border-slate-300",
-    "border-t-[1px]"
+    "justify-center",
+    "sticky",
+    "top-0"
   ),
-  h2: cn(
-    "text-[60px]",
-    "m-0",
-    "font-normal",
-    "transition-all",
-    "duration-400",
-    "transform",
-    "group-hover:-translate-x-[10px]"
+  card: cn(
+    "flex",
+    "flex-col",
+    "relative",
+    "-top-[25%]",
+    "h-[500px]",
+    "max-w-[1500px]",
+    "rounded-3xl",
+    "p-[50px]",
+    // "transform-origin-top"
   ),
-  p: cn(
-    "transition-all",
-    "duration-400",
-    "font-light",
-    "transform",
-    "group-hover:translate-x-[10px]"
+  h2: cn("text-[28px]", "m-0", "text-center"),
+  body: cn("flex", "h-full", "mt-[50px]", "gap-[50px]"),
+  description: cn("relative", "w-[40%]", "top-[10%]"),
+  imageContainer: cn(
+    "relative",
+    "w-[60%]",
+    "h-full",
+    "rounded-[25px]",
+    "overflow-hidden"
   ),
+  inner: cn("w-full", "h-full"),
 };
 
 export default styles;
