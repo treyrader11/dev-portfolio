@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { useRef } from "react";
 import { useScroll, motion, useTransform } from "framer-motion";
 import Rounded from "@/common/Rounded";
