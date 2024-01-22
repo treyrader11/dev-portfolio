@@ -11,6 +11,8 @@ import Rounded from "@/common/Rounded";
 import NavMenu from "./NavMenu";
 import Logo from "../Logo";
 import useIsomorphicLayoutEffect from "@/hooks/useIsomorphicLayoutEffect";
+import ProfilePicture from "@/common/ProfilePicture";
+import profilePicture from "/public/images/portraits/headshot-sit-blackbg.png";
 
 export default function Header() {
   const header = useRef(null);
@@ -51,9 +53,14 @@ export default function Header() {
   return (
     <>
       <div ref={header} className={styles.header}>
-        <Logo />
-        <NavMenu />
+        <div className="flex flex-col items-center gap-3">
+          <ProfilePicture src={profilePicture} height={80} width={80} />
+          {/* <Logo /> */}
+        </div>
+        <Logo className="pl-3 mr-auto" />
 
+        {/* <ProfilePicture src={profilePicture} /> */}
+        <NavMenu />
         <div ref={button} className={styles.headerButtonContainer}>
           <Rounded
             onClick={() => setIsNavOpen(!isNavOpen)}

@@ -26,7 +26,7 @@ const styles = {
             "before:rounded-t-3xl",
             "before:bg-inherit",
             `before:top-[-${beforeHeight}px]`,
-            "before:left-0",
+            "before:left-0"
             // "before:skew-y-[-6]",
           )
         : "rounded-3xl"
