@@ -5,8 +5,9 @@ import { motion } from "framer-motion";
 import useMousePosition from "@/hooks/useMousePosition";
 import styles from "./styles";
 import { cn } from "@/lib/utils";
-import portrait from "/public/images/portraits/headshot-sit-blackbg.png";
 import Image from "next/image";
+import ProfilePicture from "@/common/ProfilePicture";
+import profilePicture from "/public/images/portraits/headshot-sit-blackbg.png";
 
 export default function Hero() {
   const [isHovered, setIsHovered] = useState(false);
@@ -15,7 +16,7 @@ export default function Hero() {
 
   return (
     <section className="h-screen bg-[#0f0f0f] custom-font relative">
-      <div
+      {/* <div
         className={cn(
           "w-[100px]",
           "h-[100px]",
@@ -32,7 +33,11 @@ export default function Hero() {
           src={portrait}
           className="object-cover"
         />
-      </div>
+      </div> */}
+      <ProfilePicture
+        src={profilePicture}
+        className="absolute left-[50px] top-[100px]"
+      />
       <motion.div
         className={cn(styles.mask, "mask")}
         animate={{

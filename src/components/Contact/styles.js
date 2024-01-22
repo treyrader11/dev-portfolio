@@ -18,13 +18,6 @@ const styles = {
     "mx-[200px]",
     "relative"
   ),
-  imageContainer: cn(
-    "w-[100px]",
-    "h-[100px]",
-    "relative",
-    "rounded-full",
-    "overflow-hidden"
-  ),
   buttonContainer: cn(
     "absolute",
     "left-[calc(100%_-_400px)]",

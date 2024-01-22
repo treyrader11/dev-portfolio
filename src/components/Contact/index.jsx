@@ -7,7 +7,8 @@ import Rounded from "@/common/Rounded";
 import Magnetic from "@/common/Magnetic";
 import Container from "@/common/Container";
 import styles from "./styles";
-import portraitGrey from "/public/images/portraits/coffee-portrait-grey.png";
+import profilePicture from "/public/images/portraits/coffee-portrait-grey.png";
+import ProfilePicture from "@/common/ProfilePicture";
 
 export default function Contact() {
   const container = useRef(null);
@@ -28,14 +29,7 @@ export default function Contact() {
       <Container maxWidth={1800} classname={styles.container}>
         <div className={styles.title}>
           <span className="flex items-center">
-            <div className={styles.imageContainer}>
-              <Image
-                fill={true}
-                alt={"image"}
-                src={portraitGrey}
-                className="object-cover"
-              />
-            </div>
+            <ProfilePicture src={profilePicture} />
             <h2 className="ml-[0.3em]">Let&apos;s work</h2>
           </span>
           <h2 className="text-[5vw] m-0 font-light">together</h2>
