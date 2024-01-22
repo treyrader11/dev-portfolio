@@ -15,6 +15,7 @@ export default function Rounded({
   const circle = useRef(null);
   let timeline = useRef(null);
   let timeoutId = null;
+
   useEffect(() => {
     timeline.current = gsap.timeline({ paused: true });
     timeline.current
@@ -31,6 +32,7 @@ export default function Rounded({
   }, []);
 
   const manageMouseEnter = () => {
+    console.log('timeoutId', timeoutId)
     if (timeoutId) clearTimeout(timeoutId);
     timeline.current.tweenFromTo("enter", "exit");
   };
@@ -59,7 +61,7 @@ export default function Rounded({
           ref={circle}
           style={{ backgroundColor }}
           className={styles.circle}
-        ></div>
+        />
       </div>
     </Magnetic>
   );

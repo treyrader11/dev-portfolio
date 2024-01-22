@@ -15,7 +15,7 @@ export default function About() {
   const isInView = useInView(description);
   return (
     <section ref={description} id="about" className={cn(styles.description)}>
-      <Container maxWidth={1400} classname={styles.container}>
+      <Container maxWidth={1400} classname={cn(styles.container, "bg-red-500")}>
         {/* <div classname={cn(styles.container, "max-w-[1400px]")}> */}
         <p
           className={cn(styles.p, "text-[36px]", "gap-[8px]", "leading-[1.3]")}
@@ -46,7 +46,20 @@ export default function About() {
         </motion.p>
         <div data-scroll data-scroll-speed={0.1}>
           <Rounded className={styles.button}>
-            <p className={cn(styles.p, styles.buttonText)}>About me</p>
+            <p
+              className={cn(
+                "relative",
+                "z-[1]",
+                "transition-colors",
+                "duration-400",
+                "ease-linear",
+                "hover:text-white",
+                styles.p,
+                styles.buttonText
+              )}
+            >
+              About me
+            </p>
             {/* <p>About me</p> */}
           </Rounded>
         </div>

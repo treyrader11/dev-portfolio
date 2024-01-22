@@ -12,7 +12,9 @@ const styles = {
     "cursor-pointer",
     "transition-all",
     "duration-200",
-    "group-hover:opacity-50"
+    "hover:opacity-50",
+    "border-slate-300",
+    "border-t-[1px]"
   ),
   h2: cn(
     "text-[60px]",
@@ -20,15 +22,15 @@ const styles = {
     "font-normal",
     "transition-all",
     "duration-400",
-    "group-hover:transform",
-    "-group-translate-x-[10px]"
+    "transform",
+    "group-hover:-translate-x-[10px]"
   ),
   p: cn(
     "transition-all",
     "duration-400",
     "font-light",
-    "group-transform",
-    "group-translate-x-[10px]"
+    "transform",
+    "group-hover:translate-x-[10px]"
   ),
 };
 

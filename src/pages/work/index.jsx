@@ -1,10 +1,10 @@
 import Curve from "@/components/Layout/Curve";
-
+import Inner from "@/components/Layout/Inner";
 
 export default function Work() {
   return (
-    <Curve backgroundColor={"pink"}>
-      <h1>About</h1>
+    <Inner className="bg-red-400">
+      <h1>Work</h1>
       <section className={""}>
         <p>
           Nullam mattis mattis dictum. Praesent sit amet condimentum mi, quis
@@ -20,6 +20,6 @@ export default function Work() {
           venenatis.
         </p>
       </section>
-    </Curve>
+    </Inner>
   );
 }

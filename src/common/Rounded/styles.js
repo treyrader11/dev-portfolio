@@ -10,9 +10,9 @@ const styles = {
     "flex",
     "items-center",
     "justify-center",
-    // "flex-center-x",
     "py-[15px]",
-    "px-[60px]"
+    "px-[60px]",
+    "bg-[#455CE9]"
   ),
   p: cn(
     "relative",

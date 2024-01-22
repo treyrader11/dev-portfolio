@@ -9,29 +9,7 @@ import Container from "@/common/Container";
 import styles from "./styles";
 import { cn } from "@/lib/utils";
 import Project from "./components/project";
-
-const projects = [
-  {
-    title: "C2 Montreal",
-    src: "c2montreal.png",
-    color: "#000000",
-  },
-  {
-    title: "Office Studio",
-    src: "officestudio.png",
-    color: "#8C8C8C",
-  },
-  {
-    title: "Locomotive",
-    src: "locomotive.png",
-    color: "#EFE8D3",
-  },
-  {
-    title: "Silencio",
-    src: "silencio.png",
-    color: "#706D63",
-  },
-];
+import { projects } from "./projects";
 
 const scaleAnimation = {
   initial: { scale: 0, x: "-50%", y: "-50%" },
@@ -126,8 +104,8 @@ export default function Projects() {
         })}
       </Container>
       <Rounded>
-        {/* <p className={styles.p}>More work</p> */}
-        <p>More work</p>
+        <p className={styles.p}>More work</p>
+        {/* <p>More work</p> */}
       </Rounded>
       <>
         <motion.div
@@ -167,7 +145,7 @@ export default function Projects() {
           variants={scaleAnimation}
           initial="initial"
           animate={active ? "enter" : "closed"}
-        ></motion.div>
+        />
         <motion.div
           ref={cursorLabel}
           className={cn(styles.cursor, "bg-transparent")}

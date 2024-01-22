@@ -1,12 +1,14 @@
 import { FuzzyOverlayExample } from "@/common/FuzzyOverlay";
 import Curve from "@/components/Layout/Curve";
+import Inner from "@/components/Layout/Inner";
 
 export default function About() {
   return (
-    <Curve backgroundColor={"#BCF366"}>
+    // <Curve backgroundColor={"#BCF366"}>
+    <Inner className="bg-red-400">
       <h1>About</h1>
       <section className={""}>
-        <FuzzyOverlayExample />
+        {/* <FuzzyOverlayExample /> */}
         <p>
           Nullam mattis mattis dictum. Praesent sit amet condimentum mi, quis
           venenatis lectus. Phasellus ac ante id purus viverra hendrerit quis at
@@ -21,6 +23,6 @@ export default function About() {
           venenatis.
         </p>
       </section>
-    </Curve>
+    </Inner>
   );
 }

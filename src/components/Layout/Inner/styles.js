@@ -1,7 +1,7 @@
 import { cn } from "@/lib/utils";
 
 const styles = {
-  inner: cn("bg-black"),
+  inner: ({ className }) => cn("bg-black", className),
   page: cn("bg-white"),
   slide: cn(
     "h-screen",

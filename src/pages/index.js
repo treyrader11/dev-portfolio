@@ -1,14 +1,15 @@
-import Contact from "@/components/Contact";
+import Hero from "@/components/Hero";
 import About from "@/components/About";
-import Landing from "@/components/Landing";
-import Preloader from "@/components/Preloader";
 import Projects from "@/components/Projects";
+import Contact from "@/components/Contact";
+import Preloader from "@/components/Preloader";
 import SlidingImages from "@/components/SlidingImages";
 import { AnimatePresence } from "framer-motion";
 import { useState, useEffect } from "react";
 import { Inter } from "next/font/google";
-import Curve from "@/components/Layout/Curve";
-import Stairs from "@/components/Layout/Stairs";
+// import Curve from "@/components/Layout/Curve";
+// import Stairs from "@/components/Layout/Stairs";
+import Inner from "@/components/Layout/Inner";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -33,13 +34,15 @@ export default function Home() {
       <AnimatePresence mode="wait">
         {isLoading && <Preloader />}
       </AnimatePresence>
-      <Stairs>
-        <Landing />
+      {/* inline style overrides classname */}
+      {/* tailwind don't apply to inline style */}
+      <Inner className="bg-red-400" backgroundColor="">
+        <Hero />
         <About />
         <Projects />
         <SlidingImages />
         <Contact />
-      </Stairs>
+      </Inner>
     </main>
   );
 }

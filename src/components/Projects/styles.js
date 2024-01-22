@@ -3,11 +3,12 @@ import { cn } from "@/lib/utils";
 const styles = {
   projects: cn(
     "flex",
-    "items-center",
-    "pl-[200px]",
-    "pr-[200px]",
     "flex-col",
-    "mt-[300px]"
+    "items-center",
+    "px-[100px]",
+    "mt-[300px]",
+    "border-red-500",
+    "border-[2px]"
   ),
   container: cn(
     "w-full",
@@ -41,7 +42,7 @@ const styles = {
     "w-[80px]",
     "h-[80px]",
     "rounded-full",
-    "bg-primary",
+    "bg-[#455CE9]",
     "text-white",
     "fixed",
     "z-[3]",

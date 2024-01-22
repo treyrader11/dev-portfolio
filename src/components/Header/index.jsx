@@ -18,14 +18,11 @@ export default function Header() {
   const pathname = usePathname();
   const button = useRef(null);
 
-  const handleClick = () => {
-    setIsNavOpen(!isNavOpen);
-  };
-
   useEffect(() => {
     if (isNavOpen) setIsNavOpen(false);
   }, [pathname]);
 
+  // sliding nav logic
   useIsomorphicLayoutEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
     gsap.to(button.current, {
@@ -58,8 +55,11 @@ export default function Header() {
         <NavMenu />
 
         <div ref={button} className={styles.headerButtonContainer}>
-          <Rounded onClick={handleClick} className={styles.button}>
-            <div className={styles.burger({ isNavOpen })}></div>
+          <Rounded
+            onClick={() => setIsNavOpen(!isNavOpen)}
+            className={styles.button}
+          >
+            <div className={styles.burger({ isNavOpen })} />
           </Rounded>
         </div>
       </div>

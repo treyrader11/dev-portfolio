@@ -13,17 +13,12 @@ const anim = (variants) => {
   };
 };
 
-export default function Layout({ children }) {
+export default function Inner({ children, className, backgroundColor }) {
   return (
-    <div className="inner">
+    <div className={styles.inner({ className })} style={{ backgroundColor }}>
       <motion.div className={styles.slide} {...anim(slide)} />
       <motion.div className={styles.page} {...anim(perspective)}>
         <motion.div {...anim(opacity)}>
-          {/* <div className="header">
-            <Link href="/">Home</Link>
-            <Link href="/about">About</Link>
-            <Link href="/contact">Contact</Link>
-          </div> */}
           {children}
         </motion.div>
       </motion.div>

@@ -7,7 +7,7 @@ import ScrollTrigger from "gsap/dist/ScrollTrigger";
 import { cn } from "@/lib/utils";
 import useIsomorphicLayoutEffect from "@/hooks/useIsomorphicLayoutEffect";
 
-export default function Slider({ text }) {
+export default function Slider({ text, className, fontSize = 230 }) {
   const firstText = useRef(null);
   const secondText = useRef(null);
   const slider = useRef(null);
@@ -27,21 +27,6 @@ export default function Slider({ text }) {
     xPercent.current += 0.1 * direction.current;
   }, [firstText, secondText, direction]);
 
-  // useIsomorphicLayoutEffect(() => {
-  //   gsap.registerPlugin(ScrollTrigger);
-  //   gsap.to(slider.current, {
-  //     scrollTrigger: {
-  //       trigger: document.documentElement,
-  //       scrub: 0.25,
-  //       start: 0,
-  //       end: window.innerHeight,
-  //       onUpdate: (e) => (direction.current = e.direction * -1),
-  //     },
-  //     x: "-500px",
-  //   });
-  //   requestAnimationFrame(animate);
-  // }, [animate]);
-
   useIsomorphicLayoutEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
     gsap.to(slider.current, {
@@ -58,13 +43,20 @@ export default function Slider({ text }) {
   }, [animate]);
 
   return (
-    <div ref={slider} className={styles.slider}>
-      <p ref={firstText} className={styles.p}>
+    <div ref={slider} className={cn(styles.slider, className)}>
+      <p ref={firstText} className={cn(styles.p, `text-[${fontSize}px]`)}>
         {text}
       </p>
       <p
         ref={secondText}
-        className={cn(styles.p, "absolute", "top-0", "left-full")}
+        className={cn(
+          styles.p,
+          // `text-[${fontSize}px]`,
+          "absolute",
+          "top-0",
+          "left-full",
+          `text-[${fontSize}px]`
+        )}
       >
         {text}
       </p>
