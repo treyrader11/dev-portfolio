@@ -10,6 +10,7 @@ import { Inter } from "next/font/google";
 // import Curve from "@/components/Layout/Curve";
 // import Stairs from "@/components/Layout/Stairs";
 import Inner from "@/components/Layout/Inner";
+import ProjectsContainer from "@/components/ProjectsParallax";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -39,7 +40,8 @@ export default function Home() {
       <Inner className="bg-red-400" backgroundColor="">
         <Hero />
         <About />
-        <Projects />
+        {/* <Projects /> */}
+        <ProjectsContainer />
         <SlidingImages />
         <Contact />
       </Inner>
