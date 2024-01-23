@@ -5,7 +5,7 @@ import { AnimatePresence } from "framer-motion";
 export default function Layout({ children, route }) {
   return (
     <AnimatePresence mode="wait">
-      {/* bettwe altnerative to overflow-hidden. project cards stay in place */}
+      {/* overflow-clip is a better altnerative to overflow-hidden and keeps the layout from overflowing and in tact while maintaining the project cards to stay in place */}
       <main key={route} className="overflow-clip">
         {children}
       </main>

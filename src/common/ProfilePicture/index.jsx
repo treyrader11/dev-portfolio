@@ -1,6 +1,7 @@
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import Magnetic from "../Magnetic";
+import styles from "./styles";
 
 export default function ProfilePicture({
   src,
@@ -13,25 +14,34 @@ export default function ProfilePicture({
     return (
       <Magnetic>
         <div
-          className={cn(
-            "rounded-full",
-            "overflow-hidden",
-            "relative",
-            className
-          )}
+          className={cn(styles.container, className)}
           style={{ height, width }}
         >
-          <Image fill={true} alt={"image"} src={src} className="object-cover" />
+          <Image
+            priority
+            fill
+            alt={"image"}
+            src={src}
+            className="object-cover"
+            sizes={{}}
+          />
         </div>
       </Magnetic>
     );
   } else {
     return (
       <div
-        className={cn("rounded-full", "overflow-hidden", "relative", className)}
+        className={cn(styles.container, className)}
         style={{ height, width }}
       >
-        <Image fill={true} alt={"image"} src={src} className="object-cover" />
+        <Image
+          fill={true}
+          priority
+          alt={"image"}
+          src={src}
+          className="object-cover"
+          sizes={{}}
+        />
       </div>
     );
   }

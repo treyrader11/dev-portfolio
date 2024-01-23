@@ -76,11 +76,6 @@ export default function Project({
                 className="object-cover"
                 sizes={{}}
               />
-              {/* <img
-                src={`/projectImages/${src}`}
-                alt="image"
-                className="object-cover"
-              /> */}
             </motion.div>
           </div>
         </div>

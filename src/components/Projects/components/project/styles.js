@@ -19,8 +19,8 @@ const styles = {
     "rounded-3xl",
     "overflow-hidden"
   ),
-  inner: cn("w-full", "h-full"),
-  // inner: cn("w-full", "h-full", "relative"),
+  // inner: cn("w-full", "h-full"),
+  inner: cn("w-full", "h-full", "relative"),
   card: (isFolderShaped, beforeHeight) =>
     cn(
       "flex",

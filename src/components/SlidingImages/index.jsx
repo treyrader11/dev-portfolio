@@ -53,6 +53,7 @@ export default function SlidingImages() {
                   alt={"image"}
                   src={`/images/${project.src}`}
                   priority={project.isPriority}
+                  sizes={{}}
                 />
               </div>
             </div>
