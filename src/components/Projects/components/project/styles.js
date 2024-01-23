@@ -37,8 +37,8 @@ const styles = {
         ? cn(
             "rounded-tr-3xl",
             "rounded-b-3xl",
-            "before:absolute",
-            // "before:relative",
+            // "before:absolute",
+            "before:relative",
             `before:h-[${beforeHeight}px]`,
             "before:w-1/2",
             "before:rounded-t-3xl",
@@ -46,7 +46,7 @@ const styles = {
             `before:top-[-${beforeHeight}px]`,
             "before:left-0"
           )
-        : cn("rounded-3xl")
+        : "rounded-3xl"
     ),
 };
 
