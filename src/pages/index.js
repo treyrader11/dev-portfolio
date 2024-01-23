@@ -1,4 +1,3 @@
-import HeroOld from "@/components/HeroOld";
 import About from "@/components/About";
 import ProjectsOld from "@/components/ProjectsOld";
 import Contact from "@/components/Contact";
@@ -37,7 +36,6 @@ export default function Home() {
         {isLoading && <Preloader />}
       </AnimatePresence>
       <Inner className="bg-red-400" backgroundColor="">
-        {/* <HeroOld /> */}
         <Hero />
         <About />
         <Projects />

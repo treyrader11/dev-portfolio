@@ -5,8 +5,6 @@ import { motion } from "framer-motion";
 import useMousePosition from "@/hooks/useMousePosition";
 import styles from "./styles";
 import { cn } from "@/lib/utils";
-import ProfilePicture from "@/common/ProfilePicture";
-import profilePicture from "/public/images/portraits/headshot-sit-blackbg.png";
 
 export default function Hero() {
   const [isHovered, setIsHovered] = useState(false);
@@ -15,10 +13,6 @@ export default function Hero() {
 
   return (
     <section className={styles.container}>
-      {/* <ProfilePicture
-        src={profilePicture}
-        className="absolute left-[50px] top-[100px]"
-      /> */}
       <motion.div
         className={cn(styles.mask, "mask")}
         animate={{
@@ -43,7 +37,7 @@ export default function Hero() {
 
       <div className={styles.body}>
         <p className={styles.p}>
-          I'm a <span className="text-[#ec4e39]">selectively skilled</span> web
+          I&lsquo;m a <span className="text-[#ec4e39]">selectively skilled</span> web
           developer with a strong focus on producing quality & impactful digital
           experiences.
         </p>

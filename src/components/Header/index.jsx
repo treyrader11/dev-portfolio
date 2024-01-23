@@ -1,7 +1,7 @@
 "use client";
 
 import styles from "./styles";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import { usePathname } from "next/navigation";
 import { AnimatePresence } from "framer-motion";
 import gsap from "gsap";
@@ -20,12 +20,36 @@ export default function Header() {
   const pathname = usePathname();
   const button = useRef(null);
 
-  useEffect(() => {
-    if (isNavOpen) setIsNavOpen(false);
-  }, [pathname]);
+  const openNav = useCallback(() => {
+    setIsNavOpen((prevIsNavOpen) => !prevIsNavOpen);
+  }, []);
 
-  // sliding nav logic
-  useIsomorphicLayoutEffect(() => {
+  // useIsomorphicLayoutEffect(() => {
+  //   gsap.registerPlugin(ScrollTrigger);
+  //   gsap.to(button.current, {
+  //     scrollTrigger: {
+  //       trigger: document.documentElement,
+  //       start: 0,
+  //       end: window.innerHeight,
+  //       onLeave: () => {
+  //         gsap.to(button.current, {
+  //           scale: 1,
+  //           duration: 0.25,
+  //           ease: "power1.out",
+  //         });
+  //       },
+  //       onEnterBack: () => {
+  //         gsap.to(
+  //           button.current,
+  //           { scale: 0, duration: 0.25, ease: "power1.out" },
+  //           setIsNavOpen(false)
+  //         );
+  //       },
+  //     },
+  //   });
+  // }, []);
+
+  useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
     gsap.to(button.current, {
       scrollTrigger: {
@@ -43,29 +67,21 @@ export default function Header() {
           gsap.to(
             button.current,
             { scale: 0, duration: 0.25, ease: "power1.out" },
-            setIsNavOpen(false)
+            openNav
           );
         },
       },
     });
-  }, []);
+  }, [openNav]);
 
   return (
     <>
       <div ref={header} className={styles.header}>
-        <div className="flex flex-col items-center gap-3">
-          <ProfilePicture src={profilePicture} height={80} width={80} />
-          {/* <Logo /> */}
-        </div>
+        <ProfilePicture src={profilePicture} height={80} width={80} />
         <Logo className="pl-3 mr-auto" />
-
-        {/* <ProfilePicture src={profilePicture} /> */}
         <NavMenu />
         <div ref={button} className={styles.headerButtonContainer}>
-          <Rounded
-            onClick={() => setIsNavOpen(!isNavOpen)}
-            className={styles.button}
-          >
+          <Rounded onClick={openNav} className={styles.button}>
             <div className={styles.burger({ isNavOpen })} />
           </Rounded>
         </div>

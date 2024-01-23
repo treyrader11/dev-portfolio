@@ -2,7 +2,6 @@ import { cn } from "@/lib/utils";
 
 // When positioned absolute, height needs to be 70
 const beforeHeight = 70;
-// const beforeHeight = 100;
 
 const styles = {
   card: (isFolderShaped) =>
@@ -32,8 +31,5 @@ const styles = {
         : "rounded-3xl"
     ),
 };
-
-const className =
-  "absolute inset-0 z-0 transform -skew-y-6 bg-gradient-to-r from-purple-100 to-purple-50";
 
 export default styles;
