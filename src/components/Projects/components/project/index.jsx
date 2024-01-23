@@ -29,7 +29,7 @@ export default function Project({
   const scale = useTransform(progress, range, [1, targetScale]);
 
   return (
-    <div ref={container} className={styles.container}>
+    <div ref={container} className={cn(styles.container)}>
       <Card isFolderShaped color={color} scale={scale} index={index}>
         <h2 className={cn(styles.h2, "custom-font")}>{title}</h2>
         <div className={styles.body}>

@@ -1,14 +1,14 @@
 export const routes = [
   {
-    label: "work",
+    label: "Work",
     href: "/work",
   },
   {
-    label: "about",
+    label: "About",
     href: "/about",
   },
   {
-    label: "contact",
+    label: "Contact",
     href: "/contact",
   },
 ];

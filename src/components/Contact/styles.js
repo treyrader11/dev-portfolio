@@ -16,7 +16,7 @@ const styles = {
     "border-light-300",
     "pb-[100px]",
     "mx-[200px]",
-    "relative"
+    "relative",
   ),
   buttonContainer: cn(
     "absolute",

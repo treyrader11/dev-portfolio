@@ -9,7 +9,7 @@ import { cn } from "@/lib/utils";
 export default function Rounded({
   children,
   className,
-  backgroundColor = "#455CE9",
+  color = "#455CE9",
   ...attributes
 }) {
   const circle = useRef(null);
@@ -32,7 +32,7 @@ export default function Rounded({
   }, []);
 
   const manageMouseEnter = () => {
-    console.log('timeoutId', timeoutId)
+    console.log("timeoutId", timeoutId);
     if (timeoutId) clearTimeout(timeoutId);
     timeline.current.tweenFromTo("enter", "exit");
   };
@@ -59,7 +59,7 @@ export default function Rounded({
         {children}
         <div
           ref={circle}
-          style={{ backgroundColor }}
+          style={{ backgroundColor: color }}
           className={styles.circle}
         />
       </div>

@@ -7,7 +7,7 @@ const styles = {
     "items-center",
     "justify-center",
     "sticky",
-    "top-0"
+    "top-0",
   ),
   h2: cn("text-[28px]", "m-0", "text-center"),
   body: cn("flex", "h-full", "mt-[50px]", "gap-[50px]"),

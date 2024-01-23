@@ -35,9 +35,12 @@ export default function Home() {
       <AnimatePresence mode="wait">
         {isLoading && <Preloader />}
       </AnimatePresence>
-      <Inner className="bg-red-400" backgroundColor="">
+      <Inner className="bg-red-400 " backgroundColor="">
         <Hero />
         <About />
+        {/* <div className="relative">
+          <Projects />
+        </div> */}
         <Projects />
         <SlidingImages />
         <Contact />

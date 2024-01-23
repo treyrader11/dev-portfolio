@@ -1,7 +1,13 @@
 "use client";
 
 import styles from "./styles";
-import { useEffect, useLayoutEffect, useRef, useState, useCallback } from "react";
+import {
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+  useCallback,
+} from "react";
 import { usePathname } from "next/navigation";
 import { AnimatePresence } from "framer-motion";
 import gsap from "gsap";
@@ -13,6 +19,7 @@ import Logo from "../Logo";
 import useIsomorphicLayoutEffect from "@/hooks/useIsomorphicLayoutEffect";
 import ProfilePicture from "@/common/ProfilePicture";
 import profilePicture from "/public/images/portraits/headshot-sit-blackbg.png";
+import { cn } from "@/lib/utils";
 
 export default function Header() {
   const header = useRef(null);
@@ -53,9 +60,31 @@ export default function Header() {
   //   });
   // }, []);
 
-
-  
-  useLayoutEffect(() => {
+  // useLayoutEffect(() => {
+  //   gsap.registerPlugin(ScrollTrigger);
+  //   gsap.to(button.current, {
+  //     scrollTrigger: {
+  //       trigger: document.documentElement,
+  //       start: 0,
+  //       end: window.innerHeight,
+  //       onLeave: () => {
+  //         gsap.to(button.current, {
+  //           scale: 1,
+  //           duration: 0.25,
+  //           ease: "power1.out",
+  //         });
+  //       },
+  //       onEnterBack: () => {
+  //         gsap.to(
+  //           button.current,
+  //           { scale: 0, duration: 0.25, ease: "power1.out" },
+  //           handleNavMenu
+  //         );
+  //       },
+  //     },
+  //   });
+  // }, [handleNavMenu]);
+  useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
     gsap.to(button.current, {
       scrollTrigger: {
@@ -85,13 +114,13 @@ export default function Header() {
       <div ref={header} className={styles.header}>
         <ProfilePicture src={profilePicture} height={80} width={80} />
         <Logo className="pl-3 mr-auto" />
-        <NavMenu />
+        <NavMenu handleNavMenu={handleNavMenu} />
         <div ref={button} className={styles.navButtonContainer}>
           <Rounded
             onClick={handleNavMenu}
-            className={styles.navbutton}
+            className={cn(styles.navButton(isNavOpen))}
           >
-            <div className={styles.burger({ isNavOpen })} />
+            <div className={styles.burger(isNavOpen)} />
           </Rounded>
         </div>
       </div>

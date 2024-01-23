@@ -2,9 +2,9 @@ import { cn } from "@/lib/utils";
 
 const styles = {
   roundedButton: cn(
-    "rounded-[3em]",
+    "rounded-[3em]", //not sure if this works
     "border-light-200",
-    "border-[1px]",
+    "border-px",
     "cursor-pointer",
     "relative",
     "flex",
@@ -12,7 +12,6 @@ const styles = {
     "justify-center",
     "py-[15px]",
     "px-[60px]",
-    "bg-[#455CE9]"
   ),
   p: cn(
     "relative",
@@ -23,7 +22,7 @@ const styles = {
     "hover:text-white"
     // might need to look into this hover situation
   ),
-  circle: cn("w-full", "h-[150%]", "absolute", "rounded-full", "top-full"),
+  circle: cn("w-full", "h-[150%]", "absolute", "rounded-1/2", "top-full", "z-[12]", "bg-primary"),
 };
 
 export default styles;

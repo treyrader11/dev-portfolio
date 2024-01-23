@@ -13,10 +13,27 @@ const styles = {
     "items-center",
     "w-full"
   ),
-  navButtonContainer: cn("fixed", "transform", "scale-0", "right-0", "z-[10]"),
-  navbutton: cn("m-5", "w-[80px]", "h-[80px]", "rounded-full", "bg-dark-400"),
+  navButtonContainer: cn(
+    "fixed",
+    "transform",
+    "scale-0",
+    "right-0",
+    // "z-[10]",
+    "z-[4]",
+    "after:top-[-5px]",
+    "before:top-[5px]"
+  ),
+  navButton: (isNavOpen) =>
+    cn(
+      "relative",
+      "m-5",
+      "w-[80px]",
+      "h-[80px]",
+      "rounded-full",
+      isNavOpen ? cn("bg-primary") : cn("bg-dark-400")
+    ),
 
-  burger: ({ isNavOpen }) =>
+  burger: (isNavOpen) =>
     cn(
       "relative",
       "w-full",

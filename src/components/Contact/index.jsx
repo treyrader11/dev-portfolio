@@ -24,8 +24,8 @@ export default function Contact() {
       ref={container}
       className={styles.contact}
     >
-      {/* <Container maxWidth={1800} classname={styles.container}> */}
-      <div classname={styles.container}>
+      {/* <Container maxWidth={1800} className={styles.container}> */}
+      <div className={styles.container}>
         <div className={styles.title}>
           <span className="flex items-center">
             <ProfilePicture src={profilePicture} />
@@ -33,7 +33,7 @@ export default function Contact() {
           </span>
           <h2 className="text-[5vw] m-0 font-light">together</h2>
           <motion.div style={{ x }} className={styles.buttonContainer}>
-            <Rounded backgroundColor={"#334BD3"} className={styles.button}>
+            <Rounded className={styles.button}>
               <p>Get in touch</p>
             </Rounded>
           </motion.div>

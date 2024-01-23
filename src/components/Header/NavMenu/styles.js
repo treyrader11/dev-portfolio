@@ -28,6 +28,7 @@ const styles = {
     "group-hover:scale-100",
     "bg-white",
   ),
+  
 };
 
 export default styles;
