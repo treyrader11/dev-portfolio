@@ -18,6 +18,7 @@ export default function Project({
   progress,
   range,
   targetScale,
+  isFolderShaped = false,
 }) {
   const container = useRef(null);
   const { scrollYProgress } = useScroll({
@@ -30,7 +31,15 @@ export default function Project({
 
   return (
     <div ref={container} className={cn(styles.container)}>
-      <Card isFolderShaped color={color} scale={scale} index={index}>
+      {/* <Card isFolderShaped color={color} scale={scale} index={index}> */}
+      <motion.div
+        style={{
+          backgroundColor: color,
+          scale,
+          top: `calc(-5vh + ${index * 25}px)`,
+        }}
+        className={cn(styles.card(isFolderShaped, 100))}
+      >
         <h2 className={cn(styles.h2, "custom-font")}>{title}</h2>
         <div className={styles.body}>
           <div className={styles.description}>
@@ -61,10 +70,11 @@ export default function Project({
           <div className={styles.imageContainer}>
             <motion.div className={styles.inner} style={{ scale: imageScale }}>
               <Image
-                fill={true}
+                fill
                 src={`/projectImages/${src}`}
                 alt="image"
                 className="object-cover"
+                sizes={{}}
               />
               {/* <img
                 src={`/projectImages/${src}`}
@@ -74,7 +84,8 @@ export default function Project({
             </motion.div>
           </div>
         </div>
-      </Card>
+      </motion.div>
+      {/* </Card> */}
     </div>
   );
 }
