@@ -7,9 +7,9 @@ const styles = {
     "h-full",
     "flex",
     "items-center",
-    "",
-    "text-[64px]",
-    "leading-[66px]"
+    "text-3xl",
+    "md:text-[64px]",
+    "md:leading-[66px]"
   ),
   body: cn(
     "w-full",
@@ -17,8 +17,9 @@ const styles = {
     "flex",
     "items-center",
     "text-light-400",
-    "text-[64px]",
-    "leading-[66px]"
+    "text-3xl",
+    "md:text-[64px]",
+    "md:leading-[66px]"
   ),
   p: cn("w-[1000px]", "p-[40px]"),
 };

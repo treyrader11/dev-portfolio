@@ -22,7 +22,6 @@ export default function Contact() {
     <motion.div
       style={{ y }}
       ref={container}
-      // id="contact"
       className={styles.contact}
     >
       <Container maxWidth={1800} classname={styles.container}>

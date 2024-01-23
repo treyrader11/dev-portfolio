@@ -24,7 +24,7 @@ export default function Header() {
   //   if (isNavOpen) setIsNavOpen(false);
   // }, [pathname]);
 
-  const openNav = useCallback(() => {
+  const handleNavMenu = useCallback(() => {
     setIsNavOpen((prevIsNavOpen) => !prevIsNavOpen);
   }, []);
 
@@ -54,7 +54,7 @@ export default function Header() {
   // }, []);
 
 
-
+  
   useLayoutEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
     gsap.to(button.current, {
@@ -73,12 +73,12 @@ export default function Header() {
           gsap.to(
             button.current,
             { scale: 0, duration: 0.25, ease: "power1.out" },
-            openNav
+            handleNavMenu
           );
         },
       },
     });
-  }, []);
+  }, [handleNavMenu]);
 
   return (
     <>
@@ -86,13 +86,10 @@ export default function Header() {
         <ProfilePicture src={profilePicture} height={80} width={80} />
         <Logo className="pl-3 mr-auto" />
         <NavMenu />
-        <div ref={button} className={styles.headerButtonContainer}>
+        <div ref={button} className={styles.navButtonContainer}>
           <Rounded
-            onClick={openNav}
-            // onClick={() => {
-            //   setIsNavOpen(!isNavOpen);
-            // }}
-            className={styles.openNavbutton}
+            onClick={handleNavMenu}
+            className={styles.navbutton}
           >
             <div className={styles.burger({ isNavOpen })} />
           </Rounded>

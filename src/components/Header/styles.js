@@ -12,14 +12,8 @@ const styles = {
     "items-center",
     "w-full"
   ),
-  headerButtonContainer: cn(
-    "fixed",
-    "transform",
-    "scale-0",
-    "right-0",
-    "z-[10]"
-  ),
-  openNavbutton: cn("m-5", "w-[80px]", "h-[80px]", "rounded-full", "bg-dark-400"),
+  navButtonContainer: cn("fixed", "transform", "scale-0", "right-0", "z-[10]"),
+  navbutton: cn("m-5", "w-[80px]", "h-[80px]", "rounded-full", "bg-dark-400"),
 
   burger: ({ isNavOpen }) =>
     cn(

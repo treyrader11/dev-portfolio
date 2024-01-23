@@ -4,7 +4,6 @@ const styles = {
   menu: cn(
     "h-screen",
     "bg-dark-500",
-    // bg-[#0f0f0f]",
     "fixed",
     "right-0",
     "top-0",
