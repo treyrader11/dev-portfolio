@@ -24,7 +24,8 @@ export default function Contact() {
       ref={container}
       className={styles.contact}
     >
-      <Container maxWidth={1800} classname={styles.container}>
+      {/* <Container maxWidth={1800} classname={styles.container}> */}
+      <div classname={styles.container}>
         <div className={styles.title}>
           <span className="flex items-center">
             <ProfilePicture src={profilePicture} />
@@ -87,7 +88,8 @@ export default function Contact() {
             </Magnetic>
           </div>
         </div>
-      </Container>
+      {/* </Container> */}
+      </div>
     </motion.div>
   );
 }

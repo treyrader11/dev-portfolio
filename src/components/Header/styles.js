@@ -6,6 +6,7 @@ const styles = {
     "flex",
     "z-[5]",
     "top-0",
+    "font-extralight",
     "text-white",
     "p-[35px]",
     "justify-between",

@@ -10,7 +10,7 @@ const styles = {
     "bg-dark",
     "relative"
   ),
-  container: cn("pt-[200px]", "w-full", "bg-dark"),
+  container: cn("pt-[200px]", "w-full", "bg-dark", "max-w-[1800px]"),
   title: cn(
     "border-b-[1px]",
     "border-light-300",
