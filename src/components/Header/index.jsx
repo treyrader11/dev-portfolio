@@ -1,13 +1,7 @@
 "use client";
 
 import styles from "./styles";
-import {
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
-  useCallback,
-} from "react";
+import { useRef, useState, useCallback } from "react";
 import { AnimatePresence } from "framer-motion";
 import gsap from "gsap";
 import ScrollTrigger from "gsap/dist/ScrollTrigger";
@@ -19,12 +13,16 @@ import useIsomorphicLayoutEffect from "@/hooks/useIsomorphicLayoutEffect";
 import ProfilePicture from "@/common/ProfilePicture";
 import profilePicture from "/public/images/portraits/headshot-sit-blackbg.png";
 import { cn } from "@/lib/utils";
-import Magnetic from "@/common/Magnetic";
+import { usePathname } from "next/navigation";
+import Link from "next/link";
 
 export default function Header() {
   const header = useRef(null);
   const [isNavOpen, setIsNavOpen] = useState(false);
   const button = useRef(null);
+  const path = usePathname();
+
+  const isHomePage = path === "/";
 
   const handleNavMenu = useCallback(() => {
     setIsNavOpen((prevIsNavOpen) => !prevIsNavOpen);
@@ -58,9 +56,20 @@ export default function Header() {
   return (
     <>
       <div ref={header} className={styles.header}>
-        <ProfilePicture isMagnetic src={profilePicture} height={80} width={80} />
-        <Logo className="pl-3 mr-auto" />
-        <NavMenu handleNavMenu={handleNavMenu} />
+        <ProfilePicture
+          isMagnetic
+          src={profilePicture}
+          height={80}
+          width={80}
+        />
+        <Link href="/" className={styles.logo(isHomePage)}>
+          <Logo />
+        </Link>
+
+        <NavMenu
+          handleNavMenu={handleNavMenu}
+          className={styles.navMenu(isHomePage)}
+        />
         <div ref={button} className={styles.navButtonContainer}>
           <Rounded
             onClick={handleNavMenu}

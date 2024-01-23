@@ -14,15 +14,33 @@
     src: url("../../public/fonts/AVGARDD_2.woff") format("woff");
   }
 
+  @font-face {
+    font-family: "Title";
+    src: url("../../public/fonts/Neglige.otf");
+  }
+
+  @font-face {
+    font-family: "Body";
+    src: url("../../public/fonts/NeueMontreal_Medium.otf");
+  }
+
   body {
     margin: 0px;
     /* overflow: hidden will hide scrollbars */
-    overflow: hidden; 
+    overflow: hidden;
     cursor: wait;
   }
 
   .custom-font {
     font-family: "Avant Garde Book BT";
+  }
+
+  .custom-font-title {
+    font-family: "Title";
+  }
+
+  .custom-font-body {
+    font-family: "Body";
   }
 
   .mask {

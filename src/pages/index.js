@@ -1,5 +1,4 @@
 import About from "@/components/About";
-import ProjectsOld from "@/components/ProjectsOld";
 import Contact from "@/components/Contact";
 import Preloader from "@/components/Preloader";
 import SlidingImages from "@/components/SlidingImages";
@@ -35,12 +34,9 @@ export default function Home() {
       <AnimatePresence mode="wait">
         {isLoading && <Preloader />}
       </AnimatePresence>
-      <Inner className="bg-red-400 " backgroundColor="">
+      <Inner className="" backgroundColor="#ec4e39">
         <Hero />
         <About />
-        {/* <div className="min-h-0">
-          <Projects />
-        </div> */}
         <Projects />
         <SlidingImages />
         <Contact />

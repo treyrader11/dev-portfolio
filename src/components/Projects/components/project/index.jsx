@@ -31,7 +31,6 @@ export default function Project({
   return (
     <div ref={container} className={cn(styles.container)}>
       <Card isFolderShaped color={color} scale={scale} index={index}>
-      {/* <Card color={color} scale={scale} index={index}> */}
         <h2 className={cn(styles.h2, "custom-font")}>{title}</h2>
         <div className={styles.body}>
           <div className={styles.description}>
@@ -62,12 +61,12 @@ export default function Project({
           <div className={styles.imageContainer}>
             <motion.div className={styles.inner} style={{ scale: imageScale }}>
               <Image
-                fill
+                fill={true}
                 src={`/projectImages/${src}`}
                 alt="image"
                 className="object-cover"
               />
-               {/* <img
+              {/* <img
                 src={`/projectImages/${src}`}
                 alt="image"
                 className="object-cover"

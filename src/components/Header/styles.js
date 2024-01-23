@@ -13,6 +13,9 @@ const styles = {
     "items-center",
     "w-full"
   ),
+  logo: (isHomePage) =>
+    cn("pl-3", "mr-auto", isHomePage ? "text-white" : "text-black"),
+  navMenu: (isHomePage) => cn(isHomePage ? "text-white" : "text-black"),
   navButtonContainer: cn(
     "fixed",
     "transform",

@@ -6,9 +6,9 @@ import { routes } from "../nav/routes";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 
-export default function NavMenu({ handleNavMenu }) {
+export default function NavMenu({ handleNavMenu, className }) {
   return (
-    <nav className={styles.nav}>
+    <nav className={cn(styles.nav, className)}>
       <div className="hidden sm:flex">
         {routes.map(({ label, href }) => (
           <Magnetic key={href}>
@@ -20,7 +20,10 @@ export default function NavMenu({ handleNavMenu }) {
         ))}
       </div>
       <Magnetic>
-        <div onClick={handleNavMenu} className={cn(styles.navItem, "sm:hidden")}>
+        <div
+          onClick={handleNavMenu}
+          className={cn(styles.navItem, "sm:hidden")}
+        >
           <Link href="#">Menu</Link>
           <div
             className={cn(

@@ -7,11 +7,11 @@ const styles = {
     "items-center",
     "justify-center",
     "sticky",
-    "top-0",
+    "top-0"
   ),
   h2: cn("text-[28px]", "m-0", "text-center"),
   body: cn("flex", "h-full", "mt-[50px]", "gap-[50px]"),
-  description: cn("relative", "w-[40%]", "top-[10%]"),
+  description: cn("relative", "w-[40%]", "top-[10%]", "custom-font-body"),
   imageContainer: cn(
     "relative",
     "w-[60%]",
@@ -19,7 +19,8 @@ const styles = {
     "rounded-[25px]",
     "overflow-hidden"
   ),
-  inner: cn("w-full", "h-full"),
+  // inner: cn("w-full", "h-full"),
+  inner: cn("w-full", "h-full", "relative"),
 };
 
 export default styles;
