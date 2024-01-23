@@ -38,7 +38,7 @@ export default function Home() {
       <Inner className="bg-red-400 " backgroundColor="">
         <Hero />
         <About />
-        {/* <div className="relative">
+        {/* <div className="min-h-0">
           <Projects />
         </div> */}
         <Projects />

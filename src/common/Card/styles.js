@@ -1,7 +1,7 @@
 import { cn } from "@/lib/utils";
 
 // When positioned absolute, height needs to be 70
-const beforeHeight = 70;
+const beforeHeight = 100;
 
 const styles = {
   card: (isFolderShaped) =>
@@ -14,6 +14,8 @@ const styles = {
       "max-w-[1500px]",
       "p-[50px]",
       "origin-top",
+      "border-3",
+      "border-red-500",
       isFolderShaped
         ? cn(
             "rounded-tr-3xl",
@@ -25,10 +27,9 @@ const styles = {
             "before:rounded-t-3xl",
             "before:bg-inherit",
             `before:top-[-${beforeHeight}px]`,
-            "before:left-0"
-            // "before:skew-y-[-6]",
+            "before:left-0",
           )
-        : "rounded-3xl"
+        : cn("rounded-3xl")
     ),
 };
 

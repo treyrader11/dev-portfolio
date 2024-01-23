@@ -8,7 +8,8 @@ const styles = {
     "right-0",
     "top-0",
     "text-white",
-    "z-[4]"
+    "z-[4]",
+    // "w-full",
   ),
   body: cn("h-full", "p-[100px]", "flex", "flex-col", "justify-between"),
   nav: cn("flex", "flex-col", "text-[56px]", "gap-[12px]", "mt-[80px]"),
