@@ -52,6 +52,7 @@ export default function SlidingImages() {
                   fill={true}
                   alt={"image"}
                   src={`/images/${project.src}`}
+                  priority={project.isPriority}
                 />
               </div>
             </div>
@@ -59,7 +60,7 @@ export default function SlidingImages() {
         })}
       </motion.div>
       <motion.div style={{ height }} className={styles.circleContainer}>
-        <div className={styles.circle}></div>
+        <div className={styles.circle} />
       </motion.div>
     </div>
   );
