@@ -10,16 +10,16 @@ module.exports = {
     extend: {
       colors: {
         dark: {
-          DEFAULT: "#141516",
+          DEFAULT: "#0f0f0f",
           400: "#1c1d20",
           500: "#141516",
           600: "#292929",
-          700: "#292929",
         },
         light: {
           100: "#999999",
           200: "#888888",
           300: "#868686",
+          400: "#afa18f",
         },
       },
       transitionTimingFunction: {

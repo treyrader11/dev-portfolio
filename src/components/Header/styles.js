@@ -17,9 +17,9 @@ const styles = {
     "transform",
     "scale-0",
     "right-0",
-    "z-[4]"
+    "z-[10]"
   ),
-  button: cn("m-5", "w-[80px]", "h-[80px]", "rounded-full", "bg-dark-400"),
+  openNavbutton: cn("m-5", "w-[80px]", "h-[80px]", "rounded-full", "bg-dark-400"),
 
   burger: ({ isNavOpen }) =>
     cn(

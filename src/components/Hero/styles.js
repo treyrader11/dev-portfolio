@@ -1,7 +1,7 @@
 import { cn } from "@/lib/utils";
 
 const styles = {
-  container: cn("h-screen", "bg-[#0f0f0f]", "custom-font", "relative"),
+  container: cn("h-screen", "bg-dark", "custom-font", "relative"),
   mask: cn(
     "w-full",
     "h-full",
@@ -16,7 +16,7 @@ const styles = {
     "h-full",
     "flex",
     "items-center",
-    "text-[#afa18f]",
+    "text-light-400",
     "text-[64px]",
     "leading-[66px]"
   ),

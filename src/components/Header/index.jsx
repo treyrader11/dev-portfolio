@@ -1,7 +1,7 @@
 "use client";
 
 import styles from "./styles";
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useEffect, useLayoutEffect, useRef, useState, useCallback } from "react";
 import { usePathname } from "next/navigation";
 import { AnimatePresence } from "framer-motion";
 import gsap from "gsap";
@@ -19,6 +19,10 @@ export default function Header() {
   const [isNavOpen, setIsNavOpen] = useState(false);
   const pathname = usePathname();
   const button = useRef(null);
+
+  // useEffect(() => {
+  //   if (isNavOpen) setIsNavOpen(false);
+  // }, [pathname]);
 
   const openNav = useCallback(() => {
     setIsNavOpen((prevIsNavOpen) => !prevIsNavOpen);
@@ -49,7 +53,9 @@ export default function Header() {
   //   });
   // }, []);
 
-  useEffect(() => {
+
+
+  useLayoutEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
     gsap.to(button.current, {
       scrollTrigger: {
@@ -72,7 +78,7 @@ export default function Header() {
         },
       },
     });
-  }, [openNav]);
+  }, []);
 
   return (
     <>
@@ -81,7 +87,13 @@ export default function Header() {
         <Logo className="pl-3 mr-auto" />
         <NavMenu />
         <div ref={button} className={styles.headerButtonContainer}>
-          <Rounded onClick={openNav} className={styles.button}>
+          <Rounded
+            onClick={openNav}
+            // onClick={() => {
+            //   setIsNavOpen(!isNavOpen);
+            // }}
+            className={styles.openNavbutton}
+          >
             <div className={styles.burger({ isNavOpen })} />
           </Rounded>
         </div>
