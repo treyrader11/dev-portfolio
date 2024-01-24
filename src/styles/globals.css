@@ -26,7 +26,6 @@
 
   body {
     margin: 0px;
-    /* overflow: hidden will hide scrollbars */
     overflow: hidden;
     cursor: wait;
   }
@@ -44,43 +43,37 @@
   }
 
   .mask {
-    /* @apply absolute; */
     mask-image: url("../../public/mask.svg");
     mask-repeat: no-repeat;
     mask-size: 40px;
-    background: #ec4e39;
+    /* background: #EC85FF; */
     /* background: "#A953D7"; */
-
-    /* background: #934E00; */
+    background: #934E00;
     position: absolute;
-    color: black;
+    color: white;
   }
 
-
-
-
-  /* test later */
   .folder-shape {
     display: flex;
     flex-direction: column;
     position: relative;
-    top: -25%;
+    /* top: -25%; */
     height: 500px;
     width: 1000px;
     border-radius: 0 25px 25px 25px;
     padding: 50px;
     transform-origin: top;
+    /* overflow-y: clip; */
   }
 
   .folder-shape::before {
     content: "";
     width: 50%;
-    height: 100px;
+    height: 60px;
     border-radius: 25px 25px 0 0;
-    /* background-color: inherit; */
-    background-color: yellow;
+    background: inherit; 
     position: absolute;
-    top: -100px;
+    top: -50px;
     left: 0px;
   }
 }

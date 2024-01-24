@@ -38,8 +38,8 @@ export default function Hero() {
       <div className={styles.body}>
         <p className={styles.p}>
           I&lsquo;m a{" "}
-          <span className="text-[#ec4e39]">selectively skilled</span> web
-          developer with a strong focus on producing quality & impactful digital
+          <span className="text-[#A953D7]">selectively skilled</span> web
+          developer with a strong focus on delivering quality & impactful digital
           experiences.
         </p>
       </div>

@@ -20,6 +20,7 @@ const styles = {
   ),
   buttonText: cn("m-0", "text-[16px]", "font-light", "relative", "z-[1]"),
   p: cn("m-0"),
+  descriptionNew: cn("relative", "text-[3vw]", "uppercase", "ml-[10vw]"),
 };
 
 export default styles;

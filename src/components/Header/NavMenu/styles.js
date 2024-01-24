@@ -9,7 +9,7 @@ const styles = {
     "relative",
     "z-[1]",
     "p-[15px]",
-    "cursor-pointer",
+    // "hover:text-[#A953D7]"
   ),
   indicator: cn(
     "top-[45px]",

@@ -38,8 +38,7 @@ export default function Project({
           top: `calc(-5vh + ${index * 25}px)`,
         }}
         className={cn(
-          styles.card(isFolderShaped, 100),
-          isFolderShaped ? "folder-shape" : ""
+          isFolderShaped ? "folder-shape" : styles.card(isFolderShaped, 100)
         )}
       >
         <h2 className={cn(styles.h2, "custom-font")}>{title}</h2>
