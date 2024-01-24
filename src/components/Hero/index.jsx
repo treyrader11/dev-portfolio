@@ -30,16 +30,15 @@ export default function Hero() {
           }}
           className={cn(styles.p)}
         >
-          {/* A web developer with 7 years of professional experience, making good
-          shit only if the paycheck is equally good. */}
-          Developing the web for<span className="text-light-400"> 7 years</span> and
-          making good shit only if the paycheck is equally good.
+          Developing the web for<span className="text-light-400"> 7 years</span>{" "}
+          and making good shit only if the paycheck is equally good.
         </p>
       </motion.div>
 
       <div className={styles.body}>
         <p className={styles.p}>
-          I&lsquo;m a <span className="text-[#ec4e39]">selectively skilled</span> web
+          I&lsquo;m a{" "}
+          <span className="text-[#ec4e39]">selectively skilled</span> web
           developer with a strong focus on producing quality & impactful digital
           experiences.
         </p>

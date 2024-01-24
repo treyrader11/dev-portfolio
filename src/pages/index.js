@@ -34,7 +34,7 @@ export default function Home() {
       <AnimatePresence mode="wait">
         {isLoading && <Preloader />}
       </AnimatePresence>
-      <Inner className="" backgroundColor="#ec4e39">
+      <Inner backgroundColor="#ec4e39">
         <Hero />
         <About />
         <Projects />

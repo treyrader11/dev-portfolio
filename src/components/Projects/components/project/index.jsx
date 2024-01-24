@@ -31,14 +31,16 @@ export default function Project({
 
   return (
     <div ref={container} className={cn(styles.container)}>
-      {/* <Card isFolderShaped color={color} scale={scale} index={index}> */}
       <motion.div
         style={{
           backgroundColor: color,
           scale,
           top: `calc(-5vh + ${index * 25}px)`,
         }}
-        className={cn(styles.card(isFolderShaped, 100))}
+        className={cn(
+          styles.card(isFolderShaped, 100),
+          isFolderShaped ? "folder-shape" : ""
+        )}
       >
         <h2 className={cn(styles.h2, "custom-font")}>{title}</h2>
         <div className={styles.body}>
@@ -71,16 +73,15 @@ export default function Project({
             <motion.div className={styles.inner} style={{ scale: imageScale }}>
               <Image
                 fill
-                src={`/images/${src}`}
+                src={`/shots/${src}`}
                 alt="image"
-                className="object-cover"
-                sizes={{}}
+                className="object-cover lg:object"
+                sizes="(max-width: 900) 50vw" //figure this out
               />
             </motion.div>
           </div>
         </div>
       </motion.div>
-      {/* </Card> */}
     </div>
   );
 }
