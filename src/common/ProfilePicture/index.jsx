@@ -10,39 +10,31 @@ export default function ProfilePicture({
   width = 100,
   isMagnetic = false,
 }) {
-  if (isMagnetic) {
-    return (
-      <Magnetic>
-        <div
-          className={cn(styles.container, className)}
-          style={{ height, width }}
-        >
-          <Image
-            priority
-            fill
-            alt={"image"}
-            src={src}
-            className="object-cover"
-            sizes={{}}
-          />
-        </div>
-      </Magnetic>
-    );
-  } else {
-    return (
-      <div
-        className={cn(styles.container, className)}
-        style={{ height, width }}
-      >
-        <Image
-          fill={true}
-          priority
-          alt={"image"}
-          src={src}
-          className="object-cover"
-          sizes={{}}
-        />
+  const containerProps = {
+    className: cn(styles.container, className),
+    style: { height, width },
+  };
+
+  const imageProps = {
+    fill: true,
+    priority: true,
+    alt: "image",
+    src,
+    className: "object-cover",
+    sizes: {},
+  };
+
+  const content = isMagnetic ? (
+    <Magnetic>
+      <div {...containerProps}>
+        <Image {...imageProps} />
       </div>
-    );
-  }
+    </Magnetic>
+  ) : (
+    <div {...containerProps}>
+      <Image {...imageProps} />
+    </div>
+  );
+
+  return content;
 }
