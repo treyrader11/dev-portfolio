@@ -71,7 +71,7 @@ export default function Project({
             <motion.div className={styles.inner} style={{ scale: imageScale }}>
               <Image
                 fill
-                src={`/projectImages/${src}`}
+                src={`/images/${src}`}
                 alt="image"
                 className="object-cover"
                 sizes={{}}
