@@ -125,7 +125,7 @@ export default function About() {
 function AnimatedText({ children }) {
   const text = useRef(null);
 
-  // useLayoutEffect(() => {
+  // useIsomorphicLayoutEffect(() => {
   //   gsap.registerPlugin(ScrollTrigger);
   //   gsap.from(text.current, {
   //     scrollTrigger: {
@@ -141,7 +141,7 @@ function AnimatedText({ children }) {
   //   });
   // }, []);
 
-  useIsomorphicLayoutEffect(() => {
+  useLayoutEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
     gsap.from(text.current, {
       scrollTrigger: {
@@ -151,8 +151,8 @@ function AnimatedText({ children }) {
         end: "bottom+=400px bottom",
       },
       opacity: 0,
-      // left: "-200px",
-      left: "-100px",
+      left: "-200px",
+      // left: "-100px",
       ease: "power3.Out",
     });
   }, []);

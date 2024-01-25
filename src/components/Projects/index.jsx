@@ -40,7 +40,7 @@ export default function Projects() {
             progress={scrollYProgress}
             range={[index * 0.25, 1]}
             targetScale={targetScale}
-            isFolderShaped
+            // isFolderShaped
           />
         );
       })}

@@ -31,9 +31,9 @@ export default function Home() {
 
   return (
     <main className={inter.className}>
-      <AnimatePresence mode="wait">
+      {/* <AnimatePresence mode="wait">
         {isLoading && <Preloader />}
-      </AnimatePresence>
+      </AnimatePresence> */}
       <Inner backgroundColor="#ec4e39">
         <Hero />
         <About />

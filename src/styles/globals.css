@@ -48,6 +48,7 @@
     mask-size: 40px;
     /* background: #EC85FF; */
     /* background: "#A953D7"; */
+    z-index: 1;
     background: #934E00;
     position: absolute;
     color: white;
