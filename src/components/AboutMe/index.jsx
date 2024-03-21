@@ -113,8 +113,8 @@ export default function AboutMe() {
                 Job Opportunities
               </h1>
               <p className="mt-4 text-lg text-gray-500 dark:text-gray-300">
-                I&apos;m looking for a job currently, If you see me as a good fit,
-                check my{" "}
+                I&apos;m looking for a job currently, If you see me as a good
+                fit, check my{" "}
                 <a
                   href={userData.resumeUrl}
                   target="__blank"
@@ -270,68 +270,92 @@ export default function AboutMe() {
             >
               Tech Stack
             </h1>
-            <div className="flex flex-row flex-wrap mt-8">
+            {/* <div className="flex flex-row flex-wrap mt-8">
               <Image
                 src="https://raw.githubusercontent.com/github/explore/80688e429a7d4ef2fca1e82350fe8e3517d3494d/topics/javascript/javascript.png"
                 className="w-20 h-20 mx-4 my-4"
                 alt=""
+                width={50}
+                height={50}
               />
               <Image
                 src="https://raw.githubusercontent.com/github/explore/80688e429a7d4ef2fca1e82350fe8e3517d3494d/topics/java/java.png"
                 className="w-20 h-20 mx-4 my-4"
                 alt=""
+                width={50}
+                height={50}
               />
               <Image
                 src="https://raw.githubusercontent.com/github/explore/80688e429a7d4ef2fca1e82350fe8e3517d3494d/topics/typescript/typescript.png"
                 className="w-20 h-20 mx-4 my-4"
                 alt=""
+                width={50}
+                height={50}
               />
               <Image
                 src="https://raw.githubusercontent.com/github/explore/80688e429a7d4ef2fca1e82350fe8e3517d3494d/topics/html/html.png"
                 className="w-20 h-20 mx-4 my-4"
                 alt=""
+                width={50}
+                height={50}
               />
               <Image
                 src="https://raw.githubusercontent.com/github/explore/80688e429a7d4ef2fca1e82350fe8e3517d3494d/topics/css/css.png"
                 className="w-20 h-20 mx-4 my-4"
                 alt=""
+                width={50}
+                height={50}
               />
               <Image
                 src="https://raw.githubusercontent.com/github/explore/80688e429a7d4ef2fca1e82350fe8e3517d3494d/topics/angular/angular.png"
                 className="w-20 h-20 mx-4 my-4"
                 alt=""
+                width={50}
+                height={50}
               />
               <Image
                 src="https://raw.githubusercontent.com/github/explore/80688e429a7d4ef2fca1e82350fe8e3517d3494d/topics/vue/vue.png"
                 className="w-20 h-20 mx-4 my-4"
                 alt=""
+                width={50}
+                height={50}
               />
               <Image
                 src="https://raw.githubusercontent.com/github/explore/80688e429a7d4ef2fca1e82350fe8e3517d3494d/topics/git/git.png"
                 className="w-20 h-20 mx-4 my-4"
                 alt=""
+                width={50}
+                height={50}
               />
               <Image
                 src="https://raw.githubusercontent.com/github/explore/80688e429a7d4ef2fca1e82350fe8e3517d3494d/topics/react/react.png"
                 className="w-20 h-20 mx-4 my-4"
                 alt=""
+                width={50}
+                height={50}
               />
               <Image
                 src="https://raw.githubusercontent.com/github/explore/80688e429a7d4ef2fca1e82350fe8e3517d3494d/topics/firebase/firebase.png"
                 className="w-20 h-20 mx-4 my-4"
                 alt=""
+                width={50}
+                height={50}
               />
               <Image
                 src="https://raw.githubusercontent.com/github/explore/80688e429a7d4ef2fca1e82350fe8e3517d3494d/topics/mysql/mysql.png"
                 className="w-20 h-20 mx-4 my-4"
                 alt=""
+                width={50}
+                height={50}
               />
               <Image
                 src="https://raw.githubusercontent.com/github/explore/80688e429a7d4ef2fca1e82350fe8e3517d3494d/topics/mongodb/mongodb.png"
                 className="w-20 h-20 mx-4 my-4"
                 alt=""
+                width={50}
+                height={50}
               />
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

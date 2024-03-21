@@ -1,6 +1,10 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  reactStrictMode: true,
-}
+  // reactStrictMode: true,
+  // images: {
+  //   remotePatterns: [`raw.githubusercontent.com`]
+  //   domains: ["raw.githubusercontent.com"],
+  // },
+};
 
-module.exports = nextConfig
+module.exports = nextConfig;
