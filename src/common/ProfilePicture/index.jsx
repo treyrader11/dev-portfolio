@@ -32,7 +32,7 @@ export default function ProfilePicture({
     </Magnetic>
   ) : (
     <div {...containerProps}>
-      <Image {...imageProps} />
+      <Image alt="profile picture of Trey" {...imageProps} />
     </div>
   );
 

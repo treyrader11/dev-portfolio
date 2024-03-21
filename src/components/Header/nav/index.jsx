@@ -7,8 +7,9 @@ import { menuSlide } from "../anim";
 import Link from "./Link";
 import Curve from "./Curve";
 import Footer from "./Footer";
-import styles from "./styles";
 import { routes } from "./routes";
+import GithubCornerBadge from "@/components/GithubCornerBadge";
+import { cn } from "@/lib/utils";
 
 export default function Nav() {
   const pathname = usePathname();
@@ -20,16 +21,44 @@ export default function Nav() {
       initial="initial"
       animate="enter"
       exit="exit"
-      className={styles.menu}
+      className={cn(
+        "h-screen",
+        "bg-dark-500",
+        "fixed",
+        "inset-x-0",
+        "text-white",
+        "z-[4]",
+        "md:left-[calc(100vw-414px)]"
+      )}
     >
-      <div className={styles.body}>
+      <GithubCornerBadge />
+      <div
+        className={cn(
+          "h-full",
+          "py-[100px]",
+          "items-center",
+          "flex",
+          "flex-col",
+          "justify-between"
+        )}
+      >
         <div
           onMouseLeave={() => {
             setSelectedIndicator(pathname);
           }}
-          className={styles.nav}
+          className={cn("flex", "flex-col", "text-6xl", "gap-5", "mt-[80px]")}
         >
-          <div className={styles.header}>
+          <div
+            className={cn(
+              "text-light-100",
+              "border-b",
+              "border-light-300/50",
+              "uppercase",
+              "text-xs",
+              "mb-10",
+              "w-full"
+            )}
+          >
             <p>Navigation</p>
           </div>
           {routes.map((routes, index) => {
@@ -39,7 +68,7 @@ export default function Nav() {
                 data={{ ...routes, index }}
                 isActive={selectedIndicator == routes.href}
                 setSelectedIndicator={setSelectedIndicator}
-                className={styles.link}
+                className={cn("no-underline", "text-white", "font-light")}
               />
             );
           })}

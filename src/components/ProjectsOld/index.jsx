@@ -91,7 +91,7 @@ export default function Projects() {
       }}
       className={styles.projects}
     >
-      <Container maxWidth={1400} classname={styles.container}>
+      <div classname={cn(styles.container, "max-w-[1400]")}>
         {projects.map((project, index) => {
           return (
             <Project
@@ -102,7 +102,7 @@ export default function Projects() {
             />
           );
         })}
-      </Container>
+      </div>
       <Rounded>
         <p className={styles.p}>More work</p>
       </Rounded>

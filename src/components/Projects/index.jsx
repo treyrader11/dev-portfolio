@@ -3,7 +3,7 @@
 import { useScroll } from "framer-motion";
 import { useEffect, useRef } from "react";
 import Lenis from "@studio-freight/lenis";
-import { projects } from "./projects";
+import { projects } from "./projects.data";
 import Project from "./components/Project";
 
 export default function Projects() {

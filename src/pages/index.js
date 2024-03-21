@@ -1,4 +1,4 @@
-import About from "@/components/About";
+import Description from "@/components/Description";
 import Contact from "@/components/Contact";
 import Preloader from "@/components/Preloader";
 import SlidingImages from "@/components/SlidingImages";
@@ -14,7 +14,7 @@ import Hero from "@/components/Hero";
 const inter = Inter({ subsets: ["latin"] });
 
 export default function Home() {
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -25,22 +25,26 @@ export default function Home() {
         setIsLoading(false);
         document.body.style.cursor = "default";
         window.scrollTo(0, 0);
-      }, 2000);
+        // }, 2000);
+      }, 800);
     })();
   }, []);
 
   return (
     <main className={inter.className}>
-      {/* <AnimatePresence mode="wait">
-        {isLoading && <Preloader />}
-      </AnimatePresence> */}
-      <Inner backgroundColor="#ec4e39">
-        <Hero />
-        <About />
-        <Projects />
-        <SlidingImages />
-        <Contact />
-      </Inner>
+      <AnimatePresence mode="wait">
+        {isLoading ? (
+          <Preloader />
+        ) : (
+          <Inner backgroundColor="#934E00">
+            <Hero isLoading={isLoading} />
+            <Description />
+            <Projects />
+            <SlidingImages />
+            <Contact />
+          </Inner>
+        )}
+      </AnimatePresence>
     </main>
   );
 }

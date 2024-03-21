@@ -7,12 +7,14 @@ import styles from "./styles";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import Card from "@/common/Card";
+import Carousel from "@/components/Carousel";
 
 export default function Project({
   index,
   title,
   description,
-  src,
+  // src,
+  shots,
   url,
   color,
   progress,
@@ -28,6 +30,11 @@ export default function Project({
 
   const imageScale = useTransform(scrollYProgress, [0, 1], [2, 1]);
   const scale = useTransform(progress, range, [1, targetScale]);
+
+  const shotsWithScale = shots.map((shot) => ({
+    ...shot,
+    // scale: imageScale,
+  }));
 
   return (
     <div ref={container} className={cn(styles.container)}>
@@ -68,7 +75,7 @@ export default function Project({
             </span>
           </div>
 
-          <div className={styles.imageContainer}>
+          {/* <div className={styles.imageContainer}>
             <motion.div className={styles.inner} style={{ scale: imageScale }}>
               <Image
                 fill
@@ -78,9 +85,61 @@ export default function Project({
                 sizes="(max-width: 900) 50vw" //figure this out
               />
             </motion.div>
-          </div>
+          </div> */}
+          {/* <Carousel items={[...shots, { scale: imageScale }]} /> */}
+          <Carousel items={shots} />
+          {/* {shots.map((shot, index) => (
+            <ProjectShot key={index} src={shot.src} />
+          ))} */}
         </div>
       </motion.div>
+    </div>
+  );
+}
+
+export function ProjectShot({
+  src,
+  width = 350,
+  height = 350,
+  marginRight = 30,
+}) {
+  console.log("src", src);
+
+  return (
+    // <div
+    // className="border border-red-500 overflow-clip"
+    //   style={{
+    //     width,
+    //     // minWidth: width,
+    //     height,
+    //     marginRight,
+    //     // backgroundImage: `url(${imageUrl})`,
+    //     // backgroundPosition: "center",
+    //     // backgroundSize: "cover",
+    //   }}
+    // >
+    <div className={cn("w-[200px]")}>
+      <div
+        className="w-full border border-red-500 "
+        style={{
+          width,
+          height,
+          marginRight,
+        }}
+      >
+        {/* <motion.div className={styles.inner} style={{ scale }}> */}
+        <motion.div className={styles.inner}>
+          <Image
+            fill
+            // width={500}
+            // height={500}
+            src={`/shots/${src}`}
+            alt="image"
+            className="object-cover lg:object"
+            sizes="(max-width: 900) 50vw"
+          />
+        </motion.div>
+      </div>
     </div>
   );
 }
