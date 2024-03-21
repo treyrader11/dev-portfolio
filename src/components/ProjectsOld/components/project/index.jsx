@@ -1,6 +1,6 @@
 "use client";
 
-import styles from "./styles";
+import styles from "../../styles";
 
 export default function Project({ index, title, manageModal }) {
   return (
