@@ -28,10 +28,12 @@ export default function Projects() {
   return (
     <section
       ref={container}
-      className="relative mt-[20vh] z-[2] px-2"
+      // className="relative mt-[20vh] z-[2] px-2"
+      className="relative z-[2] px-2 w-screen"
     >
       {projects.map((project, index) => {
         const targetScale = 1 - (projects.length - index) * 0.05;
+        
         return (
           <Project
             key={`p_${index}`}

@@ -8,9 +8,9 @@ export default function About() {
     // <Curve backgroundColor={"#BCF366"}>
     <Inner className="">
       
-      <ContainerBlock>
+      {/* <ContainerBlock> */}
         <AboutMe />
-      </ContainerBlock>
+      {/* </ContainerBlock> */}
     </Inner>
   );
 }

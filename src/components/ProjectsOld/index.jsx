@@ -8,7 +8,7 @@ import Rounded from "@/common/Rounded";
 import Container from "@/common/Container";
 import styles from "./styles";
 import { cn } from "@/lib/utils";
-import Project from "./components/project";
+import Project from "./components/Project";
 import { projects } from "./projects";
 
 const scaleAnimation = {
