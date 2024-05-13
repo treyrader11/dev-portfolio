@@ -6,7 +6,7 @@ import Lenis from "@studio-freight/lenis";
 import { projects } from "./projects.data";
 import Project from "./components/Project";
 
-export default function Projects() {
+export default function HomeProjects() {
   const container = useRef(null);
 
   const { scrollYProgress } = useScroll({
