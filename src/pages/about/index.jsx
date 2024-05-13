@@ -6,7 +6,7 @@ import AboutMe from "@/components/AboutMe";
 export default function About() {
   return (
     // <Curve backgroundColor={"#BCF366"}>
-    <Inner className="">
+    <Inner className="#934E00">
       
       {/* <ContainerBlock> */}
         <AboutMe />

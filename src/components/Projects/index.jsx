@@ -33,7 +33,7 @@ export default function Projects() {
     >
       {projects.map((project, index) => {
         const targetScale = 1 - (projects.length - index) * 0.05;
-        
+
         return (
           <Project
             key={`p_${index}`}

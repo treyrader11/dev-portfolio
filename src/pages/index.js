@@ -37,13 +37,15 @@ export default function Home() {
         {isLoading ? (
           <Preloader />
         ) : (
-          <Inner backgroundColor="#934E00">
+          // <Inner backgroundColor="#934E00">
+          <>
             <Hero isLoading={isLoading} />
             <Description />
             <Projects />
             <SlidingImages />
             <Contact />
-          </Inner>
+          </>
+          // </Inner>
         )}
       </AnimatePresence>
     </main>
