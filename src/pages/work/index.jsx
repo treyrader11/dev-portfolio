@@ -3,9 +3,9 @@ import Inner from "@/components/Layout/Inner";
 
 export default function Work() {
   return (
-    <Inner className="bg-red-400">
+    <Inner backgroundColor="#934E00">
       <h1>Work</h1>
-      <section className={""}>
+      <section className={"text-white"}>
         <p>
           Nullam mattis mattis dictum. Praesent sit amet condimentum mi, quis
           venenatis lectus. Phasellus ac ante id purus viverra hendrerit quis at

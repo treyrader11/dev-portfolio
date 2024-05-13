@@ -34,20 +34,15 @@ export default function Home() {
   return (
     <main className={cn(inter.className, "overflow-clip")}>
       <AnimatePresence mode="wait">
-        {isLoading ? (
-          <Preloader />
-        ) : (
-          // <Inner backgroundColor="#934E00">
-          <>
-            <Hero isLoading={isLoading} />
-            <Description />
-            <Projects />
-            <SlidingImages />
-            <Contact />
-          </>
-          // </Inner>
-        )}
+        {isLoading && <Preloader />}
       </AnimatePresence>
+      <Inner backgroundColor="#934E00">
+        <Hero isLoading={isLoading} />
+        <Description />
+        <Projects />
+        <SlidingImages />
+        <Contact />
+      </Inner>
     </main>
   );
 }

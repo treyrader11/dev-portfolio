@@ -4,9 +4,9 @@ import Inner from "@/components/Layout/Inner";
 export default function Contact() {
   return (
     // <Curve backgroundColor={"#BCF366"} className="">
-    <Inner className="bg-red-500">
+    <Inner backgroundColor="#934E00">
       <h1>About</h1>
-      <section className={""}>
+      <section className={"text-white"}>
         <p>
           Nullam mattis mattis dictum. Praesent sit amet condimentum mi, quis
           venenatis lectus. Phasellus ac ante id purus viverra hendrerit quis at
