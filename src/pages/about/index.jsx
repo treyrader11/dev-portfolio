@@ -5,11 +5,9 @@ import AboutMe from "@/components/AboutMe";
 
 export default function About() {
   return (
-    // <Curve backgroundColor={"#BCF366"}>
     <Inner backgroundColor="#934E00">
-      
       {/* <ContainerBlock> */}
-        <AboutMe />
+      <AboutMe />
       {/* </ContainerBlock> */}
     </Inner>
   );

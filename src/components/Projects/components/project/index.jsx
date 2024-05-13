@@ -64,11 +64,9 @@ export function ProjectShot({
           marginRight,
         }}
       >
-        <motion.div className={cn("size-full")}>
+        <motion.div className="size-full">
           <Image
             fill
-            // width={500}
-            // height={500}
             src={`/shots/${src}`}
             alt="image"
             className="object-cover lg:object"
