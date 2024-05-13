@@ -64,7 +64,10 @@ export function ProjectCard({ title, link, imgUrl, number }) {
         <div className="object-cover h-72">
           <Image
             src={imgUrl}
-            alt="portfolio"
+            width={100}
+            height={100}
+            // sizes={}
+            alt="portfolio poster"
             className={cn(
               "object-cover",
               "w-full",

@@ -4,7 +4,7 @@ import { useScroll } from "framer-motion";
 import { useEffect, useRef } from "react";
 import Lenis from "@studio-freight/lenis";
 import { projects } from "./projects.data";
-import Project from "./components/Project";
+import ProjectShot from "./components/Project";
 
 export default function HomeProjects() {
   const container = useRef(null);
@@ -31,7 +31,7 @@ export default function HomeProjects() {
         const targetScale = 1 - (projects.length - index) * 0.05;
 
         return (
-          <Project
+          <ProjectShot
             key={`p_${index}`}
             index={index}
             {...project}

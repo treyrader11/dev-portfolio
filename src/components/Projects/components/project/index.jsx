@@ -5,7 +5,7 @@ import { useTransform, motion, useScroll } from "framer-motion";
 import { useRef } from "react";
 import { cn } from "@/lib/utils";
 
-export default function Project({
+export default function ProjectShot({
   index,
   title,
   description,
@@ -48,12 +48,7 @@ export default function Project({
   );
 }
 
-export function ProjectShot({
-  src,
-  width = 350,
-  height = 350,
-  marginRight = 30,
-}) {
+export function Shot({ src, width = 350, height = 350, marginRight = 30 }) {
   return (
     <div className={cn("w-[200px]")}>
       <div

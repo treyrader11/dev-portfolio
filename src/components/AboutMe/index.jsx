@@ -1,9 +1,5 @@
-"use client";
-
 import userData from "@/constants/data";
 import { cn } from "@/lib/utils";
-import Image from "next/image";
-import React from "react";
 
 export default function AboutMe() {
   return (
@@ -188,9 +184,18 @@ export default function AboutMe() {
                   <div className="relative overflow-hidden font-mono text-lg text-gray-500 dark:text-gray-300">
                     <div
                       className={cn(
-                        "absolute h-0.5 w-full bg-gray-400 bottom-0 transform -translate-x-24 group-hover:translate-x-0 transition duration-300"
+                        "absolute",
+                        "h-0.5",
+                        "w-full",
+                        "bg-gray-400",
+                        "bottom-0",
+                        "transform",
+                        "-translate-x-24",
+                        "group-hover:translate-x-0",
+                        "transition",
+                        "duration-300"
                       )}
-                    ></div>
+                    />
                     Facebook
                   </div>
                 </a>
@@ -201,8 +206,16 @@ export default function AboutMe() {
                   className="flex flex-row items-center space-x-4 group"
                 >
                   <div className="my-4">&rarr;</div>
-                  <div className="relative overflow-hidden font-mono text-lg text-gray-500 dark:text-gray-300">
-                    <div className="absolute h-0.5 w-full bg-gray-400 bottom-0 transform -translate-x-24 group-hover:translate-x-0 transition duration-300"></div>
+                  <div
+                    className={cn(
+                      "relative overflow-hidden font-mono text-lg text-gray-500 dark:text-gray-300"
+                    )}
+                  >
+                    <div
+                      className={cn(
+                        "absolute h-0.5 w-full bg-gray-400 bottom-0 transform -translate-x-24 group-hover:translate-x-0 transition duration-300"
+                      )}
+                    />
                     Twitter
                   </div>
                 </a>
@@ -214,7 +227,11 @@ export default function AboutMe() {
                 >
                   <div className="my-4">&rarr;</div>
                   <div className="relative overflow-hidden font-mono text-lg text-gray-500 dark:text-gray-300">
-                    <div className="absolute h-0.5 w-full bg-gray-400 bottom-0 transform -translate-x-24 group-hover:translate-x-0 transition duration-300"></div>
+                    <div
+                      className={cn(
+                        "absolute h-0.5 w-full bg-gray-400 bottom-0 transform -translate-x-24 group-hover:translate-x-0 transition duration-300"
+                      )}
+                    />
                     GitHub
                   </div>
                 </a>
@@ -226,7 +243,19 @@ export default function AboutMe() {
                 >
                   <div className="my-4">&rarr;</div>
                   <div className="relative overflow-hidden font-mono text-lg text-gray-500 dark:text-gray-300">
-                    <div className="absolute h-0.5 w-full bg-gray-400 bottom-0 transform -translate-x-24 group-hover:translate-x-0 transition duration-300"></div>
+                    <div
+                      className={cn(
+                        "absolute",
+                        "h-0.5",
+                        "w-full",
+                        "bg-gray-400",
+                        "bottom-0",
+                        "transform",
+                        "-translate-x-24",
+                        "group-hover:translate-x-0",
+                        "transition duration-300"
+                      )}
+                    />
                     LinkedIn
                   </div>
                 </a>
@@ -237,8 +266,30 @@ export default function AboutMe() {
                   className="flex flex-row items-center space-x-4 group"
                 >
                   <div className="my-4">&rarr;</div>
-                  <div className="relative overflow-hidden font-mono text-lg text-gray-500 dark:text-gray-300">
-                    <div className="absolute h-0.5 w-full bg-gray-400 bottom-0 transform -translate-x-28 group-hover:translate-x-0 transition duration-300"></div>
+                  <div
+                    className={cn(
+                      "relative",
+                      "overflow-hidden",
+                      "font-mono",
+                      "text-lg",
+                      "text-gray-500",
+                      "dark:text-gray-300"
+                    )}
+                  >
+                    <div
+                      className={cn(
+                        "absolute",
+                        "h-0.5",
+                        "w-full",
+                        "bg-gray-400",
+                        "bottom-0",
+                        "transform",
+                        "-translate-x-28",
+                        "group-hover:translate-x-0",
+                        "transition",
+                        "duration-300"
+                      )}
+                    />
                     Instagram
                   </div>
                 </a>
@@ -250,7 +301,7 @@ export default function AboutMe() {
             {userData.about.description?.map((desc, idx) => (
               <p
                 key={idx}
-                className="mb-4 text-xl text-gray-700 dark:text-gray-300 "
+                className="mb-4 text-xl text-gray-700 dark:text-gray-300"
               >
                 {desc}
               </p>
@@ -270,92 +321,6 @@ export default function AboutMe() {
             >
               Tech Stack
             </h1>
-            {/* <div className="flex flex-row flex-wrap mt-8">
-              <Image
-                src="https://raw.githubusercontent.com/github/explore/80688e429a7d4ef2fca1e82350fe8e3517d3494d/topics/javascript/javascript.png"
-                className="w-20 h-20 mx-4 my-4"
-                alt=""
-                width={50}
-                height={50}
-              />
-              <Image
-                src="https://raw.githubusercontent.com/github/explore/80688e429a7d4ef2fca1e82350fe8e3517d3494d/topics/java/java.png"
-                className="w-20 h-20 mx-4 my-4"
-                alt=""
-                width={50}
-                height={50}
-              />
-              <Image
-                src="https://raw.githubusercontent.com/github/explore/80688e429a7d4ef2fca1e82350fe8e3517d3494d/topics/typescript/typescript.png"
-                className="w-20 h-20 mx-4 my-4"
-                alt=""
-                width={50}
-                height={50}
-              />
-              <Image
-                src="https://raw.githubusercontent.com/github/explore/80688e429a7d4ef2fca1e82350fe8e3517d3494d/topics/html/html.png"
-                className="w-20 h-20 mx-4 my-4"
-                alt=""
-                width={50}
-                height={50}
-              />
-              <Image
-                src="https://raw.githubusercontent.com/github/explore/80688e429a7d4ef2fca1e82350fe8e3517d3494d/topics/css/css.png"
-                className="w-20 h-20 mx-4 my-4"
-                alt=""
-                width={50}
-                height={50}
-              />
-              <Image
-                src="https://raw.githubusercontent.com/github/explore/80688e429a7d4ef2fca1e82350fe8e3517d3494d/topics/angular/angular.png"
-                className="w-20 h-20 mx-4 my-4"
-                alt=""
-                width={50}
-                height={50}
-              />
-              <Image
-                src="https://raw.githubusercontent.com/github/explore/80688e429a7d4ef2fca1e82350fe8e3517d3494d/topics/vue/vue.png"
-                className="w-20 h-20 mx-4 my-4"
-                alt=""
-                width={50}
-                height={50}
-              />
-              <Image
-                src="https://raw.githubusercontent.com/github/explore/80688e429a7d4ef2fca1e82350fe8e3517d3494d/topics/git/git.png"
-                className="w-20 h-20 mx-4 my-4"
-                alt=""
-                width={50}
-                height={50}
-              />
-              <Image
-                src="https://raw.githubusercontent.com/github/explore/80688e429a7d4ef2fca1e82350fe8e3517d3494d/topics/react/react.png"
-                className="w-20 h-20 mx-4 my-4"
-                alt=""
-                width={50}
-                height={50}
-              />
-              <Image
-                src="https://raw.githubusercontent.com/github/explore/80688e429a7d4ef2fca1e82350fe8e3517d3494d/topics/firebase/firebase.png"
-                className="w-20 h-20 mx-4 my-4"
-                alt=""
-                width={50}
-                height={50}
-              />
-              <Image
-                src="https://raw.githubusercontent.com/github/explore/80688e429a7d4ef2fca1e82350fe8e3517d3494d/topics/mysql/mysql.png"
-                className="w-20 h-20 mx-4 my-4"
-                alt=""
-                width={50}
-                height={50}
-              />
-              <Image
-                src="https://raw.githubusercontent.com/github/explore/80688e429a7d4ef2fca1e82350fe8e3517d3494d/topics/mongodb/mongodb.png"
-                className="w-20 h-20 mx-4 my-4"
-                alt=""
-                width={50}
-                height={50}
-              />
-            </div> */}
           </div>
         </div>
       </div>
