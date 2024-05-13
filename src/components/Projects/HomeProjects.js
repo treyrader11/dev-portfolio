@@ -26,11 +26,7 @@ export default function HomeProjects() {
   });
 
   return (
-    <section
-      ref={container}
-      // className="relative mt-[20vh] z-[2] px-2"
-      className="relative z-[2] px-2"
-    >
+    <section ref={container} className="relative z-[2] px-2">
       {projects.map((project, index) => {
         const targetScale = 1 - (projects.length - index) * 0.05;
 

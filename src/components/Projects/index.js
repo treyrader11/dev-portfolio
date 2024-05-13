@@ -1,5 +1,6 @@
 import userData from "@/constants/data";
 import { cn } from "@/lib/utils";
+import Image from "next/image";
 
 export default function Projects() {
   return (
@@ -21,10 +22,7 @@ export default function Projects() {
             "text-center",
             "md:text-9xl",
             "md:text-left",
-            "absolute",
-            "top-[7%]",
-            "z-[999]",
-            "text-purple-600"
+            "text-[#934E00]/80"
           )}
         >
           Projects
@@ -41,11 +39,12 @@ export default function Projects() {
             "py-20",
             "pb-40",
             "mx-auto",
-            "md:grid-cols-2",
+            "md:grid-cols-2"
           )}
         >
           {userData.projects.map((proj, idx) => (
             <ProjectCard
+              key={idx}
               title={proj.title}
               link={proj.link}
               imgUrl={proj.imgUrl}
@@ -63,7 +62,7 @@ export function ProjectCard({ title, link, imgUrl, number }) {
     <a href={link} className="block w-full shadow-2xl">
       <div className="relative overflow-hidden">
         <div className="object-cover h-72">
-          <img
+          <Image
             src={imgUrl}
             alt="portfolio"
             className={cn(

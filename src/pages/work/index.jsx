@@ -5,7 +5,6 @@ import Projects from "@/components/Projects";
 export default function Work() {
   return (
     <Inner backgroundColor="#934E00">
-      {/* <section className={"text-white"}> */}
       <Projects />
     </Inner>
   );
