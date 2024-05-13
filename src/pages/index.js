@@ -10,6 +10,7 @@ import { Inter } from "next/font/google";
 import Inner from "@/components/Layout/Inner";
 import Projects from "@/components/Projects";
 import Hero from "@/components/Hero";
+import { cn } from "@/lib/utils";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -31,7 +32,7 @@ export default function Home() {
   }, []);
 
   return (
-    <main className={inter.className}>
+    <main className={cn(inter.className, "overflow-clip")}>
       <AnimatePresence mode="wait">
         {isLoading ? (
           <Preloader />

@@ -339,64 +339,12 @@ export default function Project({
         "justify-center",
         "sticky",
         "top-0",
-        "max-w-[1080px]",
-        "mx-auto"
+        "inset-x-0",
+       
+        // "max-w-[1080px]",
+        // "mx-auto"
       )}
-    >
-      <div
-        //  ref={container}
-        // style={{
-        //   backgroundColor: color,
-        //   scale,
-        //   top: `calc(-5vh + ${index * 25}px)`,
-        // }}
-        className={cn(
-          // "flex",
-          // "flex-col",
-          "relative",
-          // "h-[500px]",
-          "h-full",
-          // "p-[50px]",
-          "w-full"
-          // "origin-top",
-        )}
-      >
-        {/* <Image
-          fill
-          src={`/shots/${src}`}
-          alt="image"
-          className="object-cover"
-          sizes="(max-width: 900) 50vw"
-        /> */}
-      </div>
-      {/* <motion.div
-        style={{
-          backgroundColor: color,
-          scale,
-          top: `calc(-5vh + ${index * 25}px)`,
-        }}
-        className={cn(
-          "flex",
-          "flex-col",
-          "relative",
-          // "h-[500px]",
-          "h-full",
-          "p-[50px]",
-          "w-full",
-          "origin-top",
-          "border-3",
-          "border-red-500"
-        )}
-      >
-        <Image
-          fill
-          src={`/shots/${src}`}
-          alt="image"
-          className="object-cover"
-          sizes="(max-width: 900) 50vw"
-        />
-      </motion.div> */}
-    </div>
+    />
   );
 }
 

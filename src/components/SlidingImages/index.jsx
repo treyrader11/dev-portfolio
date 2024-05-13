@@ -29,8 +29,8 @@ export default function SlidingImages() {
             >
               <div className={styles.imageContainer}>
                 <Image
-                  fill={true}
-                  alt={"image"}
+                  fill
+                  alt="image"
                   src={`/images/${project.src}`}
                   className="object-cover"
                 />
