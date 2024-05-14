@@ -10,14 +10,20 @@ export default function NavMenu({ handleNavMenu, className }) {
   return (
     <nav className={cn(styles.nav, className)}>
       <div className="hidden sm:flex">
-        {routes.map(({ label, href }) => (
-          <Magnetic key={href}>
-            <div className={styles.navItem}>
-              <Link href={href}>{label}</Link>
-              <div className={styles.indicator} />
-            </div>
-          </Magnetic>
-        ))}
+        {routes.map(({ label, href }) => {
+          if (label !== "Home") {
+            return (
+              <Magnetic key={href}>
+                <div className={styles.navItem}>
+                  <Link href={href}>{label}</Link>
+                  <div className={styles.indicator} />
+                </div>
+              </Magnetic>
+            );
+          } else {
+            return;
+          }
+        })}
       </div>
       <Magnetic>
         <div

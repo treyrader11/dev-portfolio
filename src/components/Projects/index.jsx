@@ -4,7 +4,7 @@ import Image from "next/image";
 
 export default function Projects() {
   return (
-    <section className="bg-white dark:bg-gray-800">
+    <section className="bg-white">
       <div
         className={cn(
           "h-48",

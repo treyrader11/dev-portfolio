@@ -59,7 +59,7 @@ export default function Nav() {
               "w-full"
             )}
           >
-            <p>Navigation</p>
+            <p>Trey Rader</p>
           </div>
           {routes.map((routes, index) => {
             return (

@@ -1,5 +1,9 @@
 export const routes = [
   {
+    label: "Home",
+    href: "/",
+  },
+  {
     label: "Work",
     href: "/work",
   },

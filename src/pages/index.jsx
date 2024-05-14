@@ -40,7 +40,7 @@ export default function Home() {
         <Hero isLoading={isLoading} />
         <Description />
         {/* <HomeProjects /> */}
-        <SlidingImages />
+        {/* <SlidingImages /> */}
         <Contact />
       </Inner>
     </main>

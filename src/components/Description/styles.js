@@ -1,7 +1,13 @@
 import { cn } from "@/lib/utils";
 
 const styles = {
-  description: cn("px-[200px]", "mt-[200px]", "flex", "justify-center"),
+  description: cn(
+    "px-[200px]",
+    "mt-[200px]",
+    "flex",
+    "justify-center",
+    // "text-black"
+  ),
   container: cn("flex", "gap-[50px]", "relative"),
   mask: cn("relative", "overflow-hidden", "inline-flex"),
   button: cn(
