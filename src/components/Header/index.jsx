@@ -138,7 +138,9 @@ export default function Header() {
           "p-[35px]",
           "justify-between",
           "items-center",
-          "w-full"
+          "w-full",
+          // "bg-dark"
+
         )}
       >
         <ProfilePicture
