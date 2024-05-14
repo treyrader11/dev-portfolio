@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import useMeasure from "react-use-measure";
 import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
 import styles from "./styles";
-import { Shot } from "../Projects/components/Project";
+import { Shot } from "../Projects/components/ProjectShot";
 import { cn } from "@/lib/utils";
 // import { CourseCard } from "./Courses/CourseCard";
 

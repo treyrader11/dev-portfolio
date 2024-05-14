@@ -4,7 +4,7 @@ import { useScroll } from "framer-motion";
 import { useEffect, useRef } from "react";
 import Lenis from "@studio-freight/lenis";
 import { projects } from "./projects.data";
-import ProjectShot from "./components/Project";
+import ProjectShot from "./components/ProjectShot";
 
 export default function HomeProjects() {
   const container = useRef(null);

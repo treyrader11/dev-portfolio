@@ -8,6 +8,7 @@ export default function About() {
     <Inner backgroundColor="#934E00">
       {/* <ContainerBlock> */}
       <AboutMe />
+      <AboutMe />
       {/* </ContainerBlock> */}
     </Inner>
   );
