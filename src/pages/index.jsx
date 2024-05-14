@@ -39,7 +39,7 @@ export default function Home() {
       <Inner backgroundColor="#934E00">
         <Hero isLoading={isLoading} />
         <Description />
-        <HomeProjects />
+        {/* <HomeProjects /> */}
         <SlidingImages />
         <Contact />
       </Inner>
