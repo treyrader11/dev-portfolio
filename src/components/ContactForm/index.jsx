@@ -37,10 +37,11 @@ export default function ContactForm() {
           <div className="md:ml-4">
             <header className="">
               <h1 className="text-2xl font-semibold text-gray-50">
-                Get in touch, let's talk.
+                Get in touch, let&apos;s talk.
               </h1>
               <p className="mt-2 text-base font-light text-gray-200">
-                Fill in the details and I'll get back to you as soon as I can.
+                Fill in the details and I&apos;ll get back to you as soon as I
+                can.
               </p>
             </header>
             <div className="inline-flex flex-col my-20 icons-container">
@@ -203,7 +204,19 @@ export default function ContactForm() {
             </label>
             <input
               type="text"
-              className="px-1 py-2 mx-4 mt-2 font-light border rounded-md focus:outline-none focus:ring-2 focus:border-none ring-blue-500"
+              className={cn(
+                "px-1",
+                "py-2",
+                "mx-4",
+                "mt-2",
+                "font-light",
+                "border",
+                "rounded-md",
+                "focus:outline-none",
+                "focus:ring-2",
+                "focus:border-none",
+                "ring-purple-500"
+              )}
               name="name"
             />
             <label htmlFor="email" className="mx-4 mt-4 text-sm text-gray-600">
@@ -211,7 +224,19 @@ export default function ContactForm() {
             </label>
             <input
               type="text"
-              className="px-1 py-2 mx-4 mt-2 font-light border rounded-md focus:outline-none focus:ring-2 focus:border-none ring-blue-500"
+              className={cn(
+                "px-1",
+                "py-2",
+                "mx-4",
+                "mt-2",
+                "font-light",
+                "border",
+                "rounded-md",
+                "focus:outline-none",
+                "focus:ring-2",
+                "focus:border-none",
+                "ring-purple-500"
+              )}
               name="email"
             />
             <label
@@ -223,12 +248,34 @@ export default function ContactForm() {
             <textarea
               rows="4"
               type="text"
-              className="px-1 py-2 mx-4 mt-2 font-light border rounded-md focus:outline-none focus:ring-2 focus:border-none ring-blue-500"
+              className={cn(
+                "px-1",
+                "py-2",
+                "mx-4",
+                "mt-2",
+                "font-light",
+                "border",
+                "rounded-md",
+                "focus:outline-none",
+                "focus:ring-2",
+                "focus:border-none",
+                "ring-purple-500"
+              )}
               name="message"
             ></textarea>
             <button
               type="submit"
-              className="w-1/2 py-2 mx-4 mt-8 text-xs font-bold bg-blue-500 rounded-md text-gray-50"
+              className={cn(
+                "w-1/2",
+                "py-2",
+                "mx-4",
+                "mt-8",
+                "text-xs",
+                "font-bold",
+                "bg-blue-500",
+                "rounded-md",
+                "text-gray-50"
+              )}
             >
               Send Message
             </button>
