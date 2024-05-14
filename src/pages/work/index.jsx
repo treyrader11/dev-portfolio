@@ -5,7 +5,7 @@ import Projects from "@/components/Projects";
 export default function Work() {
   return (
     <Inner backgroundColor="#934E00">
-      <Projects />
+      {/* <Projects /> */}
     </Inner>
   );
 }
