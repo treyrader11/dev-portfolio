@@ -4,7 +4,7 @@ import Inner from "@/components/Layout/Inner";
 export default function Contact() {
   return (
     <Inner backgroundColor="#934E00">
-      {/* <ContactForm /> */}
+      <ContactForm />
     </Inner>
   );
 }
