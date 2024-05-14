@@ -25,8 +25,8 @@
   }
 
   body {
-    margin: 0px;
-    overflow: hidden;
+    /* margin: 0px;
+    overflow: hidden; */
     cursor: wait;
   }
 
@@ -46,10 +46,8 @@
     mask-image: url("../../public/mask.svg");
     mask-repeat: no-repeat;
     mask-size: 40px;
-    /* background: #EC85FF; */
-    /* background: "#A953D7"; */
     z-index: 1;
-    background: #934E00;
+    background: #934e00;
     position: absolute;
     color: white;
   }
@@ -58,13 +56,11 @@
     display: flex;
     flex-direction: column;
     position: relative;
-    /* top: -25%; */
     height: 500px;
     width: 1000px;
     border-radius: 0 25px 25px 25px;
     padding: 50px;
     transform-origin: top;
-    /* overflow-y: clip; */
   }
 
   .folder-shape::before {
@@ -72,7 +68,7 @@
     width: 50%;
     height: 60px;
     border-radius: 25px 25px 0 0;
-    background: inherit; 
+    background: inherit;
     position: absolute;
     top: -50px;
     left: 0px;
