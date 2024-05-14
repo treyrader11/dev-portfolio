@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useTransform, motion, useScroll } from "framer-motion";
 import { useRef } from "react";
 import { cn } from "@/lib/utils";
+import { useWindowDimensions } from "@/hooks/useWindowDimensions";
 
 export default function ProjectShot({
   index,
@@ -26,13 +27,17 @@ export default function ProjectShot({
   const imageScale = useTransform(scrollYProgress, [0, 1], [2, 1]);
   const scale = useTransform(progress, range, [1, targetScale]);
 
+  const { width } = useWindowDimensions();
+  const isMobile = width < 400;
+
   return (
     <div
       ref={container}
       style={{
         backgroundImage: `url(/shots/${src})`,
         backgroundPosition: "center",
-        backgroundSize: "cover",
+        backgroundSize: isMobile ? "contain" : "cover",
+        backgroundRepeat: "no-repeat",
         top: `calc(-5vh + ${index * 25}px)`,
       }}
       className={cn(
@@ -65,7 +70,7 @@ export function Shot({ src, width = 350, height = 350, marginRight = 30 }) {
             src={`/shots/${src}`}
             alt="image"
             className="object-cover lg:object"
-            sizes="(max-width: 900) 50vw"
+            // sizes="(max-width: 900) 50vw"
           />
         </motion.div>
       </div>

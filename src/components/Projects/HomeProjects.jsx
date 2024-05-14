@@ -26,7 +26,7 @@ export default function HomeProjects() {
   });
 
   return (
-    <section ref={container} className="relative z-[2] px-2">
+    <section ref={container} className="relative z-[2] sm:px-2 px-0">
       {projects.map((project, index) => {
         const targetScale = 1 - (projects.length - index) * 0.05;
 
@@ -38,7 +38,6 @@ export default function HomeProjects() {
             progress={scrollYProgress}
             range={[index * 0.25, 1]}
             targetScale={targetScale}
-            // isFolderShaped
           />
         );
       })}
