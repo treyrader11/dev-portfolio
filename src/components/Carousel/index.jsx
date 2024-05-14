@@ -5,7 +5,8 @@ import { useEffect, useState } from "react";
 import useMeasure from "react-use-measure";
 import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
 import styles from "./styles";
-import { ProjectShot } from "../Projects/components/Project";
+import { Shot } from "../Projects/components/Project";
+import { cn } from "@/lib/utils";
 // import { CourseCard } from "./Courses/CourseCard";
 
 const CARD_WIDTH = 350;
@@ -55,7 +56,7 @@ export default function Carousel({ items, children }) {
             className="flex"
           >
             {items.map((item, index) => (
-              <ProjectShot
+              <Shot
                 key={index}
                 src={item.src}
                 // scale={item.scale}
@@ -74,7 +75,21 @@ export default function Carousel({ items, children }) {
             animate={{
               x: CAN_SHIFT_LEFT ? "0%" : "-100%",
             }}
-            className="absolute left-0 top-[60%] z-30 rounded-r-xl bg-slate-100/30 p-3 pl-2 text-4xl text-white backdrop-blur-sm transition-[padding] hover:pl-3"
+            className={cn(
+              "absolute",
+              "left-0",
+              "top-[60%]",
+              "z-30",
+              "rounded-r-xl",
+              "bg-slate-100/30",
+              "p-3",
+              "pl-2",
+              "text-4xl",
+              "text-white",
+              "backdrop-blur-sm",
+              "transition-[padding]",
+              "hover:pl-3"
+            )}
             onClick={shiftLeft}
           >
             <FiChevronLeft />
