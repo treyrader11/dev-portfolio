@@ -15,78 +15,6 @@ import { cn } from "@/lib/utils";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 
-const styles = {
-  header: cn(
-    "absolute",
-    "flex",
-    "z-[5]",
-    "top-0",
-    "font-extralight",
-    "text-white",
-    "p-[35px]",
-    "justify-between",
-    "items-center",
-    "w-full"
-  ),
-  logo: (isHomePage) =>
-    cn("pl-3", "mr-auto", isHomePage ? "text-white" : "text-black"),
-  navMenu: (isHomePage) => cn(isHomePage ? "text-white" : "text-black"),
-  navButtonContainer: cn(
-    "fixed",
-    "transform",
-    "scale-0",
-    "right-0",
-    // "z-[10]",
-    "z-[4]",
-    "after:top-[-5px]",
-    "before:top-[5px]"
-  ),
-  navButton: (isNavOpen) =>
-    cn(
-      "relative",
-      "m-5",
-      "w-[80px]",
-      "h-[80px]",
-      "rounded-full",
-      "cursor-pointer",
-      isNavOpen ? cn("bg-[#934E00]") : cn("bg-dark-400")
-    ),
-
-  burger: (isNavOpen) =>
-    cn(
-      "relative",
-      "w-full",
-      "z-[1]",
-      // first line
-      "after:block",
-      "after:h-[1px]",
-      "after:w-[40%]",
-      "after:m-auto",
-      "after:bg-white",
-      "after:relative",
-      "after:transition-transform",
-      "after:duration-300",
-      // second line
-      "before:block",
-      "before:h-0.5",
-      "before:w-[40%]",
-      "before:m-auto",
-      "before:bg-white",
-      "before:relative",
-      "before:transition-transform",
-      "before:duration-300",
-      isNavOpen
-        ? cn(
-            "after:transform",
-            "after:rotate-45",
-            "after:-top-[1px]",
-            "before:-rotate-45",
-            "before:top-0"
-          )
-        : cn("after:-top-[5px]", "before:top-[5px]")
-    ),
-};
-
 export default function Header() {
   const header = useRef(null);
   const [isNavOpen, setIsNavOpen] = useState(false);
@@ -94,6 +22,7 @@ export default function Header() {
   const path = usePathname();
 
   const isHomePage = path === "/";
+  const isContactPage = path.includes("contact");
 
   const handleNavMenu = useCallback(() => {
     setIsNavOpen((prevIsNavOpen) => !prevIsNavOpen);
@@ -138,9 +67,8 @@ export default function Header() {
           "p-[35px]",
           "justify-between",
           "items-center",
-          "w-full",
+          "w-full"
           // "bg-dark"
-
         )}
       >
         <ProfilePicture
@@ -152,7 +80,7 @@ export default function Header() {
         <Link
           href="/"
           className={cn("pl-3", "mr-auto", "text-black", {
-            "text-white": isHomePage,
+            "text-white": isHomePage || isContactPage,
           })}
         >
           <Copyright />
@@ -160,7 +88,9 @@ export default function Header() {
 
         <NavMenu
           handleNavMenu={handleNavMenu}
-          className={cn(isHomePage ? "text-white" : "text-black")}
+          className={cn(
+            isHomePage || isContactPage ? "text-white" : "text-black"
+          )}
         />
         <div
           ref={button}
