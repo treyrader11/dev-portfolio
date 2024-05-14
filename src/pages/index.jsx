@@ -33,9 +33,9 @@ export default function Home() {
 
   return (
     <main className={cn(inter.className, "overflow-clip")}>
-      <AnimatePresence mode="wait">
+      {/* <AnimatePresence mode="wait">
         {isLoading && <Preloader />}
-      </AnimatePresence>
+      </AnimatePresence> */}
       <Inner backgroundColor="#934E00">
         <Hero isLoading={isLoading} />
         <Description />
