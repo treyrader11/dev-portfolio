@@ -6,6 +6,13 @@ import Image from "next/image";
 import styles from "./styles";
 import { slider1, slider2 } from "./sliders";
 
+// const imageProps = {
+//   fill,
+//   alt: "image",
+//   className: "object-cover",
+//   sizes: {}
+// };
+
 export default function SlidingImages() {
   const container = useRef(null);
   const { scrollYProgress } = useScroll({
@@ -33,6 +40,7 @@ export default function SlidingImages() {
                   alt="image"
                   src={`/images/${project.src}`}
                   className="object-cover"
+                  sizes={{}}
                 />
               </div>
             </div>

@@ -63,7 +63,6 @@ export default function Rounded({
           "py-[15px]",
           "px-[60px]",
           "text-white",
-          // "w-fit",
           className
         )}
         style={{ overflow: "hidden" }}

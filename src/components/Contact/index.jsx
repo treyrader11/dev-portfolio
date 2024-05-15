@@ -154,7 +154,7 @@ export default function Contact() {
           </motion.svg>
         </div>
         <div className={cn("flex", "gap-5", "mt-[100px]", "mx-[200px]")}>
-          <Rounded>
+          <Rounded className="w-20 py-6">
             <p>info@treyrader.com</p>
           </Rounded>
           <Rounded>

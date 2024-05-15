@@ -16,7 +16,8 @@ export default function ProjectShot({
   progress,
   range,
   targetScale,
-  isFolderShaped = false,
+  // isFolderShaped = false,
+  manageModal,
 }) {
   const container = useRef(null);
   const { scrollYProgress } = useScroll({
@@ -29,14 +30,21 @@ export default function ProjectShot({
 
   const { width } = useWindowDimensions();
   const isMobile = width < 400;
+  const backgroundSize = isMobile ? "contain" : "cover";
 
   return (
     <div
       ref={container}
+      onMouseEnter={(e) => {
+        manageModal(true, index, e.clientX, e.clientY);
+      }}
+      onMouseLeave={(e) => {
+        manageModal(false, index, e.clientX, e.clientY);
+      }}
       style={{
         backgroundImage: `url(/shots/${src})`,
         backgroundPosition: "center",
-        backgroundSize: isMobile ? "contain" : "cover",
+        backgroundSize,
         backgroundRepeat: "no-repeat",
         top: `calc(-5vh + ${index * 25}px)`,
       }}
@@ -70,7 +78,7 @@ export function Shot({ src, width = 350, height = 350, marginRight = 30 }) {
             src={`/shots/${src}`}
             alt="image"
             className="object-cover lg:object"
-            // sizes="(max-width: 900) 50vw"
+            sizes="(max-width: 900) 50vw"
           />
         </motion.div>
       </div>
