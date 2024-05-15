@@ -3,11 +3,40 @@
 import { useInView, motion } from "framer-motion";
 import { slideUp, opacity } from "./anim";
 import Rounded from "@/common/Rounded";
-import styles from "./styles";
 import { cn } from "@/lib/utils";
 import { useLayoutEffect, useRef } from "react";
 import ScrollTrigger from "gsap/dist/ScrollTrigger";
 import gsap from "gsap";
+import Link from "next/link";
+
+const styles = {
+  description: cn(
+    "px-[200px]",
+    "mt-[200px]",
+    "flex",
+    "justify-center"
+    // "text-black"
+  ),
+  container: cn("flex", "gap-[50px]", "relative"),
+  mask: cn("relative", "overflow-hidden", "inline-flex"),
+  button: cn(
+    "top-[80%]",
+    "left-[clac(100%_-_400px)]",
+    "w-[180px]",
+    "h-[180px]",
+    "bg-dark-400",
+    "text-white",
+    "rounded-full",
+    "absolute",
+    "flex",
+    "items-center",
+    "justify-center",
+    "cursor-pointer"
+  ),
+  buttonText: cn("m-0", "text-[16px]", "font-light", "relative", "z-[1]"),
+  p: cn("m-0"),
+  descriptionNew: cn("relative", "text-[3vw]", "uppercase", "ml-[10vw]"),
+};
 
 export default function Description() {
   const phrase =
@@ -40,21 +69,30 @@ export default function Description() {
         <motion.p
           variants={opacity}
           animate={isInView ? "open" : "closed"}
-          className={cn(styles.p, "text-[18px]", "w-[80%]")}
+          className={cn("m-0 text-lg w-4/5")}
         >
           The combination of my passion for design, code & interaction positions
           me in a unique place in the web design world.
         </motion.p>
         <div data-scroll data-scroll-speed={0.1}>
-          <Rounded className={styles.button}>
+          <Rounded
+            href="/about"
+            className={cn(
+              "top-[80%]",
+              "left-[clac(100%_-_400px)]",
+              "size-[180px]",
+              "bg-dark-400",
+              "absolute"
+              // styles.button
+            )}
+          >
             <p
               className={cn(
                 "relative",
                 "z-[1]",
                 "transition-colors",
                 "duration-400",
-                "ease-linear",
-                "hover:text-white"
+                "ease-linear"
               )}
             >
               About me

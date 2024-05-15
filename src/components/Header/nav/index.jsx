@@ -25,6 +25,7 @@ export default function Nav() {
         "h-screen",
         "bg-dark-500",
         "fixed",
+        // "z-[99999]",
         "inset-x-0",
         "text-white",
         "z-[4]",

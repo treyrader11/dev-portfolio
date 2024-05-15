@@ -14,6 +14,7 @@ import profilePicture from "/public/images/portraits/headshot-sit-blackbg.png";
 import { cn } from "@/lib/utils";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
+import Address from "../Address";
 
 export default function Header() {
   const header = useRef(null);
@@ -60,7 +61,10 @@ export default function Header() {
         className={cn(
           "absolute",
           "flex",
+          // "flex-col",
+          // "sm:flex-row",
           "z-[5]",
+          // isNavOpen ? "z-0" : "z-[5]",
           "top-0",
           "font-extralight",
           "text-white",
@@ -71,6 +75,24 @@ export default function Header() {
           // "bg-dark"
         )}
       >
+        {/* <div className="flex flex-col gap-2">
+          <ProfilePicture
+            isMagnetic
+            src={profilePicture}
+            height={80}
+            width={80}
+          />
+          <Link
+            href="/"
+            className={cn("sm:pl-3", "mr-auto", "text-black", {
+              "text-white": isHomePage || isContactPage,
+            })}
+          >
+            <Copyright />
+          </Link>
+          <Address className="p-0 space-x-2" />
+        </div> */}
+
         <ProfilePicture
           isMagnetic
           src={profilePicture}
@@ -110,11 +132,11 @@ export default function Header() {
             className={cn(
               "relative",
               "m-5",
-              "w-[80px]",
-              "h-[80px]",
+              "size-20",
               "rounded-full",
               "cursor-pointer",
               "bg-dark-400",
+              "p-0",
               { "bg-neutral-800": isNavOpen }
             )}
           >
