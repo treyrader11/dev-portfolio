@@ -11,6 +11,7 @@ import { motion } from "framer-motion";
 import { scaleAnimation } from "./anim";
 import Image from "next/image";
 import gsap from "gsap";
+// import Modal from "./components/Modal";
 
 const imageProps = {
   className: "size-auto",
@@ -20,8 +21,8 @@ const imageProps = {
 };
 
 export default function HomeProjects() {
-  const [modal, setModal] = useState({ active: false, index: 0 });
-  const { active, index } = modal;
+  const [modal, setModal] = useState({ isActive: false, index: 0 });
+  const { isActive, index } = modal;
 
   const container = useRef(null);
   const modalContainer = useRef(null);
@@ -79,9 +80,9 @@ export default function HomeProjects() {
     yMoveCursorLabel.current(y);
   };
 
-  const manageModal = (active, index, x, y) => {
+  const manageModal = (isActive, index, x, y) => {
     moveItems(x, y);
-    setModal({ active, index });
+    setModal({ isActive, index });
   };
 
   useEffect(() => {
@@ -142,11 +143,12 @@ export default function HomeProjects() {
         </Rounded>
       </section>
 
+      {/* <Modal ref={modalContainer} isActive={isActive} index={index} /> */}
       <motion.div
         ref={modalContainer}
         variants={scaleAnimation}
         initial="initial"
-        animate={active ? "enter" : "closed"}
+        animate={isActive ? "enter" : "closed"}
         className={cn(
           "h-[350px]",
           "w-[400px]",
@@ -181,7 +183,11 @@ export default function HomeProjects() {
                 style={{ backgroundColor: color }}
                 key={`modal_${index}`}
               >
-                <Image src={`/images/${src}`} {...imageProps} />
+                <Image
+                  priority={project.isPriority}
+                  src={`/images/${src}`}
+                  {...imageProps}
+                />
               </div>
             );
           })}
@@ -205,7 +211,7 @@ export default function HomeProjects() {
         )}
         variants={scaleAnimation}
         initial="initial"
-        animate={active ? "enter" : "closed"}
+        animate={isActive ? "enter" : "closed"}
       ></motion.div>
       <motion.div
         ref={cursorLabel}
@@ -225,7 +231,7 @@ export default function HomeProjects() {
         )}
         variants={scaleAnimation}
         initial="initial"
-        animate={active ? "enter" : "closed"}
+        animate={isActive ? "enter" : "closed"}
       >
         View
       </motion.div>
