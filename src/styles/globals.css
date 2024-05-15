@@ -2,6 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer components {
+  .transition_ {
+    @apply transition-all duration-700;
+  }
+}
+
 @layer base {
   :root {
     --navigation-height: 4.8rem;
