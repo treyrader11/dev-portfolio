@@ -8,7 +8,7 @@ import {
 import { cn } from "@/lib/utils";
 import { useState } from "react";
 
-export default function Dependencies({ Single_data }) {
+export default function Dependencies({ data }) {
   const [havecopy, sethavecopy] = useState(false);
 
   const Copy = (e) => {
@@ -21,14 +21,14 @@ export default function Dependencies({ Single_data }) {
     }
   };
 
-  const copydata = Single_data.package.map((data) => data);
+  const copydata = data.package?.map((data) => data);
 
   return (
     <div className="w-full h-auto">
       <span className="my-5 text-2xl font-bold text-slate-200">
         Dependencies
       </span>
-      <p className="text-base text-gray-300">{Single_data.dependencies_blog}</p>
+      <p className="text-base text-gray-300">{data.dependencies_blog}</p>
       <div
         className={cn(
           "my-[15px]",
@@ -45,7 +45,7 @@ export default function Dependencies({ Single_data }) {
           "border-[#401f788e]"
         )}
       >
-        {Single_data?.package.map((data) => (
+        {data.package?.map((data) => (
           <div
             key={data}
             className={cn(
@@ -84,7 +84,7 @@ export default function Dependencies({ Single_data }) {
         ) : (
           <div
             id="button-primary"
-            onClick={() => Copy(Single_data.package)}
+            onClick={() => Copy(data.package)}
             className={cn(
               "right-[10px]",
               "top-[10px]",

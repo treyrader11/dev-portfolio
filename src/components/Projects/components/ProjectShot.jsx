@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import Image from "next/image";
 import { useTransform, motion, useScroll } from "framer-motion";
 import { useRef } from "react";
@@ -10,13 +11,14 @@ export default function ProjectShot({
   index,
   title,
   description,
-  src,
+  // src,
   url,
   color,
   progress,
   range,
   targetScale,
-  // isFolderShaped = false,
+  project_image,
+  video_key,
   manageModal,
 }) {
   const container = useRef(null);
@@ -33,33 +35,36 @@ export default function ProjectShot({
   const backgroundSize = isMobile ? "contain" : "cover";
 
   return (
-    <div
-      ref={container}
-      onMouseEnter={(e) => {
-        // manageModal(true, index, e.clientX, e.clientY);
-        manageModal(true, index);
-      }}
-      onMouseLeave={(e) => {
-        // manageModal(false, index, e.clientX, e.clientY);
-        manageModal(true, index);
-      }}
-      style={{
-        backgroundImage: `url(/shots/${src})`,
-        backgroundPosition: "center",
-        backgroundSize,
-        backgroundRepeat: "no-repeat",
-        top: `calc(-5vh + ${index * 25}px)`,
-      }}
-      className={cn(
-        "h-screen",
-        "flex",
-        "items-center",
-        "justify-center",
-        "sticky",
-        "top-0",
-        "inset-x-0"
-      )}
-    />
+    <Link href={`/project/${video_key}`}>
+      <div
+        ref={container}
+        onMouseEnter={(e) => {
+          // manageModal(true, index, e.clientX, e.clientY);
+          manageModal(true, index);
+        }}
+        onMouseLeave={(e) => {
+          // manageModal(false, index, e.clientX, e.clientY);
+          manageModal(true, index);
+        }}
+        style={{
+          // backgroundImage: `url(/shots/${src})`,
+          backgroundImage: `url(/shots/${project_image})`,
+          backgroundPosition: "center",
+          backgroundSize,
+          backgroundRepeat: "no-repeat",
+          top: `calc(-5vh + ${index * 25}px)`,
+        }}
+        className={cn(
+          "h-screen",
+          "flex",
+          "items-center",
+          "justify-center",
+          "sticky",
+          "top-0",
+          "inset-x-0"
+        )}
+      />
+    </Link>
   );
 }
 

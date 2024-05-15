@@ -2,11 +2,10 @@ import { ArrowLeftIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import ProjectDetails from "@/components/Project/components/ProjectDetails";
-import { project } from "@/constants/data";
+import userData from "@/constants/data";
 
-// export default function Project({ params: { ProjectId } }) {
-export default function ProjectPage({ ProjectId = "HvkrAjHJ-38" }) {
-  const Single_data = project?.filter((data) => data.video_key === ProjectId);
+export default function ProjectPage({ project }) {
+  // console.log("project data", project);
 
   return (
     <div
@@ -53,7 +52,18 @@ export default function ProjectPage({ ProjectId = "HvkrAjHJ-38" }) {
           <span className="text-base">Back</span>
         </Link>
       </div>
-      <ProjectDetails Single_data={Single_data} />
+      {project && <ProjectDetails data={project} />}
     </div>
   );
+}
+
+export async function getServerSideProps({ params }) {
+  const { projectId } = params;
+
+  const { projects } = userData;
+  const project = projects.filter(({ video_key }) => video_key === projectId);
+
+  return {
+    props: { project },
+  };
 }

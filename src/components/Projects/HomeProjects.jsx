@@ -12,7 +12,6 @@ import Image from "next/image";
 import gsap from "gsap";
 import { useRouter } from "next/router";
 import userData from "@/constants/data";
-// import Modal from "./components/Modal";
 
 const imageProps = {
   className: "size-auto",
@@ -184,7 +183,7 @@ export default function HomeProjects() {
           )}
         >
           {projects.map((project, index) => {
-            const { src, color } = project;
+            const { project_image, color } = project;
             return (
               <div
                 className={cn(
@@ -198,7 +197,7 @@ export default function HomeProjects() {
               >
                 <Image
                   priority={project.isPriority}
-                  src={`/images/${src}`}
+                  src={`/images/${project_image}`}
                   {...imageProps}
                 />
               </div>
