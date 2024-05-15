@@ -47,7 +47,7 @@ export default function Projects() {
               key={idx}
               title={proj.title}
               link={proj.link}
-              imgUrl={proj.imgUrl}
+              imgUrl={proj.src}
               number={`${idx + 1}`}
             />
           ))}
@@ -63,11 +63,11 @@ export function ProjectCard({ title, link, imgUrl, number }) {
       <div className="relative overflow-hidden">
         <div className="object-cover h-72">
           <Image
-            src={imgUrl}
+            src={`/images/${imgUrl}`}
             width={100}
             height={100}
-            // sizes={}
-            alt="portfolio poster"
+            // sizes={{}}
+            alt="project image"
             className={cn(
               "object-cover",
               "w-full",

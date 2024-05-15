@@ -3,7 +3,6 @@
 import { useScroll } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import Lenis from "@studio-freight/lenis";
-import { projects } from "./projects.data";
 import ProjectShot from "./components/ProjectShot";
 import Rounded from "@/common/Rounded";
 import { cn } from "@/lib/utils";
@@ -12,6 +11,7 @@ import { scaleAnimation } from "./anim";
 import Image from "next/image";
 import gsap from "gsap";
 import { useRouter } from "next/router";
+import userData from "@/constants/data";
 // import Modal from "./components/Modal";
 
 const imageProps = {
@@ -22,6 +22,8 @@ const imageProps = {
   // height: 0,
   height: 0,
 };
+
+const { projects } = userData;
 
 export default function HomeProjects() {
   const [modal, setModal] = useState({ isActive: false, index: 0 });

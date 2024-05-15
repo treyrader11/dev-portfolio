@@ -5,7 +5,7 @@ import ProjectDetails from "@/components/Project/components/ProjectDetails";
 import { project } from "@/constants/data";
 
 // export default function Project({ params: { ProjectId } }) {
-export default function Project({ ProjectId = "HvkrAjHJ-38" }) {
+export default function ProjectPage({ ProjectId = "HvkrAjHJ-38" }) {
   const Single_data = project?.filter((data) => data.video_key === ProjectId);
 
   return (
@@ -54,7 +54,6 @@ export default function Project({ ProjectId = "HvkrAjHJ-38" }) {
         </Link>
       </div>
       <ProjectDetails Single_data={Single_data} />
-      {/* <Footer /> */}
     </div>
   );
 }
