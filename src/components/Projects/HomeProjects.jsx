@@ -11,12 +11,15 @@ import { motion } from "framer-motion";
 import { scaleAnimation } from "./anim";
 import Image from "next/image";
 import gsap from "gsap";
+import { useRouter } from "next/router";
 // import Modal from "./components/Modal";
 
 const imageProps = {
   className: "size-auto",
   alt: "image of project",
-  width: 300,
+  // width: 300,
+  width: 150,
+  // height: 0,
   height: 0,
 };
 
@@ -40,6 +43,8 @@ export default function HomeProjects() {
     target: container,
     offset: ["start start", "end end"],
   });
+
+  const router = useRouter();
 
   useEffect(() => {
     //Move Container
@@ -81,7 +86,7 @@ export default function HomeProjects() {
   };
 
   const manageModal = (isActive, index, x, y) => {
-    moveItems(x, y);
+    // moveItems(x, y);
     setModal({ isActive, index });
   };
 
@@ -150,11 +155,17 @@ export default function HomeProjects() {
         initial="initial"
         animate={isActive ? "enter" : "closed"}
         className={cn(
-          "h-[350px]",
-          "w-[400px]",
+          // "h-[350px]",
+          // "w-[400px]",
+          "h-[200px]",
+          "w-[250px]",
           "fixed",
-          "top-1/2",
-          "left-1/2",
+          // "top-1/2",
+          // "left-1/2",
+          // "top-3/4",
+          // "left-2/3",
+          "top-[83%]",
+          "left-[73%]",
           "bg-white",
           "pointer-events-none",
           "overflow-hidden",
@@ -227,11 +238,13 @@ export default function HomeProjects() {
           "justify-center",
           "text-sm",
           "font-light",
-          "pointer-events-none"
+          "pointer-events-none",
+          "cursor-pointer"
         )}
         variants={scaleAnimation}
         initial="initial"
         animate={isActive ? "enter" : "closed"}
+        onClick={() => router.push("/work")}
       >
         View
       </motion.div>

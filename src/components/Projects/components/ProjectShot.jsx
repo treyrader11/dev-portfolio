@@ -36,10 +36,12 @@ export default function ProjectShot({
     <div
       ref={container}
       onMouseEnter={(e) => {
-        manageModal(true, index, e.clientX, e.clientY);
+        // manageModal(true, index, e.clientX, e.clientY);
+        manageModal(true, index);
       }}
       onMouseLeave={(e) => {
-        manageModal(false, index, e.clientX, e.clientY);
+        // manageModal(false, index, e.clientX, e.clientY);
+        manageModal(true, index);
       }}
       style={{
         backgroundImage: `url(/shots/${src})`,
