@@ -39,11 +39,23 @@ module.exports = {
       },
       animation: {
         slideright2: "slideright2 1.3s ease-in-out",
+        "octocat-wave": "octocat-wave 0.56s",
       },
       keyframes: {
         slideleft2: {
           from: { opacity: 0, transform: "translateX(-500px)" },
           to: { opacity: 1, transform: "translateX(0)" },
+        },
+        "octocat-wave": {
+          "0%, 100%": {
+            transform: "rotate(0)",
+          },
+          "20%, 60%": {
+            transform: "rotate(-20deg)",
+          },
+          "40%, 80%": {
+            transform: "rotate(10deg)",
+          },
         },
       },
       screens: {

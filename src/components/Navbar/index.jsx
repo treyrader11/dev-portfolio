@@ -3,7 +3,7 @@ import Link from "next/link";
 import { useTheme } from "next-themes";
 import { useRouter } from "next/router";
 import { cn } from "@/lib/utils";
-import userData from "@/constants/data";
+import { userData } from "@/lib/data";
 
 export default function Navbar() {
   const router = useRouter();

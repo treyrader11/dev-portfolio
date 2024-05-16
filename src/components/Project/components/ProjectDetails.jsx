@@ -133,7 +133,7 @@ export default function ProjectDetails({ data }) {
             "mr-2.5",
             "mb-2.5",
             "600:mb-0",
-            "rounded-[6px]",
+            "rounded-md",
             "bg-white",
             "flex",
             "flex-row",
@@ -161,11 +161,11 @@ export default function ProjectDetails({ data }) {
           href={data[0].frontend_download_link}
           className={cn(
             { hidden: data[0].frontend_download_link.length },
-            "px-[20px]",
+            "px-5",
             "py-[5px]",
-            "mb-[10px]",
+            "mb-2.5",
             "600:mb-0",
-            "rounded-[6px]",
+            "rounded-md",
             "bg-white",
             "mr-2.5",
             "flex",
@@ -250,7 +250,7 @@ export default function ProjectDetails({ data }) {
           "my-5"
         )}
       >
-        Go Back To
+        See all
         <span className="text-sky-500 ml-[5px] cursor-pointer hover:underline">
           Projects
         </span>

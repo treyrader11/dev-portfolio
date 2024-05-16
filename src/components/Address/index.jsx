@@ -1,5 +1,5 @@
+import { userData } from "@/lib/data";
 import { cn } from "@/lib/utils";
-import userData from "@/constants/data";
 
 export default function Address({ className }) {
   return (

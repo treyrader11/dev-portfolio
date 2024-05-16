@@ -1,6 +1,5 @@
-import React from "react";
 import { cn } from "@/lib/utils";
-import userData from "@/constants/data";
+import { userData } from "@/lib/data";
 
 export default function Footer() {
   return (
@@ -20,7 +19,7 @@ export default function Footer() {
                   className="px-2 py-1 rounded-md hover:bg-red-500 hover:text-gray-50"
                   href="https://manuarora.in"
                 >
-                  Trey 
+                  Trey
                 </a>
               </div>
             </div>

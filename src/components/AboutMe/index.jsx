@@ -1,4 +1,4 @@
-import userData from "@/constants/data";
+import { userData } from "@/lib/data";
 import { cn } from "@/lib/utils";
 
 export default function AboutMe() {
@@ -101,7 +101,7 @@ export default function AboutMe() {
                 >
                   mail
                 </a>{" "}
-                and I&apos;ll get back. I swear.
+                and I&apos;ll get back the same day.
               </p>
             </div>
             <div className="mt-8">
@@ -141,40 +141,6 @@ export default function AboutMe() {
               Social Links
             </h1>
             <div className="mt-4 ml-4">
-              <div className="flex flex-row items-center justify-start ">
-                <a
-                  href={userData.socialLinks.peerlist}
-                  className="flex flex-row items-center space-x-4 group"
-                >
-                  <div className="my-4">&rarr;</div>
-                  <div
-                    className={cn(
-                      "relative",
-                      "overflow-hidden",
-                      "font-mono",
-                      "text-lg",
-                      "text-gray-500",
-                      "dark:text-gray-300"
-                    )}
-                  >
-                    <div
-                      className={
-                        ("absolute",
-                        "h-0.5",
-                        "w-full",
-                        "bg-gray-400",
-                        "bottom-0",
-                        "transform",
-                        "-translate-x-24",
-                        "group-hover:translate-x-0",
-                        "transition",
-                        "duration-300")
-                      }
-                    ></div>
-                    Peerlist
-                  </div>
-                </a>
-              </div>
               <div className="flex flex-row items-center justify-start ">
                 <a
                   href={userData.socialLinks.facebook}

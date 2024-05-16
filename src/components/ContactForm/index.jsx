@@ -1,6 +1,6 @@
-import userData from "@/constants/data";
 import { cn } from "@/lib/utils";
 import Address from "../Address";
+import { userData } from "@/lib/data";
 
 export default function ContactForm() {
   return (

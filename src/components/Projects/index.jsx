@@ -1,6 +1,7 @@
-import userData from "@/constants/data";
+import { projectsData } from "@/lib/data";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function Projects() {
   return (
@@ -42,14 +43,8 @@ export default function Projects() {
             "md:grid-cols-2"
           )}
         >
-          {userData.projects.map((proj, idx) => (
-            <ProjectCard
-              key={idx}
-              title={proj.title}
-              link={proj.link}
-              imgUrl={proj.src}
-              number={`${idx + 1}`}
-            />
+          {projectsData.map((project, index) => (
+            <ProjectCard key={index} {...project} number={`${index + 1}`} />
           ))}
         </div>
       </div>
@@ -57,16 +52,15 @@ export default function Projects() {
   );
 }
 
-export function ProjectCard({ title, link, imgUrl, number }) {
+export function ProjectCard({ title, video_key, project_image, number }) {
   return (
-    <a href={link} className="block w-full shadow-2xl">
+    <Link href={`/project/${video_key}`} className="block w-full shadow-2xl">
       <div className="relative overflow-hidden">
         <div className="object-cover h-72">
           <Image
-            src={`/images/${imgUrl}`}
+            src={`/images/${project_image}`}
             width={100}
             height={100}
-            // sizes={{}}
             alt="project image"
             className={cn(
               "object-cover",
@@ -108,6 +102,6 @@ export function ProjectCard({ title, link, imgUrl, number }) {
           {number.length === 1 ? "0" + number : number}
         </h1>
       </div>
-    </a>
+    </Link>
   );
 }

@@ -11,7 +11,8 @@ import { scaleAnimation } from "./anim";
 import Image from "next/image";
 import gsap from "gsap";
 import { useRouter } from "next/router";
-import userData from "@/constants/data";
+import { projectsData } from "@/lib/data";
+import Link from "next/link";
 
 const imageProps = {
   className: "size-auto",
@@ -21,8 +22,6 @@ const imageProps = {
   // height: 0,
   height: 0,
 };
-
-const { projects } = userData;
 
 export default function HomeProjects() {
   const [modal, setModal] = useState({ isActive: false, index: 0 });
@@ -105,8 +104,8 @@ export default function HomeProjects() {
   return (
     <>
       <section ref={container} className="relative z-[2] sm:px-2 px-0">
-        {projects.map((project, index) => {
-          const targetScale = 1 - (projects.length - index) * 0.05;
+        {projectsData.map((project, index) => {
+          const targetScale = 1 - (projectsData.length - index) * 0.05;
           return (
             <ProjectShot
               key={`p_${index}`}
@@ -121,7 +120,7 @@ export default function HomeProjects() {
         })}
 
         <Rounded
-          href="/work"
+          href="/projects"
           className={cn(
             "border-secondary",
             "rounded-full",
@@ -144,12 +143,11 @@ export default function HomeProjects() {
               "text-dark"
             )}
           >
-            More work
+            See all projects
           </p>
         </Rounded>
       </section>
 
-      {/* <Modal ref={modalContainer} isActive={isActive} index={index} /> */}
       <motion.div
         ref={modalContainer}
         variants={scaleAnimation}
@@ -182,8 +180,8 @@ export default function HomeProjects() {
             "duration-500"
           )}
         >
-          {projects.map((project, index) => {
-            const { project_image, color } = project;
+          {projectsData.map((project, index) => {
+            const { project_image, video_key, color } = project;
             return (
               <div
                 className={cn(
@@ -224,7 +222,7 @@ export default function HomeProjects() {
         variants={scaleAnimation}
         initial="initial"
         animate={isActive ? "enter" : "closed"}
-      ></motion.div>
+      />
       <motion.div
         ref={cursorLabel}
         className={cn(
@@ -239,13 +237,12 @@ export default function HomeProjects() {
           "justify-center",
           "text-sm",
           "font-light",
-          "pointer-events-none",
-          "cursor-pointer"
+          "pointer-events-none"
         )}
         variants={scaleAnimation}
         initial="initial"
         animate={isActive ? "enter" : "closed"}
-        onClick={() => router.push("/work")}
+        onClick={() => router.push(`/project/${video_key}`)}
       >
         View
       </motion.div>
