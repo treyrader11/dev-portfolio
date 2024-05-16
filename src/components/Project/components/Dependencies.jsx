@@ -21,14 +21,12 @@ export default function Dependencies({ data }) {
     }
   };
 
-  const copydata = data.package?.map((data) => data);
-
   return (
     <div className="w-full h-auto">
       <span className="my-5 text-2xl font-bold text-slate-200">
         Dependencies
       </span>
-      <p className="text-base text-gray-300">{data.dependencies_blog}</p>
+      <p className="text-base text-gray-300">{data[0].dependencies_blog}</p>
       <div
         className={cn(
           "my-[15px]",
@@ -45,7 +43,7 @@ export default function Dependencies({ data }) {
           "border-[#401f788e]"
         )}
       >
-        {data.package?.map((data) => (
+        {data[0].package?.map((data) => (
           <div
             key={data}
             className={cn(
@@ -84,7 +82,7 @@ export default function Dependencies({ data }) {
         ) : (
           <div
             id="button-primary"
-            onClick={() => Copy(data.package)}
+            onClick={() => Copy(data[0].package)}
             className={cn(
               "right-[10px]",
               "top-[10px]",

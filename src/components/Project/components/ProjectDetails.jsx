@@ -28,7 +28,7 @@ export default function ProjectDetails({ data }) {
     );
   };
 
-  console.log(data.video_key, "data.video_key");
+  console.log("data:", data);
 
   return (
     <div
@@ -45,28 +45,32 @@ export default function ProjectDetails({ data }) {
         "800::px-0"
       )}
     >
-      <div className="font-bold text-[25px] text-slate-200 ">{data.title}</div>
-      <ProjectVideo ifreamload={ifreamload} src={data.video_key} />
+      <div className="font-bold text-[25px] text-slate-200 ">
+        {data[0].title}
+      </div>
+      <ProjectVideo ifreamload={ifreamload} src={data[0].video_key} />
       <div className="my-5">
-        <span className="text-2xl font-bold text-slate-200">{data.say_xi}</span>
+        <span className="text-2xl font-bold text-slate-200">
+          {data[0].say_xi}
+        </span>
       </div>
       <div className="">
-        <p className="text-base text-gray-300 ">{data.say_xi_blog}</p>
+        <p className="text-base text-gray-300 ">{data[0].say_xi_blog}</p>
       </div>
       <span className={cn("font-bold text-slate-200 text-2xl mt-[15px]")}>
         Technology & Feature
       </span>
-      <ul className="list-disc ml-[20px] mt-[10px] text-slate-200">
-        {data.technology_feature?.map((data) => (
+      <ul className="list-disc ml-5 mt-2.5 text-slate-200">
+        {data[0].technology_feature.map((data) => (
           <li key={data}>{data}</li>
         ))}
       </ul>
       <span className="my-5 text-2xl font-bold text-slate-200">
         About this app
       </span>
-      <p className="text-gray-300 text-[15px]">{data.about_this_app}</p>
+      <p className="text-gray-300 text-[15px]">{data[0].about_this_app}</p>
       <span className="my-5 text-2xl font-bold text-slate-200">Design</span>
-      <p className="text-gray-300 text-[15px] mb-2.5">{data.design_blog}</p>
+      <p className="text-gray-300 text-[15px] mb-2.5">{data[0].design_blog}</p>
       <Dependencies data={data} />
       <span className="my-5 text-2xl font-bold text-slate-200">Conclusion</span>
       <p className="text-base text-gray-300">
@@ -90,7 +94,7 @@ export default function ProjectDetails({ data }) {
         )}
       >
         <a
-          href={data.youtube_link}
+          href={data[0].youtube_link}
           className={cn(
             "px-5",
             "py-[5px]",
@@ -122,7 +126,7 @@ export default function ProjectDetails({ data }) {
           </span>
         </a>
         <a
-          href={data.githhub_link}
+          href={data[0].githhub_link}
           className={cn(
             "px-5",
             "py-[5px]",
@@ -154,9 +158,9 @@ export default function ProjectDetails({ data }) {
           </span>
         </a>
         <a
-          href={data.frontend_download_link}
+          href={data[0].frontend_download_link}
           className={cn(
-            { hidden: data.frontend_download_link?.length },
+            { hidden: data[0].frontend_download_link.length },
             "px-[20px]",
             "py-[5px]",
             "mb-[10px]",
@@ -183,9 +187,9 @@ export default function ProjectDetails({ data }) {
             stroke="currentColor"
           >
             <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
               d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
             />
           </svg>
@@ -196,7 +200,7 @@ export default function ProjectDetails({ data }) {
         <a
           href="https://github.com/HyatMyat4/Basic_GO_Booking_App_CLI_Project-/archive/refs/heads/main.zip"
           className={cn(
-            data.backend_download_link?.length ? "" : " hidden",
+            data[0].backend_download_link.length ? "" : " hidden",
             "px-5",
             "py-[5px]",
             "mb-2.5",
@@ -222,19 +226,19 @@ export default function ProjectDetails({ data }) {
             stroke="currentColor"
           >
             <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
               d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
             />
           </svg>
-          <span className="text-black  font-bold text-base ml-[6px]">
+          <span className="text-black font-bold text-base ml-[6px]">
             Backend
           </span>
         </a>
       </div>
       <Link
-        href={"/Project"}
+        href={"/projects"}
         className={cn(
           "flex",
           "flex-row",

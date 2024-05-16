@@ -47,7 +47,6 @@ export default function ProjectShot({
           manageModal(true, index);
         }}
         style={{
-          // backgroundImage: `url(/shots/${src})`,
           backgroundImage: `url(/shots/${project_image})`,
           backgroundPosition: "center",
           backgroundSize,

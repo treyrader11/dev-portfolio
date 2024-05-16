@@ -32,7 +32,7 @@ export default function ProjectVideo({ ifreamload, src }) {
           "relative",
           "overflow-hidden",
           "w-full",
-          { hidden: ifreamload },
+          // { hidden: ifreamload },
           "frc",
           "justify-center",
           "pt-[56.25%]",
@@ -43,9 +43,7 @@ export default function ProjectVideo({ ifreamload, src }) {
       >
         <iframe
           id="iframe"
-          // @ts-ignore
           frameborder="0"
-          // @ts-ignore
           allowFullScreen="allowFullScreen"
           mozallowfullscreen="mozallowfullscreen"
           msallowfullscreen="msallowfullscreen"
