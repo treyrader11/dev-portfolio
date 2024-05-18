@@ -1,10 +1,11 @@
+import PageTitle from "@/common/PageTitle";
 import { userData } from "@/lib/data";
 import { cn } from "@/lib/utils";
 
 export default function AboutMe() {
   return (
     <section className="bg-white dark:bg-gray-800">
-      <div
+      {/* <div
         className={cn(
           "h-48",
           "max-w-6xl",
@@ -24,7 +25,8 @@ export default function AboutMe() {
         >
           About Me.
         </h1>
-      </div>
+      </div> */}
+      <PageTitle title="About Me." backgroundColor="white" />
       <div className="bg-[#F1F1F1] -mt-10 dark:bg-gray-900">
         <div className="max-w-6xl pt-20 mx-auto text-container">
           <p

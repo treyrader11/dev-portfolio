@@ -73,9 +73,8 @@ export default function PortfolioNew() {
   };
 
   return (
-    <section className="">
-      <PageTitle title="Portfolio" />
-
+    <section>
+      <PageTitle title="Portfolio." />
       <div
         className={cn(
           "mt-8",
@@ -86,7 +85,6 @@ export default function PortfolioNew() {
           "items-center",
           "gap-[1.5rem]",
           "bg-dark"
-          // "flex-nowrap"
         )}
       >
         {categories.map((categ, index) => {

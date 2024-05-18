@@ -10,7 +10,7 @@ import Button from "@/common/Button";
 export default function ContactForm() {
   return (
     <section className="bg-dark">
-      <PageTitle title="Contact" />
+      <PageTitle title="Contact." />
       <div
         className={cn(
           "relative",
@@ -246,9 +246,8 @@ export default function ContactForm() {
                   )}
                 ></textarea>
               </div>
-              {/* <div className="btn-con"> */}
+
               <Rounded>Send</Rounded>
-              {/* </div> */}
             </form>
           </div>
         </div>
