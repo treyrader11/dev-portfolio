@@ -78,8 +78,7 @@ export default function Header() {
         <ProfilePicture
           isMagnetic
           src={profilePicture}
-          height={80}
-          width={80}
+          className="size-[100px]"
         />
         <Link
           href="/"

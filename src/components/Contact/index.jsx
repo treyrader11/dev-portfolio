@@ -6,7 +6,7 @@ import Rounded from "@/common/Rounded";
 import Magnetic from "@/common/Magnetic";
 import profilePicture from "/public/images/portraits/coffee-portrait-grey.png";
 import ProfilePicture from "@/common/ProfilePicture";
-import { cn } from "@/lib/utils";
+import { cn, getLocalTime } from "@/lib/utils";
 import StyledLink from "@/common/StyledLink";
 import Brand from "@/common/Brand";
 
@@ -30,32 +30,35 @@ export default function Contact() {
         "items-center",
         "justify-center",
         "bg-dark",
-        "relative"
+        "relative",
+        "font-light"
+        // "text-[0.9em]"
       )}
     >
-      {/* <div className={cn("pt-[200px] w-full bg-dark max-w-[1800px]")}> */}
-      <div className={cn("pt-[200px] w-full bg-dark")}>
-        <div
-          className={cn(
-            "border-b-[1px]",
-            "border-light-300",
-            "pb-[100px]",
-            "mx-[200px]",
-            "relative"
-          )}
-        >
+      <div
+        className={cn(
+          "pt-[200px]",
+          "w-full",
+          "bg-dark",
+          "px-6",
+          "sm:px-20",
+          "lg:px-[10rem]"
+        )}
+      >
+        <div className={cn("border-b-[.5px] border-light-300/70")}>
           <span className="flex items-center">
-            <ProfilePicture src={profilePicture} />
-            <h2 className="ml-[0.3em]">Let&apos;s work</h2>
+            <ProfilePicture className="size-[9vw]" src={profilePicture} />
+            <h2 className="ml-[0.3em] tracking-tighter text-[9vw]">
+              Let&apos;s work
+            </h2>
           </span>
-          <h2 className="text-[5vw] m-0 font-light">together</h2>
+          <h2 className="text-[9vw] tracking-tighter font-light">together</h2>
           <motion.div
             style={{ x }}
             className={cn(
               "absolute",
-              "left-[calc(100%_-_100px)]",
-              "sm:left-[calc(100%_-_400px)]",
-              "top-[calc(100%_-_75px)]"
+              "left-[calc(100%_-_275px)]",
+              "top-[calc(100%_-_714px)]"
             )}
           >
             <Rounded
@@ -95,8 +98,20 @@ export default function Contact() {
             />
           </motion.svg>
         </div>
-        <div className={cn("flex", "gap-5", "mt-[100px]", "mx-[200px]")}>
-          <Rounded href="/contact" className="w-20 py-6">
+        <div
+          className={cn(
+            "flex",
+            "flex-col",
+            "md:flex-row",
+            "gap-5",
+            "mt-[100px]",
+            "items-center"
+          )}
+        >
+          <Rounded
+            className={cn("w-full md:w-fit py-5 px-10 border-[.3px]")}
+            href="/contact"
+          >
             <p
               className={cn(
                 "relative",
@@ -109,7 +124,7 @@ export default function Contact() {
               developertrey@gmail.com
             </p>
           </Rounded>
-          <Rounded>
+          <Rounded className={cn("w-full md:w-fit py-5 px-10 border-[.3px]")}>
             <p
               className={cn(
                 "relative",
@@ -123,33 +138,70 @@ export default function Contact() {
             </p>
           </Rounded>
         </div>
-        <div className={cn("flex justify-between mt-[200px] p-5")}>
-          <div className="flex gap-2.5 items-end">
-            <span className={cn("flex items-center gap-3.5")}>
-              <StyledLink className="flex gap-1.5">
-                {new Date().toLocaleDateString("en-US", {
-                  year: "numeric",
-                })}
-                <Brand />
-              </StyledLink>
-            </span>
-          </div>
-          <Socials />
-        </div>
       </div>
+      <footer
+        className={cn(
+          "flex",
+          "flex-col",
+          "size-full",
+          "md:flex-row",
+          "md:flex-row-reverse",
+          "md:items-center",
+          "justify-between",
+          "mt-[100px]",
+          "p-6"
+        )}
+      >
+        <Socials className={cn("py-5")} />
+        <div className={cn("flex gap-2.5 py-5 w-full")}>
+          <span
+            className={cn(
+              "flex",
+              "items-end",
+              "w-full",
+              "text-[15px]",
+              "justify-between",
+              "md:justify-normal",
+              "gap-3.5"
+            )}
+          >
+            <StyledLink className="flex gap-1">
+              {new Date().toLocaleDateString("en-US", {
+                year: "numeric",
+              })}
+              <Brand />
+            </StyledLink>
+            <span className="flex flex-col gap-3">
+              <h5 className="text-[10px] uppercase text-light-100">
+                local time
+              </h5>
+              {getLocalTime()}
+            </span>
+          </span>
+        </div>
+      </footer>
     </motion.div>
   );
 }
 
 export function Socials({ className }) {
   return (
-    <div className={className}>
-      <span className={cn("flex flex-col gap-3.5")}>
+    <div
+      className={cn(
+        "border-b-[.5px]",
+        "border-light-100/80",
+        "md:border-none",
+        "space-y-2",
+        className
+      )}
+    >
+      <h5 className="text-[10px] uppercase text-light-100">Socials</h5>
+      <span className={cn("flex gap-3.5")}>
         <StyledLink>Github</StyledLink>
+        <StyledLink>Youtube</StyledLink>
+        <StyledLink>Instagram</StyledLink>
+        <StyledLink>Linkedin</StyledLink>
       </span>
-      <StyledLink>Youtube</StyledLink>
-      <StyledLink>Instagram</StyledLink>
-      <StyledLink>Linkedin</StyledLink>
     </div>
   );
 }

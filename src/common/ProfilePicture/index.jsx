@@ -3,24 +3,15 @@ import Image from "next/image";
 import Magnetic from "../Magnetic";
 import Link from "next/link";
 
-export default function ProfilePicture({
-  src,
-  className,
-  height = 100,
-  width = 100,
-  isMagnetic = false,
-}) {
+export default function ProfilePicture({ src, className, isMagnetic = false }) {
   const containerProps = {
     className: cn(
       "rounded-full",
       "overflow-hidden",
       "relative",
-      // "border",
-      // "border",
-      // "border-purple-500",
+      "flex",
       className
     ),
-    style: { height, width },
   };
 
   const imageProps = {
