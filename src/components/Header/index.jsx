@@ -23,6 +23,7 @@ export default function Header() {
   const path = usePathname();
 
   const isHomePage = path === "/";
+  const isPortfolioPage = path === "/portfolio";
   const isContactPage = path.includes("contact");
 
   const handleNavMenu = useCallback(() => {
@@ -102,7 +103,7 @@ export default function Header() {
         <Link
           href="/"
           className={cn("pl-3", "mr-auto", "text-black", {
-            "text-white": isHomePage || isContactPage,
+            "text-white": isHomePage || isContactPage || isPortfolioPage,
           })}
         >
           <Copyright />
@@ -111,7 +112,9 @@ export default function Header() {
         <NavMenu
           handleNavMenu={handleNavMenu}
           className={cn(
-            isHomePage || isContactPage ? "text-white" : "text-black"
+            isHomePage || isContactPage || isPortfolioPage
+              ? "text-white"
+              : "text-black"
           )}
         />
         <div

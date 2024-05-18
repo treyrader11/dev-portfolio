@@ -5,8 +5,6 @@ import SlidingImages from "@/components/SlidingImages";
 import { AnimatePresence } from "framer-motion";
 import { useState, useEffect } from "react";
 import { Inter } from "next/font/google";
-// import Curve from "@/components/Layout/Curve";
-// import Stairs from "@/components/Layout/Stairs";
 import Inner from "@/components/Layout/Inner";
 import Projects from "@/components/Projects";
 import Hero from "@/components/Hero";

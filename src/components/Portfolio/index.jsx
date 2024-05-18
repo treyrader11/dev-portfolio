@@ -30,7 +30,8 @@ export default function Portfolio() {
         </h1>
       </div>
       {/* Grid starts here */}
-      <div className="bg-[#F1F1F1] dark:bg-gray-900">
+      {/* <div className="bg-[#F1F1F1] dark:bg-gray-900"> */}
+      <div className="bg-dark">
         <div
           className={cn(
             "grid",

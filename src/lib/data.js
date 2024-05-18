@@ -39,6 +39,7 @@ export const projectsData = [
     isPriority: true,
     video_key: "yF1oJ7wzvWY",
     say_xi: "Xi Form Responsive Food Project🤤",
+    category: "Web Development",
     say_xi_blog:
       "Food Shopping Project With Graphql server User Authentication  , Create , Read ,  Update , Delete And Google login , Github , Instgram , Facebook , JWT Auth  ",
     technology_feature: [
@@ -105,6 +106,7 @@ export const projectsData = [
     color: "#d6d7dc",
     isPriority: false,
     video_key: "HvkrAjHJ-38",
+    category: "Game Development",
     say_xi: "Xi from my first mobile app 📱",
     say_xi_blog:
       "ReactNative First Project With Expo CLI Conatain Google AUthentication Contain Basic RestApi and Google Maps functionality ",
@@ -118,7 +120,6 @@ export const projectsData = [
       "Express js",
       "Postger sql",
     ],
-
     about_this_app:
       "It My First ReactNative App So The have a lot of Bug!, Feature Conatin Google Auth UserCanOrder Remove Order And Containe ReactNativeMap Justlike Deliveroo",
     design_blog: "Desing From PapaReact YouTube Channel",
@@ -169,6 +170,7 @@ export const projectsData = [
     color: "#e3e3e3",
     isPriority: true,
     video_key: "yF1oJ7wzvWY",
+    category: "UI/UX Design",
     say_xi: "Xi Form Responsive Food Project🤤",
     say_xi_blog:
       "Food Shopping Project With Graphql server User Authentication  , Create , Read ,  Update , Delete And Google login , Github , Instgram , Facebook , JWT Auth  ",
@@ -237,6 +239,7 @@ export const projectsData = [
     color: "#21242b",
     isPriority: false,
     video_key: "R90bxY4UwPg",
+    category: "UI/UX Design",
     say_xi: "Xello My Frends 💚",
     say_xi_blog:
       "This is my First AI Project data Coming From Opend AI , You can asked like RealTime Chat GPT   ",
@@ -288,6 +291,7 @@ export const projectsData = [
     color: "#ec4e39",
     isPriority: true,
     video_key: "v3LJMcWbcDQ",
+    category: "Web Development",
     say_xi: "Hello my friends 👟",
     say_xi_blog:
       "Xi That is My  Fullstack Responsive Shoes Project I get A lot of SKill Form This Project Complex Ui , authentication , CRUD 💚💚 ",
@@ -355,6 +359,7 @@ export const projectsData = [
     isPriority: false,
     title: "Morden 3 js Profiol",
     video_key: "6wzf2ho-kzI",
+    category: "Web Development",
     say_xi: "Hello my friend! 👋🏼",
     say_xi_blog:
       "This is a Normal 3 js Responsive Profiol Website Constain Starts Mode , Background Music , Day and Light Mode , Contain youtube emb video like youtube Mobile Responsive desing Base on Vite ",
