@@ -2,10 +2,17 @@ import { cn } from "@/lib/utils";
 import Link from "next/link";
 // import Magnetic from "../Magnetic";
 
-export default function StyledLink({ className, label, children, href }) {
+export default function StyledLink({
+  className,
+  label,
+  children,
+  href,
+  target = "#",
+}) {
   return (
     <Link
       href={href || "#"}
+      target={target}
       className={cn(
         "m-0",
         "p-[2.5px]",

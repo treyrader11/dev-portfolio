@@ -20,7 +20,6 @@ export const userData = {
     linkedin: "https://linkedin.com/in/trey-rader",
     github: "https://github.com/treyrader11",
     facebook: "https://facebook.com/",
-    // peerlist: "https://peerlist.io/manuarora",
   },
   about: {
     title:

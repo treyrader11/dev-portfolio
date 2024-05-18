@@ -9,6 +9,7 @@ import ProfilePicture from "@/common/ProfilePicture";
 import { cn, getLocalTime } from "@/lib/utils";
 import StyledLink from "@/common/StyledLink";
 import Brand from "@/common/Brand";
+import { userData } from "@/lib/data";
 
 export default function Contact() {
   const container = useRef(null);
@@ -185,6 +186,7 @@ export default function Contact() {
 }
 
 export function Socials({ className }) {
+  const { socialLinks } = userData;
   return (
     <div
       className={cn(
@@ -197,10 +199,18 @@ export function Socials({ className }) {
     >
       <h5 className="text-[10px] uppercase text-light-100">Socials</h5>
       <span className={cn("flex gap-3.5")}>
-        <StyledLink>Github</StyledLink>
-        <StyledLink>Youtube</StyledLink>
-        <StyledLink>Instagram</StyledLink>
-        <StyledLink>Linkedin</StyledLink>
+        <StyledLink target="_blank" href={socialLinks.github}>
+          Github
+        </StyledLink>
+        <StyledLink target="_blank" href={socialLinks.youtube}>
+          Youtube
+        </StyledLink>
+        <StyledLink target="_blank" href={socialLinks.instagram}>
+          Instagram
+        </StyledLink>
+        <StyledLink target="_blank" href={socialLinks.linkedin}>
+          Linkedin
+        </StyledLink>
       </span>
     </div>
   );
