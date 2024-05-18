@@ -1,6 +1,4 @@
 import { cn } from "@/lib/utils";
-import React from "react";
-cn;
 
 export default function Button({
   name,
@@ -31,11 +29,9 @@ export default function Button({
         padding: bPad,
         fontWeight: bFw,
       }}
-      theme={theme}
     >
       {name}
       <span className="ml-[.6rem]">{icon}</span>
-
       <div
         className={cn(
           "scale-[1.4]",

@@ -1,24 +1,16 @@
 import { cn } from "@/lib/utils";
 import Address from "../Address";
 import { userData } from "@/lib/data";
+import PageTitle from "@/common/PageTitle";
+import Button from "@/common/Button";
+import Image from "next/image";
+import Input from "@/common/Input";
+import Rounded from "@/common/Rounded";
 
 export default function ContactForm() {
   return (
     <section className="bg-dark">
-      <div className={cn("max-w-6xl", "mx-auto", "h-48", "bg-dark")}>
-        <h1
-          className={cn(
-            "py-20",
-            "text-5xl",
-            "font-bold",
-            "text-center",
-            "md:text-9xl",
-            "md:text-left"
-          )}
-        >
-          Contact
-        </h1>
-      </div>
+      <PageTitle title="Contact" />
       <div
         className={cn(
           "relative",
@@ -38,7 +30,7 @@ export default function ContactForm() {
           <div className="md:ml-4">
             <header className="">
               <h1 className="text-2xl font-semibold text-gray-50">
-                Get in touch, let&apos;s talk.
+                Let&apos;s talk.
               </h1>
               <p className="mt-2 text-base font-light text-gray-200">
                 Fill in the details and I&apos;ll get back to you as soon as I
@@ -56,7 +48,7 @@ export default function ContactForm() {
                   "border",
                   "˝border-[#02044A]",
                   "hover:border",
-                  "hover:border-blue-500",
+                  "hover:border-purple-500",
                   "p-4"
                 )}
               >
@@ -65,7 +57,7 @@ export default function ContactForm() {
                   width="16"
                   height="16"
                   fill="currentColor"
-                  className="w-4 h-4 text-blue-500 bi bi-telephone-fill"
+                  className="text-purple-500 size-4 bi bi-telephone-fill"
                   viewBox="0 0 16 16"
                 >
                   <path
@@ -87,7 +79,7 @@ export default function ContactForm() {
                   "border",
                   "border-[#02044A]",
                   "hover:border",
-                  "hover:border-blue-500",
+                  "hover:border-purple-500",
                   "p-4"
                 )}
               >
@@ -96,7 +88,7 @@ export default function ContactForm() {
                   width="16"
                   height="16"
                   fill="currentColor"
-                  className="w-4 h-4 text-blue-500 bi bi-envelope-fill"
+                  className="text-purple-500 size-4 bi bi-envelope-fill"
                   viewBox="0 0 16 16"
                 >
                   <path d="M.05 3.555A2 2 0 0 1 2 2h12a2 2 0 0 1 1.95 1.555L8 8.414.05 3.555zM0 4.697v7.104l5.803-3.558L0 4.697zM6.761 8.83l-6.57 4.027A2 2 0 0 0 2 14h12a2 2 0 0 0 1.808-1.144l-6.57-4.027L8 9.586l-1.239-.757zm3.436-.586L16 11.801V4.697l-5.803 3.546z" />
@@ -110,7 +102,7 @@ export default function ContactForm() {
                   "border",
                   "border-[#02044A]",
                   "hover:border",
-                  "hover:border-blue-500"
+                  "hover:border-purple-500"
                 )}
               />
             </div>
@@ -120,7 +112,7 @@ export default function ContactForm() {
                 className={cn(
                   "size-10",
                   "rounded-full",
-                  "hover:bg-blue-500",
+                  "hover:bg-purple-500",
                   "flex",
                   "items-center",
                   "justify-center",
@@ -143,7 +135,15 @@ export default function ContactForm() {
               </a>
               <a
                 href={userData.socialLinks.twitter}
-                className="flex items-center justify-center w-10 h-10 rounded-full cursor-pointer hover:bg-blue-500"
+                className={cn(
+                  "flex",
+                  "items-center",
+                  "justify-center",
+                  "rounded-full",
+                  "cursor-pointer",
+                  "size-10",
+                  "hover:bg-purple-500"
+                )}
               >
                 <svg
                   width="24"
@@ -193,89 +193,54 @@ export default function ContactForm() {
               </a>
             </div>
           </div>
-          <form className="flex flex-col p-4 bg-white rounded-lg form">
-            <label htmlFor="name" className="mx-4 text-sm text-gray-600">
-              {" "}
-              Your Name
-            </label>
-            <input
-              type="text"
-              className={cn(
-                "px-1",
-                "py-2",
-                "mx-4",
-                "mt-2",
-                "font-light",
-                "border",
-                "rounded-md",
-                "focus:outline-none",
-                "focus:ring-2",
-                "focus:border-none",
-                "ring-purple-500"
-              )}
-              name="name"
-            />
-            <label htmlFor="email" className="mx-4 mt-4 text-sm text-gray-600">
-              Email
-            </label>
-            <input
-              type="text"
-              className={cn(
-                "px-1",
-                "py-2",
-                "mx-4",
-                "mt-2",
-                "font-light",
-                "border",
-                "rounded-md",
-                "focus:outline-none",
-                "focus:ring-2",
-                "focus:border-none",
-                "ring-purple-500"
-              )}
-              name="email"
-            />
-            <label
-              htmlFor="message"
-              className="mx-4 mt-4 text-sm text-gray-600"
-            >
-              Message
-            </label>
-            <textarea
-              rows="4"
-              type="text"
-              className={cn(
-                "px-1",
-                "py-2",
-                "mx-4",
-                "mt-2",
-                "font-light",
-                "border",
-                "rounded-md",
-                "focus:outline-none",
-                "focus:ring-2",
-                "focus:border-none",
-                "ring-purple-500"
-              )}
-              name="message"
-            ></textarea>
-            <button
-              type="submit"
-              className={cn(
-                "w-1/2",
-                "py-2",
-                "mx-4",
-                "mt-8",
-                "text-xs",
-                "font-bold",
-                "bg-blue-500",
-                "rounded-md",
-                "text-gray-50"
-              )}
-            >
-              Send Message
-            </button>
-          </form>
+
+          <div className={cn("flex gap-8 mt-[3.rem] flex-col")}>
+            <div className={cn("w-2/5 relative")}>
+              <Image
+                src={`/images/map.png`}
+                alt="image of map"
+                width={100}
+                height={100}
+                className="w-full object-cover opacity-[0.1]"
+              />
+            </div>
+            <form action="" className={cn(" flex flex-col gap-[1.2rem]")}>
+              <div className={cn("flex gap-4")}>
+                <Input type="text" placeholder="Your name" />
+                <Input type="email" placeholder="Email address" />
+              </div>
+              <div className="input-control">
+                <Input type="text" placeholder="Subject" />
+              </div>
+              <div className="input-control">
+                <textarea
+                  name=""
+                  id=""
+                  cols="30"
+                  rows="6"
+                  placeholder="Message"
+                  className={cn(
+                    "w-full",
+                    "py-4",
+                    "px-6",
+                    "rounded-[30px]",
+                    "outline-none",
+                    "border-none",
+                    "resize-none",
+                    "bg-dark-400",
+                    "focus:outline-purple-400",
+                    "outline-[1px]",
+                    "transition-all",
+                    "duration-300",
+                    "ease-in-out"
+                  )}
+                ></textarea>
+              </div>
+              {/* <div className="btn-con"> */}
+              <Rounded>Send</Rounded>
+              {/* </div> */}
+            </form>
+          </div>
         </div>
       </div>
     </section>

@@ -2,11 +2,10 @@
 
 import { projectsData } from "@/lib/data";
 import { cn, getUnique } from "@/lib/utils";
-import Image from "next/image";
-import Link from "next/link";
 import { useRef, useState } from "react";
 import gsap from "gsap";
 import PortfolioItem from "./components/portfolioItem";
+import PageTitle from "@/common/PageTitle";
 
 // const activeClass =
 //   "text-purple-500 after:absolute after:left-0 after:bottom-[-5px] after:bg-purple-500 after:w-full after:h-[2px]";
@@ -75,25 +74,7 @@ export default function PortfolioNew() {
 
   return (
     <section className="">
-      <div className={cn("h-48", "mx-auto", "bg-dark-400", "px-6")}>
-        <h1
-          className={cn(
-            "py-[130px]",
-            "md:py-[110px]",
-            // "py-[2.6em]",
-            // "text-6xl",
-            "text-8xl",
-            "font-bold",
-            "text-center",
-            "md:text-left",
-            "text-left",
-            "md:text-9xl",
-            "text-secondary"
-          )}
-        >
-          Portfolio
-        </h1>
-      </div>
+      <PageTitle title="Portfolio" />
 
       <div
         className={cn(
@@ -104,13 +85,13 @@ export default function PortfolioNew() {
           "flex",
           "items-center",
           "gap-[1.5rem]",
-          "bg-dark",
+          "bg-dark"
           // "flex-nowrap"
         )}
       >
         {categories.map((categ, index) => {
           const activeClass = cn(
-            { active  },
+            { active },
             "relative",
             "after:absolute",
             "after:block",
@@ -132,7 +113,6 @@ export default function PortfolioNew() {
                 "inline-block",
                 "font-semibold",
                 "text-white",
-                // "text-lg",
                 "border-none",
                 "outline-none",
                 "cursor-pointer",
