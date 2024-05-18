@@ -34,6 +34,16 @@
     /* margin: 0px;
     overflow: hidden; */
     cursor: wait;
+    &::-webkit-scrollbar {
+      width: 6px;
+    }
+    &::-webkit-scrollbar-thumb {
+      background-color: #934E00;
+      border-radius: 10px;
+    }
+    &::-webkit-scrollbar-track {
+      background-color: #222121;
+    }
   }
 
   .custom-font {

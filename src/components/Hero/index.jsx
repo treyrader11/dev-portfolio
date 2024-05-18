@@ -28,7 +28,7 @@ export default function Hero({ isLoading }) {
       ref={hero}
       className={cn("h-screen", "bg-dark", "custom-font", "relative", "flex")}
     >
-      <div className="absolute top-0 left-0 pointer-events-none">
+      <div className="absolute z-[99] top-0 left-0 pointer-events-none">
         <Particle />
       </div>
 
