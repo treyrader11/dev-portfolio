@@ -21,15 +21,6 @@ export default function ProjectDetails({ data }) {
     }
   }, []);
 
-  const Copy = () => {
-    sethavecopy(true);
-    navigator.clipboard.writeText(
-      "pnpm i @react-navigation/native-stack @react-navigation/native"
-    );
-  };
-
-  console.log("data:", data);
-
   return (
     <div
       className={cn(
@@ -238,7 +229,7 @@ export default function ProjectDetails({ data }) {
         </a>
       </div>
       <Link
-        href={"/projects"}
+        href={"/portfolio"}
         className={cn(
           "flex",
           "flex-row",

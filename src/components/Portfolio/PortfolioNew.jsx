@@ -84,7 +84,7 @@ export default function PortfolioNew() {
           "bg-dark"
         )}
       >
-        <p className="">
+        <p className="text-white">
           Following projects showcase my skills and experience through
           real-world examples of my work. Each project is briefly described with
           links to code repositories and live demos in it. It reflects my
