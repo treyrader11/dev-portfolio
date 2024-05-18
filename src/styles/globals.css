@@ -31,8 +31,6 @@
   }
 
   body {
-    /* margin: 0px;
-    overflow: hidden; */
     cursor: wait;
     &::-webkit-scrollbar {
       width: 6px;

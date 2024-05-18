@@ -8,6 +8,7 @@ import { slideUp } from "./anim";
 import BackgroundVideo from "@/common/BackgroundVideo";
 import Image from "next/image";
 import Particle from "@/common/Particle";
+import Rounded from "@/common/Rounded";
 
 const phrase =
   "I'm a selectively skilled web developer focusing on delivering quality & impactful digital experiences.";
@@ -124,32 +125,32 @@ export default function Hero({ isLoading }) {
           />
         </div>
       </div>
-      {/* <div
-        className={cn(
-          "w-1/2",
-          "h-full",
-          "hidden",
-          "1140:flex",
-          "flex-row",
-          "items-center",
-          "select-none",
-          "justify-between"
-        )}
-      >
-        <Image
-          src="/icons/mainIconsdark.svg"
-          width={708}
-          height={709}
-          alt="tech stack image"
-          className={cn(
-            "flex",
-            "animate-slideright2",
-            // "transition_",
-            "duration-[700]",
-            "transition-all"
-          )}
-        />
-      </div> */}
+      <div data-scroll data-scroll-speed={0.1}>
+        <div className={cn("z-[99]", "absolute", "right-[10%]", "top-[70%]")}>
+          <Rounded
+            href="/about"
+            className={cn(
+              "top-[80%]",
+              // "md:left-[clac(100%_-_400px)]",
+              "left-0",
+              "size-[180px]",
+              "bg-dark-400"
+            )}
+          >
+            <p
+              className={cn(
+                "relative",
+                "z-[1]",
+                "transition-colors",
+                "duration-400",
+                "ease-linear"
+              )}
+            >
+              Download CV
+            </p>
+          </Rounded>
+        </div>
+      </div>
     </section>
   );
 }
