@@ -120,7 +120,7 @@ export default function Projects() {
         })}
 
         <Rounded
-          href="/projects"
+          href="/portfolio"
           className={cn(
             "border-secondary",
             "rounded-full",

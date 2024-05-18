@@ -5,6 +5,7 @@ import PageTitle from "@/common/PageTitle";
 import Image from "next/image";
 import Input from "@/common/Input";
 import Rounded from "@/common/Rounded";
+import Button from "@/common/Button";
 
 export default function ContactForm() {
   return (
@@ -163,7 +164,13 @@ export default function ContactForm() {
               <Rounded
                 href={userData.socialLinks.instagram}
                 className={cn(
-                  "flex items-center justify-center size-10 rounded-full cursor-pointer hover:bg-purple-500"
+                  "flex",
+                  "items-center",
+                  "justify-center",
+                  "size-10",
+                  "rounded-full",
+                  "cursor-pointer",
+                  "hover:bg-purple-500"
                 )}
               >
                 <svg
@@ -233,7 +240,9 @@ export default function ContactForm() {
                     "outline-[1px]",
                     "transition-all",
                     "duration-300",
-                    "ease-in-out"
+                    "ease-in-out",
+                    "bg-white",
+                    "text-white"
                   )}
                 ></textarea>
               </div>

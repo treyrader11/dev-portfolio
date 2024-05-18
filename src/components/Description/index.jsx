@@ -7,7 +7,6 @@ import { cn } from "@/lib/utils";
 import { useLayoutEffect, useRef } from "react";
 import ScrollTrigger from "gsap/dist/ScrollTrigger";
 import gsap from "gsap";
-import Link from "next/link";
 
 const styles = {
   description: cn(
@@ -75,7 +74,6 @@ export default function Description() {
           me in a unique place in the web design world.
         </motion.p>
         <div data-scroll data-scroll-speed={0.1}>
-          {/* <div className={cn("left-[clac(100%_-_400px)]", "absolute", "-right-[50%]")}> */}
           <div className={cn("", "absolute", "right-0", "top-[80%]")}>
             <Rounded
               href="/about"
@@ -85,7 +83,6 @@ export default function Description() {
                 "left-0",
                 "size-[180px]",
                 "bg-dark-400"
-                // "absolute"
               )}
             >
               <p

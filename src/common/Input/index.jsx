@@ -19,6 +19,8 @@ export default function Input({ className, type, placeholder }) {
         "transition-all",
         "duration-300",
         "ease-in-out",
+        "bg-white",
+        "text-black",
         className
       )}
     />

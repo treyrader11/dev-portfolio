@@ -42,6 +42,22 @@ export default function Button({
           "ease-in-out"
         )}
       />
+      <span
+        className={cn(
+          "absolute",
+          "bottom-[-110]",
+          "right-[-70px]",
+          "h-[140px]",
+          "bg-white",
+          "rounded-[50%]",
+          "transition-all",
+          "duration-300",
+          "ease-in-out",
+          "opacity-[0.2]",
+          "border",
+          "border-[rgb(249,215,76)]"
+        )}
+      />
     </button>
   );
 }

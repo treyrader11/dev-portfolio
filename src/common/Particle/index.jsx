@@ -12,6 +12,7 @@ export default function Particle() {
   return (
     <Particles
       id="tsparticles"
+      className="h-screen"
     //   init={particlesInit}
       loaded={particlesLoaded}
       options={{
