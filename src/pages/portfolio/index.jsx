@@ -1,4 +1,4 @@
-import Inner from "@/components/Layout/Inner";
+import Inner from "@/common/layout/Inner";
 import Portfolio from "@/components/Portfolio";
 import PortfolioNew from "@/components/Portfolio/PortfolioNew";
 

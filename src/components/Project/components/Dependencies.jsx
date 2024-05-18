@@ -1,9 +1,7 @@
 "use client";
 
-import {
-  ClipboardDocumentCheckIcon,
-  CheckCircleIcon,
-} from "@heroicons/react/24/outline";
+import { FaRegCheckCircle } from "react-icons/fa";
+import { LuCopyCheck } from "react-icons/lu";
 
 import { cn } from "@/lib/utils";
 import { useState } from "react";
@@ -76,7 +74,7 @@ export default function Dependencies({ data }) {
               "rounded-[5px]"
             )}
           >
-            <CheckCircleIcon className="text-teal-400 size-5" />
+            <FaRegCheckCircle className="text-teal-400 size-5" />
             <span className=" ml-[7px] text-teal-400 text-base">Copied!</span>
           </div>
         ) : (
@@ -97,7 +95,7 @@ export default function Dependencies({ data }) {
               "rounded-[5px]"
             )}
           >
-            <ClipboardDocumentCheckIcon className="text-white size-5" />
+            <LuCopyCheck className="text-white size-5" />
             <span className="text-base ml-[7px]">Copy</span>
           </div>
         )}

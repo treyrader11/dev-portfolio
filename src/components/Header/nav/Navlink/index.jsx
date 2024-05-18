@@ -1,11 +1,11 @@
 "use client";
 
-import NextLink from "next/link";
+import Link from "next/link";
 import { motion } from "framer-motion";
 import { scale, slide } from "../../anim";
 import { cn } from "@/lib/utils";
 
-export default function Link({
+export default function Navlink({
   data,
   isActive,
   setSelectedIndicator,
@@ -15,7 +15,7 @@ export default function Link({
 
   return (
     <motion.div
-      className={cn("relative", "flex", "items-center", className)}
+      className={cn("relative flex items-center", className)}
       onMouseEnter={() => {
         setSelectedIndicator(href);
       }}
@@ -29,16 +29,14 @@ export default function Link({
         variants={scale}
         animate={isActive ? "open" : "closed"}
         className={cn(
-          "w-[10px]",
-          // "w-fit",
-          "h-[10px]",
+          "size-2.5",
           "bg-white",
           "rounded-full",
           "absolute",
           "-left-[30px]"
         )}
       />
-      <NextLink href={href}>{label}</NextLink>
+      <Link href={href}>{label}</Link>
     </motion.div>
   );
 }

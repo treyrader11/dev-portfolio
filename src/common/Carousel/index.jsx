@@ -1,13 +1,16 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import useMeasure from "react-use-measure";
 import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
-import styles from "./styles";
-import { Shot } from "../Projects/components/ProjectShot";
+import { Shot } from "../../components/Projects/components/ProjectShot";
 import { cn } from "@/lib/utils";
 // import { CourseCard } from "./Courses/CourseCard";
+
+const styles = {
+  container: cn("overflow-hidden", "relative"),
+};
 
 const CARD_WIDTH = 350;
 const CARD_HEIGHT = 350;
@@ -46,7 +49,7 @@ export default function Carousel({ items, children }) {
   };
 
   return (
-    <section ref={ref} className="">
+    <section ref={ref}>
       <div className={styles.container}>
         <div className="max-w-6xl mx-auto">
           <motion.div
@@ -99,7 +102,21 @@ export default function Carousel({ items, children }) {
             animate={{
               x: CAN_SHIFT_RIGHT ? "0%" : "100%",
             }}
-            className="absolute right-0 top-[60%] z-30 rounded-l-xl bg-slate-100/30 p-3 pr-2 text-4xl text-white backdrop-blur-sm transition-[padding] hover:pr-3"
+            className={cn(
+              "absolute",
+              "right-0",
+              "top-[60%]",
+              "z-30",
+              "rounded-l-xl",
+              "bg-slate-100/30",
+              "p-3",
+              "pr-2",
+              "text-4xl",
+              "text-white",
+              "backdrop-blur-sm",
+              "transition-[padding]",
+              "hover:pr-3"
+            )}
             onClick={shiftRight}
           >
             <FiChevronRight />

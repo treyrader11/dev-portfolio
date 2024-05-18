@@ -1,13 +1,13 @@
 import Description from "@/components/Description";
-import Contact from "@/components/Contact";
+import Contact from "@/components/contact";
 import Preloader from "@/components/Preloader";
-import SlidingImages from "@/components/SlidingImages";
+import SlidingImages from "@/components/home/SlidingImages";
 import { AnimatePresence } from "framer-motion";
 import { useState, useEffect } from "react";
 import { Inter } from "next/font/google";
-import Inner from "@/components/Layout/Inner";
+import Inner from "@/common/layout/Inner";
 import Projects from "@/components/Projects";
-import Hero from "@/components/Hero";
+import Hero from "@/components/home/Hero";
 import { cn } from "@/lib/utils";
 
 const inter = Inter({ subsets: ["latin"] });

@@ -98,29 +98,6 @@ export default function Description() {
               </p>
             </Rounded>
           </div>
-          {/* <Rounded
-            href="/about"
-            className={cn(
-              "top-[80%]",
-              "md:left-[clac(100%_-_400px)]",
-              "left-0",
-              "size-[180px]",
-              "bg-dark-400",
-              "absolute"
-            )}
-          >
-            <p
-              className={cn(
-                "relative",
-                "z-[1]",
-                "transition-colors",
-                "duration-400",
-                "ease-linear"
-              )}
-            >
-              About me
-            </p>
-          </Rounded> */}
         </div>
       </div>
     </section>

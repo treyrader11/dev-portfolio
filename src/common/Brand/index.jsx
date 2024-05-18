@@ -1,8 +1,8 @@
 import { cn } from "@/lib/utils";
 
-export default function Copyright({ className }) {
+export default function Brand({ className }) {
   return (
-    <div className={cn("group", "flex", "cursor-pointer", className)}>
+    <div className={cn("group flex cursor-pointer", className)}>
       <p
         className={cn(
           "m-0",

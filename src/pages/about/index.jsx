@@ -1,10 +1,10 @@
-import Inner from "@/components/Layout/Inner";
-import AboutMe from "@/components/AboutMe";
+import Inner from "@/common/layout/Inner";
+import About from "@/components/about";
 
 export default function AboutPage() {
   return (
     <Inner backgroundColor="#934E00">
-      <AboutMe />
+      <About />
     </Inner>
   );
 }

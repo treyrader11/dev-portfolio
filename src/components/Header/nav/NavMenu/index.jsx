@@ -2,7 +2,7 @@
 
 import styles from "./styles";
 import Magnetic from "@/common/Magnetic";
-import { routes } from "../nav/routes";
+import { routes } from "../routes";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 

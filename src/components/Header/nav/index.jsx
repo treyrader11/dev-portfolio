@@ -4,11 +4,11 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { usePathname } from "next/navigation";
 import { menuSlide } from "../anim";
-import Link from "./Link";
+import Navlink from "./Navlink";
 import Curve from "./Curve";
 import Footer from "./Footer";
 import { routes } from "./routes";
-import GithubCornerBadge from "@/components/GithubCornerBadge";
+import GithubCornerBadge from "@/common/GithubCornerBadge";
 import { cn } from "@/lib/utils";
 
 export default function Nav() {
@@ -25,7 +25,6 @@ export default function Nav() {
         "h-screen",
         "bg-dark-500",
         "fixed",
-        // "z-[99999]",
         "inset-x-0",
         "text-white",
         "z-[4]",
@@ -64,12 +63,13 @@ export default function Nav() {
           </div>
           {routes.map((routes, index) => {
             return (
-              <Link
+              <Navlink
                 key={index}
                 data={{ ...routes, index }}
                 isActive={selectedIndicator == routes.href}
                 setSelectedIndicator={setSelectedIndicator}
-                className={cn("no-underline", "text-white", "font-light")}
+                // className={cn("no-underline text-white font-light")}
+                className={cn("text-white font-light")}
               />
             );
           })}

@@ -3,7 +3,7 @@ import Link from "next/link";
 import { cn } from "@/lib/utils";
 import ProjectDetails from "@/components/Project/components/ProjectDetails";
 import { projectsData } from "@/lib/data";
-import Inner from "@/components/Layout/Inner";
+import Inner from "@/common/layout/Inner";
 
 export default function ProjectPage({ project }) {
   return (

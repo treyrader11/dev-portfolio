@@ -9,6 +9,7 @@ import BackgroundVideo from "@/common/BackgroundVideo";
 import Image from "next/image";
 import Particle from "@/common/Particle";
 import Rounded from "@/common/Rounded";
+import { userData } from "@/lib/data";
 
 const phrase =
   "I'm a selectively skilled web developer focusing on delivering quality & impactful digital experiences.";
@@ -59,7 +60,7 @@ export default function Hero({ isLoading }) {
           onMouseLeave={() => {
             setIsHovered(false);
           }}
-          className={cn("w-[1000px]", "p-10", "mt-[9%]")}
+          className={cn("w-[1000px] p-10 mt-[9%]")}
         >
           Developing the web for
           <span className="text-purple-400"> 7 years</span> and making good shit
@@ -119,7 +120,7 @@ export default function Hero({ isLoading }) {
               "flex",
               "animate-slideright2",
               // "transition_",
-              "duration-[700]",
+              "duration-700",
               "transition-all"
             )}
           />
@@ -133,11 +134,13 @@ export default function Hero({ isLoading }) {
               "top-[80%]",
               // "md:left-[clac(100%_-_400px)]",
               "left-0",
-              "size-[180px]",
+              "size-[140px]",
               "bg-dark-400"
             )}
           >
-            <p
+            <a
+              href={userData.resumeUrl}
+              target="__blank"
               className={cn(
                 "relative",
                 "z-[1]",
@@ -147,7 +150,7 @@ export default function Hero({ isLoading }) {
               )}
             >
               Download CV
-            </p>
+            </a>
           </Rounded>
         </div>
       </div>

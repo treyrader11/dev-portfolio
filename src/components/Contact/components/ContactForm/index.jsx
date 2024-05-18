@@ -1,11 +1,20 @@
 import { cn } from "@/lib/utils";
-import Address from "../Address";
+import Address from "../../../../common/Address";
 import { userData } from "@/lib/data";
 import PageTitle from "@/common/PageTitle";
 import Image from "next/image";
 import Input from "@/common/Input";
 import Rounded from "@/common/Rounded";
 import Magnetic from "@/common/Magnetic";
+import { RiMailSendLine } from "react-icons/ri";
+
+const imageProps = {
+  alt: "image of map",
+  width: 100,
+  height: 100,
+  className: "w-full object-cover opacity-[0.1]",
+  src: "/images/map.png",
+};
 
 export default function ContactForm() {
   return (
@@ -104,13 +113,14 @@ export default function ContactForm() {
               </Magnetic>
 
               <Address
-                className={cn(
+                className={
+                  cn()
                   // "border",
                   // "border-purple-950",
                   // "border-secondary/80",
                   // "hover:border",
                   // "hover:border-purple-500"
-                )}
+                }
               />
             </div>
             <div className="flex flex-row space-x-2 social-icons">
@@ -212,50 +222,53 @@ export default function ContactForm() {
 
           <div className={cn("flex gap-8 mt-[3.rem] flex-col")}>
             <div className={cn("w-2/5 relative")}>
-              <Image
-                src={`/images/map.png`}
-                alt="image of map"
-                width={100}
-                height={100}
-                className="w-full object-cover opacity-[0.1]"
-              />
+              <Image {...imageProps} />
             </div>
-            <form action="" className={cn(" flex flex-col gap-[1.2rem]")}>
+            <form action="" className={cn("flex flex-col gap-[1.2rem]")}>
               <div className={cn("flex gap-4")}>
                 <Input type="text" placeholder="Your name" />
                 <Input type="email" placeholder="Email address" />
               </div>
-              <div className="input-control">
-                <Input type="text" placeholder="Subject" />
-              </div>
-              <div className="input-control">
-                <textarea
-                  name=""
-                  id=""
-                  cols="30"
-                  rows="6"
-                  placeholder="Message"
-                  className={cn(
-                    "w-full",
-                    "py-4",
-                    "px-6",
-                    "rounded-[30px]",
-                    "outline-none",
-                    "border-none",
-                    "resize-none",
-                    "bg-dark-400",
-                    "focus:outline-purple-400",
-                    "outline-[1px]",
-                    "transition-all",
-                    "duration-300",
-                    "ease-in-out",
-                    "bg-white",
-                    "text-white"
-                  )}
-                ></textarea>
-              </div>
+              <Input type="text" placeholder="Subject" />
+              <textarea
+                name=""
+                id=""
+                cols="30"
+                rows="6"
+                placeholder="Message"
+                className={cn(
+                  "w-full",
+                  "py-4",
+                  "px-6",
+                  "rounded-[30px]",
+                  "outline-none",
+                  "border-none",
+                  "resize-none",
+                  "bg-dark-400",
+                  "focus:outline-purple-400",
+                  "outline-[1px]",
+                  "transition-all",
+                  "duration-300",
+                  "ease-in-out",
+                  "bg-white",
+                  "text-white",
+                  "text-black"
+                )}
+              />
 
-              <Rounded className="hover:border-secondary">Send</Rounded>
+              <Rounded
+                className={cn(
+                  "gap-2",
+                  "hover:border-secondary",
+                  "hover:text-secondary",
+                  "group",
+                  "transition-colors",
+                  "duration-300",
+                  "ease-in-out"
+                )}
+              >
+                <p>Send</p> <RiMailSendLine />
+              </Rounded>
             </form>
           </div>
         </div>

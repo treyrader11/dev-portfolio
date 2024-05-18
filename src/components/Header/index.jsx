@@ -6,15 +6,14 @@ import gsap from "gsap";
 import ScrollTrigger from "gsap/dist/ScrollTrigger";
 import Nav from "./nav";
 import Rounded from "@/common/Rounded";
-import NavMenu from "./NavMenu";
-import Copyright from "../Copyright";
+import NavMenu from "./nav/NavMenu";
 import useIsomorphicLayoutEffect from "@/hooks/useIsomorphicLayoutEffect";
 import ProfilePicture from "@/common/ProfilePicture";
 import profilePicture from "/public/images/portraits/headshot-sit-blackbg.png";
 import { cn } from "@/lib/utils";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
-import Address from "../Address";
+import Brand from "@/common/Brand";
 
 export default function Header() {
   const header = useRef(null);
@@ -76,24 +75,6 @@ export default function Header() {
           // "bg-dark"
         )}
       >
-        {/* <div className="flex flex-col gap-2">
-          <ProfilePicture
-            isMagnetic
-            src={profilePicture}
-            height={80}
-            width={80}
-          />
-          <Link
-            href="/"
-            className={cn("sm:pl-3", "mr-auto", "text-black", {
-              "text-white": isHomePage || isContactPage,
-            })}
-          >
-            <Copyright />
-          </Link>
-          <Address className="p-0 space-x-2" />
-        </div> */}
-
         <ProfilePicture
           isMagnetic
           src={profilePicture}
@@ -106,7 +87,7 @@ export default function Header() {
             "text-white": isHomePage || isContactPage || isPortfolioPage,
           })}
         >
-          <Copyright />
+          <Brand />
         </Link>
 
         <NavMenu

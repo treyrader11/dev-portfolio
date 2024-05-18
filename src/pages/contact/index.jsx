@@ -1,5 +1,5 @@
-import ContactForm from "@/components/ContactForm";
-import Inner from "@/components/Layout/Inner";
+import ContactForm from "@/components/contact/components/ContactForm";
+import Inner from "@/common/layout/Inner";
 
 export default function ContactPage() {
   return (

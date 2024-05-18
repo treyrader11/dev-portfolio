@@ -66,6 +66,8 @@
     color: white;
   }
 
+
+  /* Not going to use this */
   .folder-shape {
     display: flex;
     flex-direction: column;

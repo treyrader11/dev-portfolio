@@ -2,6 +2,7 @@
 
 import { cn } from "@/lib/utils";
 // import Spinner from "react-spinkit";
+import { GridLoader } from "react-spinners";
 
 export default function ProjectVideo({ ifreamload, src }) {
   return (
@@ -26,13 +27,14 @@ export default function ProjectVideo({ ifreamload, src }) {
           fadeIn="none"
           color="#ffffff"
         /> */}
+        <GridLoader color="#36d7b7" />
       </div>
       <div
         className={cn(
           "relative",
           "overflow-hidden",
           "w-full",
-          // { hidden: ifreamload },
+          { hidden: ifreamload },
           "frc",
           "justify-center",
           "pt-[56.25%]",

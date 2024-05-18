@@ -1,9 +1,10 @@
 import PageTitle from "@/common/PageTitle";
 import { userData } from "@/lib/data";
 import { cn } from "@/lib/utils";
-import Experience from "../Experience";
+import Experience from "./Experience";
+import Link from "next/link";
 
-export default function AboutMe() {
+export default function About() {
   return (
     <section className="bg-dark">
       <PageTitle title="About Me." backgroundColor="white" />
@@ -70,9 +71,10 @@ export default function AboutMe() {
                   "dark:text-gray-300"
                 )}
               >
-                For any sort help / enquiry, shoot a{" "}
-                <a
-                  href={`mailto:${userData.email}`}
+                For any sort of help / enquiry, please shoot me an{" "}
+                <Link
+                  // href={`mailto:${userData.email}`}
+                  href="/contact"
                   className={cn(
                     "font-bold",
                     "text-gray-800",
@@ -82,8 +84,8 @@ export default function AboutMe() {
                     "dark:text-gray-300"
                   )}
                 >
-                  mail
-                </a>{" "}
+                  email
+                </Link>{" "}
                 and I&apos;ll get back the same day.
               </p>
             </div>
