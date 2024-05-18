@@ -2,7 +2,6 @@ import { cn } from "@/lib/utils";
 import Address from "../Address";
 import { userData } from "@/lib/data";
 import PageTitle from "@/common/PageTitle";
-import Button from "@/common/Button";
 import Image from "next/image";
 import Input from "@/common/Input";
 import Rounded from "@/common/Rounded";
@@ -14,7 +13,6 @@ export default function ContactForm() {
       <div
         className={cn(
           "relative",
-          "z-10",
           "rounded-md",
           "shadow-md",
           "p-4",
@@ -28,7 +26,7 @@ export default function ContactForm() {
       >
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           <div className="md:ml-4">
-            <header className="">
+            <header>
               <h1 className="text-2xl font-semibold text-gray-50">
                 Let&apos;s talk.
               </h1>
@@ -106,9 +104,8 @@ export default function ContactForm() {
                 )}
               />
             </div>
-            <div className="flex flex-row space-x-8 social-icons">
-              <a
-                href={userData.socialLinks.facebook}
+            <div className="flex flex-row space-x-2 social-icons">
+              <Rounded
                 className={cn(
                   "size-10",
                   "rounded-full",
@@ -118,6 +115,7 @@ export default function ContactForm() {
                   "justify-center",
                   "cursor-pointer"
                 )}
+                href={userData.socialLinks.facebook}
               >
                 <svg
                   width="24"
@@ -132,8 +130,9 @@ export default function ContactForm() {
                     fill="currentColor"
                   />
                 </svg>
-              </a>
-              <a
+              </Rounded>
+
+              <Rounded
                 href={userData.socialLinks.twitter}
                 className={cn(
                   "flex",
@@ -160,10 +159,12 @@ export default function ContactForm() {
                     fill="currentColor"
                   />
                 </svg>
-              </a>
-              <a
+              </Rounded>
+              <Rounded
                 href={userData.socialLinks.instagram}
-                className="flex items-center justify-center w-10 h-10 rounded-full cursor-pointer hover:bg-blue-500"
+                className={cn(
+                  "flex items-center justify-center size-10 rounded-full cursor-pointer hover:bg-purple-500"
+                )}
               >
                 <svg
                   width="24"
@@ -190,7 +191,7 @@ export default function ContactForm() {
                     fill="currentColor"
                   />
                 </svg>
-              </a>
+              </Rounded>
             </div>
           </div>
 
