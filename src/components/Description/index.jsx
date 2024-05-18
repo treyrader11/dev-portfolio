@@ -75,15 +75,41 @@ export default function Description() {
           me in a unique place in the web design world.
         </motion.p>
         <div data-scroll data-scroll-speed={0.1}>
-          <Rounded
+          {/* <div className={cn("left-[clac(100%_-_400px)]", "absolute", "-right-[50%]")}> */}
+          <div className={cn("", "absolute", "right-0", "top-[80%]")}>
+            <Rounded
+              href="/about"
+              className={cn(
+                "top-[80%]",
+                // "md:left-[clac(100%_-_400px)]",
+                "left-0",
+                "size-[180px]",
+                "bg-dark-400"
+                // "absolute"
+              )}
+            >
+              <p
+                className={cn(
+                  "relative",
+                  "z-[1]",
+                  "transition-colors",
+                  "duration-400",
+                  "ease-linear"
+                )}
+              >
+                About me
+              </p>
+            </Rounded>
+          </div>
+          {/* <Rounded
             href="/about"
             className={cn(
               "top-[80%]",
-              "left-[clac(100%_-_400px)]",
+              "md:left-[clac(100%_-_400px)]",
+              "left-0",
               "size-[180px]",
               "bg-dark-400",
               "absolute"
-              // styles.button
             )}
           >
             <p
@@ -97,7 +123,7 @@ export default function Description() {
             >
               About me
             </p>
-          </Rounded>
+          </Rounded> */}
         </div>
       </div>
     </section>

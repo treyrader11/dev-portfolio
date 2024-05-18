@@ -112,7 +112,8 @@ export default function Contact() {
             style={{ x }}
             className={cn(
               "absolute",
-              "left-[calc(100%_-_400px)]",
+              "left-[calc(100%_-_100px)]",
+              "sm:left-[calc(100%_-_400px)]",
               "top-[calc(100%_-_75px)]"
             )}
           >

@@ -46,7 +46,7 @@ export default function PortfolioItem({
           "-translate-y-1/2",
           "bg-indigo-400",
           "w-0",
-          "h-[calc(100%-2rem)]",
+          "h-[calc(100%_-_2rem)]",
           "transition-all",
           "duration-[400]",
           "ease-in-out",

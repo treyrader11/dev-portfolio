@@ -82,7 +82,6 @@ export default function Rounded({
             "w-full",
             "h-[150%]",
             "absolute",
-            // "rounded-1/2",
             "rounded-[50%]",
             "top-full",
             "z-[12]",
