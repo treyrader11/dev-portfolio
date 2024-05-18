@@ -18,14 +18,14 @@ export const userData = {
   },
   about: {
     title:
-      "I'm a software developer that loves building products and web applications that impact the world",
+      "I'm a software developer who loves building products and web applications that impact the world",
     description: [
       `I've been developing full-stack application going on 7 years now. I'm so out of content right now that I'm literally crying writing this text since lorem text is so 2012 now.`,
       `After learning HTML and struggling with CSS, I came up with a brilliant idea of using Tailwind so that I don't have to style everything by myself and - for obvious reasons - if you know Tailwind, then you were cool.`,
       `I've worked in React, Angular, Meteor, Svelte, Node.js, Express, Fastify, MongoDB, MySQL, Prisma, Drizzle, Bootstrap, Tailwind, to name a few. Although I barely know the syntax (Psst, Chat gpt!), I consider myself a Jr. Developer whose forte is in frontend development.`,
     ],
     currentProject: "Vouzot",
-    currentProjectUrl: "https://vouzot.com",
+    currentProjectUrl: "https://www.vouzot.com",
   },
 };
 

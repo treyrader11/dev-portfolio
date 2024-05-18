@@ -46,6 +46,7 @@ export default function AboutMe() {
                 "bg-red-500",
                 "rounded-md"
               )}
+              target="_blank"
               href={userData.about.currentProjectUrl}
             >
               {userData.about.currentProject} ✈️

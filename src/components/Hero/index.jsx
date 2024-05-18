@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils";
 import { slideUp } from "./anim";
 import BackgroundVideo from "@/common/BackgroundVideo";
 import Image from "next/image";
+import Particle from "@/common/Particle";
 
 const phrase =
   "I'm a selectively skilled web developer focusing on delivering quality & impactful digital experiences.";
@@ -27,6 +28,10 @@ export default function Hero({ isLoading }) {
       ref={hero}
       className={cn("h-screen", "bg-dark", "custom-font", "relative", "flex")}
     >
+      <div className="absolute top-0 left-0 pointer-events-none">
+        <Particle />
+      </div>
+
       {/* <BackgroundVideo src="/code-editor2.mp4" /> */}
       {/* <BackgroundVideo /> */}
       {/* cursor mask */}

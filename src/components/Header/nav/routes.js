@@ -4,8 +4,8 @@ export const routes = [
     href: "/",
   },
   {
-    label: "Projects",
-    href: "/projects",
+    label: "Portfolio",
+    href: "/portfolio",
   },
   {
     label: "About",

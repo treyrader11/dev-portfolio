@@ -1,10 +1,10 @@
 import Inner from "@/components/Layout/Inner";
-import Projects from "@/components/Projects";
+import Portfolio from "@/components/Portfolio";
 
-export default function ProjectsPage() {
+export default function PortfolioPage() {
   return (
     <Inner backgroundColor="#934E00">
-      <Projects />
+      <Portfolio />
     </Inner>
   );
 }
