@@ -77,54 +77,71 @@ export default function PortfolioNew() {
       <PageTitle title="Portfolio." />
       <div
         className={cn(
-          "mt-8",
-          "pt-3",
+          // "mt-8",
+           "pt-3",
           "mx-0",
           "px-6",
-          "flex",
-          "items-center",
-          "gap-[1.5rem]",
           "bg-dark"
         )}
       >
-        {categories.map((categ, index) => {
-          const activeClass = cn(
-            { active },
-            "relative",
-            "after:absolute",
-            "after:block",
-            "after:h-[2px]",
-            "after:w-full",
-            "after:bg-purple-500",
-            "text-purple-500",
-            "after:transition-[transform,opacity]",
-            "[&:not(.active)]:after:translate-y-2",
-            "[&:not(.active)]:after:opacity-0",
-            "hover:[&:not(.active)]:after:translate-y-0",
-            "hover:[&:not(.active)]:after:opacity-100"
-          );
-          return (
-            <button
-              key={index}
-              onClick={() => filterProjects(categ, index)}
-              className={cn(
-                "inline-block",
-                "font-semibold",
-                "text-white",
-                "border-none",
-                "outline-none",
-                "cursor-pointer",
-                "relative",
-                "transition-all",
-                "duration-300",
-                "ease-in-out",
-                active === index ? activeClass : ""
-              )}
-            >
-              {categ}
-            </button>
-          );
-        })}
+        <p className="">
+          Following projects showcase my skills and experience through
+          real-world examples of my work. Each project is briefly described with
+          links to code repositories and live demos in it. It reflects my
+          ability to solve complex problems, work with different technologies,
+          and manage projects effectively.
+        </p>
+        <div
+          className={cn(
+            "mt-8",
+            "pt-3",
+            // "mx-0",
+            "px-6",
+            "flex",
+            "items-center",
+            "gap-[1.5rem]",
+            
+          )}
+        >
+          {categories.map((categ, index) => {
+            const activeClass = cn(
+              { active },
+              "relative",
+              "after:absolute",
+              "after:block",
+              "after:h-[2px]",
+              "after:w-full",
+              "after:bg-purple-500",
+              "text-purple-500",
+              "after:transition-[transform,opacity]",
+              "[&:not(.active)]:after:translate-y-2",
+              "[&:not(.active)]:after:opacity-0",
+              "hover:[&:not(.active)]:after:translate-y-0",
+              "hover:[&:not(.active)]:after:opacity-100"
+            );
+            return (
+              <button
+                key={index}
+                onClick={() => filterProjects(categ, index)}
+                className={cn(
+                  "inline-block",
+                  "font-semibold",
+                  "text-white",
+                  "border-none",
+                  "outline-none",
+                  "cursor-pointer",
+                  "relative",
+                  "transition-all",
+                  "duration-300",
+                  "ease-in-out",
+                  active === index ? activeClass : ""
+                )}
+              >
+                {categ}
+              </button>
+            );
+          })}
+        </div>
       </div>
 
       {/* Grid starts here */}

@@ -54,7 +54,6 @@ export default function Rounded({
           "rounded-full",
           "border-light-100",
           "border",
-          // "border-[1px]",
           "cursor-pointer",
           "relative",
           "flex",
@@ -63,6 +62,7 @@ export default function Rounded({
           "py-[15px]",
           "px-[60px]",
           "text-white",
+          "shadow-lg",
           className
         )}
         style={{ overflow: "hidden" }}

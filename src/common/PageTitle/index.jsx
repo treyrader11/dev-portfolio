@@ -9,10 +9,11 @@ export default function PageTitle({ className, backgroundColor, title }) {
       <h1
         className={cn(
           "py-[130px]",
+          // "py-[20em]",
           "md:py-[110px]",
           // "py-[2.6em]",
           // "text-6xl",
-          "text-8xl",
+          "text-7xl",
           "font-bold",
           "text-center",
           "md:text-left",

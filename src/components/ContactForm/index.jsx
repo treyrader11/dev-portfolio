@@ -5,7 +5,7 @@ import PageTitle from "@/common/PageTitle";
 import Image from "next/image";
 import Input from "@/common/Input";
 import Rounded from "@/common/Rounded";
-import Button from "@/common/Button";
+import Magnetic from "@/common/Magnetic";
 
 export default function ContactForm() {
   return (
@@ -37,71 +37,79 @@ export default function ContactForm() {
               </p>
             </header>
             <div className="inline-flex flex-col my-20 icons-container">
-              <div
-                className={cn(
-                  "flex",
-                  "flex-row",
-                  "items-center",
-                  "space-x-6",
-                  "rounded-md",
-                  "border",
-                  "˝border-[#02044A]",
-                  "hover:border",
-                  "hover:border-purple-500",
-                  "p-4"
-                )}
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
-                  fill="currentColor"
-                  className="text-purple-500 size-4 bi bi-telephone-fill"
-                  viewBox="0 0 16 16"
+              <Magnetic>
+                <div
+                  className={cn(
+                    "flex",
+                    "flex-row",
+                    "items-center",
+                    "space-x-6",
+                    "rounded-md",
+                    // "border",
+                    // "border-purple-950",
+                    // "border-secondary/80",
+                    // "hover:border",
+                    // "hover:border-purple-500",
+                    "p-4"
+                  )}
                 >
-                  <path
-                    fillRule="evenodd"
-                    d="M1.885.511a1.745 1.745 0 0 1 2.61.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.678.678 0 0 0 .178.643l2.457 2.457a.678.678 0 0 0 .644.178l2.189-.547a1.745 1.745 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.634 18.634 0 0 1-7.01-4.42 18.634 18.634 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877L1.885.511z"
-                  />
-                </svg>
-                <p className="text-sm font-light text-gray-50">
-                  {userData.phone}
-                </p>
-              </div>
-              <div
-                className={cn(
-                  "flex",
-                  "flex-row",
-                  "items-center",
-                  "space-x-6",
-                  "rounded-md",
-                  "border",
-                  "border-[#02044A]",
-                  "hover:border",
-                  "hover:border-purple-500",
-                  "p-4"
-                )}
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
-                  fill="currentColor"
-                  className="text-purple-500 size-4 bi bi-envelope-fill"
-                  viewBox="0 0 16 16"
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    fill="currentColor"
+                    className="text-purple-500 size-4 bi bi-telephone-fill"
+                    viewBox="0 0 16 16"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M1.885.511a1.745 1.745 0 0 1 2.61.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.678.678 0 0 0 .178.643l2.457 2.457a.678.678 0 0 0 .644.178l2.189-.547a1.745 1.745 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.634 18.634 0 0 1-7.01-4.42 18.634 18.634 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877L1.885.511z"
+                    />
+                  </svg>
+                  <p className="text-sm font-light text-gray-50">
+                    {userData.phone}
+                  </p>
+                </div>
+              </Magnetic>
+              <Magnetic>
+                <div
+                  className={cn(
+                    "flex",
+                    "flex-row",
+                    "items-center",
+                    "space-x-6",
+                    "rounded-md",
+                    // "border-purple-950",
+                    // "border-secondary/80",
+                    // "border",
+                    // "hover:border",
+                    // "hover:border-purple-500",
+                    "p-4"
+                  )}
                 >
-                  <path d="M.05 3.555A2 2 0 0 1 2 2h12a2 2 0 0 1 1.95 1.555L8 8.414.05 3.555zM0 4.697v7.104l5.803-3.558L0 4.697zM6.761 8.83l-6.57 4.027A2 2 0 0 0 2 14h12a2 2 0 0 0 1.808-1.144l-6.57-4.027L8 9.586l-1.239-.757zm3.436-.586L16 11.801V4.697l-5.803 3.546z" />
-                </svg>
-                <p className="text-sm font-light text-gray-50">
-                  {userData.email}
-                </p>
-              </div>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    fill="currentColor"
+                    className="text-purple-500 size-4 bi bi-envelope-fill"
+                    viewBox="0 0 16 16"
+                  >
+                    <path d="M.05 3.555A2 2 0 0 1 2 2h12a2 2 0 0 1 1.95 1.555L8 8.414.05 3.555zM0 4.697v7.104l5.803-3.558L0 4.697zM6.761 8.83l-6.57 4.027A2 2 0 0 0 2 14h12a2 2 0 0 0 1.808-1.144l-6.57-4.027L8 9.586l-1.239-.757zm3.436-.586L16 11.801V4.697l-5.803 3.546z" />
+                  </svg>
+                  <p className="text-sm font-light text-gray-50">
+                    {userData.email}
+                  </p>
+                </div>
+              </Magnetic>
+
               <Address
                 className={cn(
-                  "border",
-                  "border-[#02044A]",
-                  "hover:border",
-                  "hover:border-purple-500"
+                  // "border",
+                  // "border-purple-950",
+                  // "border-secondary/80",
+                  // "hover:border",
+                  // "hover:border-purple-500"
                 )}
               />
             </div>
@@ -247,7 +255,7 @@ export default function ContactForm() {
                 ></textarea>
               </div>
 
-              <Rounded>Send</Rounded>
+              <Rounded className="hover:border-secondary">Send</Rounded>
             </form>
           </div>
         </div>

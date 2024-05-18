@@ -1,7 +1,6 @@
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import Magnetic from "../Magnetic";
-import styles from "./styles";
 
 export default function ProfilePicture({
   src,
@@ -11,7 +10,15 @@ export default function ProfilePicture({
   isMagnetic = false,
 }) {
   const containerProps = {
-    className: cn(styles.container, className),
+    className: cn(
+      "rounded-full",
+      "overflow-hidden",
+      "relative",
+      // "border",
+      // "border",
+      // "border-purple-500",
+      className
+    ),
     style: { height, width },
   };
 

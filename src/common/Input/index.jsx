@@ -10,7 +10,6 @@ export default function Input({ className, type, placeholder }) {
         "py-4",
         "px-6",
         "rounded-[30px]",
-        "outline-none",
         "border-none",
         "resize-none",
         "bg-dark-400",

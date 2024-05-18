@@ -1,31 +1,11 @@
 import PageTitle from "@/common/PageTitle";
 import { userData } from "@/lib/data";
 import { cn } from "@/lib/utils";
+import Experience from "../Experience";
 
 export default function AboutMe() {
   return (
-    <section className="bg-white dark:bg-gray-800">
-      {/* <div
-        className={cn(
-          "h-48",
-          "max-w-6xl",
-          "mx-auto",
-          "bg-white",
-          "dark:bg-gray-800"
-        )}
-      >
-        <h1
-          className={
-            ("py-20",
-            "text-5xl",
-            "font-bold",
-            "text-center",
-            "md:text-9xl md:text-left")
-          }
-        >
-          About Me.
-        </h1>
-      </div> */}
+    <section className="bg-dark">
       <PageTitle title="About Me." backgroundColor="white" />
       <div className="bg-[#F1F1F1] -mt-10 dark:bg-gray-900">
         <div className="max-w-6xl pt-20 mx-auto text-container">
@@ -293,6 +273,7 @@ export default function AboutMe() {
           </div>
         </div>
       </div>
+      <Experience />
     </section>
   );
 }
