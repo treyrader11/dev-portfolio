@@ -1,4 +1,4 @@
-@tailwind base;
+/* @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
@@ -8,8 +8,6 @@
     --navigation-height: 4.8rem;
   }
 
-
-  /* Font below is used for hero */
   @font-face {
     font-family: "Avant Garde Book BT";
     font-style: normal;
@@ -62,8 +60,6 @@
     color: white;
   }
 
-
-  /* Not going to use this */
   .folder-shape {
     display: flex;
     flex-direction: column;
@@ -85,4 +81,66 @@
     top: -50px;
     left: 0px;
   }
+} */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+::-webkit-scrollbar {
+  width: 6px;
 }
+::-webkit-scrollbar-thumb {
+  background-color: #934e00;
+  border-radius: 10px;
+}
+::-webkit-scrollbar-track {
+  background-color: #222121;
+}
+
+/* .custom-font {
+  font-family: "Avant Garde Book BT";
+}
+
+.custom-font-title {
+  font-family: "Title";
+}
+
+.custom-font-body {
+  font-family: "Body";
+} */
+
+.mask {
+  mask-image: url("../public/mask.svg");
+  mask-repeat: no-repeat;
+  mask-size: 40px;
+  z-index: 1;
+  background: #934e00;
+  position: absolute;
+  color: white;
+}
+
+@layer base {
+  :root {
+    --navigation-height: 4.8rem;
+  }
+}
+
+
+/* Font below is used for hero */
+/* @font-face {
+  font-family: "Avant Garde Book BT";
+  font-style: normal;
+  font-weight: normal;
+  src: url("../public/fonts/AVGARDD_2.woff") format("woff");
+}
+
+@font-face {
+  font-family: "Title";
+  src: url("../public/fonts/Neglige.otf");
+}
+
+@font-face {
+  font-family: "Body";
+  src: url("../public/fonts/NeueMontreal_Medium.otf");
+} */

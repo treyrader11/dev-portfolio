@@ -11,6 +11,8 @@ export default function NavMenu({ handleNavMenu, className }) {
   const pathname = usePathname();
   const [selectedIndicator, setSelectedIndicator] = useState(pathname);
 
+  const ifPageHasWhiteBG = pathname === "/info";
+
   return (
     <nav className={cn("flex items-center", className)}>
       <div className="hidden sm:flex">
@@ -38,7 +40,7 @@ export default function NavMenu({ handleNavMenu, className }) {
                   <Link href={href}>
                     {label}
                     <Indicator
-                      className={pathname === "/info" && "bg-black"}
+                      className={ifPageHasWhiteBG && "bg-black"}
                       isActive={selectedIndicator == href}
                     />
                   </Link>
