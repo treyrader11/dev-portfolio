@@ -35,7 +35,6 @@ export default function Rounded({
   }, []);
 
   const manageMouseEnter = () => {
-    console.log("timeoutId", timeoutId);
     if (timeoutId) clearTimeout(timeoutId);
     timeline.current.tweenFromTo("enter", "exit");
   };
@@ -85,7 +84,6 @@ export default function Rounded({
             "rounded-[50%]",
             "top-full",
             "z-[12]",
-            // "z-[99]",
             "bg-primary"
           )}
         />

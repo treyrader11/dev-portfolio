@@ -1,6 +1,5 @@
 import { cn } from "@/lib/utils";
 import Link from "next/link";
-// import Magnetic from "../Magnetic";
 
 export default function StyledLink({
   className,

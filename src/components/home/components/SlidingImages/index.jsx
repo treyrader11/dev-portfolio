@@ -140,7 +140,8 @@ export default function SlidingImages() {
         })}
       </motion.div>
 
-      <motion.div
+      {/* Big Circle */}
+      {/* <motion.div
         style={{ height }}
         className={cn("bg-red-500 relative mt-[100px]")}
       >
@@ -156,11 +157,10 @@ export default function SlidingImages() {
             "bg-white",
             "z-[1]",
             "absolute",
-            // "shadow-lg",
             "custom-shadow"
           )}
         />
-      </motion.div>
+      </motion.div> */}
     </div>
   );
 }

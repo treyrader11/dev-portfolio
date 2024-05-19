@@ -1,3 +1,5 @@
+"use client";
+
 import { cn } from "@/lib/utils";
 
 export default function Brand({ className }) {
@@ -23,7 +25,8 @@ export default function Brand({ className }) {
           "ml-[5px]",
           "transition-all",
           "duration-500",
-          "custom-ease-in-out"
+          // "custom-ease-in-out",
+          "ease-in-out",
         )}
       >
         <p
@@ -31,11 +34,11 @@ export default function Brand({ className }) {
             "m-0",
             "transition-all",
             "duration-500",
-            "custom-ease-in-out",
             "relative",
             "transition-transform",
             "duration-500",
-            "custom-ease-in-out",
+            // "custom-ease-in-out",
+            "ease-in-out",
             "group-hover:-translate-x-full"
           )}
         >
