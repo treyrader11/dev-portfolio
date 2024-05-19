@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { useState } from "react";
 import useMeasure from "react-use-measure";
 import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
-import { Shot } from "../../components/home/components/Projects/components/ProjectShot";
+import { Shot } from "../../components/Home/components/Projects/components/ProjectShot";
 import { cn } from "@/lib/utils";
 // import { CourseCard } from "./Courses/CourseCard";
 

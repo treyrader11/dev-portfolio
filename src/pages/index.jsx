@@ -1,13 +1,13 @@
-import Description from "@/components/home/components/Description";
+import Description from "@/components/Home/components/Description";
 import Contact from "@/components/Footer/components/Contact";
 import Preloader from "@/components/Preloader";
-import SlidingImages from "@/components/home/components/SlidingImages";
+import SlidingImages from "@/components/Home/components/SlidingImages";
 import { AnimatePresence } from "framer-motion";
 import { useState, useEffect } from "react";
 import { Inter } from "next/font/google";
 import Inner from "@/common/layout/Inner";
-import Projects from "@/components/home/components/Projects";
-import Hero from "@/components/home/components/Hero";
+import Projects from "@/components/Home/components/Projects";
+import Hero from "@/components/Home/components/Hero";
 import { cn } from "@/lib/utils";
 import Footer from "@/components/Footer";
 
