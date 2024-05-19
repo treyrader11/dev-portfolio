@@ -12,11 +12,9 @@ import Image from "next/image";
 import gsap from "gsap";
 import { useRouter } from "next/router";
 import { projectsData } from "@/lib/data";
-import Link from "next/link";
 
 const imageProps = {
   className: "size-auto",
-  alt: "image of project",
   // width: 300,
   width: 150,
   // height: 0,
@@ -194,6 +192,7 @@ export default function Projects() {
                 key={`modal_${index}`}
               >
                 <Image
+                  alt="image of project"
                   priority={project.isPriority}
                   src={`/images/${project_image}`}
                   {...imageProps}

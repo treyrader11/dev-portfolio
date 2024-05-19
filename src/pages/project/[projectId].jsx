@@ -1,9 +1,9 @@
-import { ArrowLeftIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
-import ProjectDetails from "@/components/Project/components/ProjectDetails";
+import ProjectDetails from "@/components/portfolio/components/Project/components/ProjectDetails";
 import { projectsData } from "@/lib/data";
 import Inner from "@/common/layout/Inner";
+import { GoArrowLeft } from "react-icons/go";
 
 export default function ProjectPage({ project }) {
   return (
@@ -48,7 +48,7 @@ export default function ProjectPage({ project }) {
               "hover:text-sky-500"
             )}
           >
-            <ArrowLeftIcon className="size-4 mr-[5px]" />
+            <GoArrowLeft className="size-4 mr-[5px]" />
             <span className="text-base">Back</span>
           </Link>
         </div>

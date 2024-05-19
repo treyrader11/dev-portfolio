@@ -9,6 +9,14 @@ import "react-vertical-timeline-component/style.min.css";
 import { experiences } from "@/lib/data";
 import { cn } from "@/lib/utils";
 import { textVariant } from "./anim";
+import Image from "next/image";
+
+const imageProps = {
+  className: "object-contain size-3/5",
+  width: 40,
+  height: 40,
+  sizes: {},
+};
 
 function ExperienceCard({ experience }) {
   return (
@@ -22,10 +30,10 @@ function ExperienceCard({ experience }) {
       iconStyle={{ background: experience.iconBg }}
       icon={
         <div className="flex items-center justify-center size-full">
-          <img
+          <Image
             src={experience.icon}
             alt={experience.company_name}
-            className="object-contain size-3/5"
+            {...imageProps}
           />
         </div>
       }

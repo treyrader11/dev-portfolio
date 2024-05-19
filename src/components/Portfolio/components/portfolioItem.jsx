@@ -6,7 +6,7 @@ import Link from "next/link";
 const imageProps = {
   width: 100,
   height: 100,
-  alt: "project image",
+  className: "object-cover size-full rounded-xl",
 };
 
 export default function PortfolioItem({
@@ -35,7 +35,7 @@ export default function PortfolioItem({
       <Image
         src={`/images/${project_image}`}
         {...imageProps}
-        className="object-cover size-full rounded-xl"
+        alt="project image"
       />
       <div
         className={cn(

@@ -9,7 +9,6 @@ import Magnetic from "@/common/Magnetic";
 import { RiMailSendLine } from "react-icons/ri";
 
 const imageProps = {
-  alt: "image of map",
   width: 100,
   height: 100,
   className: "w-full object-cover opacity-[0.1]",
@@ -81,7 +80,8 @@ export default function ContactForm() {
                 </div>
               </Magnetic>
               <Magnetic>
-                <div
+                <a
+                  href={`mailto:${userData.email}`}
                   className={cn(
                     "flex",
                     "flex-row",
@@ -106,10 +106,11 @@ export default function ContactForm() {
                   >
                     <path d="M.05 3.555A2 2 0 0 1 2 2h12a2 2 0 0 1 1.95 1.555L8 8.414.05 3.555zM0 4.697v7.104l5.803-3.558L0 4.697zM6.761 8.83l-6.57 4.027A2 2 0 0 0 2 14h12a2 2 0 0 0 1.808-1.144l-6.57-4.027L8 9.586l-1.239-.757zm3.436-.586L16 11.801V4.697l-5.803 3.546z" />
                   </svg>
+
                   <p className="text-sm font-light text-gray-50">
                     {userData.email}
                   </p>
-                </div>
+                </a>
               </Magnetic>
 
               <Address
@@ -222,7 +223,7 @@ export default function ContactForm() {
 
           <div className={cn("flex gap-8 mt-[3.rem] flex-col")}>
             <div className={cn("w-2/5 relative")}>
-              <Image {...imageProps} />
+              <Image {...imageProps} alt="image of map" />
             </div>
             <form action="" className={cn("flex flex-col gap-[1.2rem]")}>
               <div className={cn("flex gap-4")}>

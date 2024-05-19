@@ -4,7 +4,6 @@ import Link from "next/link";
 
 export default function StyledLink({
   className,
-  label,
   children,
   href,
   target = "#",
