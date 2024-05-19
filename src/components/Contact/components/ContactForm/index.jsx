@@ -113,16 +113,7 @@ export default function ContactForm() {
                 </a>
               </Magnetic>
 
-              <Address
-                className={
-                  cn()
-                  // "border",
-                  // "border-purple-950",
-                  // "border-secondary/80",
-                  // "hover:border",
-                  // "hover:border-purple-500"
-                }
-              />
+              <Address />
             </div>
             <div className="flex flex-row space-x-2 social-icons">
               <Rounded
@@ -251,8 +242,7 @@ export default function ContactForm() {
                   "transition-all",
                   "duration-300",
                   "ease-in-out",
-                  "bg-white",
-                  "text-white",
+                  "bg-slate-100",
                   "text-black"
                 )}
               />

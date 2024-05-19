@@ -31,12 +31,11 @@ export default function Contact({ style, rotate }) {
           <span className="flex items-center">
             <ProfilePicture className="size-[9vw]" src={profilePicture} />
             <h2 className="ml-[0.3em] tracking-tighter text-[9vw] md:text-[6vw]">
-              Let&apos;s work
-              {/* Hire me */}
+              Let&apos;s talk
             </h2>
           </span>
           <h2 className="text-[9vw] tracking-tighter font-light md:text-[6vw]">
-            together
+            Javascript
           </h2>
           <motion.div
             style={style}

@@ -8,8 +8,8 @@ export const routes = [
     href: "/portfolio",
   },
   {
-    label: "About",
-    href: "/about",
+    label: "Info",
+    href: "/info",
   },
   {
     label: "Contact",

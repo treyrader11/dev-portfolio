@@ -9,12 +9,12 @@ import Rounded from "@/common/Rounded";
 import NavMenu from "./nav/NavMenu";
 import useIsomorphicLayoutEffect from "@/hooks/useIsomorphicLayoutEffect";
 import ProfilePicture from "@/common/ProfilePicture";
-import profilePictureClear from "/public/images/portraits/profile-transparent.png";
 import profilePicture from "/public/images/portraits/headshot-sit-blackbg.png";
 import { cn } from "@/lib/utils";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import Brand from "@/common/Brand";
+import BurgerMenu from "./BurgerMenu";
 
 export default function Header() {
   const header = useRef(null);
@@ -25,8 +25,6 @@ export default function Header() {
   const isHomePage = path === "/";
   const isPortfolioPage = path === "/portfolio";
   const isContactPage = path.includes("contact");
-
-  const profile = isHomePage ? profilePicture : profilePictureClear;
 
   const handleNavMenu = useCallback(() => {
     setIsNavOpen((prevIsNavOpen) => !prevIsNavOpen);
@@ -80,8 +78,7 @@ export default function Header() {
       >
         <ProfilePicture
           isMagnetic
-          // src={profilePicture}
-          src={profile}
+          src={profilePicture}
           className="size-[100px]"
         />
         <Link
@@ -108,7 +105,6 @@ export default function Header() {
             "transform",
             "scale-0",
             "right-0",
-            // "z-[10]",
             "z-[4]",
             "after:top-[-5px]",
             "before:top-[5px]"
@@ -119,7 +115,7 @@ export default function Header() {
             className={cn(
               "relative",
               "m-5",
-              "size-20",
+              "size-16",
               "rounded-full",
               "cursor-pointer",
               "bg-dark-400",
@@ -136,41 +132,4 @@ export default function Header() {
   );
 }
 
-export function BurgerMenu({ isOpen }) {
-  return (
-    <div
-      className={cn(
-        "relative",
-        "w-full",
-        "z-[1]",
-        // first line
-        "after:block",
-        "after:h-px",
-        "after:w-[40%]",
-        "after:m-auto",
-        "after:bg-white",
-        "after:relative",
-        "after:transition-transform",
-        "after:duration-300",
-        // second line
-        "before:block",
-        "before:h-px",
-        "before:w-[40%]",
-        "before:m-auto",
-        "before:bg-white",
-        "before:relative",
-        "before:transition-transform",
-        "before:duration-300",
-        isOpen
-          ? cn(
-              "after:transform",
-              "after:rotate-45",
-              "after:-top-[1px]",
-              "before:-rotate-45",
-              "before:top-0"
-            )
-          : cn("after:-top-[5px]", "before:top-[5px]")
-      )}
-    />
-  );
-}
+

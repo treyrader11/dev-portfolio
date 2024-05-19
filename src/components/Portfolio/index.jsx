@@ -1,38 +1,154 @@
+"use client";
+
 import { projectsData } from "@/lib/data";
-import { cn } from "@/lib/utils";
-import Image from "next/image";
-import Link from "next/link";
+import { cn, getUnique } from "@/lib/utils";
+import { useRef, useState } from "react";
+import gsap from "gsap";
+import PortfolioItem from "./components/portfolioItem";
+import PageTitle from "@/common/PageTitle";
+
+// const activeClass =
+//   "text-purple-500 after:absolute after:left-0 after:bottom-[-5px] after:bg-purple-500 after:w-full after:h-[2px]";
 
 export default function Portfolio() {
+  const [projects, setProjects] = useState(projectsData);
+  const [categories] = useState([
+    "All",
+    ...getUnique(projectsData, "category"),
+  ]);
+  const [active, setActive] = useState(0);
+
+  const projCon = useRef();
+
+  const activeCategory = (index) => setActive(index);
+
+  const filterProjects = (category, index) => {
+    if (category === "All") {
+      gsap.to(projCon.current, {
+        duration: 0.5,
+        opacity: 0,
+        y: 20,
+        ease: "power4.out",
+        onComplete: () => {
+          gsap.fromTo(
+            projCon.current,
+            {
+              y: 20,
+              opacity: 0,
+              scale: 0,
+            },
+            {
+              duration: 0.5,
+              y: 20,
+              opacity: 1,
+              scale: 1,
+              ease: "power4.out",
+            }
+          );
+          setProjects(projectsData);
+        },
+      });
+      activeCategory(index);
+      return;
+    }
+
+    const filtered = projectsData.filter((port) => port.category === category);
+
+    activeCategory(index);
+    gsap.to(projCon.current, {
+      duration: 0.5,
+      opacity: 0,
+      y: 25,
+      ease: "power4.out",
+      onComplete: () => {
+        gsap.to(projCon.current, {
+          duration: 0.5,
+          y: 20,
+          opacity: 1,
+          ease: "power4.out",
+        });
+        setProjects(filtered);
+      },
+    });
+  };
+
   return (
-    <section className="bg-white">
+    <section>
+      <PageTitle title="Portfolio." />
       <div
         className={cn(
-          "h-48",
-          "max-w-6xl",
-          "mx-auto",
-          "bg-white",
-          "dark:bg-gray-800"
+          // "mt-8",
+          "pt-3",
+          "mx-0",
+          // "px-6",
+          "bg-dark"
         )}
       >
-        <h1
+        <div className="w-full p-6 bg-slate-100">
+          <p className="font-semibold text-black">
+            The following projects showcase my skills and experience through
+            real-world examples of my work. Each project is briefly described
+            with links to code repositories and live demos in it. It reflects my
+            ability to solve complex problems, work with different technologies,
+            and manage projects effectively.
+          </p>
+        </div>
+        <div
           className={cn(
-            "py-20",
-            "text-5xl",
-            "font-bold",
-            "text-center",
-            "md:text-9xl",
-            "md:text-left",
-            "text-[#934E00]/80"
+            "mt-8",
+            "pt-3",
+            // "mx-0",
+            "px-12",
+            "flex",
+            "items-center",
+            "gap-[1.5rem]"
           )}
         >
-          Portfolio
-        </h1>
+          {categories.map((categ, index) => {
+            const activeClass = cn(
+              { active },
+              "relative",
+              "after:absolute",
+              "after:block",
+              "after:h-[2px]",
+              "after:w-full",
+              "after:bg-purple-500",
+              "text-purple-500",
+              "after:transition-[transform,opacity]",
+              "[&:not(.active)]:after:translate-y-2",
+              "[&:not(.active)]:after:opacity-0",
+              "hover:[&:not(.active)]:after:translate-y-0",
+              "hover:[&:not(.active)]:after:opacity-100"
+            );
+            return (
+              <button
+                key={index}
+                onClick={() => filterProjects(categ, index)}
+                className={cn(
+                  "inline-block",
+                  "font-semibold",
+                  "text-white",
+                  "border-none",
+                  "outline-none",
+                  "cursor-pointer",
+                  "relative",
+                  "transition-all",
+                  "duration-300",
+                  "ease-in-out",
+                  active === index ? activeClass : ""
+                )}
+              >
+                {categ}
+              </button>
+            );
+          })}
+        </div>
       </div>
+
       {/* Grid starts here */}
-      {/* <div className="bg-[#F1F1F1] dark:bg-gray-900"> */}
-      <div className="bg-dark">
+      <div className="px-10 sm:px-20 bg-dark">
         <div
+          ref={projCon}
           className={cn(
             "grid",
             "max-w-6xl",
@@ -44,65 +160,11 @@ export default function Portfolio() {
             "md:grid-cols-2"
           )}
         >
-          {projectsData.map((project, index) => (
-            <ProjectCard key={index} {...project} number={`${index + 1}`} />
+          {projects.map((project, index) => (
+            <PortfolioItem key={`${project.video_key}_${index}`} {...project} />
           ))}
         </div>
       </div>
     </section>
-  );
-}
-
-export function ProjectCard({ title, video_key, project_image, number }) {
-  return (
-    <Link href={`/project/${video_key}`} className="block w-full shadow-2xl">
-      <div className="relative overflow-hidden">
-        <div className="object-cover h-72">
-          <Image
-            src={`/images/${project_image}`}
-            width={100}
-            height={100}
-            alt="project image"
-            className={cn(
-              "object-cover",
-              "w-full",
-              "h-full",
-              "transition",
-              "ease-out",
-              "transform",
-              "hover:scale-125",
-              "duration-2000"
-            )}
-          />
-        </div>
-        <h1
-          className={cn(
-            "absolute",
-            "px-2",
-            "text-xl",
-            "font-bold",
-            "bg-red-500",
-            "rounded-md",
-            "top-10",
-            "left-10",
-            "text-gray-50"
-          )}
-        >
-          {title}
-        </h1>
-        <h1
-          className={cn(
-            "absolute",
-            "text-xl",
-            "font-bold",
-            "bottom-10",
-            "left-10",
-            "text-gray-50"
-          )}
-        >
-          {number.length === 1 ? "0" + number : number}
-        </h1>
-      </div>
-    </Link>
   );
 }

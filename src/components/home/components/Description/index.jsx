@@ -76,7 +76,7 @@ export default function Description() {
         <div data-scroll data-scroll-speed={0.1}>
           <div className={cn("", "absolute", "right-0", "top-[80%]")}>
             <Rounded
-              href="/about"
+              href="/info"
               className={cn(
                 "top-[80%]",
                 // "md:left-[clac(100%_-_400px)]",

@@ -111,7 +111,7 @@ export const projectsData = [
     color: "#d6d7dc",
     isPriority: false,
     video_key: "HvkrAjHJ-38",
-    category: "Game Development",
+    category: "Mobile Development",
     say_xi: "Xi from my first mobile app 📱",
     say_xi_blog:
       "ReactNative First Project With Expo CLI Conatain Google AUthentication Contain Basic RestApi and Google Maps functionality ",

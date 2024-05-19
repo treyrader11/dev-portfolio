@@ -11,36 +11,6 @@ export default function App({ Component, pageProps, router }) {
     <ThemeProvider defaultTheme="light" attribute="class">
       <Layout route={router.route}>
         <Header />
-        <div
-          className={cn(
-            "w-[160px]",
-            "h-[60px]",
-            "flex",
-            "justify-between",
-            "items-center",
-            "ml-[-100px]",
-            "hover:-ml-2.5",
-            "duration-300",
-            "bg-purple-600",
-            "fixed",
-            "top-40",
-            "z-[10]",
-            "rounded-r-lg"
-          )}
-        >
-          <a
-            className={cn(
-              "flex",
-              "items-center",
-              "justify-between",
-              "w-full",
-              "text-gray-300"
-            )}
-            href="/"
-          >
-            Resume <BsFillPersonLinesFill size={30} />
-          </a>
-        </div>
         <Component {...pageProps} router={router} />
         <Footer />
       </Layout>

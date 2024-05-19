@@ -5,9 +5,7 @@ import { useInView, motion } from "framer-motion";
 import useMousePosition from "@/hooks/useMousePosition";
 import { cn } from "@/lib/utils";
 import { slideUp } from "./anim";
-import BackgroundVideo from "@/common/BackgroundVideo";
 import Image from "next/image";
-import Particle from "@/common/Particle";
 import Rounded from "@/common/Rounded";
 import { userData } from "@/lib/data";
 
@@ -30,12 +28,6 @@ export default function Hero({ isLoading }) {
       ref={hero}
       className={cn("h-screen", "bg-dark", "custom-font", "relative", "flex")}
     >
-      <div className="absolute z-[99] top-0 left-0 pointer-events-none">
-        <Particle />
-      </div>
-
-      {/* <BackgroundVideo src="/code-editor2.mp4" /> */}
-      {/* <BackgroundVideo /> */}
       {/* cursor mask */}
       <motion.div
         className={cn(
@@ -89,7 +81,7 @@ export default function Hero({ isLoading }) {
                 custom={index}
                 animate={!isLoading ? (isInView ? "open" : "closed") : ""}
                 key={index}
-                className={cn("mr-3", "inline-flex", "text-light-400", {
+                className={cn("mr-3 inline-flex text-light-400", {
                   "text-purple-400": isTargetedWord,
                 })}
               >
@@ -119,7 +111,6 @@ export default function Hero({ isLoading }) {
             className={cn(
               "flex",
               "animate-slideright2",
-              // "transition_",
               "duration-700",
               "transition-all"
             )}
@@ -127,16 +118,25 @@ export default function Hero({ isLoading }) {
         </div>
       </div>
       <div data-scroll data-scroll-speed={0.1}>
-        <div className={cn("z-[99]", "absolute", "right-[10%]", "top-[70%]")}>
+        <div
+          className={cn(
+            "z-[9999]",
+            "absolute",
+            "right-[10%]",
+            "top-[70%]",
+            "left-[calc(100%_-_275px)]"
+          )}
+        >
           <Rounded
             href="/about"
-            className={cn(
-              "top-[80%]",
-              // "md:left-[clac(100%_-_400px)]",
-              "left-0",
-              "size-[140px]",
-              "bg-dark-400"
-            )}
+            // className={cn(
+            //   "top-[80%]",
+            //   // "md:left-[clac(100%_-_400px)]",
+            //   "left-0",
+            //   "size-[140px]",
+            //   "bg-dark-400"
+            // )}
+            className={cn("w-full py-5 px-12 border-[.3px]")}
           >
             <a
               href={userData.resumeUrl}
@@ -146,7 +146,8 @@ export default function Hero({ isLoading }) {
                 "z-[1]",
                 "transition-colors",
                 "duration-400",
-                "ease-linear"
+                "ease-linear",
+                "text-sm"
               )}
             >
               Download CV
