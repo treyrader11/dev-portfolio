@@ -9,6 +9,7 @@ import Rounded from "@/common/Rounded";
 import NavMenu from "./nav/NavMenu";
 import useIsomorphicLayoutEffect from "@/hooks/useIsomorphicLayoutEffect";
 import ProfilePicture from "@/common/ProfilePicture";
+import profilePictureClear from "/public/images/portraits/profile-transparent.png";
 import profilePicture from "/public/images/portraits/headshot-sit-blackbg.png";
 import { cn } from "@/lib/utils";
 import { usePathname } from "next/navigation";
@@ -24,6 +25,8 @@ export default function Header() {
   const isHomePage = path === "/";
   const isPortfolioPage = path === "/portfolio";
   const isContactPage = path.includes("contact");
+
+  const profile = isHomePage ? profilePicture : profilePictureClear;
 
   const handleNavMenu = useCallback(() => {
     setIsNavOpen((prevIsNavOpen) => !prevIsNavOpen);
@@ -77,7 +80,8 @@ export default function Header() {
       >
         <ProfilePicture
           isMagnetic
-          src={profilePicture}
+          // src={profilePicture}
+          src={profile}
           className="size-[100px]"
         />
         <Link

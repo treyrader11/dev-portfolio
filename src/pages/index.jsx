@@ -4,7 +4,6 @@ import { useState, useEffect } from "react";
 import { Inter } from "next/font/google";
 import Inner from "@/common/layout/Inner";
 import { cn } from "@/lib/utils";
-import Footer from "@/components/Footer";
 import Description from "@/components/Home/components/Description";
 import SlidingImages from "@/components/Home/components/SlidingImages";
 import Projects from "@/components/Home/components/Projects";
@@ -39,7 +38,6 @@ export default function Home() {
         <Description />
         <Projects />
         <SlidingImages />
-        <Footer />
       </Inner>
     </main>
   );

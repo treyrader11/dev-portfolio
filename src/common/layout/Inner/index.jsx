@@ -17,7 +17,10 @@ export default function Inner({
   backgroundColor = "inherit",
 }) {
   return (
-    <div className={styles.inner({ className })} style={{ backgroundColor }}>
+    <div
+      className={styles.inner({ className })}
+      style={{ backgroundColor, zIndex: 2, position: "relative" }}
+    >
       <motion.div className={styles.slide} {...anim(slide)} />
       <motion.div className={styles.page} {...anim(perspective)}>
         <motion.div {...anim(opacity)}>{children}</motion.div>

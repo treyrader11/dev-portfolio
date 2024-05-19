@@ -29,7 +29,7 @@ export default function Footer() {
         "justify-center",
         "bg-dark",
         "relative",
-        "font-light"
+        "font-light",
       )}
     >
       <Contact style={{ x }} rotate={rotate} />

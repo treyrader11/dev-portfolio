@@ -1,5 +1,5 @@
 import Inner from "@/common/layout/Inner";
-import About from "@/components/about";
+import About from "@/components/About";
 
 export default function AboutPage() {
   return (
