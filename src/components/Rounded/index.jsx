@@ -9,7 +9,8 @@ import { useRouter } from "next/router";
 export default function Rounded({
   children,
   className,
-  backgroundColor = "#455CE9",
+  text,
+  backgroundColor = "#8550C2",
   href,
   ...attributes
 }) {
@@ -50,6 +51,7 @@ export default function Rounded({
       <div
         onClick={() => router.push(href)}
         className={cn(
+          "group",
           "rounded-full",
           "border-light-100",
           "border",
@@ -73,7 +75,24 @@ export default function Rounded({
         }}
         {...attributes}
       >
-        {children}
+        {text ? (
+          <div
+            className={cn(
+              "relative",
+              "z-[1]",
+              "transition-colors",
+              "duration-[400]",
+              "ease-linear",
+              "flex",
+              "group-hover:text-white"
+            )}
+          >
+            {text}
+          </div>
+        ) : (
+          children
+        )}
+
         <div
           ref={circle}
           style={{ backgroundColor }}
@@ -83,7 +102,6 @@ export default function Rounded({
             "absolute",
             "rounded-[50%]",
             "top-full",
-            "z-[12]",
             "bg-primary"
           )}
         />

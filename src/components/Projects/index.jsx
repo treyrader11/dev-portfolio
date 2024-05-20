@@ -118,6 +118,8 @@ export default function Projects() {
         })}
 
         <Rounded
+          backgroundColor="#934e00"
+          text="See all projects"
           href="/portfolio"
           className={cn(
             "border-secondary",
@@ -125,25 +127,13 @@ export default function Projects() {
             "w-fit",
             "mx-auto",
             "py-6",
-            "-top-40",
+            "-top-50",
             "sm:top-0",
             "md:top-20",
-            "lg:top-32"
+            "lg:top-32",
+            "text-black"
           )}
-        >
-          <p
-            className={cn(
-              "relative",
-              "z-[1]",
-              "transition-colors",
-              "duration-[400]",
-              "ease-linear",
-              "text-dark"
-            )}
-          >
-            See all projects
-          </p>
-        </Rounded>
+        />
       </section>
 
       <motion.div

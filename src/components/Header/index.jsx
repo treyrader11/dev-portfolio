@@ -21,7 +21,7 @@ export default function Header() {
 
   const header = useRef(null);
   const button = useRef(null);
-  
+
   const path = usePathname();
 
   const { width } = useWindowDimensions();
@@ -35,31 +35,6 @@ export default function Header() {
   const handleNavMenu = useCallback(() => {
     setIsNavOpen((prevIsNavOpen) => !prevIsNavOpen);
   }, []);
-
-  // useIsomorphicLayoutEffect(() => {
-  //   gsap.registerPlugin(ScrollTrigger);
-  //   gsap.to(button.current, {
-  //     scrollTrigger: {
-  //       trigger: document.documentElement,
-  //       start: 0,
-  //       end: window.innerHeight,
-  //       onLeave: () => {
-  //         gsap.to(button.current, {
-  //           scale: 1,
-  //           duration: 0.25,
-  //           ease: "power1.out",
-  //         });
-  //       },
-  //       onEnterBack: () => {
-  //         gsap.to(
-  //           button.current,
-  //           { scale: 0, duration: 0.25, ease: "power1.out" },
-  //           setIsNavOpen(false)
-  //         );
-  //       },
-  //     },
-  //   });
-  // }, []);
 
   useIsomorphicLayoutEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
@@ -107,7 +82,6 @@ export default function Header() {
         className={cn(
           "absolute",
           "flex",
-          // "z-[5]",
           "z-[4]",
           "top-0",
           "font-extralight",
@@ -116,7 +90,6 @@ export default function Header() {
           "justify-between",
           "items-center",
           "w-full"
-          // "bg-dark"
         )}
       >
         <ProfilePicture

@@ -64,6 +64,7 @@ export default function Contact({ style, rotate }) {
             )}
           >
             <Rounded
+              backgroundColor="#A25600"
               href="/contact"
               className={cn(
                 "size-[140px]",

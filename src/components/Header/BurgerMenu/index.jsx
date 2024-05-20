@@ -21,26 +21,27 @@ function BurgerMenu({ isOpen, handleNavMenu }, ref) {
     >
       <Rounded
         onClick={handleNavMenu}
+        backgroundColor="#934e00"
         className={cn(
           "relative",
           "m-5",
           "size-16",
           "rounded-full",
           "cursor-pointer",
-          "bg-dark-400",
+          !isOpen ? "bg-dark-400" : "bg-secondary",
           "p-0",
-          { "bg-neutral-800": isOpen }
+          // { "bg-neutral-800": isOpen }
         )}
       >
         <div
           className={cn(
             "relative",
             "w-full",
-            "z-[1]",
+            "z-[5]",
             // first line
             "after:block",
             "after:h-px",
-            "after:w-[40%]",
+            "after:w-2/5",
             "after:m-auto",
             "after:bg-white",
             "after:relative",
@@ -49,7 +50,7 @@ function BurgerMenu({ isOpen, handleNavMenu }, ref) {
             // second line
             "before:block",
             "before:h-px",
-            "before:w-[40%]",
+            "before:w-2/5",
             "before:m-auto",
             "before:bg-white",
             "before:relative",

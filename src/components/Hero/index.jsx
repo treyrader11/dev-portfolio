@@ -128,7 +128,9 @@ export default function Hero({ isLoading }) {
           )}
         >
           <Rounded
-            href="/about"
+            href={userData.resumeUrl}
+            text="Download CV"
+            target="__blank"
             // className={cn(
             //   "top-[80%]",
             //   // "md:left-[clac(100%_-_400px)]",
@@ -137,22 +139,7 @@ export default function Hero({ isLoading }) {
             //   "bg-dark-400"
             // )}
             className={cn("w-full py-5 px-12 border-[.3px]")}
-          >
-            <a
-              href={userData.resumeUrl}
-              target="__blank"
-              className={cn(
-                "relative",
-                "z-[1]",
-                "transition-colors",
-                "duration-400",
-                "ease-linear",
-                "text-sm"
-              )}
-            >
-              Download CV
-            </a>
-          </Rounded>
+          />
         </div>
       </div>
     </section>
