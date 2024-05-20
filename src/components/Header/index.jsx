@@ -62,6 +62,7 @@ export default function Header() {
         className={cn(
           "absolute",
           "flex",
+          "items-center",
           "z-[5]",
           // isNavOpen ? "z-0" : "z-[5]",
           "top-0",
@@ -70,7 +71,7 @@ export default function Header() {
           "p-[35px]",
           "justify-between",
           "items-center",
-          "w-full",
+          "w-full"
           // "bg-dark"
         )}
       >
@@ -96,38 +97,14 @@ export default function Header() {
               : "text-black"
           )}
         />
-        <div
+
+        <BurgerMenu
+          isOpen={isNavOpen}
+          handleNavMenu={handleNavMenu}
           ref={button}
-          className={cn(
-            "fixed",
-            "transform",
-            "scale-0",
-            "right-0",
-            "z-[4]",
-            "after:top-[-5px]",
-            "before:top-[5px]"
-          )}
-        >
-          <Rounded
-            onClick={handleNavMenu}
-            className={cn(
-              "relative",
-              "m-5",
-              "size-16",
-              "rounded-full",
-              "cursor-pointer",
-              "bg-dark-400",
-              "p-0",
-              { "bg-neutral-800": isNavOpen }
-            )}
-          >
-            <BurgerMenu isOpen={isNavOpen} />
-          </Rounded>
-        </div>
+        />
       </div>
       <AnimatePresence mode="wait">{isNavOpen && <Nav />}</AnimatePresence>
     </>
   );
 }
-
-
