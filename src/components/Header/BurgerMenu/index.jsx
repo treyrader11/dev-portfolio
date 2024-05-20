@@ -15,7 +15,8 @@ function BurgerMenu({ isOpen, handleNavMenu }, ref) {
         "right-0",
         "z-[4]",
         "after:top-[-5px]",
-        "before:top-[5px]"
+        "before:top-[5px]",
+        "top-8"
       )}
     >
       <Rounded

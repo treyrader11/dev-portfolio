@@ -98,7 +98,7 @@
   background-color: #222121;
 }
 
-/* .custom-font {
+.custom-font {
   font-family: "Avant Garde Book BT";
 }
 
@@ -108,7 +108,7 @@
 
 .custom-font-body {
   font-family: "Body";
-} */
+}
 
 .mask {
   mask-image: url("../public/mask.svg");

@@ -4,10 +4,10 @@ import { useState, useEffect } from "react";
 import { Inter } from "next/font/google";
 import Inner from "@/common/layout/Inner";
 import { cn } from "@/lib/utils";
-import Description from "@/components/Home/components/Description";
-import SlidingImages from "@/components/Home/components/SlidingImages";
-import Projects from "@/components/Home/components/Projects";
-import Hero from "@/components/Home/components/Hero";
+import Description from "@/components/Description";
+import SlidingImages from "@/components/SlidingImages";
+import Projects from "@/components/Projects";
+import Hero from "@/components/Hero";
 
 const inter = Inter({ subsets: ["latin"] });
 
