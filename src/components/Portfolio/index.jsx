@@ -175,7 +175,7 @@ import { projectsData } from "@/lib/data";
 import { cn, getUnique } from "@/lib/utils";
 import { useRef, useState } from "react";
 import gsap from "gsap";
-import PortfolioItem from "./components/portfolioItem";
+import PortfolioItem from "./PortfolioItem";
 import PageTitle from "@/common/PageTitle";
 
 // const activeClass =

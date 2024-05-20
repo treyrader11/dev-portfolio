@@ -4,8 +4,8 @@ import { useRef, useState, useCallback } from "react";
 import { AnimatePresence } from "framer-motion";
 import gsap from "gsap";
 import ScrollTrigger from "gsap/dist/ScrollTrigger";
-import Nav from "./Nav";
-import NavMenu from "./Nav/NavMenu";
+import Nav from "./nav";
+import NavMenu from "./nav/NavMenu";
 import useIsomorphicLayoutEffect from "@/hooks/useIsomorphicLayoutEffect";
 import ProfilePicture from "@/common/ProfilePicture";
 import profilePicture from "/public/images/portraits/headshot-sit-blackbg.png";
@@ -17,9 +17,11 @@ import BurgerMenu from "./BurgerMenu";
 import { useWindowDimensions } from "@/hooks/useWindowDimensions";
 
 export default function Header() {
-  const header = useRef(null);
   const [isNavOpen, setIsNavOpen] = useState(false);
+
+  const header = useRef(null);
   const button = useRef(null);
+  
   const path = usePathname();
 
   const { width } = useWindowDimensions();
