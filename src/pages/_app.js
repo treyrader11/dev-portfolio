@@ -6,10 +6,13 @@ import Footer from "@/components/Footer";
 
 export default function App({ Component, pageProps, router }) {
   return (
-    <Layout route={router.route}>
-      <Header />
-      <Component {...pageProps} router={router} />
+    <>
+      <Layout route={router.route}>
+        <Header />
+        <Component {...pageProps} router={router} />
+        {/* <Footer /> */}
+      </Layout>
       <Footer />
-    </Layout>
+    </>
   );
 }

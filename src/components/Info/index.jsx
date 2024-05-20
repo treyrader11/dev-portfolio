@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 import Experience from "./Experience";
 import Link from "next/link";
 
-export default function About() {
+export default function Info() {
   return (
     <section className="bg-dark">
       <PageTitle title="About Me." backgroundColor="white" />
@@ -126,7 +126,7 @@ export default function About() {
               Social Links
             </h1>
             <div className="mt-4 ml-4">
-              <div className="flex flex-row items-center justify-start ">
+              <div className="flex flex-row items-center justify-start">
                 <a
                   href={userData.socialLinks.facebook}
                   className="flex flex-row items-center space-x-4 group"

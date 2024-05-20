@@ -62,8 +62,6 @@ export default function Header() {
         className={cn(
           "absolute",
           "flex",
-          // "flex-col",
-          // "sm:flex-row",
           "z-[5]",
           // isNavOpen ? "z-0" : "z-[5]",
           "top-0",
@@ -72,7 +70,7 @@ export default function Header() {
           "p-[35px]",
           "justify-between",
           "items-center",
-          "w-full"
+          "w-full",
           // "bg-dark"
         )}
       >

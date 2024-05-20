@@ -74,12 +74,13 @@ export default function Portfolio() {
 
   return (
     <section>
-      <PageTitle title="Portfolio." />
+      
+      {/* <PageTitle title="Portfolio." className="text-[20vh] mt-20" /> */}
+      {/* <PageTitle title="Portfolio." className="text-[10vh] sm:text-[20vh]" /> */}
       <div
         className={cn(
-          // "mt-8",
-          "pt-3",
           "mx-0",
+          // "pt-32",
           // "px-6",
           "bg-dark"
         )}
