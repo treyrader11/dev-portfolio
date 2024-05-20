@@ -5,23 +5,9 @@ import Rounded from "@/components/Rounded";
 import profilePicture from "/public/images/portraits/coffee-portrait-grey.png";
 import ProfilePicture from "@/components/ProfilePicture";
 import { cn } from "@/lib/utils";
-import { useState } from "react";
-import { FaRegCheckCircle } from "react-icons/fa";
-import { LuCopyCheck } from "react-icons/lu";
+import CopyContent from "@/components/CopyContent";
 
 export default function Contact({ style, rotate }) {
-  const [havecopy, sethavecopy] = useState(false);
-
-  const Copy = (e) => {
-    sethavecopy(true);
-    navigator.clipboard.writeText(e);
-    const myTimeout = setTimeout(myStopFunction, 5000);
-    function myStopFunction() {
-      sethavecopy(false);
-      clearTimeout(myTimeout);
-    }
-  };
-
   return (
     <div
       className={cn(
@@ -64,6 +50,7 @@ export default function Contact({ style, rotate }) {
             )}
           >
             <Rounded
+              text="Get in touch"
               backgroundColor="#A25600"
               href="/contact"
               className={cn(
@@ -73,19 +60,7 @@ export default function Contact({ style, rotate }) {
                 "p-0",
                 "absolute"
               )}
-            >
-              <p
-                className={cn(
-                  "relative",
-                  "z-[1]",
-                  "transition-colors",
-                  "duration-[400]",
-                  "ease-linear"
-                )}
-              >
-                Get in touch
-              </p>
-            </Rounded>
+            />
           </motion.div>
         </div>
         <motion.svg
@@ -114,22 +89,16 @@ export default function Contact({ style, rotate }) {
         )}
       >
         <Rounded
+          backgroundColor="#131316"
+          text="developertrey@gmail.com"
           className={cn("w-full md:w-fit py-5 px-10 border-[.3px]")}
           href="/contact"
+        />
+
+        <Rounded
+          backgroundColor="#131316"
+          className={cn("w-full md:w-fit py-5 px-10 border-[.3px]")}
         >
-          <p
-            className={cn(
-              "relative",
-              "z-[1]",
-              "transition-colors",
-              "duration-400",
-              "ease-linear"
-            )}
-          >
-            developertrey@gmail.com
-          </p>
-        </Rounded>
-        <Rounded className={cn("w-full md:w-fit py-5 px-10 border-[.3px]")}>
           <p
             className={cn(
               "relative",
@@ -141,49 +110,7 @@ export default function Contact({ style, rotate }) {
           >
             504.756.4538
           </p>
-          {havecopy ? (
-            <div
-              id="button-primary"
-              onClick={() => sethavecopy(false)}
-              className={cn(
-                "right-[10px]",
-                "top-[10px]",
-                "absolute",
-                "hidden",
-                "group-hover:flex",
-                "flex-row",
-                "items-center",
-                "px-[15px]",
-                "py-[5px]",
-                "cursor-pointer",
-                "rounded-[5px]"
-              )}
-            >
-              <FaRegCheckCircle className="text-teal-400 size-5" />
-              <span className=" ml-[7px] text-teal-400 text-base">Copied!</span>
-            </div>
-          ) : (
-            <div
-              id="button-primary"
-              onClick={() => Copy(data[0].package)}
-              className={cn(
-                "right-[10px]",
-                "top-[10px]",
-                "absolute",
-                "hidden",
-                "group-hover:flex",
-                "flex-row",
-                "items-center",
-                "px-[15px]",
-                "py-[5px]",
-                "cursor-pointer",
-                "rounded-[5px]"
-              )}
-            >
-              <LuCopyCheck className="text-white size-5" />
-              <span className="text-base ml-[7px]">Copy</span>
-            </div>
-          )}
+          {/* <CopyContent className="relative z-[10]" content="5047564538" /> */}
         </Rounded>
       </div>
     </div>

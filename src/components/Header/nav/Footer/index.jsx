@@ -1,13 +1,13 @@
 import StyledLink from "@/components/StyledLink";
 import { userData } from "@/lib/data";
 import { cn } from "@/lib/utils";
-import Link from "next/link";
+import { BsDownload } from "react-icons/bs";
 
 export default function Footer() {
   const { socialLinks, resumeUrl } = userData;
   return (
-    <div className={cn("flex justify-between text-xs gap-10 mt-10")}>
-      <StyledLink href={`${resumeUrl}`}>Resume</StyledLink>
+    <div className={cn("flex justify-between text-xs gap-6 mt-10")}>
+      <StyledLink className="flex gap-x-2" href={`${resumeUrl}`}>Resume<BsDownload /></StyledLink>
       <StyledLink href={`${socialLinks.instagram}`}>Instagram</StyledLink>
       <StyledLink href={`${socialLinks.youtube}`}>Youtube</StyledLink>
       <StyledLink href={`${socialLinks.linkedin}`}>LinkedIn</StyledLink>
