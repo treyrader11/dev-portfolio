@@ -1,4 +1,4 @@
-import Inner from "@/common/layout/Inner";
+import Inner from "@/components/layout/Inner";
 import ContactForm from "@/components/Contact/components/ContactForm";
 
 export default function ContactPage() {

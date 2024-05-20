@@ -2,7 +2,7 @@ import Preloader from "@/components/Preloader";
 import { AnimatePresence } from "framer-motion";
 import { useState, useEffect } from "react";
 import { Inter } from "next/font/google";
-import Inner from "@/common/layout/Inner";
+import Inner from "@/components/layout/Inner";
 import { cn } from "@/lib/utils";
 import Description from "@/components/Description";
 import SlidingImages from "@/components/SlidingImages";

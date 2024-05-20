@@ -1,6 +1,6 @@
 "use client";
 
-import Magnetic from "@/common/Magnetic";
+import Magnetic from "@/components/Magnetic";
 import { routes } from "../routes";
 import Link from "next/link";
 import { cn } from "@/lib/utils";

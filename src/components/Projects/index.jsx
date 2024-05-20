@@ -4,7 +4,7 @@ import { useScroll } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import Lenis from "@studio-freight/lenis";
 import ProjectShot from "./components/ProjectShot";
-import Rounded from "@/common/Rounded";
+import Rounded from "@/components/Rounded";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 import { scaleAnimation } from "./anim";

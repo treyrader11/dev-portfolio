@@ -2,7 +2,7 @@
 
 import { useInView, motion } from "framer-motion";
 import { slideUp, opacity } from "./anim";
-import Rounded from "@/common/Rounded";
+import Rounded from "@/components/Rounded";
 import { cn } from "@/lib/utils";
 import { useLayoutEffect, useRef } from "react";
 import ScrollTrigger from "gsap/dist/ScrollTrigger";

@@ -1,4 +1,4 @@
-import Inner from "@/common/layout/Inner";
+import Inner from "@/components/layout/Inner";
 import Info from "@/components/Info";
 
 export default function InfoPage() {

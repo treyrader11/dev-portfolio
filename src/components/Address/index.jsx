@@ -1,4 +1,4 @@
-import Magnetic from "@/common/Magnetic";
+import Magnetic from "@/components/Magnetic";
 import { userData } from "@/lib/data";
 import { cn } from "@/lib/utils";
 

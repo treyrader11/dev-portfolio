@@ -4,8 +4,8 @@ import { userData } from "@/lib/data";
 import PageTitle from "@/components/PageTitle";
 import Image from "next/image";
 import Input from "@/common/Input";
-import Rounded from "@/common/Rounded";
-import Magnetic from "@/common/Magnetic";
+import Rounded from "@/components/Rounded";
+import Magnetic from "@/components/Magnetic";
 import { RiMailSendLine } from "react-icons/ri";
 
 const imageProps = {

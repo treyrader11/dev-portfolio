@@ -6,7 +6,7 @@ import useMousePosition from "@/hooks/useMousePosition";
 import { cn } from "@/lib/utils";
 import { slideUp } from "./anim";
 import Image from "next/image";
-import Rounded from "@/common/Rounded";
+import Rounded from "@/components/Rounded";
 import { userData } from "@/lib/data";
 
 const phrase =

@@ -1,6 +1,6 @@
 "use client";
 
-import Rounded from "@/common/Rounded";
+import Rounded from "@/components/Rounded";
 import { cn } from "@/lib/utils";
 import { forwardRef } from "react";
 

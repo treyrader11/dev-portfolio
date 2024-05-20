@@ -1,5 +1,5 @@
 import PageTitle from "@/components/PageTitle";
-import Inner from "@/common/layout/Inner";
+import Inner from "@/components/layout/Inner";
 import Portfolio from "@/components/Portfolio";
 
 export default function PortfolioPage() {

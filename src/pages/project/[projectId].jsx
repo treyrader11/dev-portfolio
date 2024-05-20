@@ -2,7 +2,7 @@ import Link from "next/link";
 import { cn } from "@/lib/utils";
 import ProjectDetails from "@/components/Portfolio/Project/components/ProjectDetails";
 import { projectsData } from "@/lib/data";
-import Inner from "@/common/layout/Inner";
+import Inner from "@/components/layout/Inner";
 import { GoArrowLeft } from "react-icons/go";
 
 export default function ProjectPage({ project }) {
