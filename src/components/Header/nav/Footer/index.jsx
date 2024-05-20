@@ -2,6 +2,7 @@ import StyledLink from "@/components/StyledLink";
 import { userData } from "@/lib/data";
 import { cn } from "@/lib/utils";
 import { BsDownload } from "react-icons/bs";
+import { SlPaperClip } from "react-icons/sl";
 
 export default function Footer() {
   const { socialLinks, resumeUrl } = userData;

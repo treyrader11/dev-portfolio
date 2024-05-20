@@ -89,16 +89,12 @@ export default function Contact({ style, rotate }) {
         )}
       >
         <Rounded
-          backgroundColor="#131316"
           text="developertrey@gmail.com"
           className={cn("w-full md:w-fit py-5 px-10 border-[.3px]")}
           href="/contact"
         />
 
-        <Rounded
-          backgroundColor="#131316"
-          className={cn("w-full md:w-fit py-5 px-10 border-[.3px]")}
-        >
+        <Rounded className={cn("w-full md:w-fit py-5 px-10 border-[.3px]")}>
           <p
             className={cn(
               "relative",

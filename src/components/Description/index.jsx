@@ -53,7 +53,6 @@ export default function Description() {
         <div data-scroll data-scroll-speed={0.1}>
           <div className="absolute right-0 top-3/4">
             <Rounded
-              backgroundColor="#131316"
               text="About me"
               href="/info"
               className="size-[180px] bg-dark-400"

@@ -21,16 +21,16 @@ function BurgerMenu({ isOpen, handleNavMenu }, ref) {
     >
       <Rounded
         onClick={handleNavMenu}
-        backgroundColor="#934e00"
+        // backgroundColor="#934e00"
         className={cn(
           "relative",
           "m-5",
           "size-16",
           "rounded-full",
           "cursor-pointer",
-          !isOpen ? "bg-dark-400" : "bg-secondary",
+          "bg-dark",
           "p-0",
-          // { "bg-neutral-800": isOpen }
+          { "bg-neutral-800": isOpen }
         )}
       >
         <div

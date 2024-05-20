@@ -10,7 +10,8 @@ export default function Rounded({
   children,
   className,
   text,
-  backgroundColor = "#8550C2",
+  // backgroundColor = "#8550C2",
+  backgroundColor = "#292929",
   href,
   ...attributes
 }) {
@@ -83,7 +84,7 @@ export default function Rounded({
               "transition-colors",
               "duration-[400]",
               "ease-linear",
-              "flex",
+              "inline-flex",
               "group-hover:text-white"
             )}
           >
