@@ -10,7 +10,6 @@ import Footer from "./Footer";
 import { routes } from "./routes";
 import GithubCornerBadge from "@/common/GithubCornerBadge";
 import { cn } from "@/lib/utils";
-import ResumeSlideout from "@/common/ResumeSlideout";
 
 export default function Nav() {
   const pathname = usePathname();
@@ -29,8 +28,7 @@ export default function Nav() {
         "inset-x-0",
         "text-white",
         "z-[4]",
-        "md:left-[calc(100vw-414px)]",
-        "overflow-hidden"
+        "md:left-[calc(100vw-414px)]"
       )}
     >
       <GithubCornerBadge />
@@ -75,10 +73,8 @@ export default function Nav() {
             );
           })}
         </div>
-        {/* <ResumeSlideout /> */}
         <Footer />
       </div>
-
       <Curve />
     </motion.div>
   );
