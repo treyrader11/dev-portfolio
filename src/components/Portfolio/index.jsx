@@ -4,7 +4,7 @@ import { projectsData } from "@/lib/data";
 import { cn, getUnique } from "@/lib/utils";
 import { useRef, useState } from "react";
 import gsap from "gsap";
-import PortfolioItem from "./components/portfolioItem";
+import PortfolioItem from "./components/PortfolioItem";
 import PageTitle from "@/common/PageTitle";
 
 // const activeClass =
@@ -98,7 +98,6 @@ export default function Portfolio() {
           className={cn(
             "mt-8",
             "pt-3",
-            // "mx-0",
             "px-12",
             "flex",
             "items-center",

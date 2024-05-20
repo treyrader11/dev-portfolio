@@ -62,9 +62,9 @@ export default function Header() {
         className={cn(
           "absolute",
           "flex",
-          "items-center",
+          // "items-start",
+          // "items-center",
           "z-[5]",
-          // isNavOpen ? "z-0" : "z-[5]",
           "top-0",
           "font-extralight",
           "text-white",
@@ -82,7 +82,7 @@ export default function Header() {
         />
         <Link
           href="/"
-          className={cn("pl-3", "mr-auto", "text-black", {
+          className={cn("pl-3 mr-auto text-black", {
             "text-white": isHomePage || isContactPage || isPortfolioPage,
           })}
         >
