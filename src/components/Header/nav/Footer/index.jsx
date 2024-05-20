@@ -7,7 +7,11 @@ export default function Footer() {
   const { socialLinks, resumeUrl } = userData;
   return (
     <div className={cn("flex justify-between text-xs gap-6 mt-10")}>
-      <StyledLink className="flex gap-x-2" href={`${resumeUrl}`}>Resume<BsDownload /></StyledLink>
+      <StyledLink href={`${resumeUrl}`}>
+        <span className="flex items-center gap-2">
+          Resume <BsDownload />
+        </span>
+      </StyledLink>
       <StyledLink href={`${socialLinks.instagram}`}>Instagram</StyledLink>
       <StyledLink href={`${socialLinks.youtube}`}>Youtube</StyledLink>
       <StyledLink href={`${socialLinks.linkedin}`}>LinkedIn</StyledLink>
