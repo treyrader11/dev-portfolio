@@ -1,4 +1,4 @@
-import PageTitle from "@/common/PageTitle";
+import PageTitle from "@/components/PageTitle";
 import Inner from "@/common/layout/Inner";
 import Portfolio from "@/components/Portfolio";
 

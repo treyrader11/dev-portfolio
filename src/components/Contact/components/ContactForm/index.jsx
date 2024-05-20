@@ -1,7 +1,7 @@
 import { cn } from "@/lib/utils";
 import Address from "../../../../common/Address";
 import { userData } from "@/lib/data";
-import PageTitle from "@/common/PageTitle";
+import PageTitle from "@/components/PageTitle";
 import Image from "next/image";
 import Input from "@/common/Input";
 import Rounded from "@/common/Rounded";

@@ -1,4 +1,4 @@
-import PageTitle from "@/common/PageTitle";
+import PageTitle from "@/components/PageTitle";
 import { userData } from "@/lib/data";
 import { cn } from "@/lib/utils";
 import Experience from "./Experience";
@@ -94,8 +94,8 @@ export default function Info() {
                 Job Opportunities
               </h1>
               <p className="mt-4 text-lg text-gray-500 dark:text-gray-300">
-                I&apos;m looking for a job currently, If you see me as a good
-                fit, check my{" "}
+                I&apos;m looking for a job currently. If you see me as a good
+                fit, please have a look at my{" "}
                 <a
                   href={userData.resumeUrl}
                   target="__blank"

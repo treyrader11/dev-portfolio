@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
 import Image from "next/image";
-import Magnetic from "../Magnetic";
+import Magnetic from "../../common/Magnetic";
 import Link from "next/link";
 
 export default function ProfilePicture({ src, className, isMagnetic = false }) {

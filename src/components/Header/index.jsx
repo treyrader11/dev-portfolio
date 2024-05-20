@@ -7,12 +7,12 @@ import ScrollTrigger from "gsap/dist/ScrollTrigger";
 import Nav from "./nav";
 import NavMenu from "./nav/NavMenu";
 import useIsomorphicLayoutEffect from "@/hooks/useIsomorphicLayoutEffect";
-import ProfilePicture from "@/common/ProfilePicture";
+import ProfilePicture from "@/components/ProfilePicture";
 import profilePicture from "/public/images/portraits/headshot-sit-blackbg.png";
 import { cn } from "@/lib/utils";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
-import Brand from "@/common/Brand";
+import Brand from "@/components/Brand";
 import BurgerMenu from "./BurgerMenu";
 import { useWindowDimensions } from "@/hooks/useWindowDimensions";
 

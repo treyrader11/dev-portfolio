@@ -1,4 +1,4 @@
-import StyledLink from "@/common/StyledLink";
+import StyledLink from "@/components/StyledLink";
 import { userData } from "@/lib/data";
 import { cn } from "@/lib/utils";
 

@@ -21,14 +21,13 @@ export default function StyledLink({
         "after:block",
         "after:mt-[2px]",
         "after:relative",
-        "after:left-1/2",
+        "after:left-0",
         "after:transform",
-        "after:-translate-x-[-50%]",
+        "after:-translate-x-0",
         "after:transition-[width]",
         "after:duration-200",
         "after:ease-linear",
         "hover:after:w-full",
-
         className
       )}
     >

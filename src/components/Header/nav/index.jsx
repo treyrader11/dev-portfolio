@@ -8,7 +8,7 @@ import Navlink from "./Navlink";
 import Curve from "./Curve";
 import Footer from "./Footer";
 import { routes } from "./routes";
-import GithubCornerBadge from "@/common/GithubCornerBadge";
+import GithubCornerBadge from "@/components/GithubCornerBadge";
 import { cn } from "@/lib/utils";
 
 export default function Nav() {

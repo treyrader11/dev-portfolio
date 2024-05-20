@@ -176,7 +176,7 @@ import { cn, getUnique } from "@/lib/utils";
 import { useRef, useState } from "react";
 import gsap from "gsap";
 import PortfolioItem from "./PortfolioItem";
-import PageTitle from "@/common/PageTitle";
+import PageTitle from "@/components/PageTitle";
 
 // const activeClass =
 //   "text-purple-500 after:absolute after:left-0 after:bottom-[-5px] after:bg-purple-500 after:w-full after:h-[2px]";

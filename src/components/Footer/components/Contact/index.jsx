@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import Rounded from "@/common/Rounded";
 import profilePicture from "/public/images/portraits/coffee-portrait-grey.png";
-import ProfilePicture from "@/common/ProfilePicture";
+import ProfilePicture from "@/components/ProfilePicture";
 import { cn } from "@/lib/utils";
 
 export default function Contact({ style, rotate }) {

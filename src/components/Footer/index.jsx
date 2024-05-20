@@ -3,8 +3,8 @@
 import { useRef } from "react";
 import { useScroll, motion, useTransform } from "framer-motion";
 import { cn, getLocalTime } from "@/lib/utils";
-import StyledLink from "@/common/StyledLink";
-import Brand from "@/common/Brand";
+import StyledLink from "@/components/StyledLink";
+import Brand from "@/components/Brand";
 import Socials from "./components/Socials";
 import Contact from "./components/Contact";
 
