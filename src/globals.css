@@ -128,7 +128,7 @@
 
 
 /* Font below is used for hero */
-/* @font-face {
+@font-face {
   font-family: "Avant Garde Book BT";
   font-style: normal;
   font-weight: normal;
@@ -143,4 +143,4 @@
 @font-face {
   font-family: "Body";
   src: url("../public/fonts/NeueMontreal_Medium.otf");
-} */
+}

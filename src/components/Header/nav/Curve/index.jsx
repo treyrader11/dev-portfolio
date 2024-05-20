@@ -1,7 +1,7 @@
 "use client";
 
+import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
-import styles from "./styles";
 
 export default function Curve() {
   let initialPath;
@@ -31,13 +31,29 @@ export default function Curve() {
   };
 
   return (
-    <svg className={styles.svgCurve}>
+    <svg
+      className={cn(
+        "absolute",
+        "top-0",
+        "-left-[99px]",
+        "w-[100px]",
+        "h-full",
+        "stroke-none",
+        "fill-dark-700"
+      )}
+    >
       <motion.path
         variants={curve}
         initial="initial"
         animate="enter"
         exit="exit"
       ></motion.path>
+       {/* <motion.path
+        variants={curve}
+        initial="initial"
+        animate="enter"
+        exit="exit"
+      /> */}
     </svg>
   );
 }
