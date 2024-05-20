@@ -1,9 +1,9 @@
 import { cn } from "@/lib/utils";
-import Address from "../../../../common/Address";
+import Address from "../../../Address";
 import { userData } from "@/lib/data";
 import PageTitle from "@/components/PageTitle";
 import Image from "next/image";
-import Input from "@/common/Input";
+import Input from "@/components/Input";
 import Rounded from "@/components/Rounded";
 import Magnetic from "@/components/Magnetic";
 import { RiMailSendLine } from "react-icons/ri";
