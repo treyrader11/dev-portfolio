@@ -6,6 +6,7 @@ export default function StyledLink({
   children,
   href,
   target = "#",
+  onColor = false,
 }) {
   return (
     <Link
@@ -17,7 +18,7 @@ export default function StyledLink({
         "cursor-pointer",
         "after:w-0",
         "after:h-px",
-        "after:bg-white",
+        !onColor ? "after:bg-white" : "after:bg-dark",
         "after:block",
         "after:mt-[2px]",
         "after:relative",

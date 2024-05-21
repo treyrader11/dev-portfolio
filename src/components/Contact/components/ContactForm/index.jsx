@@ -5,9 +5,10 @@ import Image from "next/image";
 import Input from "@/components/Input";
 import Rounded from "@/components/Rounded";
 import Magnetic from "@/components/Magnetic";
-import { socials } from "./data";
 import { userData } from "@/lib/data";
 import { VscSend } from "react-icons/vsc";
+import { VscCoffee } from "react-icons/vsc";
+import Socials from "@/components/Socials";
 
 const imageProps = {
   width: 100,
@@ -36,16 +37,16 @@ export default function ContactForm() {
       >
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           <div className="md:ml-4">
-            <header>
-              <h1 className="text-2xl font-semibold text-gray-50">
-                Let&apos;s talk.
+            <header className="pt-10">
+              <h1 className="flex items-center text-2xl font-semibold gap-x-2 text-gray-50">
+                Let&apos;s talk. <VscCoffee className="text-3xl" />
               </h1>
               <p className="mt-2 text-base font-light text-gray-200">
                 Fill in the details and I&apos;ll get back to you as soon as I
                 can.
               </p>
             </header>
-            <div className="inline-flex flex-col my-20 icons-container">
+            <div className="inline-flex flex-col my-10">
               <Magnetic>
                 <div
                   className={cn(
@@ -54,11 +55,6 @@ export default function ContactForm() {
                     "items-center",
                     "space-x-6",
                     "rounded-md",
-                    // "border",
-                    // "border-purple-950",
-                    // "border-secondary/80",
-                    // "hover:border",
-                    // "hover:border-purple-500",
                     "p-4"
                   )}
                 >
@@ -89,11 +85,6 @@ export default function ContactForm() {
                     "items-center",
                     "space-x-6",
                     "rounded-md",
-                    // "border-purple-950",
-                    // "border-secondary/80",
-                    // "border",
-                    // "hover:border",
-                    // "hover:border-purple-500",
                     "p-4"
                   )}
                 >
@@ -113,29 +104,17 @@ export default function ContactForm() {
                   </p>
                 </a>
               </Magnetic>
-
               <Address />
             </div>
-            <div className="flex flex-row space-x-2 social-icons">
-              {socials.map(({ icon: Icon, href }) => (
-                <Rounded
-                  backgroundColor="#8550C2"
-                  key={href}
-                  href={href}
-                  className={cn("size-10 p-0")}
-                >
-                  <span className="relative z-[10]">{Icon}</span>
-                </Rounded>
-              ))}
-            </div>
+            <Socials rounded />
           </div>
 
           <div className={cn("flex gap-8 mt-[3.rem] flex-col")}>
-            <div className={cn("w-2/5 relative")}>
+            <div className="relative w-2/5">
               <Image {...imageProps} alt="image of map" />
             </div>
             <form action="" className={cn("flex flex-col gap-[1.2rem]")}>
-              <div className={cn("flex gap-4")}>
+              <div className="flex gap-4">
                 <Input type="text" placeholder="Your name" />
                 <Input type="email" placeholder="Email address" />
               </div>
@@ -154,7 +133,6 @@ export default function ContactForm() {
                   "outline-none",
                   "border-none",
                   "resize-none",
-                  "bg-dark-400",
                   "focus:outline-purple-400",
                   "outline-[1px]",
                   "transition-all",
@@ -165,10 +143,7 @@ export default function ContactForm() {
                 )}
               />
 
-              <Rounded
-                backgroundColor="#8550C2"
-                // backgroundColor="#934E00"
-              >
+              <Rounded backgroundColor="#8550C2">
                 <p className="flex relative z-[10] items-center gap-2">
                   Send <VscSend />
                 </p>

@@ -29,7 +29,7 @@ export default function Footer() {
         "justify-center",
         "bg-dark",
         "relative",
-        "font-light",
+        "font-light"
       )}
     >
       <Contact style={{ x }} rotate={rotate} />
@@ -47,7 +47,7 @@ export default function Footer() {
           "text-[15px]"
         )}
       >
-        <Socials className={cn("py-5")} />
+        <Socials className={cn("py-5 font-mono")} />
         <div className={cn("flex gap-2.5 py-5 w-full")}>
           <span
             className={cn(
@@ -59,10 +59,13 @@ export default function Footer() {
               "gap-3.5"
             )}
           >
-            <StyledLink className="flex gap-1">
-              {new Date().toLocaleDateString("en-US", {
-                year: "numeric",
-              })}
+            <StyledLink onColor className="flex gap-1">
+              <span className="font-mono">
+                {new Date().toLocaleDateString("en-US", {
+                  year: "numeric",
+                })}
+              </span>
+
               <Brand />
             </StyledLink>
             <span className="flex flex-col gap-3">

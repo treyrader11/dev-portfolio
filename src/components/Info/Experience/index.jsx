@@ -66,7 +66,7 @@ export default function Experience() {
   return (
     <>
       <motion.div variants={textVariant()}>
-        <p
+        {/* <p
           className={cn(
             "text-center",
             "sm:text-lg",
@@ -77,7 +77,7 @@ export default function Experience() {
           )}
         >
           What I have done so far
-        </p>
+        </p> */}
         <h2
           className={cn(
             "text-center",

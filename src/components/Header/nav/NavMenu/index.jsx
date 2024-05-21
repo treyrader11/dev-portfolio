@@ -6,15 +6,27 @@ import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
+import LinkDecorator from "@/components/LinkDecorator";
 
-export default function NavMenu({ handleNavMenu, className }) {
+export default function NavMenu({
+  handleNavMenu,
+  className,
+  backgroundHasColor,
+}) {
   const pathname = usePathname();
   const [selectedIndicator, setSelectedIndicator] = useState(pathname);
 
-  const ifPageHasWhiteBG = pathname === "/info";
-
   return (
-    <nav className={cn("flex items-center", className)}>
+    <nav
+      className={cn(
+        "flex",
+        "font-mono",
+        "items-center",
+        "sm:mt-4",
+        backgroundHasColor ? "text-white" : "text-gray-500",
+        className
+      )}
+    >
       <div className="hidden sm:flex">
         {routes.map(({ label, href }) => {
           if (label !== "Home") {
@@ -39,8 +51,8 @@ export default function NavMenu({ handleNavMenu, className }) {
                 <Magnetic key={href}>
                   <Link href={href}>
                     {label}
-                    <Indicator
-                      className={ifPageHasWhiteBG && "bg-black"}
+                    <LinkDecorator
+                      className={backgroundHasColor && "bg-gray-500"}
                       isActive={selectedIndicator == href}
                     />
                   </Link>
@@ -67,7 +79,11 @@ export default function NavMenu({ handleNavMenu, className }) {
             "cursor-pointer"
           )}
         >
-          <Indicator className="m-0 scale-100" />
+          <LinkDecorator
+            className={cn("m-0", "scale-100", {
+              "bg-gray-500": !backgroundHasColor,
+            })}
+          />
           <p>Menu</p>
         </div>
       </Magnetic>
@@ -75,25 +91,25 @@ export default function NavMenu({ handleNavMenu, className }) {
   );
 }
 
-function Indicator({ className, isActive }) {
-  return (
-    <div
-      className={cn(
-        "size-[5px]",
-        "transition-transform",
-        "duration-200",
-        "custom-ease-in-out",
-        "transform",
-        "-translate-x-1/2",
-        "rounded-full",
-        "bg-white",
-        "mx-auto",
-        "mt-3",
-        "scale-0",
-        "group-hover:scale-100",
-        isActive && cn("scale-100"),
-        className
-      )}
-    />
-  );
-}
+// function Indicator({ className, isActive }) {
+//   return (
+//     <div
+//       className={cn(
+//         "size-[5px]",
+//         "transition-transform",
+//         "duration-200",
+//         "custom-ease-in-out",
+//         "transform",
+//         "-translate-x-1/2",
+//         "rounded-full",
+//         "bg-white",
+//         "mx-auto",
+//         "mt-3",
+//         "scale-0",
+//         "group-hover:scale-100",
+//         isActive && cn("scale-100"),
+//         className
+//       )}
+//     />
+//   );
+// }

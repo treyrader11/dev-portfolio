@@ -3,23 +3,23 @@ import { userData } from "@/lib/data";
 import { cn } from "@/lib/utils";
 import Experience from "./Experience";
 import Link from "next/link";
+// import Socials from "../Socials";
+import Magnetic from "../Magnetic";
+
+const socialLinks = [
+  { name: "Facebook", href: userData.socialLinks.facebook },
+  { name: "GitHub", href: userData.socialLinks.github },
+  { name: "LinkedIn", href: userData.socialLinks.linkedin },
+  { name: "Instagram", href: userData.socialLinks.instagram },
+];
 
 export default function Info() {
   return (
     <section className="bg-dark">
-      <PageTitle title="About Me." backgroundColor="white" />
-      <div className="bg-[#F1F1F1] -mt-10 dark:bg-gray-900">
-        <div className="max-w-6xl pt-20 mx-auto text-container">
-          <p
-            className={cn(
-              "mx-4",
-              "text-2xl",
-              "font-semibold",
-              "leading-loose",
-              "md:text-4xl"
-            )}
-            style={{ lineHeight: "3rem" }}
-          >
+      <PageTitle title="About." backgroundColor="white" />
+      <div className="bg-[#F1F1F1] -mt-10">
+        <div className="max-w-6xl pt-20 mx-auto">
+          <p className={cn("mx-4", "text-2xl", "font-semibold", "md:text-4xl")}>
             {userData.about.title}. Currently working on{" "}
             <a
               className={cn(
@@ -46,8 +46,7 @@ export default function Info() {
             "pt-20",
             "mx-auto",
             "md:grid-cols-3",
-            "gap-y-20",
-            "gap-x-20"
+            "gap-20"
           )}
         >
           {/* Social Buttons */}
@@ -114,139 +113,9 @@ export default function Info() {
               </p>
             </div>
             {/* Social Links */}
-            <h1
-              className={cn(
-                "mt-8",
-                "text-xl",
-                "font-semibold",
-                "text-gray-700",
-                "dark:text-gray-200"
-              )}
-            >
-              Social Links
-            </h1>
-            <div className="mt-4 ml-4">
-              <div className="flex flex-row items-center justify-start">
-                <a
-                  href={userData.socialLinks.facebook}
-                  className="flex flex-row items-center space-x-4 group"
-                >
-                  <div className="my-4">&rarr;</div>
-                  <div className="relative overflow-hidden font-mono text-lg text-gray-500 dark:text-gray-300">
-                    <div
-                      className={cn(
-                        "absolute",
-                        "h-0.5",
-                        "w-full",
-                        "bg-gray-400",
-                        "bottom-0",
-                        "transform",
-                        "-translate-x-24",
-                        "group-hover:translate-x-0",
-                        "transition",
-                        "duration-300"
-                      )}
-                    />
-                    Facebook
-                  </div>
-                </a>
-              </div>
-              <div className="flex flex-row items-center justify-start">
-                <a
-                  href={userData.socialLinks.twitter}
-                  className="flex flex-row items-center space-x-4 group"
-                >
-                  <div className="my-4">&rarr;</div>
-                  <div
-                    className={cn(
-                      "relative overflow-hidden font-mono text-lg text-gray-500 dark:text-gray-300"
-                    )}
-                  >
-                    <div
-                      className={cn(
-                        "absolute h-0.5 w-full bg-gray-400 bottom-0 transform -translate-x-24 group-hover:translate-x-0 transition duration-300"
-                      )}
-                    />
-                    Twitter
-                  </div>
-                </a>
-              </div>
-              <div className="flex flex-row items-center justify-start">
-                <a
-                  href={userData.socialLinks.github}
-                  className="flex flex-row items-center space-x-4 group"
-                >
-                  <div className="my-4">&rarr;</div>
-                  <div className="relative overflow-hidden font-mono text-lg text-gray-500 dark:text-gray-300">
-                    <div
-                      className={cn(
-                        "absolute h-0.5 w-full bg-gray-400 bottom-0 transform -translate-x-24 group-hover:translate-x-0 transition duration-300"
-                      )}
-                    />
-                    GitHub
-                  </div>
-                </a>
-              </div>
-              <div className="flex flex-row items-center justify-start">
-                <a
-                  href={userData.socialLinks.linkedin}
-                  className="flex flex-row items-center space-x-4 group"
-                >
-                  <div className="my-4">&rarr;</div>
-                  <div className="relative overflow-hidden font-mono text-lg text-gray-500 dark:text-gray-300">
-                    <div
-                      className={cn(
-                        "absolute",
-                        "h-0.5",
-                        "w-full",
-                        "bg-gray-400",
-                        "bottom-0",
-                        "transform",
-                        "-translate-x-24",
-                        "group-hover:translate-x-0",
-                        "transition duration-300"
-                      )}
-                    />
-                    LinkedIn
-                  </div>
-                </a>
-              </div>
-              <div className="flex flex-row items-center justify-start">
-                <a
-                  href={userData.socialLinks.instagram}
-                  className="flex flex-row items-center space-x-4 group"
-                >
-                  <div className="my-4">&rarr;</div>
-                  <div
-                    className={cn(
-                      "relative",
-                      "overflow-hidden",
-                      "font-mono",
-                      "text-lg",
-                      "text-gray-500",
-                      "dark:text-gray-300"
-                    )}
-                  >
-                    <div
-                      className={cn(
-                        "absolute",
-                        "h-0.5",
-                        "w-full",
-                        "bg-gray-400",
-                        "bottom-0",
-                        "transform",
-                        "-translate-x-28",
-                        "group-hover:translate-x-0",
-                        "transition",
-                        "duration-300"
-                      )}
-                    />
-                    Instagram
-                  </div>
-                </a>
-              </div>
-            </div>
+            <Socials />
           </div>
+
           {/* Text area */}
           <div className="col-span-1 md:col-span-2">
             {userData.about.description?.map((desc, idx) => (
@@ -277,5 +146,68 @@ export default function Info() {
       </div>
       <Experience />
     </section>
+  );
+}
+
+function SocialLink({ name, href }) {
+  return (
+    <Magnetic>
+      <div
+        className={cn(
+          "flex",
+          "group",
+          "flex-row",
+          "items-center",
+          "justify-start",
+          "cursor-pointer",
+          "w-fit"
+        )}
+      >
+        <a href={href} className="flex flex-row items-center p-4 space-x-4">
+          {/* <div className="my-4">&rarr;</div> */}
+          <div
+            className={cn(
+              "relative",
+              "overflow-hidden",
+              "font-mono",
+              "text-lg",
+              "text-gray-500"
+            )}
+          >
+            <div
+              className={cn(
+                "absolute",
+                "h-0.5",
+                "w-full",
+                "bg-gray-400",
+                "bottom-0",
+                "transform",
+                "-translate-x-24",
+                "group-hover:translate-x-0",
+                "transition",
+                "duration-300"
+              )}
+            />
+            {name}
+          </div>
+        </a>
+      </div>
+    </Magnetic>
+  );
+}
+
+function Socials() {
+  return (
+    <>
+      <h1 className={cn("mt-8", "text-xl", "font-semibold", "text-gray-700")}>
+        Socials
+      </h1>
+
+      <div className="mt-4 ml-4">
+        {socialLinks.map((link) => (
+          <SocialLink key={link.name} name={link.name} href={link.href} />
+        ))}
+      </div>
+    </>
   );
 }

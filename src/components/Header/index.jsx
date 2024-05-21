@@ -32,6 +32,8 @@ export default function Header() {
   const isPortfolioPage = path === "/portfolio";
   const isContactPage = path.includes("contact");
 
+  const backgroundHasColor = isHomePage || isContactPage || isPortfolioPage;
+
   const handleNavMenu = useCallback(() => {
     setIsNavOpen((prevIsNavOpen) => !prevIsNavOpen);
   }, []);
@@ -99,20 +101,17 @@ export default function Header() {
         />
         <Link
           href="/"
-          className={cn("pl-3 mr-auto text-black", {
-            "text-white": isHomePage || isContactPage || isPortfolioPage,
-          })}
+          className={cn(
+            "pl-3 mr-auto",
+            backgroundHasColor ? "text-white" : "text-gray-500"
+          )}
         >
           <Brand />
         </Link>
 
         <NavMenu
           handleNavMenu={handleNavMenu}
-          className={cn(
-            isHomePage || isContactPage || isPortfolioPage
-              ? "text-white"
-              : "text-black"
-          )}
+          backgroundHasColor={backgroundHasColor}
         />
       </div>
       <AnimatePresence mode="wait">{isNavOpen && <Nav />}</AnimatePresence>
