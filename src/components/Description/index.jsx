@@ -56,7 +56,8 @@ export default function Description({ scrollYProgress, className }) {
           me in a unique place in the web design world.
         </motion.p>
         <div data-scroll data-scroll-speed={0.1}>
-          <div className="absolute right-0 top-3/4">
+          {/* <div className="absolute right-0 top-3/4"> */}
+          <div className={cn("absolute right-0 top-[40%] md:top-[35%]")}>
             <Rounded
               text="About me"
               href="/info"

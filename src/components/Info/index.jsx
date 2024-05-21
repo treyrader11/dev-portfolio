@@ -28,9 +28,9 @@ export default function Info() {
   const rotate = useTransform(scrollYProgress, [0, 1], [0, -5]);
 
   return (
-    <div ref={container} className="bg-dark">
+    <div ref={container} className=" bg-dark">
       {/* <motion.section style={{ scale, rotate }}  className="sticky top-0"> */}
-      <motion.section style={{ scale, rotate }}>
+      <motion.section className="">
         <PageTitle
           title="About."
           backgroundColor="#1c1d20"

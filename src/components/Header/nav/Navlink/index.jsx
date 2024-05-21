@@ -57,29 +57,31 @@ export default function Navlink({
   const { label, href, index } = data;
 
   return (
-    <motion.div
-      className={cn("relative flex items-center", className)}
-      onMouseEnter={() => {
-        setSelectedIndicator(href);
-      }}
-      custom={index}
-      variants={slide}
-      initial="initial"
-      animate="enter"
-      exit="exit"
-    >
+    <Link href={href}>
       <motion.div
-        variants={scale}
-        animate={isActive ? "open" : "closed"}
-        className={cn(
-          "size-2.5",
-          "bg-white",
-          "rounded-full",
-          "absolute",
-          "-left-[30px]"
-        )}
-      />
-      <Link href={href}>{label}</Link>
-    </motion.div>
+        className={cn("relative flex items-center", className)}
+        onMouseEnter={() => {
+          setSelectedIndicator(href);
+        }}
+        custom={index}
+        variants={slide}
+        initial="initial"
+        animate="enter"
+        exit="exit"
+      >
+        <motion.div
+          variants={scale}
+          animate={isActive ? "open" : "closed"}
+          className={cn(
+            "size-2.5",
+            "bg-white",
+            "rounded-full",
+            "absolute",
+            "-left-[30px]"
+          )}
+        />
+        {label}
+      </motion.div>
+    </Link>
   );
 }
