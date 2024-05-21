@@ -48,7 +48,7 @@ export default function Home() {
           className="sticky top-0 min-h-screen"
         />
         <Description
-          scrollYProgress={scrollYProgress}
+          // scrollYProgress={scrollYProgress}
           className="sticky top-0 min-h-[170vh] pt-[20vh] bg-white"
         />
         <Projects

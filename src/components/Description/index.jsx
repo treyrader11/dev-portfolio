@@ -16,12 +16,12 @@ export default function Description({ scrollYProgress, className }) {
   const description = useRef(null);
   const isInView = useInView(description);
 
-  const scale = useTransform(scrollYProgress, [0, 1], [1, 0.8]);
-  const rotate = useTransform(scrollYProgress, [0, 1], [0, -5]);
+  // const scale = useTransform(scrollYProgress, [0, 1], [1, 0.8]);
+  // const rotate = useTransform(scrollYProgress, [0, 1], [0, -5]);
 
   return (
     <motion.section
-      style={{ scale, rotate }}
+      // style={{ scale, rotate }}
       ref={description}
       className={cn("px-[200px] mt-[200px] flex justify-center", className)}
     >
@@ -55,17 +55,23 @@ export default function Description({ scrollYProgress, className }) {
           The combination of my passion for design, code & interaction positions
           me in a unique place in the web design world.
         </motion.p>
-        <div data-scroll data-scroll-speed={0.1}>
+        <div data-scroll data-scroll-speed={1}>
           {/* <div className="absolute right-0 top-3/4"> */}
-          <div className={cn("absolute right-0 top-[40%] md:top-[35%]")}>
-            <Rounded
-              text="About me"
-              href="/info"
-              className="size-[180px] bg-dark-400"
-            />
-          </div>
+          <AboutButton />
         </div>
       </div>
     </motion.section>
+  );
+}
+
+function AboutButton({ className, scrollSpeed }) {
+  return (
+    <div className={cn("absolute right-0 top-[40%] md:top-[35%]", className)}>
+      <Rounded
+        text="About me"
+        href="/info"
+        className="size-[180px] bg-dark-400"
+      />
+    </div>
   );
 }
