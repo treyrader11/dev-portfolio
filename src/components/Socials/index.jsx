@@ -11,10 +11,10 @@ export default function Socials({
 }) {
   return (
     <div className={cn("flex flex-row space-x-2", containerClass)}>
-      {socials.map(({ icon: Icon, href, label, color }) => (
+      {socials.map(({ icon: Icon, href, label, color }, index) => (
         <Rounded
           backgroundColor={rounded ? color : "transparent"}
-          key={`social-${href}-rounded`}
+          key={`social-${index}-rounded`}
           href={`${href}`}
           className={cn("size-10 p-0", className)}
         >

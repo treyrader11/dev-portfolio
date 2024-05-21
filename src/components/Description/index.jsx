@@ -7,10 +7,10 @@ import { useRef } from "react";
 import { cn } from "@/lib/utils";
 
 export default function Description({ scrollYProgress, className }) {
-  // const phrase =
-  //   "Helping brands to stand out in the digital era. Together we will set the new status quo. No nonsense, always on the cutting edge.";
   const phrase =
-    "One beautiful aspect of coding is that, when comparing it to a vast majority of other professions, learning is endless, whether it be discovering a new technique or a new technology.";
+    "Helping brands to stand out in the digital era. Together we will set the new status quo. No nonsense, always on the cutting edge.";
+  // const phrase =
+  //   "One beautiful aspect of coding is that, when comparing it to a vast majority of other professions, learning is endless, whether it be discovering a new technique or a new technology.";
   // const phrase =
   // "Determined Software engineer";
   const description = useRef(null);
@@ -25,7 +25,7 @@ export default function Description({ scrollYProgress, className }) {
       ref={description}
       className={cn("px-[200px] mt-[200px] flex justify-center", className)}
     >
-      <div className="flex gap-[50px] relative max-w-[1400px]">
+      <div className="flex gap-[50px] relative skew-y-2 max-w-[1400px]">
         <p className="m-0 text-4xl gap-2 leading-[1.3]">
           {phrase.split(" ").map((word, index) => {
             return (

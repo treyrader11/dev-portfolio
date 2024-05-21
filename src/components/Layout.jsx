@@ -7,7 +7,7 @@ import Header from "./Header";
 export default function Layout({ children, route }) {
   return (
     <AnimatePresence mode="wait">
-      <main key={route} className="mx-auto overflow-clip">
+      <main key={route} className="mx-auto overflow-clip bg-dark">
         <Header />
         {children}
         <Footer />
