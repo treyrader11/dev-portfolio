@@ -29,11 +29,12 @@ export default function Info() {
 
   return (
     <div ref={container} className="bg-dark">
+      {/* <motion.section style={{ scale, rotate }}  className="sticky top-0"> */}
       <motion.section style={{ scale, rotate }}>
         <PageTitle
           title="About."
-          backgroundColor="white"
-          className="sticky top-0"
+          backgroundColor="#1c1d20"
+          className=" #0f0f0f"
         />
 
         <div className="bg-[#F1F1F1]">
