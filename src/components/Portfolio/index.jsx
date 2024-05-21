@@ -75,14 +75,7 @@ export default function Portfolio() {
   return (
     <section>
       <PageTitle title="Portfolio." />
-      <div
-        className={cn(
-          "pt-12",
-          "mx-0",
-          "px-6",
-          "bg-dark"
-        )}
-      >
+      <div className={cn("pt-12", "mx-0", "px-6", "bg-dark")}>
         <p className="text-white">
           Following projects showcase my skills and experience through
           real-world examples of my work. Each project is briefly described with
@@ -94,7 +87,6 @@ export default function Portfolio() {
           className={cn(
             "mt-8",
             "pt-3",
-            // "mx-0",
             "px-6",
             "flex",
             "items-center",

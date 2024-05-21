@@ -1,7 +1,10 @@
+"use client";
+
 import { cn } from "@/lib/utils";
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useState } from "react";
 
 const imageProps = {
   width: 100,
@@ -20,16 +23,22 @@ export default function PortfolioItem({
   itemRef,
   category,
 }) {
+  const [isHovered, setIsHovered] = useState(false);
+
   return (
     <div
+      // onMouseEnter={() => setIsHovered(true)}
+      // onMouseLeave={() => setIsHovered(false)}
       className={cn(
         "w-full",
         "h-[320px]",
         "rounded-xl",
         "relative",
-        "overflow-hidden",
+        // "overflow-hidden",
         "border",
-        "border-secondary"
+        "border-secondary",
+        "group"
+        // "bg-indigo-400"
       )}
     >
       <Image
@@ -37,21 +46,23 @@ export default function PortfolioItem({
         {...imageProps}
         alt="project image"
       />
+
       <div
         className={cn(
           "absolute",
           "top-1/2",
           "left-1/2",
-          "-translate-x-1/2",
-          "-translate-y-1/2",
+          "group-hover:-translate-x-1/2",
+          "group-hover:-translate-y-1/2",
           "bg-indigo-400",
-          "w-0",
-          "h-[calc(100%_-_2rem)]",
+          "size-[calc(100%_-_2rem)]",
           "transition-all",
           "duration-[400]",
           "ease-in-out",
           "opacity-0",
+          "group-hover:opacity-50",
           "overflow-hidden"
+          // "z-[99]"
         )}
       >
         <div className={cn("p-8")}>
@@ -77,19 +88,21 @@ export default function PortfolioItem({
               "gap-8",
               "top-1/2",
               "left-1/2",
-              "-translate-x-1/2",
-              "translate-y-[220px]",
+              "group-hover:-translate-y-1/2",
+              "group-hover:-translate-x-[220px]",
               "scale-0",
               "transition-all",
               "duration-[400]",
               "ease-in-out",
-              "opacity-0"
+              "opacity-0",
+              "group-hover:scale-100",
+              "group-hover:opacity-100"
             )}
           >
             <Link
               className={cn(
                 "size-[3.5rem]",
-                "rounded-[50%]",
+                "rounded-full",
                 "flex",
                 "items-center",
                 "justify-center",
@@ -108,7 +121,7 @@ export default function PortfolioItem({
             <Link
               className={cn(
                 "size-[3.5rem]",
-                "rounded-[50%]",
+                "rounded-full",
                 "flex",
                 "items-center",
                 "justify-center",

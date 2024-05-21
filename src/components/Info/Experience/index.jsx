@@ -4,7 +4,7 @@ import {
   VerticalTimeline,
   VerticalTimelineElement,
 } from "react-vertical-timeline-component";
-import { motion } from "framer-motion";
+import { useScroll, useTransform, motion } from "framer-motion";
 import "react-vertical-timeline-component/style.min.css";
 import { experiences } from "@/lib/data";
 import { cn } from "@/lib/utils";
@@ -59,11 +59,12 @@ function ExperienceCard({ experience }) {
               "hover:underline",
               "duration-300",
               "transition-all",
-              "ease-in-out",
+              "ease-in-out"
             )}
           >
-            here)
+            here
           </a>
+          )
         </h3>
       </div>
 
@@ -81,22 +82,13 @@ function ExperienceCard({ experience }) {
   );
 }
 
-export default function Experience() {
+export default function Experience({ scrollYProgress, className }) {
+  const scale = useTransform(scrollYProgress, [0, 1], [0.8, 1]);
+  const rotate = useTransform(scrollYProgress, [0, 1], [5, 0]);
+
   return (
-    <>
+    <motion.section style={{ scale, rotate }} className={cn("", className)}>
       <motion.div variants={textVariant()}>
-        {/* <p
-          className={cn(
-            "text-center",
-            "sm:text-lg",
-            "text-base",
-            "text-secondary",
-            "uppercase",
-            "tracking-wider"
-          )}
-        >
-          What I have done so far
-        </p> */}
         <h2
           className={cn(
             "text-center",
@@ -122,6 +114,6 @@ export default function Experience() {
           ))}
         </VerticalTimeline>
       </div>
-    </>
+    </motion.section>
   );
 }

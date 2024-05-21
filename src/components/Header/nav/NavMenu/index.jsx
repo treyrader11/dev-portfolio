@@ -47,10 +47,7 @@ export default function NavMenu({
                 <Magnetic key={href}>
                   <Link href={href}>
                     {label}
-                    <LinkDecorator
-                      // className={backgroundHasColor && "bg-white"}
-                      isActive={selectedIndicator == href}
-                    />
+                    <LinkDecorator isActive={selectedIndicator == href} />
                   </Link>
                 </Magnetic>
               </div>
