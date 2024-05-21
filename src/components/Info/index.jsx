@@ -1,3 +1,5 @@
+"use client";
+
 import PageTitle from "@/components/PageTitle";
 import { userData } from "@/lib/data";
 import { cn } from "@/lib/utils";
@@ -5,6 +7,8 @@ import Experience from "./Experience";
 import Link from "next/link";
 // import Socials from "../Socials";
 import Magnetic from "../Magnetic";
+import LinkDecorator from "../LinkDecorator";
+import { useState } from "react";
 
 const socialLinks = [
   { name: "Facebook", href: userData.socialLinks.facebook },
@@ -92,23 +96,26 @@ export default function Info() {
               <h1 className="text-xl font-semibold text-gray-700 dark:text-gray-200">
                 Job Opportunities
               </h1>
-              <p className="mt-4 text-lg text-gray-500 dark:text-gray-300">
+              <p className="relative mt-4 text-lg text-gray-500 dark:text-gray-300">
                 I&apos;m looking for a job currently. If you see me as a good
                 fit, please have a look at my{" "}
-                <a
-                  href={userData.resumeUrl}
-                  target="__blank"
-                  className={cn(
-                    "font-bold",
-                    "text-gray-800",
-                    "border-b-2",
-                    "border-gray-800",
-                    "dark:border-gray-300",
-                    "dark:text-gray-300"
-                  )}
-                >
-                  CV
-                </a>{" "}
+                <span>
+                  <a
+                    href={userData.resumeUrl}
+                    target="__blank"
+                    className={cn(
+                      "font-bold",
+                      "text-gray-800",
+                      "border-b-2",
+                      "border-gray-800",
+                      "dark:border-gray-300",
+                      "dark:text-gray-300"
+                    )}
+                  >
+                    CV
+                  </a>
+                  {" "}
+                </span>
                 and I&apos;d love to work for you.
               </p>
             </div>
@@ -150,9 +157,13 @@ export default function Info() {
 }
 
 function SocialLink({ name, href }) {
+  const [isHovered, setIsHovered] = useState(false);
+
   return (
     <Magnetic>
       <div
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
         className={cn(
           "flex",
           "group",
@@ -164,29 +175,18 @@ function SocialLink({ name, href }) {
         )}
       >
         <a href={href} className="flex flex-row items-center p-4 space-x-4">
-          {/* <div className="my-4">&rarr;</div> */}
           <div
             className={cn(
-              "relative",
-              "overflow-hidden",
               "font-mono",
               "text-lg",
-              "text-gray-500"
+              "text-gray-500",
+              "flex",
+              "gap-2"
             )}
           >
-            <div
-              className={cn(
-                "absolute",
-                "h-0.5",
-                "w-full",
-                "bg-gray-400",
-                "bottom-0",
-                "transform",
-                "-translate-x-24",
-                "group-hover:translate-x-0",
-                "transition",
-                "duration-300"
-              )}
+            <LinkDecorator
+              isActive={isHovered}
+              className="bg-gray-500 size-1.5"
             />
             {name}
           </div>
@@ -203,7 +203,7 @@ function Socials() {
         Socials
       </h1>
 
-      <div className="mt-4 ml-4">
+      <div className="mt-4 ml-1">
         {socialLinks.map((link) => (
           <SocialLink key={link.name} name={link.name} href={link.href} />
         ))}

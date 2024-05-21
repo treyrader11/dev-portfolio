@@ -20,7 +20,7 @@ export default function Footer() {
     >
       <StyledLink href={`${resumeUrl}`}>
         <span className="flex items-center gap-2">
-          Resume <BsDownload />
+          Resume <BsDownload className="animate-bounce" />
         </span>
       </StyledLink>
       <StyledLink href={`${socialLinks.facebook}`}>Facebook</StyledLink>

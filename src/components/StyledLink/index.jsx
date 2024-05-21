@@ -32,6 +32,21 @@ export default function StyledLink({
         className
       )}
     >
+      {/* without psuedo */}
+      {/* <div
+              className={cn(
+                "absolute",
+                "h-px",
+                "w-full",
+                "bg-white",
+                "bottom-0",
+                "transform",
+                "-translate-x-24",
+                "group-hover:translate-x-0",
+                "transition",
+                "duration-300"
+              )}
+            /> */}
       {children}
     </Link>
   );
