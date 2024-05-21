@@ -23,9 +23,8 @@ export const userData = {
     title:
       "I'm a software developer who loves building products and web applications that impact the world",
     description: [
-      `I've been developing full-stack application going on 7 years now. I'm so out of content right now that I'm literally crying writing this text since lorem text is so 2012 now.`,
-      `After learning HTML and struggling with CSS, I came up with a brilliant idea of using Tailwind so that I don't have to style everything by myself and - for obvious reasons - if you know Tailwind, then you were cool.`,
-      `I've worked in React, Angular, Meteor, Svelte, Node.js, Express, Fastify, MongoDB, MySQL, Prisma, Drizzle, Bootstrap, Tailwind, to name a few. Although I barely know the syntax (Psst, Chat gpt!), I consider myself a Jr. Developer whose forte is in frontend development.`,
+      `I began teaching myself to code back in 2016, HTML, CSS, and JS. I did well enough to eventually land my first job with an ed tech startup out of New Orleans, called TORSH. After having at TORSH, however, I hardly did anything tech-related except for develop and deploy a few websites for my musician friends`,
+      `I've worked in React, Angular, Meteor, Svelte, Node.js, Express, KeystoneJS, MongoDB, MySQL, Prisma, Drizzle, Bootstrap, & Tailwind, to name a few. As of lately, most of my experience has been cosummed in honing in my frontend development skillset using Framer Motion & Gsap, often in tandem.`,
     ],
     currentProject: "Vouzot",
     currentProjectUrl: "https://www.vouzot.com",

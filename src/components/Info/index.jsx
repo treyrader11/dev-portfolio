@@ -21,7 +21,7 @@ export default function Info() {
   return (
     <section className="bg-dark">
       <PageTitle title="About." backgroundColor="white" />
-      <div className="bg-[#F1F1F1] -mt-10">
+      <div className="bg-[#F1F1F1]">
         <div className="max-w-6xl pt-20 mx-auto">
           <p className={cn("mx-4", "text-2xl", "font-semibold", "md:text-4xl")}>
             {userData.about.title}. Currently working on{" "}
@@ -36,7 +36,7 @@ export default function Info() {
               target="_blank"
               href={userData.about.currentProjectUrl}
             >
-              {userData.about.currentProject} ✈️
+              {userData.about.currentProject}
             </a>
           </p>
         </div>
@@ -203,7 +203,7 @@ function Socials() {
         Socials
       </h1>
 
-      <div className="mt-4 ml-1">
+      <div className="mt-4">
         {socialLinks.map((link) => (
           <SocialLink key={link.name} name={link.name} href={link.href} />
         ))}

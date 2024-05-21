@@ -77,7 +77,7 @@ export default function Portfolio() {
       <PageTitle title="Portfolio." />
       <div
         className={cn(
-          "pt-3",
+          "pt-12",
           "mx-0",
           "px-6",
           "bg-dark"

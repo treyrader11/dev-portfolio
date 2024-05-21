@@ -48,7 +48,7 @@ export default function NavMenu({
                   <Link href={href}>
                     {label}
                     <LinkDecorator
-                      className={backgroundHasColor && "bg-gray-500"}
+                      // className={backgroundHasColor && "bg-white"}
                       isActive={selectedIndicator == href}
                     />
                   </Link>

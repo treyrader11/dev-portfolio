@@ -25,6 +25,7 @@ export default function PageTitle({
           "text-left",
           "md:text-9xl",
           "text-secondary",
+          "relative",
           className
         )}
         delay={0.2}
