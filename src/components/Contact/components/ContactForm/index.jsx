@@ -43,8 +43,7 @@ export default function ContactForm() {
                 Let&apos;s talk. <VscCoffee className="text-28" />
               </h1>
               <p className="mt-2 text-base font-light text-gray-200">
-                Fill in the details and I&apos;ll get back to you as soon as I
-                can.
+                Please leave a detailed message and I&apos;ll likely get back to you in the morning. Thanks!
               </p>
             </header>
             <div className="inline-flex flex-col my-10">
