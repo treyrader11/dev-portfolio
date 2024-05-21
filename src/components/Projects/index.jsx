@@ -6,7 +6,7 @@ import Lenis from "@studio-freight/lenis";
 import ProjectShot from "./components/ProjectShot";
 import Rounded from "@/components/Rounded";
 import { cn } from "@/lib/utils";
-import { motion } from "framer-motion";
+import { motion, useTransform } from "framer-motion";
 import { scaleAnimation } from "./anim";
 import Image from "next/image";
 import gsap from "gsap";
@@ -21,7 +21,7 @@ const imageProps = {
   height: 0,
 };
 
-export default function Projects() {
+export default function Projects({ scrollYP, className }) {
   const [modal, setModal] = useState({ isActive: false, index: 0 });
   const { isActive, index } = modal;
 
@@ -29,6 +29,9 @@ export default function Projects() {
   const modalContainer = useRef(null);
   const cursor = useRef(null);
   const cursorLabel = useRef(null);
+
+  // const scale = useTransform(scrollYP, [0, 1], [1, 0.8]);
+  // const rotate = useTransform(scrollYP, [0, 1], [0, -5]);
 
   let xMoveContainer = useRef(null);
   let yMoveContainer = useRef(null);
@@ -72,6 +75,14 @@ export default function Projects() {
       duration: 0.45,
       ease: "power3",
     });
+    return () => {
+      xMoveContainer.current = null;
+      yMoveContainer.current = null;
+      xMoveCursor.current = null;
+      yMoveCursor.current = null;
+      xMoveCursorLabel.current = null;
+      yMoveCursorLabel.current = null;
+    }
   }, []);
 
   const moveItems = (x, y) => {
@@ -101,7 +112,11 @@ export default function Projects() {
 
   return (
     <>
-      <section ref={container} className="relative z-[2] sm:px-2 px-0">
+      <motion.section
+        // style={{ scale, rotate }}
+        ref={container}
+        className={cn("relative z-[2] sm:px-2 px-0", className)}
+      >
         {projectsData.map((project, index) => {
           const targetScale = 1 - (projectsData.length - index) * 0.05;
           return (
@@ -134,7 +149,7 @@ export default function Projects() {
             "text-black"
           )}
         />
-      </section>
+      </motion.section>
 
       <motion.div
         ref={modalContainer}

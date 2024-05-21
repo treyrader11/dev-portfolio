@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef } from "react";
-import { useInView, motion } from "framer-motion";
+import { useInView, motion, useTransform } from "framer-motion";
 import useMousePosition from "@/hooks/useMousePosition";
 import { cn } from "@/lib/utils";
 import { slideUp } from "./anim";
@@ -16,17 +16,28 @@ const targetedWords = phrase
   .split(" ")
   .filter((word) => word.includes("selectively") || word.includes("skilled"));
 
-export default function Hero({ isLoading }) {
+export default function Hero({ isLoading, scrollYProgress, className }) {
   const [isHovered, setIsHovered] = useState(false);
   const { x, y } = useMousePosition();
   const size = isHovered ? 400 : 40;
   const hero = useRef(null);
   const isInView = useInView(hero);
 
+  const scale = useTransform(scrollYProgress, [0, 1], [1, 0.8]);
+  const rotate = useTransform(scrollYProgress, [0, 1], [0, -5]);
+
   return (
-    <section
+    <motion.section
       ref={hero}
-      className={cn("h-screen", "bg-dark", "custom-font", "relative", "flex")}
+      style={{ scale, rotate }}
+      className={cn(
+        "h-screen",
+        "bg-dark",
+        "custom-font",
+        "relative",
+        "flex",
+        className
+      )}
     >
       {/* cursor mask */}
       <motion.div
@@ -142,6 +153,6 @@ export default function Hero({ isLoading }) {
           />
         </div>
       </div>
-    </section>
+    </motion.section>
   );
 }

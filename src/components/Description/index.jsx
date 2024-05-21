@@ -1,11 +1,12 @@
 "use client";
 
-import { useInView, motion } from "framer-motion";
+import { useInView, motion, useTransform } from "framer-motion";
 import { slideUp, opacity } from "./anim";
 import Rounded from "@/components/Rounded";
 import { useRef } from "react";
+import { cn } from "@/lib/utils";
 
-export default function Description() {
+export default function Description({ scrollYProgress, className }) {
   // const phrase =
   //   "Helping brands to stand out in the digital era. Together we will set the new status quo. No nonsense, always on the cutting edge.";
   const phrase =
@@ -15,10 +16,14 @@ export default function Description() {
   const description = useRef(null);
   const isInView = useInView(description);
 
+  const scale = useTransform(scrollYProgress, [0, 1], [1, 0.8]);
+  const rotate = useTransform(scrollYProgress, [0, 1], [0, -5]);
+
   return (
-    <section
+    <motion.section
+      style={{ scale, rotate }}
       ref={description}
-      className="px-[200px] mt-[200px] flex justify-center"
+      className={cn("px-[200px] mt-[200px] flex justify-center", className)}
     >
       <div className="flex gap-[50px] relative max-w-[1400px]">
         <p className="m-0 text-4xl gap-2 leading-[1.3]">
@@ -60,6 +65,6 @@ export default function Description() {
           </div>
         </div>
       </div>
-    </section>
+    </motion.section>
   );
 }
