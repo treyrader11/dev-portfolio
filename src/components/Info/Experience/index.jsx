@@ -22,7 +22,7 @@ function ExperienceCard({ experience }) {
   return (
     <VerticalTimelineElement
       contentStyle={{
-        background: "#1d1836",
+        background: "rgb(34 31 34)",
         color: "#fff",
       }}
       contentArrowStyle={{ borderRight: "7px solid  #232631" }}
@@ -41,11 +41,30 @@ function ExperienceCard({ experience }) {
       <div>
         <h3 className="text-2xl font-bold text-white">{experience.title}</h3>
         <p
-          className="text-secondary text-[16px] font-semibold"
+          className="text-lg font-semibold text-secondary"
           style={{ margin: 0 }}
         >
           {experience.company_name}
         </p>
+      </div>
+      <div>
+        <h3 className="text-sm font-light text-neutral-400">
+          (Visit {experience.company_name}{" "}
+          <a
+            href={experience.website_url}
+            target="_blank"
+            className={cn(
+              "font-light",
+              "text-blue-600",
+              "hover:underline",
+              "duration-300",
+              "transition-all",
+              "ease-in-out",
+            )}
+          >
+            here)
+          </a>
+        </h3>
       </div>
 
       <ul className="mt-5 ml-5 space-y-2 list-disc">

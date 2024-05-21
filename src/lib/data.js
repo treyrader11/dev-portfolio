@@ -1,8 +1,6 @@
-import starbucks from "/public/images/company/starbucks.png"
-import tesla from "/public/images/company/tesla.png"
-import shopify from "/public/images/company/shopify.png"
-import meta from "/public/images/company/meta.png"
-
+import torsh from "/public/images/company/torsh.png";
+import vouzot from "/public/images/company/vouzot.png";
+import pasteui from "/public/images/company/pasteui.png";
 
 export const userData = {
   githubUsername: "treyrader11",
@@ -416,24 +414,28 @@ export const projectsData = [
 
 export const experiences = [
   {
-    title: "React.js Developer",
-    company_name: "Starbucks",
-    icon: starbucks,
-    iconBg: "#383E56",
-    date: "March 2020 - April 2021",
-    points: [
-      "Developing and maintaining web applications using React.js and other related technologies.",
-      "Collaborating with cross-functional teams including designers, product managers, and other developers to create high-quality products.",
-      "Implementing responsive design and ensuring cross-browser compatibility.",
-      "Participating in code reviews and providing constructive feedback to other developers.",
-    ],
-  },
-  {
-    title: "React Native Developer",
-    company_name: "Tesla",
-    icon: tesla,
+    title: "Meteor JS Developer",
+    company_name: "Torsh",
+    icon: torsh,
     iconBg: "#E6DEDD",
-    date: "Jan 2021 - Feb 2022",
+    date: "April 2017 - August 2018",
+    website_url: "https://www.torsh.co",
+    points: [
+      "Developed features in a large fullstack web application and separate corporate CMS website. Integrated 3rd party APIs into platform. Wrote server side CRUD methods and implementing frontend UI and UX.",
+      "Architected features from design mocks. Communicated with UX designer to clarify feature behavior.",
+      "Coordinated with other developers to complete sprints. Collaborated using version control to organize workflow. Discussed sprint progress during scrum meetings and engaged in peer reviews. Presented work during weekly demos.",
+      "Corresponded with other developers via Slack and Google Hangouts. Collaborated on software development projects in realtime using screenshare software.",
+      "Experienced with manual acceptance testing for large software releases. Automated testing experience. Tracked bugs by opening and resolving sprint cases.",
+      "Drafted, composed, and edited technical documentation to meet purpose and standards.",
+    ],
+  },
+  {
+    title: "Founder/Sr. React JS Developer",
+    company_name: "Vouzot",
+    icon: vouzot,
+    iconBg: "#7900B6",
+    date: "August 2022 - Present",
+    website_url: "https://www.vouzot.com",
     points: [
       "Developing and maintaining web applications using React.js and other related technologies.",
       "Collaborating with cross-functional teams including designers, product managers, and other developers to create high-quality products.",
@@ -442,24 +444,12 @@ export const experiences = [
     ],
   },
   {
-    title: "Web Developer",
-    company_name: "Shopify",
-    icon: shopify,
+    title: "Founder/Sr. React JS Developer",
+    company_name: "Paste UI",
+    icon: pasteui,
     iconBg: "#383E56",
-    date: "Jan 2022 - Jan 2023",
-    points: [
-      "Developing and maintaining web applications using React.js and other related technologies.",
-      "Collaborating with cross-functional teams including designers, product managers, and other developers to create high-quality products.",
-      "Implementing responsive design and ensuring cross-browser compatibility.",
-      "Participating in code reviews and providing constructive feedback to other developers.",
-    ],
-  },
-  {
-    title: "Full stack Developer",
-    company_name: "Meta",
-    icon: meta,
-    iconBg: "#E6DEDD",
-    date: "Jan 2023 - Present",
+    date: "Jan 2024 - Present",
+    website_url: "https://www.pasteui.io",
     points: [
       "Developing and maintaining web applications using React.js and other related technologies.",
       "Collaborating with cross-functional teams including designers, product managers, and other developers to create high-quality products.",

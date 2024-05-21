@@ -13,6 +13,7 @@ import Socials from "@/components/Socials";
 const imageProps = {
   width: 100,
   height: 100,
+  // fill: true,
   className: "w-full object-cover opacity-[0.1]",
   src: "/images/map.png",
 };
@@ -110,7 +111,7 @@ export default function ContactForm() {
           </div>
 
           <div className={cn("flex gap-8 mt-[3.rem] flex-col")}>
-            <div className="relative w-2/5">
+            <div className="relative w-2/5 mx-auto">
               <Image {...imageProps} alt="image of map" />
             </div>
             <form action="" className={cn("flex flex-col gap-[1.2rem]")}>
