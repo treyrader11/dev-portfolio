@@ -25,7 +25,10 @@ function LinkItem({ href, imageSrc, imageAlt, label, hidden }) {
         "select-none",
         "gap-2",
         "cursor-pointer",
-        "hover:bg-[#f3f3f3]",
+        // "hover:bg-[#f3f3f3]",
+        "transition-all",
+        "duration-[400]",
+        "ease-in-out",
         "group"
       )}
     >

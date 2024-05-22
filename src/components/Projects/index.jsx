@@ -10,13 +10,10 @@ import { motion } from "framer-motion";
 import { useRouter } from "next/router";
 import { projectsData } from "@/lib/data";
 
-export default function Projects({ scrollYP, className }) {
+export default function Projects({ className }) {
   const container = useRef(null);
 
   const router = useRouter();
-
-  // const scale = useTransform(scrollYP, [0, 1], [1, 0.8]);
-  // const rotate = useTransform(scrollYP, [0, 1], [0, -5]);
 
   const { scrollYProgress } = useScroll({
     target: container,
@@ -36,7 +33,6 @@ export default function Projects({ scrollYP, className }) {
 
   return (
     <motion.section
-      // style={{ scale, rotate }}
       ref={container}
       className={cn("relative z-[2] sm:px-2 px-0", className)}
     >

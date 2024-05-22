@@ -7,8 +7,8 @@ import Experience from "./Experience";
 import Link from "next/link";
 import Magnetic from "../Magnetic";
 import LinkDecorator from "../LinkDecorator";
-import { useScroll, useTransform, motion } from "framer-motion";
-import { useEffect, useRef, useState } from "react";
+import { useScroll, motion } from "framer-motion";
+import { useRef, useState } from "react";
 
 const socialLinks = [
   { name: "Facebook", href: userData.socialLinks.facebook },
@@ -24,12 +24,8 @@ export default function Info() {
     offset: ["start start", "end end"],
   });
 
-  const scale = useTransform(scrollYProgress, [0, 1], [1, 0.8]);
-  const rotate = useTransform(scrollYProgress, [0, 1], [0, -5]);
-
   return (
     <div ref={container} className=" bg-dark">
-      {/* <motion.section style={{ scale, rotate }}  className="sticky top-0"> */}
       <motion.section className="">
         <PageTitle
           title="About."
@@ -44,14 +40,7 @@ export default function Info() {
             >
               {userData.about.title}. Currently working on{" "}
               <a
-                className={cn(
-                  "px-2",
-                  "py-1",
-                  "text-white",
-                  "bg-purple-500",
-                  // "text-purple-500",
-                  "rounded-md"
-                )}
+                className={cn("px-2", "py-1", "bg-purple-500", "rounded-md")}
                 target="_blank"
                 href={userData.about.currentProjectUrl}
               >
@@ -61,7 +50,7 @@ export default function Info() {
           </div>
         </div>
 
-        <div className="bg-[#F1F1F1] dark:bg-gray-900 px-4">
+        <div className="bg-[#F1F1F1] px-4">
           <div
             className={cn(
               "grid",
@@ -86,14 +75,7 @@ export default function Info() {
                 >
                   Contact
                 </h1>
-                <p
-                  className={cn(
-                    "mt-4",
-                    "text-lg",
-                    "text-gray-500",
-                    "dark:text-gray-300"
-                  )}
-                >
+                <p className={cn("mt-4", "text-lg", "text-gray-500")}>
                   For any sort of help / enquiry, please shoot me an{" "}
                   <Link
                     // href={`mailto:${userData.email}`}
@@ -102,9 +84,7 @@ export default function Info() {
                       "font-bold",
                       "text-gray-800",
                       "border-b-2",
-                      "border-gray-800",
-                      "dark:border-gray-300",
-                      "dark:text-gray-300"
+                      "border-gray-800"
                     )}
                   >
                     email
@@ -127,15 +107,13 @@ export default function Info() {
                         "font-bold",
                         "text-gray-800",
                         "border-b-2",
-                        "border-gray-800",
-                        "dark:border-gray-300",
-                        "dark:text-gray-300"
+                        "border-gray-800"
                       )}
                     >
                       CV
                     </a>{" "}
                   </span>
-                  and I&apos;d love to work for you.
+                  and I&apos;d love to see what y'all do!
                 </p>
               </div>
               <Socials />
@@ -144,10 +122,7 @@ export default function Info() {
             {/* Text area */}
             <div className="col-span-1 md:col-span-2">
               {userData.about.description?.map((desc, idx) => (
-                <p
-                  key={idx}
-                  className="mb-4 text-xl text-gray-700 dark:text-gray-300"
-                >
+                <p key={idx} className="mb-4 text-xl text-gray-700">
                   {desc}
                 </p>
               ))}

@@ -9,6 +9,7 @@ import PageTitle from "@/components/PageTitle";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { scaleAnimation } from "./anim";
+import ProjectCategories from "./ProjectCategories";
 
 export default function Portfolio() {
   const [projects, setProjects] = useState(projectsData);
@@ -16,7 +17,7 @@ export default function Portfolio() {
     "All",
     ...getUnique(projectsData, "category"),
   ]);
-  const [active, setActive] = useState(0);
+  const [selected, setSelected] = useState(0);
   const [modal, setModal] = useState({ isModalActive: false, index: 0 });
   const { isModalActive, index } = modal;
 
@@ -25,7 +26,7 @@ export default function Portfolio() {
   const cursor = useRef(null);
   const cursorLabel = useRef(null);
 
-  const activeCategory = (index) => setActive(index);
+  const selectedCategory = (index) => setSelected(index);
 
   const filterProjects = (category, index) => {
     if (category === "All") {
@@ -53,13 +54,13 @@ export default function Portfolio() {
           setProjects(projectsData);
         },
       });
-      activeCategory(index);
+      selectedCategory(index);
       return;
     }
 
-    const filtered = projectsData.filter((port) => port.category === category);
+    const filtered = projectsData.filter((proj) => proj.category === category);
 
-    activeCategory(index);
+    selectedCategory(index);
     gsap.to(projContainer.current, {
       duration: 0.5,
       opacity: 0,
@@ -122,6 +123,7 @@ export default function Portfolio() {
     xMoveCursorLabel.current(x);
     yMoveCursorLabel.current(y);
   };
+
   const manageModal = (isModalActive, index, x, y) => {
     moveItems(x, y);
     setModal({ isModalActive, index });
@@ -134,64 +136,19 @@ export default function Portfolio() {
       }}
     >
       <PageTitle title="Portfolio." />
-
       <div className={cn("pt-12 mx-0 px-6 bg-dark")}>
         <p className="text-white">
-          Following projects showcase my skills and experience through
+          The following projects showcase my skills and experience through
           real-world examples of my work. Each project is briefly described with
           links to code repositories and live demos in it. It reflects my
           ability to solve complex problems, work with different technologies,
           and manage projects effectively.
         </p>
-        <div
-          className={cn(
-            "mt-8",
-            "pt-3",
-            "px-6",
-            "flex",
-            "items-center",
-            "gap-[1.5rem]"
-          )}
-        >
-          {categories.map((categ, index) => {
-            const activeClass = cn(
-              { active },
-              "relative",
-              "after:absolute",
-              "after:block",
-              "after:h-[2px]",
-              "after:w-full",
-              "after:bg-purple-500",
-              "text-purple-500",
-              "after:transition-[transform,opacity]",
-              "[&:not(.active)]:after:translate-y-2",
-              "[&:not(.active)]:after:opacity-0",
-              "hover:[&:not(.active)]:after:translate-y-0",
-              "hover:[&:not(.active)]:after:opacity-100"
-            );
-            return (
-              <button
-                key={index}
-                onClick={() => filterProjects(categ, index)}
-                className={cn(
-                  "inline-block",
-                  "font-semibold",
-                  "text-white",
-                  "border-none",
-                  "outline-none",
-                  "cursor-pointer",
-                  "relative",
-                  "transition-all",
-                  "duration-300",
-                  "ease-in-out",
-                  active === index ? activeClass : ""
-                )}
-              >
-                {categ}
-              </button>
-            );
-          })}
-        </div>
+        <ProjectCategories
+          selected={selected}
+          filterProjects={filterProjects}
+          categories={categories}
+        />
       </div>
 
       <div
