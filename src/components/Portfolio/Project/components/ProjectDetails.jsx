@@ -29,12 +29,14 @@ export default function ProjectDetails({ data }) {
         )}
       >
         <ProjectVideo src={data[0].video_key} />
-        <div className="my-5">
+        <span className="my-5 text-2xl font-bold">About this app</span>
+        <p>{data[0].about_this_app}</p>
+        {/* <div className="my-5">
           <span className="text-2xl font-bold">{data[0].say_hi}</span>
         </div>
         <div>
           <p>{data[0].say_hi_blog}</p>
-        </div>
+        </div> */}
         <span className={cn("font-bold text-2xl mt-4")}>
           Technology & Features
         </span>
@@ -45,8 +47,7 @@ export default function ProjectDetails({ data }) {
             </Magnetic>
           ))}
         </ul>
-        <span className="my-5 text-2xl font-bold">About this app</span>
-        <p>{data[0].about_this_app}</p>
+        
         <span className={cn("my-5 text-2xl font-bold")}>Design</span>
         <p className="mb-2.5">{data[0].design_blog}</p>
         <Environment data={data} />
@@ -61,6 +62,7 @@ export default function ProjectDetails({ data }) {
             "font-extralight",
             "text-gray-500",
             "my-20",
+            "mx-8",
             "group"
           )}
         >

@@ -33,7 +33,10 @@ export default function Projects({ className }) {
   });
 
   return (
-    <motion.section ref={container} className={cn("relative z-[2]", className)}>
+    <motion.section
+      ref={container}
+      className={cn("relative z-[2] pb-28", className)}
+    >
       {/* <h2
         className={cn(
           "text-center",
@@ -49,7 +52,11 @@ export default function Projects({ className }) {
       >
         Recent projects
       </h2> */}
-      <PageTitle title="Recent projects." className={cn("top-16")} />
+      <PageTitle
+        backgroundColor="transparent"
+        title="Recent projects."
+        className={cn("top-16")}
+      />
 
       {projectsData.map((project, index) => {
         const targetScale = 1 - (projectsData.length - index) * 0.05;
@@ -64,24 +71,25 @@ export default function Projects({ className }) {
           />
         );
       })}
-
-      <Rounded
-        backgroundColor="#934e00"
-        text="See all projects"
-        href="/portfolio"
-        className={cn(
-          "border-secondary",
-          "rounded-full",
-          "w-fit",
-          "mx-auto",
-          "py-6",
-          "-top-50",
-          "sm:top-0",
-          "md:top-20",
-          "lg:top-32",
-          "text-black"
-        )}
-      />
+      <div className="-mt-40">
+        <Rounded
+          backgroundColor="#934e00"
+          text="See all projects"
+          href="/portfolio"
+          className={cn(
+            "border-secondary",
+            "rounded-full",
+            "w-fit",
+            "mx-auto",
+            "py-6",
+            "-top-50",
+            "sm:top-0",
+            "md:top-20",
+            "lg:top-32",
+            "text-black"
+          )}
+        />
+      </div>
     </motion.section>
   );
 }
