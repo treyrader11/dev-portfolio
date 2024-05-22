@@ -5,6 +5,7 @@ import Environment from "./Environment";
 import Magnetic from "@/components/Magnetic";
 import ProjectLinks from "./ProjectLinks";
 import PageTitle from "@/components/PageTitle";
+import LinkDecorator from "@/components/LinkDecorator";
 
 export default function ProjectDetails({ data }) {
   return (
@@ -47,39 +48,42 @@ export default function ProjectDetails({ data }) {
             </Magnetic>
           ))}
         </ul>
-        
+
         <span className={cn("my-5 text-2xl font-bold")}>Design</span>
         <p className="mb-2.5">{data[0].design_blog}</p>
         <Environment data={data} />
         <ProjectLinks data={data} />
-
-        <Link
-          href={"/portfolio"}
-          className={cn(
-            "flex",
-            "flex-row",
-            "items-center",
-            "font-extralight",
-            "text-gray-500",
-            "my-20",
-            "mx-8",
-            "group"
-          )}
-        >
-          See all
-          <span
+        <Magnetic>
+         
+          <Link
+            href={"/portfolio"}
             className={cn(
-              "text-purple-500",
-              "ml-[5px]",
-              "hover:underline",
-              "font-normal",
-              "text-lg",
-              "animate-pulse"
+              "flex",
+              "flex-row",
+              "items-center",
+              "font-extralight",
+              "text-gray-500",
+              "my-20",
+              "mx-8",
+              "group"
             )}
           >
-            Projects
-          </span>
-        </Link>
+             <LinkDecorator isActive className="my-auto mr-2" />
+            See all
+            <span
+              className={cn(
+                "text-purple-500",
+                "ml-[5px]",
+                "hover:underline",
+                "font-normal",
+                "text-lg",
+                "animate-pulse"
+              )}
+            >
+              Projects
+            </span>
+          </Link>
+        </Magnetic>
       </div>
     </section>
   );
