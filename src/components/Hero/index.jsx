@@ -128,7 +128,7 @@ export default function Hero({ isLoading, scrollYProgress, className }) {
           />
         </div>
       </div>
-      <div data-scroll data-scroll-speed={0.1}>
+      {/* <div data-scroll data-scroll-speed={1}>
         <div
           className={cn(
             "z-[9999]",
@@ -152,7 +152,7 @@ export default function Hero({ isLoading, scrollYProgress, className }) {
             className={cn("w-full py-5 px-12 border-[.3px]")}
           />
         </div>
-      </div>
+      </div> */}
     </motion.section>
   );
 }
