@@ -31,6 +31,9 @@ export const positions = [
   {
     positionId: 5,
   },
+  {
+    positionId: 6,
+  },
 ];
 
 export default function Projects({ className }) {
