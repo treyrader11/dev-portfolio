@@ -9,6 +9,7 @@ import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 import { useRouter } from "next/router";
 import { projectsData } from "@/lib/data";
+import PageTitle from "../PageTitle";
 
 export default function Projects({ className }) {
   const container = useRef(null);
@@ -31,30 +32,9 @@ export default function Projects({ className }) {
     requestAnimationFrame(raf);
   });
 
-  const textVariant = (delay) => {
-    return {
-      hidden: {
-        y: -50,
-        opacity: 0,
-      },
-      show: {
-        y: 0,
-        opacity: 1,
-        transition: {
-          type: "spring",
-          duration: 1.25,
-          delay: delay,
-        },
-      },
-    };
-  };
-
   return (
-    <motion.section
-      ref={container}
-      className={cn("relative z-[2]", className)}
-    >
-      <h2
+    <motion.section ref={container} className={cn("relative z-[2]", className)}>
+      {/* <h2
         className={cn(
           "text-center",
           "font-black",
@@ -68,7 +48,8 @@ export default function Projects({ className }) {
         )}
       >
         Recent projects
-      </h2>
+      </h2> */}
+      <PageTitle title="Recent projects." className={cn("top-16")} />
 
       {projectsData.map((project, index) => {
         const targetScale = 1 - (projectsData.length - index) * 0.05;
