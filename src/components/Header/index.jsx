@@ -100,7 +100,8 @@ export default function Header() {
         <Link
           href="/"
           className={cn(
-            "pl-3 mr-auto",
+            "pl-3",
+            "mr-auto",
             backgroundHasColor ? "text-white" : "text-gray-500"
           )}
         >

@@ -35,7 +35,8 @@ export default function ProjectShot({
         style={{
           backgroundImage: `url(/shots/${project_image})`,
           backgroundPosition: "center",
-          backgroundSize,
+          // backgroundSize,
+          backgroundSize: "contain",
           backgroundRepeat: "no-repeat",
           top: `calc(-5vh + ${index * 25}px)`,
         }}

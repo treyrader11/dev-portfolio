@@ -33,7 +33,7 @@ export default function Hero({ isLoading, scrollYProgress, className }) {
       className={cn(
         "h-screen",
         "bg-dark",
-        "custom-font",
+        // "custom-font",
         "relative",
         "flex",
         className
