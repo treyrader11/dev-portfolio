@@ -1,50 +1,50 @@
+import Rounded from "@/components/Rounded";
 import StyledLink from "@/components/StyledLink";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import { BsDownload } from "react-icons/bs";
 
-function LinkItem({ href, imageSrc, imageAlt, label, hidden }) {
+function LinkItem({ href, imageSrc, imageAlt, label, hidden, className }) {
   return (
-    <a
-      href={href}
+    <Rounded
+      backgroundColor="#9533F5"
+      href={`${href}`}
       className={cn(
-        { hidden },
-        "px-5",
-        "py-[5px]",
-        "mr-2.5",
-        "mb-2.5",
-        "sm:mb-0",
-        "rounded-md",
-        "bg-white",
-        "flex",
-        "flex-row",
-        "items-center",
-        "active:scale-90",
-        "transition-all",
-        "duration-150",
-        "select-none",
-        "gap-2",
-        "cursor-pointer",
-        // "hover:bg-[#f3f3f3]",
-        "transition-all",
-        "duration-[400]",
-        "ease-in-out",
-        "group"
+        // "border-purple-500",
+        "outline-purple-700",
+        "rounded-full",
+        "w-fit",
+        "mx-auto",
+        "p-4",
+        "text-purple-500"
       )}
     >
-      {imageSrc ? (
-        <Image
-          src={imageSrc}
-          className="w-[25px] h-auto"
-          width={1920}
-          height={1080}
-          alt={imageAlt}
-        />
-      ) : (
-        <BsDownload strokeWidth={1} className="group-hover:animate-bounce" />
-      )}
-      <span className="font-bold ml-[6px]">{label}</span>
-    </a>
+      <a
+        href={href}
+        className={cn(
+          { hidden },
+          "flex",
+          "flex-row",
+          "items-center",
+          "gap-2",
+          // "font-mono",
+          className
+        )}
+      >
+        {imageSrc ? (
+          <Image
+            src={imageSrc}
+            className="w-[25px] h-auto"
+            width={1920}
+            height={1080}
+            alt={imageAlt}
+          />
+        ) : (
+          <BsDownload strokeWidth={1} className="group-hover:animate-bounce" />
+        )}
+        <span className="font-semibold ml-[6px]">{label}</span>
+      </a>
+    </Rounded>
   );
 }
 
@@ -80,20 +80,14 @@ export default function ProjectLinks({ className, data }) {
 
   return (
     <div className={className}>
-      <span className={cn("my-5 text-2xl font-bold select-none")}>Links</span>
-      <div
-        className={cn(
-          "size-auto",
-          "flex",
-          "flex-row",
-          "items-center",
-          "justify-start",
-          "sm:justify-between",
-          "flex-wrap"
-        )}
-      >
+      <span className={cn("my-5 text-2xl font-bold")}>Links</span>
+      <div className={cn("flex flex-wrap gap-3 pt-5")}>
         {links.map((link, index) => (
-          <LinkItem key={index} {...link} />
+          <LinkItem
+            key={index}
+            {...link}
+            className="relative z-10 group-hover:text-white"
+          />
         ))}
       </div>
     </div>

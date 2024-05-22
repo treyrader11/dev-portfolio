@@ -113,7 +113,7 @@ export default function Info() {
                       CV
                     </a>{" "}
                   </span>
-                  and I&apos;d love to see what y'all do!
+                  and I&apos;d love to see what y&lsquo;all do!
                 </p>
               </div>
               <Socials />

@@ -57,7 +57,6 @@ export default function Description({ scrollYProgress, className }) {
           me in a unique place in the web design world.
         </motion.p>
         <div data-scroll data-scroll-speed={1}>
-          {/* <div className="absolute right-0 top-3/4"> */}
           <AboutButton />
         </div>
       </div>
@@ -65,7 +64,7 @@ export default function Description({ scrollYProgress, className }) {
   );
 }
 
-function AboutButton({ className, scrollSpeed }) {
+function AboutButton({ className }) {
   return (
     <div className={cn("absolute right-0 top-[40%] md:top-[35%]", className)}>
       <Rounded
