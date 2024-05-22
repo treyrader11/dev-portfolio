@@ -6,15 +6,9 @@ import { useTransform, motion, useScroll } from "framer-motion";
 import { useRef } from "react";
 import { cn } from "@/lib/utils";
 import { useWindowDimensions } from "@/hooks/useWindowDimensions";
-import { useEffect } from "react";
 
 export default function ProjectShot({
   index,
-  title,
-  description,
-  // src,
-  url,
-  color,
   progress,
   range,
   targetScale,
@@ -77,7 +71,6 @@ export function Shot({ src, width = 350, height = 350, marginRight = 30 }) {
             alt="image"
             className="object-fit lg:object-contain"
             sizes="(max-width: 900) 50vw"
-            // size={{}}
           />
         </motion.div>
       </div>

@@ -28,11 +28,9 @@ export default function Header() {
   const isMobile = width < 600;
   const showButton = isMobile && isNavOpen;
 
-  const isHomePage = path === "/";
-  const isPortfolioPage = path === "/portfolio";
-  const isContactPage = path.includes("contact");
+  const isProjectPage = path.includes("project");
 
-  const backgroundHasColor = isHomePage || isContactPage || isPortfolioPage;
+  const backgroundHasColor = !isProjectPage;
 
   const handleNavMenu = useCallback(() => {
     setIsNavOpen((prevIsNavOpen) => !prevIsNavOpen);

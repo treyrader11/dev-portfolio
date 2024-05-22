@@ -1,7 +1,7 @@
 "use client";
 
 import { useScroll } from "framer-motion";
-import { useRef } from "react";
+import { useRef, useEffect } from "react";
 import Lenis from "@studio-freight/lenis";
 import ProjectShot from "./components/ProjectShot";
 import Rounded from "@/components/Rounded";
@@ -23,16 +23,16 @@ export default function Projects({ scrollYP, className }) {
     offset: ["start start", "end end"],
   });
 
-  // useEffect(() => {
-  //   const lenis = new Lenis();
+  useEffect(() => {
+    const lenis = new Lenis();
 
-  //   function raf(time) {
-  //     lenis.raf(time);
-  //     requestAnimationFrame(raf);
-  //   }
+    function raf(time) {
+      lenis.raf(time);
+      requestAnimationFrame(raf);
+    }
 
-  //   requestAnimationFrame(raf);
-  // });
+    requestAnimationFrame(raf);
+  });
 
   return (
     <motion.section

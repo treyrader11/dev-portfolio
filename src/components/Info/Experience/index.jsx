@@ -72,7 +72,7 @@ function ExperienceCard({ experience }) {
         {experience.points.map((point, index) => (
           <li
             key={`experience-point-${index}`}
-            className="pl-1 text-base tracking-wider text-white-100"
+            className={cn("pl-1 tracking-wider text-white-100")}
           >
             {point}
           </li>
@@ -82,22 +82,20 @@ function ExperienceCard({ experience }) {
   );
 }
 
-export default function Experience({ scrollYProgress, className }) {
-  const scale = useTransform(scrollYProgress, [0, 1], [0.8, 1]);
-  const rotate = useTransform(scrollYProgress, [0, 1], [5, 0]);
-
+export default function Experience({ className }) {
   return (
-    <motion.section style={{ scale, rotate }} className={cn("", className)}>
+    <motion.section className={cn("py-10", className)}>
       <motion.div variants={textVariant()}>
         <h2
           className={cn(
             "text-center",
             "text-white",
             "font-black",
-            "md:text-[60px]",
-            "sm:text-[50px]",
-            "xs:text-[40px]",
-            "text-[30px]"
+            // "md:text-[60px]",
+            // "sm:text-[50px]",
+            // "xs:text-[40px]",
+            "text-3xl",
+            "text-[7vw]"
           )}
         >
           Work Experience.

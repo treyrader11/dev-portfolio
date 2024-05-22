@@ -6,7 +6,7 @@ import { LuCopyCheck } from "react-icons/lu";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
 
-export default function Dependencies({ data }) {
+export default function Environnment({ data }) {
   const [havecopy, sethavecopy] = useState(false);
 
   const Copy = (e) => {
@@ -21,27 +21,28 @@ export default function Dependencies({ data }) {
 
   return (
     <div className="w-full h-auto">
-      <span className="my-5 text-2xl font-bold text-slate-200">
-        Dependencies
+      <span className="my-5 text-2xl font-bold">
+        Environment
       </span>
-      <p className="text-base text-gray-300">{data[0].dependencies_blog}</p>
+      <p>{data[0].environment_blog}</p>
       <div
         className={cn(
-          "my-[15px]",
+          "my-4",
           "w-full",
           "h-auto",
           "relative",
           "group",
-          "py-[15px]",
+          "py-4",
           "px-2.5",
           "border",
           "text-slate-200",
-          "rounded-[10px]",
-          "bg-[#0c0728]",
-          "border-[#401f788e]"
+          "rounded-lg",
+          "bg-[linear-gradient(110deg,#000103,45%,#1e2631,55%,#000103)]",
+          "border",
+          "border-purple-500",
         )}
       >
-        {data[0].package?.map((data) => (
+        {data[0].env?.map((data) => (
           <div
             key={data}
             className={cn(
@@ -49,7 +50,7 @@ export default function Dependencies({ data }) {
               "h-auto",
               "hover:bg-gray-300/20",
               "rounded",
-              "px-[15px]"
+              "px-4"
             )}
           >
             {data}
@@ -58,7 +59,6 @@ export default function Dependencies({ data }) {
 
         {havecopy ? (
           <div
-            id="button-primary"
             onClick={() => sethavecopy(false)}
             className={cn(
               "right-[10px]",
@@ -68,19 +68,18 @@ export default function Dependencies({ data }) {
               "group-hover:flex",
               "flex-row",
               "items-center",
-              "px-[15px]",
+              "px-4",
               "py-[5px]",
               "cursor-pointer",
               "rounded-[5px]"
             )}
           >
             <FaRegCheckCircle className="text-teal-400 size-5" />
-            <span className=" ml-[7px] text-teal-400 text-base">Copied!</span>
+            <span className="ml-1.5 text-teal-400">Copied!</span>
           </div>
         ) : (
           <div
-            id="button-primary"
-            onClick={() => Copy(data[0].package)}
+            onClick={() => Copy(data[0].env)}
             className={cn(
               "right-[10px]",
               "top-[10px]",
@@ -89,14 +88,14 @@ export default function Dependencies({ data }) {
               "group-hover:flex",
               "flex-row",
               "items-center",
-              "px-[15px]",
+              "px-4",
               "py-[5px]",
               "cursor-pointer",
-              "rounded-[5px]"
+              "rounded-md"
             )}
           >
             <LuCopyCheck className="text-white size-5" />
-            <span className="text-base ml-[7px]">Copy</span>
+            <span className="ml-1.5">Copy</span>
           </div>
         )}
       </div>

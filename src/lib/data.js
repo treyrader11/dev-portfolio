@@ -39,10 +39,10 @@ export const projectsData = [
     link: "https://www.ignant.com/2023/03/25/ad2186-matthias-leidingers-photographic-exploration-of-awe-and-wonder/",
     color: "#e3e5e7",
     isPriority: true,
-    video_key: "yF1oJ7wzvWY",
-    say_xi: "Xi Form Responsive Food Project🤤",
+    video_key: "GJyPpc8qaHA",
+    say_hi: "Hi there 🤤",
     category: "Web Development",
-    say_xi_blog:
+    say_hi_blog:
       "Food Shopping Project With Graphql server User Authentication  , Create , Read ,  Update , Delete And Google login , Github , Instgram , Facebook , JWT Auth  ",
     technology_feature: [
       "Tailwind",
@@ -61,8 +61,7 @@ export const projectsData = [
       "A Real Time Full Stack FoodOrder & Admin Dashboard application User Can Order and Contain Payment For Stripe And AdminDashBoard Feature Admin can make Product CRUD and Responsive Desing",
     design_blog:
       "desing and all of ui create by my own ideal , conatin Backend ",
-    dependencies_blog:
-      "You can use Yarn or NPM to install the dependencies. In this case I am use Yarn",
+    environment_blog: "Make sure to add these to either local.env or .env file",
     package: [
       "@apollo/client",
       "@emotion/react",
@@ -87,13 +86,25 @@ export const projectsData = [
       "uuid",
       "redux",
     ],
-    conclusion_blog: "",
+    env: [
+      'DATABASE_URL=""',
+      'DIRECT_URL=""',
+      'GITHUB_CLIENT_ID=""',
+      'GITHUB_CLIENT_SECRET=""',
+      'GITHUB_AUTH_TOKEN=""',
+      'GOOGLE_CLIENT_ID=""',
+      'GOOGLE_CLIENT_SECRET=""',
+      'AUTH_SECRET=""',
+      'RESEND_API_KEY=""',
+      'NEXT_PUBLIC_APP_URL="http://localhost:3000"',
+    ],
     youtube_link: "https://youtu.be/yF1oJ7wzvWY",
-    githhub_link: "https://github.com/HyatMyat4",
+    githhub_link: "https://github.com/treyrader11/JSearch-Expo",
     frontend_download_link:
-      "https://github.com/HyatMyat4/AdminDashboard/archive/refs/heads/main.zip",
+      "https://github.com/treyrader11/JSearch-Expo/archive/refs/heads/main.zip",
     backend_download_link:
-      "https://github.com/HyatMyat4/DeshboardBackend/archive/refs/heads/main.zip",
+      "https://github.com/treyrader11/JSearch-Expo/archive/refs/heads/main.zip",
+    // "https://github.com/HyatMyat4/DeshboardBackend/archive/refs/heads/main.zip",
     project_image: "c2.png",
     project_blog:
       "A Real Time Full Stack FoodOrder & Admin Dashboard application User Can Order and Contain Payment For Stripe And AdminDashBoard Feature Admin can make Product CRUD and",
@@ -107,26 +118,32 @@ export const projectsData = [
     link: "https://www.ignant.com/2022/09/30/clement-chapillon-questions-geographical-and-mental-isolation-with-les-rochers-fauves/",
     color: "#d6d7dc",
     isPriority: false,
-    video_key: "HvkrAjHJ-38",
+    video_key: "QKGIvW886dc",
     category: "Mobile Development",
-    say_xi: "Xi from my first mobile app 📱",
-    say_xi_blog:
+    say_hi: "Hi there 📱",
+    say_hi_blog:
       "ReactNative First Project With Expo CLI Conatain Google AUthentication Contain Basic RestApi and Google Maps functionality ",
     technology_feature: [
-      "Tailwind",
-      "React Native",
-      "Redux",
-      "Type Script",
-      "Expo",
-      "Node js",
-      "Express js",
-      "Postger sql",
+      "Tailwind CSS",
+      "Next JS 14 (App Router)",
+      "Zustand",
+      "TypeScript",
+      "Zod",
+      "React Hook Form",
+      "Prisma",
+      "Mongodb",
+      "Shadcn UI",
+      "Framer Motion",
+      "Gsap",
+      "Tanstack Table",
+      "Stripe JS",
+      "Stroybook",
+      "Docker",
     ],
     about_this_app:
       "It My First ReactNative App So The have a lot of Bug!, Feature Conatin Google Auth UserCanOrder Remove Order And Containe ReactNativeMap Justlike Deliveroo",
     design_blog: "Desing From PapaReact YouTube Channel",
-    dependencies_blog:
-      "You can use Yarn or NPM to install the dependencies. In this case we use Yarn and since this project was developed using expo we can also use the expo-cli to install the dependencies.",
+    environment_blog: "Make sure to add these to either local.env or .env file",
     package: [
       "expo",
       "react-native-gesture-handler",
@@ -144,13 +161,25 @@ export const projectsData = [
       "@react-native-masked-view/masked-view",
       "@react-native-async-storage/async-storage",
     ],
-    conclusion_blog: "",
+    env: [
+      'DATABASE_URL=""',
+      'DIRECT_URL=""',
+      'GITHUB_CLIENT_ID=""',
+      'GITHUB_CLIENT_SECRET=""',
+      'GITHUB_AUTH_TOKEN=""',
+      'GOOGLE_CLIENT_ID=""',
+      'GOOGLE_CLIENT_SECRET=""',
+      'AUTH_SECRET=""',
+      'RESEND_API_KEY=""',
+      'NEXT_PUBLIC_APP_URL="http://localhost:3000"',
+    ],
     youtube_link: "https://youtu.be/AxQ_Eli8gtk",
-    githhub_link: "https://github.com/HyatMyat4",
+    githhub_link: "https://github.com/treyrader11/JSearch-Expo",
     frontend_download_link:
-      "https://github.com/HyatMyat4/Deliveroo_Mobile.apk/archive/refs/heads/main.zip",
+      "https://github.com/treyrader11/JSearch-Expo/archive/refs/heads/main.zip",
     backend_download_link:
-      "https://github.com/HyatMyat4/Deliveroo/archive/refs/heads/main.zip",
+      "https://github.com/treyrader11/JSearch-Expo/archive/refs/heads/main.zip",
+    // "https://github.com/HyatMyat4/Deliveroo/archive/refs/heads/main.zip",
     project_image: "decimal.png",
     project_blog:
       "It My First ReactNative App So The have a lot of Bug!, Feature Conatin Google Auth UserCanOrder Remove Order And Containe ReactNativeMap Justlike Deliveroo",
@@ -171,10 +200,10 @@ export const projectsData = [
     link: "https://www.ignant.com/2023/10/28/capturing-balis-many-faces-zissou-documents-the-sacred-and-the-mundane-of-a-fragile-island/",
     color: "#e3e3e3",
     isPriority: true,
-    video_key: "yF1oJ7wzvWY",
+    video_key: "zHL1eT87OCw",
     category: "UI/UX Design",
-    say_xi: "Xi Form Responsive Food Project🤤",
-    say_xi_blog:
+    say_hi: "Xi Form Responsive Food Project🤤",
+    say_hi_blog:
       "Food Shopping Project With Graphql server User Authentication  , Create , Read ,  Update , Delete And Google login , Github , Instgram , Facebook , JWT Auth  ",
     technology_feature: [
       "Tailwind",
@@ -193,8 +222,7 @@ export const projectsData = [
       "A Real Time Full Stack FoodOrder & Admin Dashboard application User Can Order and Contain Payment For Stripe And AdminDashBoard Feature Admin can make Product CRUD and Responsive Desing",
     design_blog:
       "desing and all of ui create by my own ideal , conatin Backend ",
-    dependencies_blog:
-      "You can use Yarn or NPM to install the dependencies. In this case I am use Yarn",
+    environment_blog: "Make sure to add these to either local.env or .env file",
     package: [
       "@apollo/client",
       "@emotion/react",
@@ -219,13 +247,24 @@ export const projectsData = [
       "uuid",
       "redux",
     ],
-    conclusion_blog: "",
+    env: [
+      'DATABASE_URL=""',
+      'DIRECT_URL=""',
+      'GITHUB_CLIENT_ID=""',
+      'GITHUB_CLIENT_SECRET=""',
+      'GITHUB_AUTH_TOKEN=""',
+      'GOOGLE_CLIENT_ID=""',
+      'GOOGLE_CLIENT_SECRET=""',
+      'AUTH_SECRET=""',
+      'RESEND_API_KEY=""',
+      'NEXT_PUBLIC_APP_URL="http://localhost:3000"',
+    ],
     youtube_link: "https://youtu.be/yF1oJ7wzvWY",
-    githhub_link: "https://github.com/HyatMyat4",
+    githhub_link: "https://github.com/treyrader11/JSearch-Expo",
     frontend_download_link:
-      "https://github.com/HyatMyat4/AdminDashboard/archive/refs/heads/main.zip",
+      "https://github.com/treyrader11/JSearch-Expo/archive/refs/heads/main.zip",
     backend_download_link:
-      "https://github.com/HyatMyat4/DeshboardBackend/archive/refs/heads/main.zip",
+      "https://github.com/treyrader11/JSearch-Expo/archive/refs/heads/main.zip",
     project_image: "funny.png",
     project_blog:
       "A Real Time Full Stack FoodOrder & Admin Dashboard application User Can Order and Contain Payment For Stripe And AdminDashBoard Feature Admin can make Product CRUD and",
@@ -240,10 +279,10 @@ export const projectsData = [
     link: "https://www.ignant.com/2019/03/13/a-photographic-series-depicting-the-uncertain-future-of-denmarks-treasured-coastlines/",
     color: "#21242b",
     isPriority: false,
-    video_key: "R90bxY4UwPg",
+    video_key: "iT6ahO0CHtM",
     category: "UI/UX Design",
-    say_xi: "Xello My Frends 💚",
-    say_xi_blog:
+    say_hi: "Xello My Frends 💚",
+    say_hi_blog:
       "This is my First AI Project data Coming From Opend AI , You can asked like RealTime Chat GPT   ",
     technology_feature: [
       "html",
@@ -259,8 +298,7 @@ export const projectsData = [
     about_this_app:
       "This Appp Contain Chate Create , Read , Update , Delete and Google Authentication , Microsoft Authentication , JWT Authentication functionality ",
     design_blog: "Desing From Realworld ChatGPT",
-    dependencies_blog:
-      "You can use Yarn or NPM to install the dependencies. In this case I am use Npm ",
+    environment_blog: "Make sure to add these to either local.env or .env file",
     package: [
       "@reduxjs/toolkit",
       "@uiball/loaders",
@@ -273,12 +311,24 @@ export const projectsData = [
       "react-redux",
       "react-simple-typewriter",
     ],
-    conclusion_blog: "",
+    env: [
+      'DATABASE_URL=""',
+      'DIRECT_URL=""',
+      'GITHUB_CLIENT_ID=""',
+      'GITHUB_CLIENT_SECRET=""',
+      'GITHUB_AUTH_TOKEN=""',
+      'GOOGLE_CLIENT_ID=""',
+      'GOOGLE_CLIENT_SECRET=""',
+      'AUTH_SECRET=""',
+      'RESEND_API_KEY=""',
+      'NEXT_PUBLIC_APP_URL="http://localhost:3000"',
+    ],
     youtube_link: "https://youtu.be/R90bxY4UwPg",
-    githhub_link: "https://github.com/HyatMyat4",
+    githhub_link: "https://github.com/treyrader11/JSearch-Expo",
     frontend_download_link:
-      "https://github.com/HyatMyat4/Chat_GPT4/archive/refs/heads/main.zip",
-    backend_download_link: "",
+      "https://github.com/treyrader11/JSearch-Expo/archive/refs/heads/main.zip",
+    backend_download_link:
+      "https://github.com/treyrader11/JSearch-Expo/archive/refs/heads/main.zip",
     project_image: "google.png",
     project_blog:
       "A Real Time You Can Ask any thing & you can create new chat delete chat & Clear conversations Feature and google , microsoft Auth",
@@ -286,16 +336,16 @@ export const projectsData = [
     indevelopment: false,
   },
   {
-    title: "Mytube",
+    title: "UTube Study",
     description:
       "Dutch photographer Mark Rammers has shared with IGNANT the first chapter of his latest photographic project, ‘all over again’—captured while in residency at Hektor, an old farm in Los Valles, Lanzarote. Titled ‘Beginnings’, the mesmerizing collection of images is a visual and meditative journey into the origins of regrets and the uncertainty of stepping into new unknowns.",
     link: "https://www.ignant.com/2023/04/12/mark-rammers-all-over-again-is-a-study-of-regret-and-the-willingness-to-move-forward/",
     color: "#ec4e39",
     isPriority: true,
-    video_key: "v3LJMcWbcDQ",
+    video_key: "dX3WaXJ9ibw",
     category: "Web Development",
-    say_xi: "Hello my friends 👟",
-    say_xi_blog:
+    say_hi: "Hello my friends 👟",
+    say_hi_blog:
       "Xi That is My  Fullstack Responsive Shoes Project I get A lot of SKill Form This Project Complex Ui , authentication , CRUD 💚💚 ",
     technology_feature: [
       "Tailwind",
@@ -309,13 +359,11 @@ export const projectsData = [
       "Firebase",
       "Stripe",
     ],
-
     about_this_app:
       "A Real Time Full Stack Responsive Shoe Ecommerce & Admin Dashboard application User Can Order and Contain Real World Payment For Stripe And AdminDashBoard Feature Admin can make Product CRUD and Promote Product CRUD Admin Can look How Much User & Chart Pie , Chart line and Auth Google , Nike Auth",
     design_blog:
       "I Found Very Basic Ui Desing From Youtube , Then i get ideal To Make This All Desing By me 💚💚 ",
-    dependencies_blog:
-      "You can use Yarn or NPM to install the dependencies. In this case I am use NPM",
+    environment_blog: "Make sure to add these to either local.env or .env file",
     package: [
       "@mui/material",
       "@nivo/core",
@@ -339,16 +387,27 @@ export const projectsData = [
       "react-tilt",
       "uuid",
     ],
-    conclusion_blog: "",
+    env: [
+      'DATABASE_URL=""',
+      'DIRECT_URL=""',
+      'GITHUB_CLIENT_ID=""',
+      'GITHUB_CLIENT_SECRET=""',
+      'GITHUB_AUTH_TOKEN=""',
+      'GOOGLE_CLIENT_ID=""',
+      'GOOGLE_CLIENT_SECRET=""',
+      'AUTH_SECRET=""',
+      'RESEND_API_KEY=""',
+      'NEXT_PUBLIC_APP_URL="http://localhost:3000"',
+    ],
     youtube_link: "https://youtu.be/v3LJMcWbcDQ",
-    githhub_link: "https://github.com/HyatMyat4",
+    githhub_link: "https://github.com/treyrader11/JSearch-Expo",
     frontend_download_link:
-      "https://github.com/HyatMyat4/Nike_Shoes/archive/refs/heads/main.zip",
+      "https://github.com/treyrader11/JSearch-Expo/archive/refs/heads/main.zip",
     backend_download_link:
-      "https://github.com/HyatMyat4/Nike_Backend/archive/refs/heads/main.zip",
+      "https://github.com/treyrader11/JSearch-Expo/archive/refs/heads/main.zip",
     project_image: "maven.png",
     project_blog:
-      "A Real Time Full Stack Shoe Ecommerce & Admin Dashboard application User Can Order and Contain Real World Payment For Stripe",
+      "This is just some placeholder text until i make time to actually create the real deal. If you're seeing this, then it means I love you",
     Type: "Next js 13",
     indevelopment: false,
   },
@@ -359,12 +418,11 @@ export const projectsData = [
     link: "https://www.ignant.com/2023/04/12/mark-rammers-all-over-again-is-a-study-of-regret-and-the-willingness-to-move-forward/",
     color: "#e1dad6",
     isPriority: false,
-    title: "Morden 3 js Profiol",
-    video_key: "6wzf2ho-kzI",
+    video_key: "PyaAp-eANRQ",
     category: "Web Development",
-    say_xi: "Hello my friend! 👋🏼",
-    say_xi_blog:
-      "This is a Normal 3 js Responsive Profiol Website Constain Starts Mode , Background Music , Day and Light Mode , Contain youtube emb video like youtube Mobile Responsive desing Base on Vite ",
+    say_hi: "Hi there! 👋🏼",
+    say_hi_blog:
+      "This is just some placeholder text until i make time to actually create the real deal. If you're seeing this, then it means I love you",
     technology_feature: [
       "html",
       "css",
@@ -372,15 +430,14 @@ export const projectsData = [
       "Tailwind",
       "React",
       "Redux",
-      "Threes js",
+      "Three js",
       "Framer Motion",
     ],
     about_this_app:
-      "This Responsive Website is Make for showcase Project Profile ",
+      "This is just some placeholder text until i make time to actually create the real deal. If you're seeing this, then it means I love you",
     design_blog:
-      "very basic desing from My Friends , and I ReModified It All Code & Desing by Me ",
-    dependencies_blog:
-      "You can use Yarn or NPM to install the dependencies. In this case I use npm beacuse We use older npm package .",
+      "This is just some placeholder text until i make time to actually create the real deal. If you're seeing this, then it means I love you",
+    environment_blog: "Make sure to add these to either local.env or .env file",
     package: [
       " maath",
       " @react-three/fiber",
@@ -396,16 +453,26 @@ export const projectsData = [
       " react-vertical-timeline-component",
       " three",
     ],
-    conclusion_blog:
-      "As I said at the beginning, this is a great project for begginers and even for those who are not new to React . I bealive this is a grat project to have in a resume or portfolio. I am very happy with the app and I hope you will enjoy it as well.",
+    env: [
+      'DATABASE_URL=""',
+      'DIRECT_URL=""',
+      'GITHUB_CLIENT_ID=""',
+      'GITHUB_CLIENT_SECRET=""',
+      'GITHUB_AUTH_TOKEN=""',
+      'GOOGLE_CLIENT_ID=""',
+      'GOOGLE_CLIENT_SECRET=""',
+      'AUTH_SECRET=""',
+      'RESEND_API_KEY=""',
+      'NEXT_PUBLIC_APP_URL="http://localhost:3000"',
+    ],
     youtube_link: "https://youtu.be/6wzf2ho-kzI",
-    githhub_link: "https://github.com/HyatMyat4",
+    githhub_link: "https://github.com/treyrader11/JSearch-Expo",
     frontend_download_link:
-      "https://github.com/HyatMyat4/Profiol_2/archive/refs/heads/main.zip",
-    backend_download_link: "",
+      "https://github.com/treyrader11/JSearch-Expo/archive/refs/heads/main.zip",
+    backend_download_link:
+      "https://github.com/treyrader11/JSearch-Expo/archive/refs/heads/main.zip",
     project_image: "panda.png",
-    project_blog:
-      "Morden Profiol Wbsite With Javascript | React | Tailwind css | Responsive Website profiol desing.",
+    project_blog: "An app that helps design logos",
     Type: "React",
     indevelopment: false,
   },

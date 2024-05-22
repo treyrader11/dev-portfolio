@@ -48,7 +48,8 @@ export default function Info() {
                   "px-2",
                   "py-1",
                   "text-white",
-                  "bg-red-500",
+                  "bg-purple-500",
+                  // "text-purple-500",
                   "rounded-md"
                 )}
                 target="_blank"

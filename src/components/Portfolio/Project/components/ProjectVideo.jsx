@@ -1,50 +1,21 @@
-"use client";
-
 import { cn } from "@/lib/utils";
-// import Spinner from "react-spinkit";
-import { GridLoader } from "react-spinners";
 
-export default function ProjectVideo({ ifreamload, src }) {
+export default function ProjectVideo({ src }) {
   return (
     <div className={cn("w-full h-auto mt-[5px]")}>
-      <div
-        className={cn(
-          "w-full",
-          "h-[500px]",
-          "flex",
-          "flex-row",
-          "items-center",
-          "justify-center",
-          { hidden: ifreamload }
-        )}
-      >
-        {/* <Spinner
-          name="line-spin-fade-loader"
-          style={{
-            height: "35px", // Adjust the height as desired
-            width: "35px", // Adjust the width as desired
-          }}
-          fadeIn="none"
-          color="#ffffff"
-        /> */}
-        <GridLoader color="#36d7b7" />
-      </div>
       <div
         className={cn(
           "relative",
           "overflow-hidden",
           "w-full",
-          { hidden: ifreamload },
-          "frc",
           "justify-center",
           "pt-[56.25%]",
           "m-auto",
           "rounded-0",
-          "600:rounded-[8px]"
+          "sm:rounded-lg"
         )}
       >
         <iframe
-          id="iframe"
           frameborder="0"
           allowFullScreen="allowFullScreen"
           mozallowfullscreen="mozallowfullscreen"
