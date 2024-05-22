@@ -13,9 +13,9 @@ import PageTitle from "../PageTitle";
 import Scrollbar from "./components/Scrollbar";
 
 export const positions = [
-  {
-    positionId: 0,
-  },
+  // {
+  //   positionId: 0,
+  // },
   {
     positionId: 1,
   },
@@ -44,16 +44,16 @@ export default function Projects({ className }) {
     offset: ["start start", "end end"],
   });
 
-  useEffect(() => {
-    const lenis = new Lenis();
+  // useEffect(() => {
+  //   const lenis = new Lenis();
 
-    function raf(time) {
-      lenis.raf(time);
-      requestAnimationFrame(raf);
-    }
+  //   function raf(time) {
+  //     lenis.raf(time);
+  //     requestAnimationFrame(raf);
+  //   }
 
-    requestAnimationFrame(raf);
-  });
+  //   requestAnimationFrame(raf);
+  // });
 
   return (
     <motion.section

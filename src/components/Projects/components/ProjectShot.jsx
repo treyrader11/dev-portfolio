@@ -85,6 +85,7 @@ export default function ProjectShot({
           "sticky",
           "top-0",
           "inset-x-0"
+          // "shadow-xl",
         )}
       >
         {/* <div className="relative size-full group">
