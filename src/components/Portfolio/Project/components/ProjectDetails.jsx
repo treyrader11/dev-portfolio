@@ -34,8 +34,8 @@ export default function ProjectDetails({ data }) {
         Technology & Features
       </span>
       <ul className="list-disc ml-5 mt-2.5 text-secondary">
-        {data[0].technology_feature.map((data) => (
-          <Magnetic>
+        {data[0].technology_feature.map((data, index) => (
+          <Magnetic key={index}>
             <li key={data}>{data}</li>
           </Magnetic>
         ))}
