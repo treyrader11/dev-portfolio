@@ -15,16 +15,13 @@ export default function Scrollbar({ positions, className }) {
     <motion.div
       className={cn(
         "sticky",
-        // "right-10",
         "h-screen",
         "inset-y-0",
-        // "start-0",
         "inset-x-0",
         "flex",
         "flex-col",
         "gap-2",
         "justify-center",
-        "z-[50]",
         className
       )}
     >

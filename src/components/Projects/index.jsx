@@ -1,21 +1,16 @@
 "use client";
 
 import { useScroll } from "framer-motion";
-import { useRef, useEffect } from "react";
-import Lenis from "@studio-freight/lenis";
+import { useRef } from "react";
 import ProjectShot from "./components/ProjectShot";
 import Rounded from "@/components/Rounded";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
-import { useRouter } from "next/router";
 import { projectsData } from "@/lib/data";
 import PageTitle from "../PageTitle";
 import Scrollbar from "./components/Scrollbar";
 
 export const positions = [
-  // {
-  //   positionId: 0,
-  // },
   {
     positionId: 1,
   },
@@ -39,8 +34,6 @@ export const positions = [
 export default function Projects({ className }) {
   const container = useRef(null);
 
-  const router = useRouter();
-
   const { scrollYProgress } = useScroll({
     target: container,
     offset: ["start start", "end end"],
@@ -55,7 +48,6 @@ export default function Projects({ className }) {
         backgroundColor="transparent"
         containerClass="h-0"
         title="Recent projects."
-        // position="sticky"
         className={cn("top-16")}
       />
 
