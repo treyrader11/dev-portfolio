@@ -20,7 +20,6 @@ export default function ProjectShot({
   targetScale,
   project_image,
   video_key,
-  manageModal,
 }) {
   const container = useRef(null);
   const { scrollYProgress } = useScroll({
@@ -39,14 +38,6 @@ export default function ProjectShot({
     <Link href={`/project/${video_key}`}>
       <div
         ref={container}
-        onMouseEnter={(e) => {
-          // manageModal(true, index, e.clientX, e.clientY);
-          manageModal(true, index);
-        }}
-        onMouseLeave={(e) => {
-          // manageModal(false, index, e.clientX, e.clientY);
-          manageModal(true, index);
-        }}
         style={{
           backgroundImage: `url(/shots/${project_image})`,
           backgroundPosition: "center",
