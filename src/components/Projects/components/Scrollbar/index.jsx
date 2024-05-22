@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 import { useContext } from "react";
 
-export default function Scrollbar({ positions }) {
+export default function Scrollbar({ positions, className }) {
   const sectionContext = useContext(SectionContext);
   if (sectionContext == null) return;
 
@@ -18,14 +18,14 @@ export default function Scrollbar({ positions }) {
         // "right-10",
         "h-screen",
         "inset-y-0",
-        "start-0",
+        // "start-0",
         "inset-x-0",
-        // "top-[20%]",
         "flex",
         "flex-col",
         "gap-2",
         "justify-center",
-        "z-[50]"
+        "z-[50]",
+        className
       )}
     >
       {positions.map(({ positionId }) => (
@@ -35,7 +35,7 @@ export default function Scrollbar({ positions }) {
           transition={{ duration: 0.3 }}
           style={{
             height: activeSection == positionId ? "32px" : "8px",
-            
+
             backgroundColor:
               activeSection == positionId
                 ? "rgb(200,200,200)"
@@ -46,7 +46,7 @@ export default function Scrollbar({ positions }) {
         >
           {activeSection == positionId && (
             <motion.div
-              style={{ height: `calc(${activeSectionProgress * 100}% + 0px)` }}
+              style={{ height: `calc(${activeSectionProgress * 200}% + 0px)` }} // set 200 instead of 100 since projectcards only scroll half way
               className="w-full bg-pink-500"
             />
           )}

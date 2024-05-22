@@ -31,7 +31,6 @@ export const positions = [
   {
     positionId: 5,
   },
-
 ];
 
 export default function Projects({ className }) {
@@ -44,17 +43,6 @@ export default function Projects({ className }) {
     offset: ["start start", "end end"],
   });
 
-  // useEffect(() => {
-  //   const lenis = new Lenis();
-
-  //   function raf(time) {
-  //     lenis.raf(time);
-  //     requestAnimationFrame(raf);
-  //   }
-
-  //   requestAnimationFrame(raf);
-  // });
-
   return (
     <motion.section
       ref={container}
@@ -62,7 +50,9 @@ export default function Projects({ className }) {
     >
       <PageTitle
         backgroundColor="transparent"
+        containerClass="h-0"
         title="Recent projects."
+        // position="sticky"
         className={cn("top-16")}
       />
 
@@ -74,7 +64,7 @@ export default function Projects({ className }) {
           <ProjectShot
             position={positions[index]}
             isFirst={index === 1}
-            isLast={index > projectsData.length}
+            // isLast={index > projectsData.length}
             key={`p_${index}`}
             index={index}
             {...project}

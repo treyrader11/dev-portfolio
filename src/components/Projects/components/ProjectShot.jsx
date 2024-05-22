@@ -26,7 +26,7 @@ export default function ProjectShot({
   isLast = false,
   position,
 }) {
-  const container = useRef(null);
+  const positionContainer = useRef(null);
 
   const sectionContext = useContext(SectionContext);
   const { setActiveSection, setActiveSectionProgress } = sectionContext || {};
@@ -38,13 +38,9 @@ export default function ProjectShot({
   // const imageScale = useTransform(scrollYProgress, [0, 1], [2, 1]);
   // const scale = useTransform(progress, range, [1, targetScale]);
 
-  // const { width } = useWindowDimensions();
-  // const isMobile = width < 400;
-  // const backgroundSize = isMobile ? "contain" : "cover";
-
   // Section scrollbar logic
   const { scrollYProgress } = useScroll({
-    target: container,
+    target: positionContainer,
     offset: isFirst
       ? ["start start", "end center"]
       : isLast
@@ -68,7 +64,7 @@ export default function ProjectShot({
   return (
     <Link href={`/project/${video_key}`}>
       <div
-        ref={container}
+        ref={positionContainer}
         style={{
           backgroundImage: `url(/shots/${project_image})`,
           backgroundPosition: "center",
