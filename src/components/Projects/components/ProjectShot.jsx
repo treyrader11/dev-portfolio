@@ -2,11 +2,16 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useTransform, motion, useScroll } from "framer-motion";
-import { useRef } from "react";
+import {
+  useTransform,
+  useMotionValueEvent,
+  motion,
+  useScroll,
+} from "framer-motion";
+import { useRef, useContext } from "react";
 import { cn } from "@/lib/utils";
-import { useWindowDimensions } from "@/hooks/useWindowDimensions";
 import Rounded from "@/components/Rounded";
+import { SectionContext } from "@/lib/contexts";
 
 export default function ProjectShot({
   index,
@@ -17,19 +22,48 @@ export default function ProjectShot({
   video_key,
   category,
   title,
+  isFirst = false,
+  isLast = false,
+  position,
 }) {
   const container = useRef(null);
+
+  const sectionContext = useContext(SectionContext);
+  const { setActiveSection, setActiveSectionProgress } = sectionContext || {};
+  // const { scrollYProgress } = useScroll({
+  //   target: container,
+  //   offset: ["start end", "start start"],
+  // });
+
+  // const imageScale = useTransform(scrollYProgress, [0, 1], [2, 1]);
+  // const scale = useTransform(progress, range, [1, targetScale]);
+
+  // const { width } = useWindowDimensions();
+  // const isMobile = width < 400;
+  // const backgroundSize = isMobile ? "contain" : "cover";
+
+  // Section scrollbar logic
   const { scrollYProgress } = useScroll({
     target: container,
-    offset: ["start end", "start start"],
+    offset: isFirst
+      ? ["start start", "end center"]
+      : isLast
+      ? ["start center", "end end"]
+      : ["start center", "end center"],
   });
 
-  const imageScale = useTransform(scrollYProgress, [0, 1], [2, 1]);
-  const scale = useTransform(progress, range, [1, targetScale]);
-
-  const { width } = useWindowDimensions();
-  const isMobile = width < 400;
-  const backgroundSize = isMobile ? "contain" : "cover";
+  useMotionValueEvent(scrollYProgress, "change", (value) => {
+    if (
+      value > 0 &&
+      value < 1 &&
+      setActiveSection &&
+      setActiveSectionProgress
+    ) {
+      position?.positionId && setActiveSection(position?.positionId);
+      setActiveSectionProgress(value);
+    }
+  });
+  // Section scrollbar logic end
 
   return (
     <Link href={`/project/${video_key}`}>
@@ -51,7 +85,6 @@ export default function ProjectShot({
           "sticky",
           "top-0",
           "inset-x-0"
-          // "group"
         )}
       >
         {/* <div className="relative size-full group">
