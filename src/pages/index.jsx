@@ -52,10 +52,10 @@ export default function Home() {
           className="sticky top-0 min-h-[170vh] pt-[20vh] bg-white"
         />
         <SectionProvider>
-          <Projects className="sticky top-0 min-h-screen bg-white" />
+          <Projects className="sticky top-0 bg-white" />
         </SectionProvider>
 
-        <SlidingImages />
+        {/* <SlidingImages /> */}
       </Inner>
     </main>
   );

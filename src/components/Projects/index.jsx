@@ -13,9 +13,9 @@ import PageTitle from "../PageTitle";
 import Scrollbar from "./components/Scrollbar";
 
 export const positions = [
-  // {
-  //   positionId: 0,
-  // },
+  {
+    positionId: 0,
+  },
   {
     positionId: 1,
   },
@@ -28,6 +28,10 @@ export const positions = [
   {
     positionId: 4,
   },
+  {
+    positionId: 5,
+  },
+
 ];
 
 export default function Projects({ className }) {

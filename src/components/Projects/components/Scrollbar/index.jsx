@@ -25,7 +25,7 @@ export default function Scrollbar({ positions }) {
         "flex-col",
         "gap-2",
         "justify-center",
-        "z-[99]"
+        "z-[50]"
       )}
     >
       {positions.map(({ positionId }) => (
@@ -47,7 +47,7 @@ export default function Scrollbar({ positions }) {
           {activeSection == positionId && (
             <motion.div
               style={{ height: `calc(${activeSectionProgress * 100}% + 0px)` }}
-              className="w-full bg-purple-500"
+              className="w-full bg-pink-500"
             />
           )}
         </motion.div>
