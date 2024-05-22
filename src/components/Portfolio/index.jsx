@@ -254,7 +254,7 @@ export default function Portfolio() {
           ref={cursorLabel}
           className={cn(
             "size-20",
-            "rounded-[50%]",
+            "rounded-full",
             "bg-transparent",
             "text-white",
             "fixed",
