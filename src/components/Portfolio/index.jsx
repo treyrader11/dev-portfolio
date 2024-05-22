@@ -136,7 +136,7 @@ export default function Portfolio() {
       }}
     >
       <PageTitle title="Portfolio." />
-      <div className={cn("pt-12 mx-0 px-6 bg-dark")}>
+      <div className={cn("py-12 mx-0 px-6 bg-dark")}>
         <p className="text-white">
           The following projects showcase my skills and experience through
           real-world examples of my work. Each project is briefly described with
@@ -218,12 +218,6 @@ export default function Portfolio() {
                   style={{ backgroundColor: color }}
                   key={`modal_${index}`}
                 >
-                  {/* <Image
-                    alt="image of project"
-                    priority={project.isPriority}
-                    src={`/images/${project_image}`}
-                    {...imageProps}
-                  /> */}
                   <Image
                     src={`/images/${project_image}`}
                     width={300}

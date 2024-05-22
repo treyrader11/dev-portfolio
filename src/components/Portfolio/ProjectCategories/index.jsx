@@ -19,26 +19,17 @@ export default function ProjectCategories({
       )}
     >
       {categories.map((categ, index) => {
-        const activeClass = cn(
-          { selected },
-          "relative",
-          "after:absolute",
-          "after:block",
-          "after:h-[2px]",
-          "after:w-full",
+        const selectedClass = cn(
           "after:bg-purple-500",
           "text-purple-500",
-          "after:transition-[transform,opacity]",
-          "[&:not(.active)]:after:translate-y-2",
-          "[&:not(.active)]:after:opacity-0",
-          "hover:[&:not(.active)]:after:translate-y-0",
-          "hover:[&:not(.active)]:after:opacity-100"
+          "after:opacity-100"
         );
         return (
           <button
             key={index}
             onClick={() => filterProjects(categ, index)}
             className={cn(
+              selected === index && selectedClass,
               "inline-block",
               "font-semibold",
               "text-white",
@@ -49,7 +40,17 @@ export default function ProjectCategories({
               "transition-all",
               "duration-300",
               "ease-in-out",
-              selected === index ? activeClass : ""
+              "after:opacity-0",
+              "hover:after:opacity-100",
+              "after:absolute",
+              "after:block",
+              "after:h-px",
+              "after:w-full",
+              "after:bg-white",
+              "after:transition-[transform,opacity]",
+              selected === index
+                ? selectedClass
+                : cn("hover:after:-translate-y-px", "after:translate-y-3")
             )}
           >
             {categ}
