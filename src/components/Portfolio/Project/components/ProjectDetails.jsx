@@ -8,7 +8,7 @@ import PageTitle from "@/components/PageTitle";
 
 export default function ProjectDetails({ data }) {
   return (
-    <section>
+    <section className="pb-28">
       <PageTitle
         title={`${data[0].title}.`}
         backgroundColor="transparent"
@@ -60,7 +60,7 @@ export default function ProjectDetails({ data }) {
             "items-center",
             "font-extralight",
             "text-gray-500",
-            "my-5",
+            "my-20",
             "group"
           )}
         >

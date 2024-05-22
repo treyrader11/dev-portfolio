@@ -32,8 +32,7 @@ export default function ProjectShot({
   const backgroundSize = isMobile ? "contain" : "cover";
 
   return (
-    // <Link href={`/project/${video_key}`}>
-    <>
+    <Link href={`/project/${video_key}`}>
       <div
         ref={container}
         style={{
@@ -55,15 +54,15 @@ export default function ProjectShot({
           // "group"
         )}
       >
-        <div className="relative size-full group">
+        {/* <div className="relative size-full group">
           <ShotHoverOverlay
             projectId={video_key}
             title={title}
             category={category}
           />
-        </div>
+        </div> */}
       </div>
-    </>
+    </Link>
   );
 }
 
@@ -104,7 +103,7 @@ function ShotHoverOverlay({ title, category, projectId, className }) {
         "group-hover:-translate-y-1/2",
         "bg-indigo-400",
         "backdrop-blur-md",
-       
+
         "size-[calc(100%_-_2rem)]",
         "transition-all",
         "duration-[400]",

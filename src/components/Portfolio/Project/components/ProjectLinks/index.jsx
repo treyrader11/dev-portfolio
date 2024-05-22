@@ -7,17 +7,18 @@ import { BsDownload } from "react-icons/bs";
 function LinkItem({ href, imageSrc, imageAlt, label, hidden, className }) {
   return (
     <Rounded
-      backgroundColor="#9533F5"
+      // backgroundColor="#9533F5"
       href={`${href}`}
-      className={cn(
-        // "border-purple-500",
-        "outline-purple-700",
-        "rounded-full",
-        "w-fit",
-        "mx-auto",
-        "p-4",
-        "text-purple-500"
-      )}
+      // className={cn(
+      //   // "border-purple-500",
+      //   "outline-purple-700",
+      //   "rounded-full",
+      //   "w-fit",
+      //   "mx-auto",
+      //   "p-4",
+      //   "text-purple-500"
+      // )}
+      className={cn("w-full md:w-fit py-5 px-10 border-[.3px]")}
     >
       <a
         href={href}
@@ -28,6 +29,8 @@ function LinkItem({ href, imageSrc, imageAlt, label, hidden, className }) {
           "items-center",
           "gap-2",
           // "font-mono",
+          "text-black",
+          "group-hover:text-slate-100",
           className
         )}
       >
@@ -51,18 +54,6 @@ function LinkItem({ href, imageSrc, imageAlt, label, hidden, className }) {
 export default function ProjectLinks({ className, data }) {
   const links = [
     {
-      href: data[0].youtube_link,
-      imageSrc: "/youtube-svgrepo-com.svg",
-      imageAlt: "YouTube",
-      label: "YouTube",
-    },
-    {
-      href: data[0].githhub_link,
-      imageSrc: "/github-142-svgrepo-com.svg",
-      imageAlt: "GitHub",
-      label: "GitHub",
-    },
-    {
       href: data[0].frontend_download_link,
       imageSrc: null,
       imageAlt: "",
@@ -79,15 +70,20 @@ export default function ProjectLinks({ className, data }) {
   ];
 
   return (
-    <div className={className}>
+    <div className={cn("w-full", className)}>
       <span className={cn("my-5 text-2xl font-bold")}>Links</span>
-      <div className={cn("flex flex-wrap gap-3 pt-5")}>
+      <div
+        className={cn(
+          "flex",
+          "flex-col",
+          "md:flex-row",
+          "gap-5",
+          "mt-10",
+          "items-center"
+        )}
+      >
         {links.map((link, index) => (
-          <LinkItem
-            key={index}
-            {...link}
-            className="relative z-10 group-hover:text-white"
-          />
+          <LinkItem key={index} {...link} className="relative z-10" />
         ))}
       </div>
     </div>
