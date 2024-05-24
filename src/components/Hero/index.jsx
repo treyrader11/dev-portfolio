@@ -48,7 +48,8 @@ export default function Hero({ isLoading, scrollYProgress, className }) {
           "text-3xl",
           "md:text-[64px]",
           "md:leading-[66px]",
-          "mask"
+          "mask",
+          "select-none"
         )}
         animate={{
           WebkitMaskPosition: `${x - size / 2}px ${y - size / 2}px`,

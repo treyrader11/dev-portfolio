@@ -9,7 +9,7 @@ import { motion } from "framer-motion";
 import { projectsData } from "@/lib/data";
 import PageTitle from "../PageTitle";
 import Scrollbar from "../Scrollbar";
-import { positions as projPositions } from "./positions.data";
+import { projectPositions } from "./constants";
 
 export default function RecentProjects({ className }) {
   const container = useRef(null);
@@ -31,13 +31,13 @@ export default function RecentProjects({ className }) {
         className={cn("top-16")}
       />
 
-      <Scrollbar positions={projPositions} />
+      <Scrollbar positions={projectPositions} />
 
       {projectsData.map((project, index) => {
         const targetScale = 1 - (projectsData.length - index) * 0.05;
         return (
           <Project
-            position={projPositions[index]}
+            position={projectPositions[index]}
             isLast={index > projectsData.length}
             key={`p_${index}`}
             index={index}
