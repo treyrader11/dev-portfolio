@@ -33,9 +33,12 @@ export default function References({ className }) {
           backgroundColor="transparent"
           title="References."
         /> */}
-        <h1 className="my-4 font-light text-slate-500">
+        {/* <h1 className="my-4 font-light text-slate-500">
           I&apos;ve had the pleasure to work with the following professionals below.
           Here are a few of their words.
+        </h1> */}
+        <h1 className="my-4 text-[10vw] font-bold text-slate-200">
+          References
         </h1>
         <SelectBtns
           numTracks={references.length}
@@ -167,6 +170,7 @@ function Card({
         className={cn(
           "size-[100px]",
           "mx-auto",
+          "mt-16",
           background !== dark ? "border-purple-500" : "border-secondary"
         )}
       />
