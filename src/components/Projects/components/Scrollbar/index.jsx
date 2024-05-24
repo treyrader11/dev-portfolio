@@ -16,8 +16,7 @@ export default function Scrollbar({ positions, className }) {
       className={cn(
         "sticky",
         "h-screen",
-        "inset-y-0",
-        "inset-x-0",
+        "inset-0",
         "flex",
         "flex-col",
         "gap-2",

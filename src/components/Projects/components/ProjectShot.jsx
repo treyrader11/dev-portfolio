@@ -27,7 +27,7 @@ export default function ProjectShot({
   position,
 }) {
   const positionContainer = useRef(null);
-
+console.log('isFirst', isFirst)
   const sectionContext = useContext(SectionContext);
   const { setActiveSection, setActiveSectionProgress } = sectionContext || {};
   // const { scrollYProgress } = useScroll({

@@ -58,8 +58,9 @@ export default function Projects({ className }) {
         return (
           <ProjectShot
             position={positions[index]}
+            // isFirst={ positions[index] === 1}
             isFirst={index === 1}
-            // isLast={index > projectsData.length}
+            isLast={index > projectsData.length}
             key={`p_${index}`}
             index={index}
             {...project}
