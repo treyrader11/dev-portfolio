@@ -3,8 +3,6 @@
 import { useEffect, useState } from "react";
 import { motion, useMotionValue } from "framer-motion";
 import { cn } from "@/lib/utils";
-import { testimonials } from "@/lib/data";
-import ProfilePicture from "@/components/ProfilePicture";
 import { Testimonial } from "../..";
 import { SPRING_OPTIONS } from "../../anim";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
@@ -13,7 +11,7 @@ const ONE_SECOND = 1000;
 const AUTO_DELAY = ONE_SECOND * 10;
 const DRAG_BUFFER = 50;
 
-export default function SwipeCarousel({ className }) {
+export default function SwipeCarousel({ className, items }) {
   const [selected, setSelected] = useState(0);
 
   const dragX = useMotionValue(0);
@@ -24,7 +22,7 @@ export default function SwipeCarousel({ className }) {
 
       if (x === 0) {
         setSelected((pv) => {
-          if (pv === testimonials.length - 1) {
+          if (pv === items.length - 1) {
             return 0;
           }
           return pv + 1;
@@ -38,7 +36,7 @@ export default function SwipeCarousel({ className }) {
   const onDragEnd = () => {
     const x = dragX.get();
 
-    if (x <= -DRAG_BUFFER && selected < testimonials.length - 1) {
+    if (x <= -DRAG_BUFFER && selected < items.length - 1) {
       setSelected((pv) => pv + 1);
     } else if (x >= DRAG_BUFFER && selected > 0) {
       setSelected((pv) => pv - 1);
@@ -48,10 +46,10 @@ export default function SwipeCarousel({ className }) {
   return (
     <div
       className={cn(
-        "relative",
+        // "relative",
         "overflow-hidden",
         "py-8",
-        "w-full",
+        // "w-full",
         "mx-auto",
         className
       )}
@@ -71,11 +69,14 @@ export default function SwipeCarousel({ className }) {
         transition={SPRING_OPTIONS}
         onDragEnd={onDragEnd}
         className={cn(
-          "flex cursor-grab w-full items-center active:cursor-grabbing"
+          "flex",
+          "cursor-grab",
+          "w-full",
+          "items-center",
+          "active:cursor-grabbing"
         )}
       >
-        {/* <Images selected={selected} /> */}
-        {testimonials.map((testimonial, index) => (
+        {items.map((testimonial, index) => (
           <Testimonial
             key={index}
             {...testimonial}
@@ -85,15 +86,15 @@ export default function SwipeCarousel({ className }) {
         ))}
       </motion.div>
       {/* <GradientArrows /> */}
-      <Dots selected={selected} setSelected={setSelected} />
+      <Dots selected={selected} items={items} setSelected={setSelected} />
     </div>
   );
 }
 
-export function Dots({ selected, setSelected }) {
+export function Dots({ selected, items, setSelected }) {
   return (
     <div className="flex justify-center w-full gap-2 mt-4">
-      {testimonials.map((_, index) => {
+      {items.map((_, index) => {
         return (
           <button
             key={index}

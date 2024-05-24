@@ -31,16 +31,24 @@ export default function RecentProjects({ className }) {
         className
       )}
     >
-      <PageTitle
+      {/* <PageTitle
         backgroundColor="transparent"
         containerClass="h-0"
         title="Recent projects."
         className={cn("top-16")}
-      />
+      /> */}
 
-      <Scrollbar positions={projectPositions} />
+      {/* <Scrollbar positions={projectPositions} /> */}
 
       <div className="sticky">
+      <PageTitle
+        backgroundColor="transparent"
+        containerClass="h-0 sticky -top-[20%]"
+        title="Recent work."
+        className={cn("top-16")}
+      />
+        <Scrollbar positions={projectPositions} />
+
         {projectsData.map((project, index) => {
           const targetScale = 1 - (projectsData.length - index) * 0.05;
           return (
@@ -58,7 +66,6 @@ export default function RecentProjects({ className }) {
           );
         })}
 
-        {/* <div className="pt-[30vh] relative"> */}
         <div className="pt-[20vh] sm:pt-[30vh] relative">
           <Rounded
             backgroundColor="#934e00"
