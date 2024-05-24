@@ -128,14 +128,12 @@ export function Testimonial({
         width: "100%",
       }}
       className={cn(
-        // "bg-dark-400",
         "overflow-hidden",
         "text-center",
         "top-0",
         "left-0",
         "pb-[70px]",
         "px-0",
-   
         "flex",
         "flex-col",
         "gap-4",
@@ -149,7 +147,7 @@ export function Testimonial({
     >
       <ProfilePicture
         src={image_url.src}
-        className={cn("img", "size-[100px]", "mx-auto")}
+        className={cn("size-[200px]", "mx-auto")}
       />
       <h2 className="text-xl font-semibold text-secondary">{name}</h2>
       <p className={cn("text-sm", "", "w-full", "mx-auto")}>{quote}</p>
