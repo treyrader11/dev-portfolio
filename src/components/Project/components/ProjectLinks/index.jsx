@@ -7,18 +7,21 @@ import { BsDownload } from "react-icons/bs";
 function LinkItem({ href, imageSrc, imageAlt, label, hidden, className }) {
   return (
     <Rounded
-      // backgroundColor="#9533F5"
+      backgroundColor="transparent"
       href={`${href}`}
-      // className={cn(
-      //   // "border-purple-500",
-      //   "outline-purple-700",
-      //   "rounded-full",
-      //   "w-fit",
-      //   "mx-auto",
-      //   "p-4",
-      //   "text-purple-500"
-      // )}
-      className={cn("w-full md:w-fit py-5 px-10 border-[.3px]")}
+      className={cn(
+        "w-full",
+        "md:w-fit",
+        "py-5",
+        "px-10",
+        "border-[.3px]",
+        "transition-[colors,border]",
+        "duration-500",
+        "ease-in-out",
+        "text-black",
+        "hover:text-purple-700",
+        "hover:border-purple-700"
+      )}
     >
       <a
         href={href}
@@ -28,9 +31,6 @@ function LinkItem({ href, imageSrc, imageAlt, label, hidden, className }) {
           "flex-row",
           "items-center",
           "gap-2",
-          // "font-mono",
-          "text-black",
-          "group-hover:text-slate-100",
           className
         )}
       >

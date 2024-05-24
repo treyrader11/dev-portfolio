@@ -51,10 +51,16 @@ export default function ProjectDetails({ data }) {
 
         <span className={cn("my-5 text-2xl font-bold")}>Design</span>
         <p className="mb-2.5">{data[0].design_blog}</p>
-        <Environment data={data} />
+        <Environment
+          desc={data[0].environment_desc}
+          data={data[0].env.frontend}
+        />
+        <Environment
+          desc={data[0].environment_desc}
+          data={data[0].env.backend}
+        />
         <ProjectLinks data={data} />
         <Magnetic>
-         
           <Link
             href={"/portfolio"}
             className={cn(
@@ -68,7 +74,7 @@ export default function ProjectDetails({ data }) {
               "group"
             )}
           >
-             <LinkDecorator isActive className="my-auto mr-2" />
+            <LinkDecorator isActive className="my-auto mr-2" />
             See all
             <span
               className={cn(

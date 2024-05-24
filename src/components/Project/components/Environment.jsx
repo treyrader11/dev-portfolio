@@ -6,7 +6,7 @@ import { LuCopyCheck } from "react-icons/lu";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
 
-export default function Environnment({ data }) {
+export default function Environnment({ data, desc }) {
   const [havecopy, sethavecopy] = useState(false);
 
   const Copy = (e) => {
@@ -21,10 +21,8 @@ export default function Environnment({ data }) {
 
   return (
     <div className="w-full h-auto">
-      <span className="my-5 text-2xl font-bold">
-        Environment
-      </span>
-      <p>{data[0].environment_blog}</p>
+      <span className="my-5 text-2xl font-bold">Environment</span>
+      <p>{desc}</p>
       <div
         className={cn(
           "my-4",
@@ -39,10 +37,10 @@ export default function Environnment({ data }) {
           "rounded-lg",
           "bg-[linear-gradient(110deg,#000103,45%,#1e2631,55%,#000103)]",
           "border",
-          "border-purple-500",
+          "border-purple-500"
         )}
       >
-        {data[0].env?.map((data) => (
+        {data.map((data) => (
           <div
             key={data}
             className={cn(
