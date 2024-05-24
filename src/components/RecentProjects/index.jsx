@@ -22,7 +22,7 @@ export default function RecentProjects({ className }) {
   return (
     <motion.section
       ref={container}
-      className={cn("relative z-[2] pb-28 mx-3", className)}
+      className={cn("relative z-[2] mx-4", "pb-[30vh]", className)}
     >
       <PageTitle
         backgroundColor="transparent"
@@ -51,7 +51,7 @@ export default function RecentProjects({ className }) {
         })}
       </div>
 
-      <div className="-mt-40">
+      <div className="relative -mt-40">
         <Rounded
           backgroundColor="#934e00"
           text="See all projects"
