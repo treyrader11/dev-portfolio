@@ -1,3 +1,3 @@
 import { createContext } from "react";
 
-export const SectionContext = createContext(null);
+export const PositionContext = createContext(null);

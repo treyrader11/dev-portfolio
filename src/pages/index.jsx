@@ -9,7 +9,7 @@ import SlidingImages from "@/components/SlidingImages";
 import Projects from "@/components/Projects";
 import Hero from "@/components/Hero";
 import { useScroll, useTransform, motion } from "framer-motion";
-import SectionProvider from "@/components/providers/SectionProvider";
+import PositionProvider from "@/components/providers/PositionProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -51,9 +51,9 @@ export default function Home() {
           scrollYProgress={scrollYProgress}
           className="sticky top-0 min-h-[170vh] pt-[20vh] bg-white"
         />
-        <SectionProvider>
+        <PositionProvider>
           <Projects className="sticky top-0 bg-white" />
-        </SectionProvider>
+        </PositionProvider>
 
         {/* <SlidingImages /> */}
       </Inner>

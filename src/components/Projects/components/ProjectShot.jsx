@@ -11,7 +11,7 @@ import {
 import { useRef, useContext } from "react";
 import { cn } from "@/lib/utils";
 import Rounded from "@/components/Rounded";
-import { SectionContext } from "@/lib/contexts";
+import { PositionContext } from "@/lib/contexts";
 
 export default function ProjectShot({
   index,
@@ -27,9 +27,10 @@ export default function ProjectShot({
   position,
 }) {
   const positionContainer = useRef(null);
-console.log('isFirst', isFirst)
-  const sectionContext = useContext(SectionContext);
-  const { setActiveSection, setActiveSectionProgress } = sectionContext || {};
+  console.log("isFirst", isFirst);
+  const positionContext = useContext(PositionContext);
+  const { setActivePosition, setActivePositionProgress } =
+    positionContext || {};
   // const { scrollYProgress } = useScroll({
   //   target: container,
   //   offset: ["start end", "start start"],
@@ -38,7 +39,7 @@ console.log('isFirst', isFirst)
   // const imageScale = useTransform(scrollYProgress, [0, 1], [2, 1]);
   // const scale = useTransform(progress, range, [1, targetScale]);
 
-  // Section scrollbar logic
+  // Position scrollbar logic
   const { scrollYProgress } = useScroll({
     target: positionContainer,
     offset: isFirst
@@ -52,14 +53,14 @@ console.log('isFirst', isFirst)
     if (
       value > 0 &&
       value < 1 &&
-      setActiveSection &&
-      setActiveSectionProgress
+      setActivePosition &&
+      setActivePositionProgress
     ) {
-      position?.positionId && setActiveSection(position?.positionId);
-      setActiveSectionProgress(value);
+      position?.positionId && setActivePosition(position?.positionId);
+      setActivePositionProgress(value);
     }
   });
-  // Section scrollbar logic end
+  // Position scrollbar logic end
 
   return (
     <Link href={`/project/${video_key}`}>
