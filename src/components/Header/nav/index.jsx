@@ -39,14 +39,26 @@ export default function Nav() {
           "items-center",
           "flex",
           "flex-col",
-          "justify-between"
+          "justify-between",
+          "sm:w-full",
+          "md:w-auto",
+          "max-w-[50vw]",
+          "mx-auto"
         )}
       >
         <div
           onMouseLeave={() => {
             setSelectedIndicator(pathname);
           }}
-          className={cn("flex", "flex-col", "text-6xl", "gap-5", "mt-[80px]")}
+          className={cn(
+            "flex",
+            "flex-col",
+            "text-6xl",
+            "gap-5",
+            "mt-[80px]",
+            "w-full",
+            "md:w-auto"
+          )}
         >
           <div
             className={cn(
@@ -55,8 +67,8 @@ export default function Nav() {
               "border-light-300/50",
               "uppercase",
               "text-xs",
-              "mb-10",
-              "w-full"
+              "mb-10"
+              // "w-full",
             )}
           >
             <p>Trey Rader</p>

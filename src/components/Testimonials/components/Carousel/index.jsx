@@ -31,7 +31,7 @@ export default function SwipeCarousel({ className, items }) {
     }, AUTO_DELAY);
 
     return () => clearInterval(intervalRef);
-  }, []);
+  }, [dragX, items.length]);
 
   const onDragEnd = () => {
     const x = dragX.get();

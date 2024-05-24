@@ -164,12 +164,15 @@ function Card({
     >
       {/* <Icon className="mx-auto text-7xl" /> */}
       <ProfilePicture
+        isBordered
         src={image_url.src}
-        className={cn("size-[100px]", "mx-auto")}
+        className={cn("size-[100px]", "mx-auto", "border-secondary")}
       />
-      <p className="my-8 text-lg italic font-light lg:text-xl">"{desc}"</p>
+      <p className="my-8 text-lg italic font-light lg:text-xl">&quot;{desc}&quot;</p>
       <div>
-        <span className="block text-lg font-semibold">{name}</span>
+        <span className="block text-lg font-semibold text-purple-500">
+          {name}
+        </span>
         <span className="block text-sm">{title}</span>
       </div>
     </motion.div>

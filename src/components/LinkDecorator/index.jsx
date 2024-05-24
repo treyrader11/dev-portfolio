@@ -11,7 +11,6 @@ export default function LinkDecorator({ className, isActive }) {
         "transform",
         "-translate-x-1/2",
         "rounded-full",
-        "bg-white",
         "bg-gray-500",
         "mx-auto",
         "mt-3",

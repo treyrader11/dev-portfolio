@@ -4,6 +4,7 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { scale, slide } from "../../anim";
 import { cn } from "@/lib/utils";
+import LinkDecorator from "@/components/LinkDecorator";
 
 export default function Navlink({
   data,
@@ -11,34 +12,21 @@ export default function Navlink({
   setSelectedIndicator,
   className,
 }) {
-  const { label, href, index } = data;
+  const { label, href } = data;
 
   return (
-    <Link href={href}>
-      <motion.div
-        className={cn("relative flex items-center", className)}
-        onMouseEnter={() => {
-          setSelectedIndicator(href);
-        }}
-        custom={index}
-        variants={slide}
-        initial="initial"
-        animate="enter"
-        exit="exit"
-      >
-        <motion.div
-          variants={scale}
-          animate={isActive ? "open" : "closed"}
-          className={cn(
-            "size-2.5",
-            "bg-white",
-            "rounded-full",
-            "absolute",
-            "-left-[30px]"
-          )}
-        />
-        {label}
-      </motion.div>
+    <Link
+      href={href}
+      className={cn("relative flex items-center", className)}
+      onMouseEnter={() => {
+        setSelectedIndicator(href);
+      }}
+    >
+      <LinkDecorator
+        isActive={isActive}
+        className={cn("size-2.5 bg-white absolute -left-[30px]")}
+      />
+      {label}
     </Link>
   );
 }
