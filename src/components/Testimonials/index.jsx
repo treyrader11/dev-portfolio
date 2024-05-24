@@ -62,9 +62,8 @@ export function Testimonial({
         "gap-4",
         "w-full",
         "h-[300px]",
-        "border border-red-600",
 
-        // "absolute",
+        "absolute",
         isSelected ? "opacity-100 relative" : "opacity-0",
         className
       )}

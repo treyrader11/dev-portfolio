@@ -28,6 +28,7 @@ export default function RecentProjects({ className }) {
         "z-[2]",
         "mx-4",
         "pb-[124vh]",
+
         className
       )}
     >
@@ -38,15 +39,14 @@ export default function RecentProjects({ className }) {
         className={cn("top-16")}
       /> */}
 
-      {/* <Scrollbar positions={projectPositions} /> */}
-
       <div className="sticky">
-      <PageTitle
-        backgroundColor="transparent"
-        containerClass="h-0 sticky -top-[20%]"
-        title="Recent work."
-        className={cn("top-16")}
-      />
+        <PageTitle
+          backgroundColor="white"
+          containerClass={cn("h-0 sticky -top-[20%] p-0", "z-[50]")}
+          title="Recent work."
+          className={cn("top-16 pt-[10vh] w-full bg-white")}
+        />
+
         <Scrollbar positions={projectPositions} />
 
         {projectsData.map((project, index) => {
@@ -54,7 +54,6 @@ export default function RecentProjects({ className }) {
           return (
             <Project
               position={projectPositions[index]}
-              isLast={index > projectsData.length}
               key={`p_${index}`}
               index={index}
               {...project}

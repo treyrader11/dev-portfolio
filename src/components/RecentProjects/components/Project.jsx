@@ -24,6 +24,7 @@ export default function Project({
   title,
   position,
   overlap,
+  className,
 }) {
   const positionContainer = useRef(null);
   const positionContext = useContext(PositionContext);
@@ -35,7 +36,8 @@ export default function Project({
     offset: ["start center", "end center"],
   });
 
-  const getTopPosition = (pos) => `calc(-5vh + ${pos * 25}px)`;
+  const getTopPosition = (pos) =>
+    overlap === "full" ? 0 : `calc(-5vh + ${pos * 25}px)`;
 
   useMotionValueEvent(scrollYProgress, "change", (value) => {
     if (
@@ -51,7 +53,7 @@ export default function Project({
   // Position scrollbar logic end
 
   return (
-    <Link href={`/project/${video_key}`}>
+    <Link href={`/project/${video_key}`} className={className}>
       <div
         ref={positionContainer}
         style={{
@@ -59,7 +61,7 @@ export default function Project({
           backgroundPosition: "center",
           backgroundSize: "contain",
           backgroundRepeat: "no-repeat",
-          top: overlap === "full" ? 0 : getTopPosition(index),
+          top: getTopPosition(index),
         }}
         className={cn(
           "h-screen",
@@ -68,7 +70,8 @@ export default function Project({
           "justify-center",
           "sticky",
           "top-0",
-          "inset-x-0"
+          "inset-x-0",
+          "z-[52]"
         )}
       >
         {/* <div className="relative size-full group">

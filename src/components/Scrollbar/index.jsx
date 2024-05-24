@@ -15,7 +15,7 @@ export default function Scrollbar({ positions, className }) {
     <motion.div
       className={cn(
         "sticky",
-        "h-screen",
+        "min-h-screen",
         "inset-0",
         "flex",
         "flex-col",
