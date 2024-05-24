@@ -58,7 +58,8 @@ export default function RecentProjects({ className }) {
           );
         })}
 
-        <div className="pt-[30vh] relative">
+        {/* <div className="pt-[30vh] relative"> */}
+        <div className="pt-[20vh] sm:pt-[30vh] relative">
           <Rounded
             backgroundColor="#934e00"
             text="See all projects"

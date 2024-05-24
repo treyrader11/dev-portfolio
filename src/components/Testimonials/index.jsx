@@ -1,25 +1,19 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import PageTitle from "../PageTitle";
 import { testimonials } from "@/lib/data";
 import ProfilePicture from "../ProfilePicture";
-import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
 import SwipeCarousel from "./components/Carousel";
-import { motion, useMotionValue } from "framer-motion";
+import { motion } from "framer-motion";
 import { SPRING_OPTIONS } from "./anim";
 
 export default function Testimonials({ className }) {
   const [selected, setSelected] = useState(0);
 
-  const container = useRef();
-  const dots = useRef();
-  const content = useRef();
-
   return (
     <div
-      ref={container}
       className={cn(
         "w-full",
         "bg-white",
@@ -35,18 +29,11 @@ export default function Testimonials({ className }) {
         backgroundColor="transparent"
         title="Testimonials."
       />
-      <div
-        className={cn(
-          // "textim",
-          "w-full",
-          "absolute",
-          "top-2/3",
-          "-translate-y-1/2",
-          "overflow-auto"
-        )}
-      >
-        <SwipeCarousel />
-        {/* <div
+
+      <SwipeCarousel
+        className={cn("w-full", "absolute", "top-2/3", "-translate-y-1/2")}
+      />
+      {/* <div
           className={cn(
             // "wrap",
             "mx-6",
@@ -57,47 +44,9 @@ export default function Testimonials({ className }) {
             "px-5"
           )}
         >
-          <FaChevronRight
-            className={cn(
-              // "arrow",
-              "text-white",
-              "absolute",
-              "text-3xl",
-              "cursor-pointer",
-              "top-1/2",
-              "-translate-y-1/2",
-              "transition-all",
-              "duration-300",
-              "ease-in-out",
-              "p-[5px]",
-              "z-[10]",
-              "right-2.5",
-              "hover:text-purple-600",
+         
 
-              "before:cursor-pointer"
-            )}
-          />
-
-          <FaChevronLeft
-            className={cn(
-              // "arrow",
-              "text-white",
-              "absolute",
-              "text-3xl",
-              "cursor-pointer",
-              "top-1/2",
-              "-translate-y-1/2",
-              "transition-all",
-              "duration-300",
-              "ease-in-out",
-              "p-[5px]",
-              "z-[10]",
-              "left-2.5",
-              "hover:text-purple-600",
-
-              "before:cursor-pointer"
-            )}
-          />
+        
           <ul
             ref={dots}
             className={cn(
@@ -154,7 +103,7 @@ export default function Testimonials({ className }) {
             ))}
           </div>
         </div>  */}
-      </div>
+      {/* </div> */}
     </div>
   );
 }
@@ -173,24 +122,28 @@ export function Testimonial({
       transition={SPRING_OPTIONS}
       style={{
         //   backgroundImage: `url(${tes.image_url.src})`,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        height: 300
+        // backgroundSize: "cover",
+        // backgroundPosition: "center",
+        height: 300,
+        width: "100%",
       }}
       className={cn(
-        //   "active",
-        "bg-dark-400",
-        "absolute",
+        // "bg-dark-400",
+        "overflow-hidden",
         "text-center",
         "top-0",
         "left-0",
         "pb-[70px]",
         "px-0",
-        // "opacity-0",
+   
         "flex",
         "flex-col",
         "gap-4",
-        isSelected ? "opacity-100 relative" : "opacity-100",
+        "w-full",
+        
+        "opacity-0",
+        "absolute",
+        isSelected ? "opacity-100 relative" : "opacity-0",
         className
       )}
     >
@@ -199,9 +152,7 @@ export function Testimonial({
         className={cn("img", "size-[100px]", "mx-auto")}
       />
       <h2 className="text-xl font-semibold text-secondary">{name}</h2>
-      <p className={cn("text-sm", "text-slate-100", "w-4/5", "mx-auto")}>
-        {quote}
-      </p>
+      <p className={cn("text-sm", "", "w-full", "mx-auto")}>{quote}</p>
     </motion.div>
   );
 }

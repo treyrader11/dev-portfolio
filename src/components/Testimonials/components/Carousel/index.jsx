@@ -7,16 +7,7 @@ import { testimonials } from "@/lib/data";
 import ProfilePicture from "@/components/ProfilePicture";
 import { Testimonial } from "../..";
 import { SPRING_OPTIONS } from "../../anim";
-
-const imgs = [
-  "/imgs/nature/1.jpg",
-  "/imgs/nature/2.jpg",
-  "/imgs/nature/3.jpg",
-  "/imgs/nature/4.jpg",
-  "/imgs/nature/5.jpg",
-  "/imgs/nature/6.jpg",
-  "/imgs/nature/7.jpg",
-];
+import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
 
 const ONE_SECOND = 1000;
 const AUTO_DELAY = ONE_SECOND * 10;
@@ -33,7 +24,7 @@ export default function SwipeCarousel({ className }) {
 
       if (x === 0) {
         setSelected((pv) => {
-          if (pv === imgs.length - 1) {
+          if (pv === testimonials.length - 1) {
             return 0;
           }
           return pv + 1;
@@ -47,7 +38,7 @@ export default function SwipeCarousel({ className }) {
   const onDragEnd = () => {
     const x = dragX.get();
 
-    if (x <= -DRAG_BUFFER && selected < imgs.length - 1) {
+    if (x <= -DRAG_BUFFER && selected < testimonials.length - 1) {
       setSelected((pv) => pv + 1);
     } else if (x >= DRAG_BUFFER && selected > 0) {
       setSelected((pv) => pv - 1);
@@ -55,7 +46,16 @@ export default function SwipeCarousel({ className }) {
   };
 
   return (
-    <div className={cn("relative", "overflow-hidden", "py-8", className)}>
+    <div
+      className={cn(
+        "relative",
+        "overflow-hidden",
+        "py-8",
+        "w-full",
+        "mx-auto",
+        className
+      )}
+    >
       <motion.div
         drag="x"
         dragConstraints={{
@@ -70,7 +70,9 @@ export default function SwipeCarousel({ className }) {
         }}
         transition={SPRING_OPTIONS}
         onDragEnd={onDragEnd}
-        className={cn("flex cursor-grab items-center active:cursor-grabbing")}
+        className={cn(
+          "flex cursor-grab w-full items-center active:cursor-grabbing"
+        )}
       >
         {/* <Images selected={selected} /> */}
         {testimonials.map((testimonial, index) => (
@@ -82,9 +84,8 @@ export default function SwipeCarousel({ className }) {
           />
         ))}
       </motion.div>
-
+      {/* <GradientArrows /> */}
       <Dots selected={selected} setSelected={setSelected} />
-      <GradientEdges />
     </div>
   );
 }
@@ -92,20 +93,19 @@ export default function SwipeCarousel({ className }) {
 export function Dots({ selected, setSelected }) {
   return (
     <div className="flex justify-center w-full gap-2 mt-4">
-      {testimonials.map((_, idx) => {
+      {testimonials.map((_, index) => {
         return (
           <button
-            key={idx}
-            onClick={() => setSelected(idx)}
+            key={index}
+            onClick={() => setSelected(index)}
             className={cn(
               "size-3",
               "rounded-full",
               "transition-colors",
               "border",
               "border-[1px]",
-              idx === selected
-                ? "bg-secondary border-secondary"
-                : "bg-transparent border-slate-100"
+              "border-secondary",
+              index === selected ? "bg-secondary" : "bg-transparent"
             )}
           />
         );
@@ -114,10 +114,10 @@ export function Dots({ selected, setSelected }) {
   );
 }
 
-export function GradientEdges() {
+export function GradientArrows() {
   return (
     <>
-      <div
+      {/* <div
         className={cn(
           "pointer-events-none",
           "absolute",
@@ -142,6 +142,44 @@ export function GradientEdges() {
           "bg-gradient-to-r",
           "from-neutral-950/50",
           "to-neutral-950/0"
+        )}
+      /> */}
+
+      <FaChevronRight
+        className={cn(
+          // "arrow",
+
+          "absolute",
+          "text-3xl",
+          "cursor-pointer",
+          "top-1/2",
+          "-translate-y-1/2",
+          "transition-all",
+          "duration-300",
+          "ease-in-out",
+          "p-[5px]",
+          "z-[10]",
+          "right-2.5",
+          "hover:text-purple-600",
+          "before:cursor-pointer"
+        )}
+      />
+
+      <FaChevronLeft
+        className={cn(
+          "absolute",
+          "text-3xl",
+          "cursor-pointer",
+          "top-1/2",
+          "-translate-y-1/2",
+          "transition-all",
+          "duration-300",
+          "ease-in-out",
+          "p-[5px]",
+          "z-[10]",
+          "left-2.5",
+          "hover:text-purple-600",
+          "before:cursor-pointer"
         )}
       />
     </>

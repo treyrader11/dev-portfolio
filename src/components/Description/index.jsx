@@ -66,6 +66,7 @@ export default function Description({ scrollYProgress, className }) {
 
 function AboutButton({ className }) {
   return (
+    // <div className={cn("absolute right-0 top-[40%] md:top-[35%]", className)}>
     <div className={cn("absolute right-0 top-[40%] md:top-[35%]", className)}>
       <Rounded
         text="About me"
