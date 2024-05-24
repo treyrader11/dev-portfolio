@@ -33,21 +33,24 @@ export default function RecentProjects({ className }) {
 
       <Scrollbar positions={projectPositions} />
 
-      {projectsData.map((project, index) => {
-        const targetScale = 1 - (projectsData.length - index) * 0.05;
-        return (
-          <Project
-            position={projectPositions[index]}
-            isLast={index > projectsData.length}
-            key={`p_${index}`}
-            index={index}
-            {...project}
-            progress={scrollYProgress}
-            range={[index * 0.25, 1]}
-            targetScale={targetScale}
-          />
-        );
-      })}
+      <div className="sticky">
+        {projectsData.map((project, index) => {
+          const targetScale = 1 - (projectsData.length - index) * 0.05;
+          return (
+            <Project
+              position={projectPositions[index]}
+              isLast={index > projectsData.length}
+              key={`p_${index}`}
+              index={index}
+              {...project}
+              progress={scrollYProgress}
+              range={[index * 0.25, 1]}
+              targetScale={targetScale}
+            />
+          );
+        })}
+      </div>
+
       <div className="-mt-40">
         <Rounded
           backgroundColor="#934e00"
