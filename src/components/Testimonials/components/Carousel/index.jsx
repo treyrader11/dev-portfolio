@@ -4,6 +4,9 @@ import { useEffect, useState } from "react";
 import { motion, useMotionValue } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { testimonials } from "@/lib/data";
+import ProfilePicture from "@/components/ProfilePicture";
+import { Testimonial } from "../..";
+import { SPRING_OPTIONS } from "../../anim";
 
 const imgs = [
   "/imgs/nature/1.jpg",
@@ -19,15 +22,8 @@ const ONE_SECOND = 1000;
 const AUTO_DELAY = ONE_SECOND * 10;
 const DRAG_BUFFER = 50;
 
-const SPRING_OPTIONS = {
-  type: "spring",
-  mass: 3,
-  stiffness: 400,
-  damping: 50,
-};
-
 export default function SwipeCarousel({ className }) {
-  const [imgIndex, setImgIndex] = useState(0);
+  const [selected, setSelected] = useState(0);
 
   const dragX = useMotionValue(0);
 
@@ -36,7 +32,7 @@ export default function SwipeCarousel({ className }) {
       const x = dragX.get();
 
       if (x === 0) {
-        setImgIndex((pv) => {
+        setSelected((pv) => {
           if (pv === imgs.length - 1) {
             return 0;
           }
@@ -51,23 +47,15 @@ export default function SwipeCarousel({ className }) {
   const onDragEnd = () => {
     const x = dragX.get();
 
-    if (x <= -DRAG_BUFFER && imgIndex < imgs.length - 1) {
-      setImgIndex((pv) => pv + 1);
-    } else if (x >= DRAG_BUFFER && imgIndex > 0) {
-      setImgIndex((pv) => pv - 1);
+    if (x <= -DRAG_BUFFER && selected < imgs.length - 1) {
+      setSelected((pv) => pv + 1);
+    } else if (x >= DRAG_BUFFER && selected > 0) {
+      setSelected((pv) => pv - 1);
     }
   };
 
   return (
-    <div
-      className={cn(
-        "relative",
-        "overflow-hidden",
-        "bg-neutral-950",
-        "py-8",
-        className
-      )}
-    >
+    <div className={cn("relative", "overflow-hidden", "py-8", className)}>
       <motion.div
         drag="x"
         dragConstraints={{
@@ -78,63 +66,46 @@ export default function SwipeCarousel({ className }) {
           x: dragX,
         }}
         animate={{
-          translateX: `-${imgIndex * 100}%`,
+          translateX: `-${selected * 100}%`,
         }}
         transition={SPRING_OPTIONS}
         onDragEnd={onDragEnd}
         className={cn("flex cursor-grab items-center active:cursor-grabbing")}
       >
-        <Images imgIndex={imgIndex} />
+        {/* <Images selected={selected} /> */}
+        {testimonials.map((testimonial, index) => (
+          <Testimonial
+            key={index}
+            {...testimonial}
+            scale={selected === index ? 0.95 : 0.85}
+            isSelected={selected == index}
+          />
+        ))}
       </motion.div>
 
-      <Dots imgIndex={imgIndex} setImgIndex={setImgIndex} />
+      <Dots selected={selected} setSelected={setSelected} />
       <GradientEdges />
     </div>
   );
 }
 
-export function Images({ imgIndex }) {
-  return (
-    <>
-      {testimonials.map((tes, idx) => {
-        return (
-          <motion.div
-            key={idx}
-            style={{
-              backgroundImage: `url(${tes.image_url.src})`,
-              backgroundSize: "cover",
-              backgroundPosition: "center",
-            }}
-            animate={{
-              scale: imgIndex === idx ? 0.95 : 0.85,
-            }}
-            transition={SPRING_OPTIONS}
-            className={cn(
-              "aspect-video",
-              "w-screen",
-              "shrink-0",
-              "rounded-xl",
-              "bg-neutral-800",
-              "object-cover"
-            )}
-          />
-        );
-      })}
-    </>
-  );
-}
-
-export function Dots({ imgIndex, setImgIndex }) {
+export function Dots({ selected, setSelected }) {
   return (
     <div className="flex justify-center w-full gap-2 mt-4">
       {testimonials.map((_, idx) => {
         return (
           <button
             key={idx}
-            onClick={() => setImgIndex(idx)}
+            onClick={() => setSelected(idx)}
             className={cn(
-              "size-3 rounded-full transition-colors",
-              idx === imgIndex ? "bg-neutral-50" : "bg-neutral-500"
+              "size-3",
+              "rounded-full",
+              "transition-colors",
+              "border",
+              "border-[1px]",
+              idx === selected
+                ? "bg-secondary border-secondary"
+                : "bg-transparent border-slate-100"
             )}
           />
         );

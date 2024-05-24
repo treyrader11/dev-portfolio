@@ -7,6 +7,8 @@ import { testimonials } from "@/lib/data";
 import ProfilePicture from "../ProfilePicture";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa6";
 import SwipeCarousel from "./components/Carousel";
+import { motion, useMotionValue } from "framer-motion";
+import { SPRING_OPTIONS } from "./anim";
 
 export default function Testimonials({ className }) {
   const [selected, setSelected] = useState(0);
@@ -157,9 +159,24 @@ export default function Testimonials({ className }) {
   );
 }
 
-export function Testimonial({ className, name, quote, image_url, isSelected }) {
+export function Testimonial({
+  className,
+  name,
+  quote,
+  image_url,
+  isSelected,
+  scale,
+}) {
   return (
-    <div
+    <motion.div
+      animate={{ scale }}
+      transition={SPRING_OPTIONS}
+      style={{
+        //   backgroundImage: `url(${tes.image_url.src})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        height: 300
+      }}
       className={cn(
         //   "active",
         "bg-dark-400",
@@ -169,7 +186,7 @@ export function Testimonial({ className, name, quote, image_url, isSelected }) {
         "left-0",
         "pb-[70px]",
         "px-0",
-        "opacity-0",
+        // "opacity-0",
         "flex",
         "flex-col",
         "gap-4",
@@ -185,6 +202,6 @@ export function Testimonial({ className, name, quote, image_url, isSelected }) {
       <p className={cn("text-sm", "text-slate-100", "w-4/5", "mx-auto")}>
         {quote}
       </p>
-    </div>
+    </motion.div>
   );
 }
