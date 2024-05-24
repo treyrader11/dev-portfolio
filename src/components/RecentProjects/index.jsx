@@ -28,7 +28,6 @@ export default function RecentProjects({ className }) {
         "z-[2]",
         "mx-4",
         "pb-[124vh]",
-
         className
       )}
     >
@@ -37,7 +36,7 @@ export default function RecentProjects({ className }) {
       <div className="sticky">
         <PageTitle
           backgroundColor="white"
-          containerClass={cn("h-0 sticky -top-[20%] p-0", "z-[50]")}
+          containerClass={cn("h-0 sticky -top-[20%] p-0")}
           title="Recent projects."
           className={cn("top-16 pt-[10vh] w-full bg-white")}
         />

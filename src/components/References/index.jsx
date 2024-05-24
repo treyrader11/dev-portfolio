@@ -5,7 +5,6 @@ import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { references } from "@/lib/data";
 import ProfilePicture from "../ProfilePicture";
-import PageTitle from "../PageTitle";
 
 export default function References({ className }) {
   const [selected, setSelected] = useState(0);
@@ -27,18 +26,17 @@ export default function References({ className }) {
         className
       )}
     >
-      <div className="relative p-4 ">
-        <PageTitle
+      <div className="relative p-4 mt-0 ">
+        {/* <PageTitle
           containerClass="h-0"
           className="text-[10vw]"
           backgroundColor="transparent"
           title="References."
-        />
-        <p className="my-4 text-slate-500">
-          Lorem ipsum dolor sit, amet consectetur adipisicing elit. Minus
-          commodi sint, similique cupiditate possimus suscipit delectus illum
-          eos iure magnam!
-        </p>
+        /> */}
+        <h1 className="my-4 font-light text-slate-500">
+          I've had the pleasure to work with the following professionals below.
+          Here are a few of their words.
+        </h1>
         <SelectBtns
           numTracks={references.length}
           setSelected={setSelected}
@@ -124,8 +122,9 @@ function Card({
 }) {
   const scale = position <= selected ? 1 : 1 + 0.015 * (position - selected);
   const offset = position <= selected ? 0 : 95 + (position - selected) * 3;
-  const background = position % 2 ? "#0f0f0f" : "white";
-  const color = position % 2 ? "white" : "#0f0f0f";
+  const dark = "#0f0f0f";
+  const background = position % 2 ? dark : "white";
+  const color = position % 2 ? "white" : dark;
 
   return (
     <motion.div
@@ -162,18 +161,29 @@ function Card({
         "justify-between"
       )}
     >
-      {/* <Icon className="mx-auto text-7xl" /> */}
       <ProfilePicture
         isBordered
         src={image_url.src}
-        className={cn("size-[100px]", "mx-auto", "border-secondary")}
+        className={cn(
+          "size-[100px]",
+          "mx-auto",
+          background !== dark ? "border-purple-500" : "border-secondary"
+        )}
       />
-      <p className="my-8 text-lg italic font-light lg:text-xl">&quot;{desc}&quot;</p>
+      <p className={cn("my-8 text-lg italic font-light lg:text-xl")}>
+        &quot;{desc}&quot;
+      </p>
       <div>
-        <span className="block text-lg font-semibold text-purple-500">
+        <h3
+          className={cn(
+            "block",
+            "text-lg",
+            background === dark ? "text-purple-500" : "text-secondary"
+          )}
+        >
           {name}
-        </span>
-        <span className="block text-sm">{title}</span>
+        </h3>
+        <p className="block text-sm">{title}</p>
       </div>
     </motion.div>
   );

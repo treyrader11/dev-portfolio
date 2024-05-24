@@ -6,45 +6,9 @@ import Image from "next/image";
 import { slider1, slider2 } from "./sliders";
 import { cn } from "@/lib/utils";
 
-// const imageProps = {
-//   fill,
-//   alt: "image",
-//   className: "object-cover",
-//   sizes: {}
-// };
-
-const styles = {
-  slidingImages: cn(
-    "flex",
-    "flex-col",
-    "gap-[3vw]",
-    "relative",
-    "mt-[200px]",
-    "bg-white",
-    "z-[1]"
-  ),
-  slider: cn("flex", "relative", "gap-[3vw]", "w-[120vw]", "-left-[10vw]"),
-  project: cn("w-[25%]", "h-[20vw]", "flex", "items-center", "justify-center"),
-  imageContainer: cn("relative", "w-[80%]", "h-[80%]"),
-  circleContainer: cn("bg-red-500", "relative", "mt-[100px]"),
-  circle: cn(
-    "h-[1550%]",
-    "w-[120%]",
-    "-left-[10%]",
-    "rounded-tl-none",
-    "rounded-tr-none",
-    "rounded-bl-full",
-    "rounded-br-full",
-    "bg-white",
-    "z-[1]",
-    "absolute",
-    // "shadow-lg",
-    "custom-shadow"
-  ),
-};
-
-export default function SlidingImages() {
+export default function SlidingImages({ className }) {
   const container = useRef(null);
+  
   const { scrollYProgress } = useScroll({
     target: container,
     offset: ["start end", "end start"],
@@ -62,9 +26,9 @@ export default function SlidingImages() {
         "flex-col",
         "gap-[3vw]",
         "relative",
-        "mt-[200px]",
         "bg-white",
-        "z-[1]"
+        "z-[1]",
+        className
       )}
     >
       <motion.div
