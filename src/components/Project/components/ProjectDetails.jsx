@@ -6,6 +6,7 @@ import Magnetic from "@/components/Magnetic";
 import ProjectLinks from "./ProjectLinks";
 import PageTitle from "@/components/PageTitle";
 import LinkDecorator from "@/components/LinkDecorator";
+import Block from "@/components/Block";
 
 export default function ProjectDetails({ data }) {
   return (
@@ -30,36 +31,32 @@ export default function ProjectDetails({ data }) {
         )}
       >
         <ProjectVideo src={data[0].video_key} />
-        <span className="my-5 text-2xl font-bold">About this app</span>
-        <p>{data[0].about_this_app}</p>
-        {/* <div className="my-5">
-          <span className="text-2xl font-bold">{data[0].say_hi}</span>
-        </div>
-        <div>
-          <p>{data[0].say_hi_blog}</p>
-        </div> */}
-        <span className={cn("font-bold text-2xl mt-4")}>
-          Technology & Features
-        </span>
-        <ul className="list-disc ml-5 mt-2.5 text-secondary">
-          {data[0].technology_feature.map((data, index) => (
-            <Magnetic key={index}>
-              <li key={data}>{data}</li>
-            </Magnetic>
-          ))}
-        </ul>
-
-        <span className={cn("my-5 text-2xl font-bold")}>Design</span>
-        <p className="mb-2.5">{data[0].design_blog}</p>
-        <Environment
-          desc={data[0].environment_desc}
-          data={data[0].env.frontend}
-        />
-        <Environment
-          desc={data[0].environment_desc}
-          data={data[0].env.backend}
-        />
-        <ProjectLinks data={data} />
+        <Block title="About this app" desc={data[0].about_this_app} />
+        <Block title="Technology & Features">
+          <ul className="list-disc ml-5 mt-2.5 text-secondary">
+            {data[0].technology_feature.map((data, index) => (
+              <Magnetic key={index}>
+                <li key={data}>{data}</li>
+              </Magnetic>
+            ))}
+          </ul>
+        </Block>
+        <Block title="Design" desc={data[0].design_blog} />
+        <Block title="Environment">
+          <Environment
+            title="Frontend"
+            desc={data[0].environment_desc}
+            data={data[0].env.frontend}
+          />
+          <Environment
+            title="Backend"
+            desc={data[0].environment_desc}
+            data={data[0].env.backend}
+          />
+        </Block>
+        <Block title="Links">
+          <ProjectLinks data={data} />
+        </Block>
         <Magnetic>
           <Link
             href={"/portfolio"}

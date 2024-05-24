@@ -6,7 +6,7 @@ import { LuCopyCheck } from "react-icons/lu";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
 
-export default function Environnment({ data, desc }) {
+export default function Environnment({ data, desc, title }) {
   const [havecopy, sethavecopy] = useState(false);
 
   const Copy = (e) => {
@@ -21,7 +21,7 @@ export default function Environnment({ data, desc }) {
 
   return (
     <div className="w-full h-auto">
-      <span className="my-5 text-2xl font-bold">Environment</span>
+      <h3 className="text-xl font-bold">{title}</h3>
       <p>{desc}</p>
       <div
         className={cn(

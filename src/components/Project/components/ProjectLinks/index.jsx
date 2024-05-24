@@ -71,7 +71,6 @@ export default function ProjectLinks({ className, data }) {
 
   return (
     <div className={cn("w-full", className)}>
-      <span className={cn("my-5 text-2xl font-bold")}>Links</span>
       <div
         className={cn(
           "flex",
