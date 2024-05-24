@@ -10,6 +10,7 @@ import RecentProjects from "@/components/RecentProjects";
 import Hero from "@/components/Hero";
 import { useScroll, useTransform, motion } from "framer-motion";
 import PositionProvider from "@/components/providers/PositionProvider";
+import Testimonials from "@/components/Testimonials";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -55,7 +56,9 @@ export default function Home() {
           <RecentProjects className="sticky top-0 bg-white" />
         </PositionProvider>
 
-        {/* <SlidingImages /> */}
+        {/* <SlidingImages className="relative bg-white z-[2]" /> */}
+
+        <Testimonials className="relative z-[2] min-h-screen" />
       </Inner>
     </main>
   );

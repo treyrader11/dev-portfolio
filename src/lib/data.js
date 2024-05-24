@@ -2,6 +2,8 @@ import torsh from "/public/images/company/torsh.png";
 import vouzot from "/public/images/company/vouzot.png";
 import pasteui from "/public/images/company/pasteui.png";
 
+import jason_humphrey from "/public/images/testimonials/jason-humphrey.png";
+
 export const userData = {
   githubUsername: "treyrader11",
   name: "Trey Rader",
@@ -605,6 +607,24 @@ export const projectsData = [
     indevelopment: false,
     website_url: "",
   },
+];
+
+export const testimonials = [
+  {
+    image_url: jason_humphrey,
+    // "https://media.licdn.com/dms/image/C4D03AQEzw2CfgUSsOg/profile-displayphoto-shrink_400_400/0/1634141189754?e=1721865600&v=beta&t=Y2-esDUhtRaIqj7kk8gM7EqgIhc2R0iLqmEvRP0xv1o",
+    quote:
+      "I've had the pleasure of mentoring Trey. During this time I have personally noticed persistence, quick to adapt to a new environment and puts all his attention into his work. He is a dedicated individual who is good at what he does and is genuinely a hard worker. If given the opportunity I would hire Trey for any of my coding needs. I know that he will be an excellent addition to any prospecting company in the near future. Please feel free to contact me with any questions.",
+    name: "Jason Humphrey",
+  },
+  {
+    image_url:
+      "https://media.licdn.com/dms/image/C4D03AQEzw2CfgUSsOg/profile-displayphoto-shrink_400_400/0/1634141189754?e=1721865600&v=beta&t=Y2-esDUhtRaIqj7kk8gM7EqgIhc2R0iLqmEvRP0xv1o",
+    quote: "",
+    name: "Wilson Savoy",
+  },
+  { image_url: "", quote: "", name: "Daniel Dekerlegand" },
+  { image_url: "", quote: "", name: "Janine Bonilla" },
 ];
 
 export const experiences = [

@@ -22,7 +22,14 @@ export default function RecentProjects({ className }) {
   return (
     <motion.section
       ref={container}
-      className={cn("relative z-[2] mx-4", "pb-[30vh]", className)}
+      className={cn(
+        "relative",
+        "min-h-screen",
+        "z-[2]",
+        "mx-4",
+        "pb-[124vh]",
+        className
+      )}
     >
       <PageTitle
         backgroundColor="transparent"
@@ -50,26 +57,23 @@ export default function RecentProjects({ className }) {
             />
           );
         })}
-      </div>
 
-      <div className="relative -mt-40">
-        <Rounded
-          backgroundColor="#934e00"
-          text="See all projects"
-          href="/portfolio"
-          className={cn(
-            "border-secondary",
-            "rounded-full",
-            "w-fit",
-            "mx-auto",
-            "py-6",
-            "-top-50",
-            "sm:top-0",
-            "md:top-20",
-            "lg:top-32",
-            "text-black"
-          )}
-        />
+        <div className="pt-[30vh] relative">
+          <Rounded
+            backgroundColor="#934e00"
+            text="See all projects"
+            href="/portfolio"
+            className={cn(
+              "border-secondary",
+              "rounded-full",
+              "w-fit",
+              "mx-auto",
+              "py-6",
+              "text-black",
+              "-mt-28"
+            )}
+          />
+        </div>
       </div>
     </motion.section>
   );
