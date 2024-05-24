@@ -42,7 +42,7 @@ export default function Projects({ className }) {
   return (
     <motion.section
       ref={container}
-      className={cn("relative z-[2] pb-28", "mx-3", className)}
+      className={cn("relative z-[2] pb-28 mx-3", className)}
     >
       <PageTitle
         backgroundColor="transparent"
@@ -58,8 +58,6 @@ export default function Projects({ className }) {
         return (
           <ProjectShot
             position={positions[index]}
-            // isFirst={ positions[index] === 1}
-            isFirst={index === 1}
             isLast={index > projectsData.length}
             key={`p_${index}`}
             index={index}

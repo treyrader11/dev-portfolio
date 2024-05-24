@@ -22,31 +22,16 @@ export default function ProjectShot({
   video_key,
   category,
   title,
-  isFirst = false,
-  isLast = false,
   position,
 }) {
   const positionContainer = useRef(null);
-  console.log("isFirst", isFirst);
   const positionContext = useContext(PositionContext);
   const { setActivePosition, setActivePositionProgress } =
     positionContext || {};
-  // const { scrollYProgress } = useScroll({
-  //   target: container,
-  //   offset: ["start end", "start start"],
-  // });
 
-  // const imageScale = useTransform(scrollYProgress, [0, 1], [2, 1]);
-  // const scale = useTransform(progress, range, [1, targetScale]);
-
-  // Position scrollbar logic
   const { scrollYProgress } = useScroll({
     target: positionContainer,
-    offset: isFirst
-      ? ["start start", "end center"]
-      : isLast
-      ? ["start center", "end end"]
-      : ["start center", "end center"],
+    offset: ["start center", "end center"],
   });
 
   useMotionValueEvent(scrollYProgress, "change", (value) => {
@@ -69,7 +54,6 @@ export default function ProjectShot({
         style={{
           backgroundImage: `url(/shots/${project_image})`,
           backgroundPosition: "center",
-          // backgroundSize,
           backgroundSize: "contain",
           backgroundRepeat: "no-repeat",
           // top: `calc(-5vh + ${index * 25}px)`,

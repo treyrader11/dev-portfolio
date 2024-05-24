@@ -43,7 +43,7 @@ export default function Scrollbar({ positions, className }) {
           {activePosition == positionId && (
             <motion.div
               style={{ height: `calc(${activePositionProgress * 200}% + 0px)` }} // set 200 instead of 100 since projectcards only scroll half way
-              className="w-full bg-pink-500"
+              className="w-full bg-indigo-400"
             />
           )}
         </motion.div>
