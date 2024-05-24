@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { cn } from "@/lib/utils";
-import ProjectDetails from "@/components/Portfolio/Project/components/ProjectDetails";
+import ProjectDetails from "@/components/Project/components/ProjectDetails";
 import { projectsData } from "@/lib/data";
 import Inner from "@/components/layout/Inner";
 import { GoArrowLeft } from "react-icons/go";
