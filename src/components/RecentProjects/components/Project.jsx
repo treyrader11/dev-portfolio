@@ -13,7 +13,7 @@ import { cn } from "@/lib/utils";
 import Rounded from "@/components/Rounded";
 import { PositionContext } from "@/lib/contexts";
 
-export default function ProjectShot({
+export default function Project({
   index,
   progress,
   range,
@@ -66,7 +66,6 @@ export default function ProjectShot({
           "sticky",
           "top-0",
           "inset-x-0"
-          // "shadow-xl",
         )}
       >
         {/* <div className="relative size-full group">

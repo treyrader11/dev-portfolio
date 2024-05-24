@@ -6,7 +6,7 @@ import Inner from "@/components/layout/Inner";
 import { cn } from "@/lib/utils";
 import Description from "@/components/Description";
 import SlidingImages from "@/components/SlidingImages";
-import Projects from "@/components/Projects";
+import RecentProjects from "@/components/RecentProjects";
 import Hero from "@/components/Hero";
 import { useScroll, useTransform, motion } from "framer-motion";
 import PositionProvider from "@/components/providers/PositionProvider";
@@ -49,10 +49,10 @@ export default function Home() {
         />
         <Description
           scrollYProgress={scrollYProgress}
-          className="sticky top-0 min-h-[170vh] pt-[20vh] bg-white"
+          className={cn("sticky top-0 min-h-[170vh] pt-[20vh] bg-white")}
         />
         <PositionProvider>
-          <Projects className="sticky top-0 bg-white" />
+          <RecentProjects className="sticky top-0 bg-white" />
         </PositionProvider>
 
         {/* <SlidingImages /> */}

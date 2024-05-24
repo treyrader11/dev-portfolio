@@ -2,36 +2,16 @@
 
 import { useScroll } from "framer-motion";
 import { useRef } from "react";
-import ProjectShot from "./components/ProjectShot";
+import Project from "./components/Project";
 import Rounded from "@/components/Rounded";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 import { projectsData } from "@/lib/data";
 import PageTitle from "../PageTitle";
-import Scrollbar from "./components/Scrollbar";
+import Scrollbar from "../Scrollbar";
+import { positions as projPositions } from "./positions.data";
 
-export const positions = [
-  {
-    positionId: 1,
-  },
-  {
-    positionId: 2,
-  },
-  {
-    positionId: 3,
-  },
-  {
-    positionId: 4,
-  },
-  {
-    positionId: 5,
-  },
-  {
-    positionId: 6,
-  },
-];
-
-export default function Projects({ className }) {
+export default function RecentProjects({ className }) {
   const container = useRef(null);
 
   const { scrollYProgress } = useScroll({
@@ -51,13 +31,13 @@ export default function Projects({ className }) {
         className={cn("top-16")}
       />
 
-      <Scrollbar positions={positions} />
+      <Scrollbar positions={projPositions} />
 
       {projectsData.map((project, index) => {
         const targetScale = 1 - (projectsData.length - index) * 0.05;
         return (
-          <ProjectShot
-            position={positions[index]}
+          <Project
+            position={projPositions[index]}
             isLast={index > projectsData.length}
             key={`p_${index}`}
             index={index}
