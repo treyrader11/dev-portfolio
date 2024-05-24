@@ -46,6 +46,7 @@ export default function RecentProjects({ className }) {
               progress={scrollYProgress}
               range={[index * 0.25, 1]}
               targetScale={targetScale}
+              overlap="full"
             />
           );
         })}

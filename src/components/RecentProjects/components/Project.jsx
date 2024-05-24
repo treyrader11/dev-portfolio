@@ -23,6 +23,7 @@ export default function Project({
   category,
   title,
   position,
+  overlap,
 }) {
   const positionContainer = useRef(null);
   const positionContext = useContext(PositionContext);
@@ -33,6 +34,8 @@ export default function Project({
     target: positionContainer,
     offset: ["start center", "end center"],
   });
+
+  const getTopPosition = (pos) => `calc(-5vh + ${pos * 25}px)`;
 
   useMotionValueEvent(scrollYProgress, "change", (value) => {
     if (
@@ -56,7 +59,7 @@ export default function Project({
           backgroundPosition: "center",
           backgroundSize: "contain",
           backgroundRepeat: "no-repeat",
-          // top: `calc(-5vh + ${index * 25}px)`,
+          top: overlap === "full" ? 0 : getTopPosition(index),
         }}
         className={cn(
           "h-screen",
