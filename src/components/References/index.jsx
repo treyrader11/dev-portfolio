@@ -34,7 +34,7 @@ export default function References({ className }) {
           title="References."
         /> */}
         <h1 className="my-4 font-light text-slate-500">
-          I've had the pleasure to work with the following professionals below.
+          I&apos;ve had the pleasure to work with the following professionals below.
           Here are a few of their words.
         </h1>
         <SelectBtns
