@@ -1,5 +1,4 @@
 import Rounded from "@/components/Rounded";
-import StyledLink from "@/components/StyledLink";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import { BsDownload } from "react-icons/bs";

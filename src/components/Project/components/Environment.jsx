@@ -37,7 +37,8 @@ export default function Environnment({ data, desc, title }) {
           "rounded-lg",
           "bg-[linear-gradient(110deg,#000103,45%,#1e2631,55%,#000103)]",
           "border",
-          "border-purple-500"
+          "border-purple-500",
+          "shadow-2xl"
         )}
       >
         {data.map((data) => (
