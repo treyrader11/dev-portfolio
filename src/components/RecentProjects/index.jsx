@@ -32,18 +32,13 @@ export default function RecentProjects({ className }) {
         className
       )}
     >
-      {/* <PageTitle
-        backgroundColor="transparent"
-        containerClass="h-0"
-        title="Recent projects."
-        className={cn("top-16")}
-      /> */}
+      
 
       <div className="sticky">
         <PageTitle
           backgroundColor="white"
           containerClass={cn("h-0 sticky -top-[20%] p-0", "z-[50]")}
-          title="Recent work."
+          title="Recent projects."
           className={cn("top-16 pt-[10vh] w-full bg-white")}
         />
 

@@ -27,7 +27,8 @@ export default function Testimonials({ className }) {
         containerClass="h-0"
         className="text-[10vw]"
         backgroundColor="transparent"
-        title="Testimonials."
+        // title="Testimonials."
+        title="Encouragement."
       />
       <SwipeCarousel
         items={testimonials}

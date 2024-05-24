@@ -609,30 +609,30 @@ export const projectsData = [
   },
 ];
 
-export const testimonials = [
+export const references = [
   {
     image_url: jason_humphrey,
-    quote:
-      "If given the opportunity I would hire Trey for any of my coding needs. I know that he will be an excellent addition to any prospective company in the near future.",
+    desc: "If given the opportunity I would hire Trey for any of my coding needs. I know that he will be an excellent addition to any prospective company in the near future.",
     name: "Jason Humphrey",
+    title: "Senior Developer, Nike",
   },
   {
     image_url: jason_humphrey,
-    quote:
-      "If given the opportunity I would hire Trey for any of my coding needs. I know that he will be an excellent addition to any prospective company in the near future.",
+    desc: "If given the opportunity I would hire Trey for any of my coding needs. I know that he will be an excellent addition to any prospective company in the near future.",
     name: "Wilson Savoy",
+    title: "Musician, Pine Leaf Boys",
   },
   {
     image_url: jason_humphrey,
-    quote:
-      "If given the opportunity I would hire Trey for any of my coding needs. I know that he will be an excellent addition to any prospective company in the near future.",
+    desc: "If given the opportunity I would hire Trey for any of my coding needs. I know that he will be an excellent addition to any prospective company in the near future.",
     name: "Daniel Dekerlegand",
+    title: "Senior Developer, Evolve",
   },
   {
     image_url: jason_humphrey,
-    quote:
-      "If given the opportunity I would hire Trey for any of my coding needs. I know that he will be an excellent addition to any prospective company in the near future.",
+    desc: "If given the opportunity I would hire Trey for any of my coding needs. I know that he will be an excellent addition to any prospective company in the near future.",
     name: "Janine Bonilla",
+    title: "Marketing Director, Nasty",
   },
 ];
 

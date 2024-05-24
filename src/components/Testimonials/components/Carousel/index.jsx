@@ -118,38 +118,8 @@ export function Dots({ selected, items, setSelected }) {
 export function GradientArrows() {
   return (
     <>
-      {/* <div
-        className={cn(
-          "pointer-events-none",
-          "absolute",
-          "inset-y-0",
-          "left-0",
-          "w-[10vw]",
-          "max-w-[100px]",
-          "bg-gradient-to-r",
-          "from-neutral-950/50",
-          "to-neutral-950/0"
-        )}
-      />
-
-      <div
-        className={cn(
-          "pointer-events-none",
-          "absolute",
-          "inset-y-0",
-          "right-0",
-          "w-[10vw]",
-          "max-w-[100px]",
-          "bg-gradient-to-r",
-          "from-neutral-950/50",
-          "to-neutral-950/0"
-        )}
-      /> */}
-
       <FaChevronRight
         className={cn(
-          // "arrow",
-
           "absolute",
           "text-3xl",
           "cursor-pointer",

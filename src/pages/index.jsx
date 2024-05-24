@@ -8,9 +8,11 @@ import Description from "@/components/Description";
 import SlidingImages from "@/components/SlidingImages";
 import RecentProjects from "@/components/RecentProjects";
 import Hero from "@/components/Hero";
-import { useScroll, useTransform, motion } from "framer-motion";
+import { useScroll } from "framer-motion";
 import PositionProvider from "@/components/providers/PositionProvider";
 import Testimonials from "@/components/Testimonials";
+import { references } from "@/lib/data";
+import References from "@/components/References";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -58,7 +60,8 @@ export default function Home() {
 
         {/* <SlidingImages className="relative bg-white z-[2]" /> */}
 
-        <Testimonials className="relative z-[2] min-h-screen" />
+        {/* <Testimonials className="relative z-[2] min-h-screen" /> */}
+        <References className="relative z-[2] min-h-screen" />
       </Inner>
     </main>
   );
