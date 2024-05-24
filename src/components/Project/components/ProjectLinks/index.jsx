@@ -51,21 +51,24 @@ function LinkItem({ href, imageSrc, imageAlt, label, hidden, className }) {
   );
 }
 
-export default function ProjectLinks({ className, data }) {
+export default function ProjectLinks({
+  className,
+  links: [ frontend_download_link, backend_download_link ],
+}) {
   const links = [
     {
-      href: data[0].frontend_download_link,
+      href: frontend_download_link,
       imageSrc: null,
       imageAlt: "",
       label: "Frontend",
-      hidden: !data[0].frontend_download_link.length,
+      hidden: !frontend_download_link.length,
     },
     {
-      href: data[0].backend_download_link,
+      href: backend_download_link,
       imageSrc: null,
       imageAlt: "",
       label: "Backend",
-      hidden: !data[0].backend_download_link.length,
+      hidden: !backend_download_link.length,
     },
   ];
 

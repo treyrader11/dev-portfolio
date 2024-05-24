@@ -9,12 +9,24 @@ import LinkDecorator from "@/components/LinkDecorator";
 import Block from "@/components/Block";
 
 export default function ProjectDetails({ data }) {
+  const {
+    title,
+    video_key,
+    about_this_app,
+    technology_feature,
+    design_blog,
+    environment_desc,
+    env,
+    frontend_download_link,
+    backend_download_link,
+  } = data[0];
+
   return (
     <section className="pb-28">
       <PageTitle
-        title={`${data[0].title}.`}
+        title={title}
         backgroundColor="transparent"
-        className={cn("p-0", "pt-20")}
+        className={cn("p-0 pt-20")}
       />
       <div
         className={cn(
@@ -30,32 +42,34 @@ export default function ProjectDetails({ data }) {
           "md::px-0"
         )}
       >
-        <ProjectVideo src={data[0].video_key} />
-        <Block title="About this app" desc={data[0].about_this_app} />
+        <ProjectVideo src={video_key} />
+        <Block title="About this app" desc={about_this_app} />
         <Block title="Technology & Features">
           <ul className="list-disc ml-5 mt-2.5 text-secondary">
-            {data[0].technology_feature.map((data, index) => (
+            {technology_feature.map((data, index) => (
               <Magnetic key={index}>
                 <li key={data}>{data}</li>
               </Magnetic>
             ))}
           </ul>
         </Block>
-        <Block title="Design" desc={data[0].design_blog} />
+        <Block title="Design" desc={design_blog} />
         <Block title="Environment">
           <Environment
             title="Frontend"
-            desc={data[0].environment_desc}
-            data={data[0].env.frontend}
+            desc={environment_desc}
+            data={env.frontend}
           />
           <Environment
             title="Backend"
-            desc={data[0].environment_desc}
-            data={data[0].env.backend}
+            desc={environment_desc}
+            data={env.backend}
           />
         </Block>
         <Block title="Links">
-          <ProjectLinks data={data} />
+          <ProjectLinks
+            links={[frontend_download_link, backend_download_link]}
+          />
         </Block>
         <Magnetic>
           <Link
