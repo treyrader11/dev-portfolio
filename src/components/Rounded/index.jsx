@@ -21,6 +21,14 @@ export default function Rounded({
 
   const router = useRouter();
 
+  const handleClick = () => {
+    if (!href) {
+      return null;
+    } else {
+      router.push(href);
+    }
+  };
+
   useEffect(() => {
     timeline.current = gsap.timeline({ paused: true });
     timeline.current
@@ -50,7 +58,7 @@ export default function Rounded({
   return (
     <Magnetic>
       <div
-        onClick={() => router.push(href)}
+        onClick={handleClick}
         className={cn(
           "group",
           "rounded-full",

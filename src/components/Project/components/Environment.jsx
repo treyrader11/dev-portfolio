@@ -2,20 +2,22 @@
 
 import { FaRegCheckCircle } from "react-icons/fa";
 import { LuCopyCheck } from "react-icons/lu";
-
 import { cn } from "@/lib/utils";
-import { useState } from "react";
+import Confetti from "@/components/Confetti";
+import useCopyToClipboard from "@/hooks/useCopyClipboard";
+import { useNotificationsContext } from "@/providers/notificationsProvider";
 
-export default function Environnment({ data, desc, title }) {
-  const [havecopy, sethavecopy] = useState(false);
+export default function Environnment({ data, title }) {
+  const [copied, copy] = useCopyToClipboard(5000);
 
-  const Copy = (e) => {
-    sethavecopy(true);
-    navigator.clipboard.writeText(e);
-    const myTimeout = setTimeout(myStopFunction, 5000);
-    function myStopFunction() {
-      sethavecopy(false);
-      clearTimeout(myTimeout);
+  // const { addNotification } = useNotifications();
+  const { addNotification } = useNotificationsContext();
+
+  const handleClick = (text) => {
+    if (text) {
+      console.log(`Copying text: ${text}`);
+      copy(text);
+      addNotification({ text: `Copied: ${text}` });
     }
   };
 
@@ -82,9 +84,11 @@ export default function Environnment({ data, desc, title }) {
           </div>
         ))}
 
-        {havecopy ? (
+        <Confetti copied={copied} />
+
+        {copied ? (
           <div
-            onClick={() => sethavecopy(false)}
+            // onClick={() => setCopied(false)}
             className={cn(
               "right-[10px]",
               "top-[10px]",
@@ -104,7 +108,9 @@ export default function Environnment({ data, desc, title }) {
           </div>
         ) : (
           <div
-            onClick={() => Copy(data[0].env)}
+            // onClick={() => copy(data[0].env)}
+            // onClick={() => handleClick(data[0].env)}
+            onClick={() => handleClick(data[0])}
             className={cn(
               "right-[10px]",
               "top-[10px]",

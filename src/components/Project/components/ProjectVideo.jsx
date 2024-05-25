@@ -42,7 +42,7 @@ export default function ProjectVideo({ src }) {
           )}
         >
           <iframe
-            frameborder="0"
+            frameBorder="0"
             allowFullScreen="allowFullScreen"
             mozallowfullscreen="mozallowfullscreen"
             msallowfullscreen="msallowfullscreen"

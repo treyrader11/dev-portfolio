@@ -1,11 +1,16 @@
 import "@/globals.css";
 
 import Layout from "@/components/Layout";
+import Notifications from "@/components/Notifications";
+import { NotificationsProvider } from "@/providers/notificationsProvider";
 
 export default function App({ Component, pageProps, router }) {
   return (
-    <Layout route={router.route}>
-      <Component {...pageProps} router={router} />
-    </Layout>
+    <NotificationsProvider>
+      <Layout route={router.route}>
+        <Component {...pageProps} router={router} />
+        <Notifications />
+      </Layout>
+    </NotificationsProvider>
   );
 }

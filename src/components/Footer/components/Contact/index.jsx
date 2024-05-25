@@ -5,9 +5,24 @@ import Rounded from "@/components/Rounded";
 import profilePicture from "/public/images/portraits/coffee-portrait-grey.png";
 import ProfilePicture from "@/components/ProfilePicture";
 import { cn } from "@/lib/utils";
-import CopyContent from "@/components/CopyContent";
+import { IoCopyOutline } from "react-icons/io5";
+import Confetti from "@/components/Confetti";
+import useCopyToClipboard from "@/hooks/useCopyClipboard";
+import { useNotificationsContext } from "@/providers/notificationsProvider";
 
 export default function Contact({ style, rotate }) {
+  const [copied, copy] = useCopyToClipboard(500);
+
+  const { addNotification } = useNotificationsContext();
+
+  const handleClick = (text) => {
+    if (text) {
+      console.log(`Copying text: ${text}`);
+      copy(text);
+      addNotification({ text: `Copied: ${text}` });
+    }
+  };
+
   return (
     <div
       className={cn(
@@ -16,9 +31,11 @@ export default function Contact({ style, rotate }) {
         "bg-dark",
         "px-6",
         "sm:px-20",
-        "lg:px-[10rem]"
+        "lg:px-[10rem]",
+        "relative"
       )}
     >
+      <Confetti copied={copied} />
       <div
         className={cn(
           "border-b-[.5px]",
@@ -78,7 +95,9 @@ export default function Contact({ style, rotate }) {
           />
         </motion.svg>
       </div>
+
       <div
+        // onClick={() => handleClick("developertrey@gmail.com")}
         className={cn(
           "flex",
           "flex-col",
@@ -89,25 +108,31 @@ export default function Contact({ style, rotate }) {
         )}
       >
         <Rounded
+          onClick={() => handleClick("developertrey@gmail.com")}
           text="developertrey@gmail.com"
           className={cn("w-full md:w-fit py-5 px-10 border-[.3px]")}
-          href="/contact"
         />
-
-        <Rounded className={cn("w-full md:w-fit py-5 px-10 border-[.3px]")}>
-          <p
-            className={cn(
-              "relative",
-              "z-[1]",
-              "transition-colors",
-              "duration-400",
-              "ease-linear"
-            )}
+        <div
+          // onClick={() => handleClick("5047564538")}
+          className={cn("w-full")}
+        >
+          <Rounded
+            onClick={() => handleClick("5047564538")}
+            className={cn("md:w-fit py-5 px-10 border-[.3px]")}
           >
-            504.756.4538
-          </p>
-          {/* <CopyContent className="relative z-[10]" content="5047564538" /> */}
-        </Rounded>
+            <p
+              className={cn(
+                "relative",
+                "z-[1]",
+                "transition-colors",
+                "duration-400",
+                "ease-linear"
+              )}
+            >
+              504.756.4538
+            </p>
+          </Rounded>
+        </div>
       </div>
     </div>
   );
