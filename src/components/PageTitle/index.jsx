@@ -9,30 +9,41 @@ export default function PageTitle({
   containerClass,
   backgroundColor,
   title,
+  hasBlur = false,
 }) {
-  return (
+  const commonContainerClasses = cn(
+    "h-48 mx-auto bg-dark-400 px-6",
+    containerClass
+  );
+  const commonVanishClasses = cn(
+    "py-[125px]",
+    "sm:py-[130px]",
+    "md:py-[110px]",
+    "text-7xl",
+    "font-bold",
+    "md:text-left",
+    "text-left",
+    "md:text-9xl",
+    "text-secondary",
+    "relative",
+    className
+  );
+
+  const Content = () => (
+    <Vanish className={commonVanishClasses} delay={0.2} phrases={[title]} />
+  );
+
+  return hasBlur ? (
     <BlurredIn
       once
       style={{ backgroundColor }}
-      className={cn("h-48 mx-auto bg-dark-400 px-6", containerClass)}
+      className={commonContainerClasses}
     >
-      <Vanish
-        className={cn(
-          "py-[125px]",
-          "sm:py-[130px]",
-          "md:py-[110px]",
-          "text-7xl",
-          "font-bold",
-          "md:text-left",
-          "text-left",
-          "md:text-9xl",
-          "text-secondary",
-          "relative",
-          className
-        )}
-        delay={0.2}
-        phrases={[title]}
-      />
+      <Content />
     </BlurredIn>
+  ) : (
+    <div style={{ backgroundColor }} className={commonContainerClasses}>
+      <Content />
+    </div>
   );
 }

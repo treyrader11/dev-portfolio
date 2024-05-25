@@ -15,6 +15,7 @@ import Link from "next/link";
 import Brand from "@/components/Brand";
 import BurgerMenu from "./BurgerMenu";
 import { useWindowDimensions } from "@/hooks/useWindowDimensions";
+import BlurredIn from "../BlurredIn";
 
 export default function Header() {
   const [isNavOpen, setIsNavOpen] = useState(false);
@@ -77,7 +78,8 @@ export default function Header() {
 
   return (
     <>
-      <div
+      <BlurredIn
+        once
         ref={header}
         className={cn(
           "absolute",
@@ -112,7 +114,7 @@ export default function Header() {
           handleNavMenu={handleNavMenu}
           backgroundHasColor={backgroundHasColor}
         />
-      </div>
+      </BlurredIn>
       <AnimatePresence mode="wait">{isNavOpen && <Nav />}</AnimatePresence>
       <BurgerMenu
         isOpen={isNavOpen}

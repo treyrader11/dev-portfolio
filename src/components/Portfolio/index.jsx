@@ -10,6 +10,7 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import { scaleAnimation } from "./anim";
 import ProjectCategories from "./ProjectCategories";
+import BlurredIn from "../BlurredIn";
 
 export default function Portfolio() {
   const [projects, setProjects] = useState(projectsData);
@@ -135,21 +136,23 @@ export default function Portfolio() {
         moveItems(e.clientX, e.clientY);
       }}
     >
-      <PageTitle title="Portfolio." />
-      <div className={cn("py-12 mx-0 px-6 bg-dark")}>
-        <p className="text-white">
-          The following projects showcase my skills and experience through
-          real-world examples of my work. Each project is briefly described with
-          links to code repositories and live demos in it. It reflects my
-          ability to solve complex problems, work with different technologies,
-          and manage projects effectively.
-        </p>
-        <ProjectCategories
-          selected={selected}
-          filterProjects={filterProjects}
-          categories={categories}
-        />
-      </div>
+      <BlurredIn once>
+        <PageTitle title="Portfolio." />
+        <div className={cn("py-12 mx-0 px-6 bg-dark")}>
+          <p className="text-white">
+            The following projects showcase my skills and experience through
+            real-world examples of my work. Each project is briefly described
+            with links to code repositories and live demos in it. It reflects my
+            ability to solve complex problems, work with different technologies,
+            and manage projects effectively.
+          </p>
+          <ProjectCategories
+            selected={selected}
+            filterProjects={filterProjects}
+            categories={categories}
+          />
+        </div>
+      </BlurredIn>
 
       <div
         ref={projContainer}
@@ -188,8 +191,8 @@ export default function Portfolio() {
             "h-[30vh]",
             "w-[50vw]",
             "md:w-[36vw]",
-            // "h-[350px]",
-            // "w-[400px]",
+            // "h-[350px]", // original
+            // "w-[400px]", // original
             "fixed",
             "top-1/2",
             "left-1/2",

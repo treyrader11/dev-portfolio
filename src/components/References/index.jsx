@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { references } from "@/lib/data";
 import ProfilePicture from "../ProfilePicture";
+import BlurredIn from "../BlurredIn";
 
 export default function References({ className }) {
   const [selected, setSelected] = useState(0);
@@ -27,19 +28,12 @@ export default function References({ className }) {
       )}
     >
       <div className="relative p-4 mt-0 ">
-        {/* <PageTitle
-          containerClass="h-0"
-          className="text-[10vw]"
-          backgroundColor="transparent"
-          title="References."
-        /> */}
-        {/* <h1 className="my-4 font-light text-slate-500">
-          I&apos;ve had the pleasure to work with the following professionals below.
-          Here are a few of their words.
-        </h1> */}
-        <h1 className="my-4 text-[10vw] font-bold text-slate-200">
-          References
-        </h1>
+        <BlurredIn
+          once
+          className="my-4 text-[10vw] font-bold text-secondary/90"
+        >
+          References.
+        </BlurredIn>
         <SelectBtns
           numTracks={references.length}
           setSelected={setSelected}

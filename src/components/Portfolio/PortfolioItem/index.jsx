@@ -1,5 +1,6 @@
 "use client";
 
+import BlurredIn from "@/components/BlurredIn";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 
@@ -10,7 +11,7 @@ export default function PortfolioItem({
   manageModal,
   projectId,
 }) {
-  console.log('projectId', projectId)
+  console.log("projectId", projectId);
   return (
     <Link
       href={`/project/${projectId}`}
@@ -21,10 +22,7 @@ export default function PortfolioItem({
         manageModal(false, index, e.clientX, e.clientY);
       }}
       className={cn(
-        "flex",
         "w-full",
-        "justify-between",
-        "items-center",
         "py-12",
         "px-16",
         "md:px-24",
@@ -33,30 +31,36 @@ export default function PortfolioItem({
         "transition-all",
         "duration-200",
         "group",
-        "hover:opacity-50"
+        "hover:opacity-50",
+        "hover:blur-sm"
       )}
     >
-      <h2
-        className={cn(
-          "text-[6vw]",
-          "m-0",
-          "transition-all",
-          "duration-[400]",
-          "group-hover:-translate-x-2.5"
-        )}
+      <BlurredIn
+        once
+        className={cn("md:flex", "justify-between", "items-center")}
       >
-        {title}
-      </h2>
-      <p
-        className={cn(
-          "transition-all",
-          "duration-[400]",
-          "font-light",
-          "group-hover:translate-x-2.5"
-        )}
-      >
-        {category}
-      </p>
+        <h2
+          className={cn(
+            "text-[6vw]",
+            "m-0",
+            "transition-all",
+            "duration-[400]",
+            "group-hover:-translate-x-2.5"
+          )}
+        >
+          {title}
+        </h2>
+        <p
+          className={cn(
+            "transition-all",
+            "duration-[400]",
+            "font-light",
+            "group-hover:translate-x-2.5"
+          )}
+        >
+          {category}
+        </p>
+      </BlurredIn>
     </Link>
   );
 }

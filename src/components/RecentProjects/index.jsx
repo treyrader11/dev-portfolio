@@ -31,10 +31,9 @@ export default function RecentProjects({ className }) {
         className
       )}
     >
-      
-
       <div className="sticky">
         <PageTitle
+          hasBlur
           backgroundColor="white"
           containerClass={cn("h-0 sticky -top-[20%] p-0")}
           title="Recent projects."

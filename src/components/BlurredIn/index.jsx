@@ -2,10 +2,12 @@
 
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
+import { forwardRef } from "react";
 
-export default function BlurredIn({ className, children, once = false }) {
+function BlurredIn({ className, children, once = false }, ref) {
   return (
     <motion.div
+      ref={ref}
       initial={{
         filter: "blur(4px)",
       }}
@@ -24,3 +26,5 @@ export default function BlurredIn({ className, children, once = false }) {
     </motion.div>
   );
 }
+
+export default forwardRef(BlurredIn);
