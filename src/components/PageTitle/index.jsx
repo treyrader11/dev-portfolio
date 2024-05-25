@@ -2,6 +2,7 @@
 
 import { cn } from "@/lib/utils";
 import { Vanish } from "../Vanish";
+import BlurredIn from "../BlurredIn";
 
 export default function PageTitle({
   className,
@@ -10,7 +11,8 @@ export default function PageTitle({
   title,
 }) {
   return (
-    <div
+    <BlurredIn
+      once
       style={{ backgroundColor }}
       className={cn("h-48 mx-auto bg-dark-400 px-6", containerClass)}
     >
@@ -31,6 +33,6 @@ export default function PageTitle({
         delay={0.2}
         phrases={[title]}
       />
-    </div>
+    </BlurredIn>
   );
 }

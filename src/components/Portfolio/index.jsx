@@ -185,8 +185,11 @@ export default function Portfolio() {
           initial="initial"
           animate={isModalActive ? "enter" : "closed"}
           className={cn(
-            "h-[350px]",
-            "w-[400px]",
+            "h-[30vh]",
+            "w-[50vw]",
+            "md:w-[36vw]",
+            // "h-[350px]",
+            // "w-[400px]",
             "fixed",
             "top-1/2",
             "left-1/2",
@@ -224,6 +227,7 @@ export default function Portfolio() {
                     priority={project.isPriority}
                     height={0}
                     alt="image"
+                    className="md:h-[24vh] md:w-[20vw] h-[20vh] w-[38vw]"
                   />
                 </div>
               );

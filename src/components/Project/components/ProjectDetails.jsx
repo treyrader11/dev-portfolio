@@ -20,7 +20,7 @@ export default function ProjectDetails({ data }) {
   } = data[0];
 
   return (
-    <section className="pb-28bg-[#F1F1F1]">
+    <section className="pb-28bg-[#F1F1F1] px-6">
       <PageTitle
         title={title}
         backgroundColor="transparent"
@@ -37,7 +37,7 @@ export default function ProjectDetails({ data }) {
           "justify-start",
           "px-2.5",
           "sm:px-4",
-          "md::px-0",
+          "md::px-0"
           // "bg-[#F1F1F1]"
         )}
       >
@@ -76,7 +76,10 @@ export default function ProjectDetails({ data }) {
               "group"
             )}
           >
-            <LinkDecorator isActive className="my-auto mr-2" />
+            <LinkDecorator
+              isActive
+              className="my-auto mr-2"
+            />
             See all
             <span
               className={cn(
