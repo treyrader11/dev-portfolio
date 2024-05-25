@@ -34,7 +34,7 @@ export default function Contact({ style, rotate }) {
         "relative"
       )}
     >
-      {/* <Confetti copied={copied} /> */}
+      <Confetti copied={copied} />
       <div
         className={cn(
           "border-b-[.5px]",
