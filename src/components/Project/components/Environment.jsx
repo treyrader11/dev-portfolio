@@ -68,8 +68,17 @@ export default function Environnment({ data, desc, title }) {
             )}
           >
             {data}
-            <span className="text-sm text-neutral-300">{`=`}</span>
-            <span className="text-[#BE7C64]">{`""`}</span>
+            {data.includes("NEXT_PUBLIC_APP_URL") ? (
+              <>
+                <span className="text-sm text-neutral-300">{`=`}</span>
+                <span className="text-[#BE7C64]">{`"http://localhost:3000"`}</span>
+              </>
+            ) : (
+              <>
+                <span className="text-sm text-neutral-300">{`=`}</span>
+                <span className="text-[#BE7C64]">{`""`}</span>
+              </>
+            )}
           </div>
         ))}
 
