@@ -38,7 +38,6 @@ export default function ProjectDetails({ data }) {
           "px-2.5",
           "sm:px-4",
           "md::px-0"
-          // "bg-[#F1F1F1]"
         )}
       >
         <ProjectVideo src={video_key} />
@@ -76,10 +75,7 @@ export default function ProjectDetails({ data }) {
               "group"
             )}
           >
-            <LinkDecorator
-              isActive
-              className="my-auto mr-2"
-            />
+            <LinkDecorator isActive className="my-auto mr-2" />
             See all
             <span
               className={cn(

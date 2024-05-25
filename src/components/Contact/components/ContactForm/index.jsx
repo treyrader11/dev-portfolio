@@ -10,6 +10,7 @@ import { VscSend } from "react-icons/vsc";
 import { VscCoffee } from "react-icons/vsc";
 import Socials from "@/components/Socials";
 import BlurredIn from "@/components/BlurredIn";
+import GridGlobe from "@/components/GridGlobe";
 
 const imageProps = {
   width: 100,
@@ -112,9 +113,30 @@ export default function ContactForm() {
           </div>
 
           <div className={cn("flex gap-8 mt-[3.rem] flex-col")}>
-            <div className="relative w-2/5 mx-auto">
+            {/* <div className="relative w-2/5 mx-auto">
               <Image {...imageProps} alt="image of map" />
+            </div> */}
+            <div
+              className={cn(
+                "hover:translate-x-2",
+                "transition",
+                "duration-200",
+                "relative",
+                "md:h-full",
+                // "min-h-40",
+                "min-h-48",
+                "flex",
+                "flex-col",
+                "p-5",
+                "lg:p-10",
+                // "border border-red-600",
+                // "md:overflow-visible",
+                "overflow-hidden"
+              )}
+            >
+              <GridGlobe />
             </div>
+
             <form action="" className={cn("flex flex-col gap-[1.2rem]")}>
               <div className="flex gap-4">
                 <Input type="text" placeholder="Your name" />

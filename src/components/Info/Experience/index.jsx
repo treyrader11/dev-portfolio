@@ -39,7 +39,7 @@ function ExperienceCard({ experience }) {
         </div>
       }
     >
-      <BlurredIn>
+      <BlurredIn once>
         <div>
           <h3 className="text-2xl font-bold text-white">{experience.title}</h3>
           <p
