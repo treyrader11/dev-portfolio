@@ -11,8 +11,6 @@ const World = dynamic(() => import("./components/Globe").then((m) => m.World), {
 
 export default function GridGlobe({ className }) {
   return (
-    // remove dark:bg-black bg-white h-screen md:h-auto  w-full flex-row py-20
-    // change absolute -left-5 top-36, add w-full h-full md:top-40
     <div
       className={cn(
         "absolute",
@@ -26,7 +24,6 @@ export default function GridGlobe({ className }) {
         className
       )}
     >
-      {/* remove h-full md:h-[40rem] */}
       <div
         className={cn(
           "relative",
@@ -38,7 +35,6 @@ export default function GridGlobe({ className }) {
           "h-96"
         )}
       >
-        {/* remove these text divs */}
         {/* <motion.div
           initial={{
             opacity: 0,

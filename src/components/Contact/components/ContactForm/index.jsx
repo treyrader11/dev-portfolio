@@ -129,8 +129,6 @@ export default function ContactForm() {
                 "flex-col",
                 "p-5",
                 "lg:p-10",
-                // "border border-red-600",
-                // "md:overflow-visible",
                 "overflow-hidden"
               )}
             >

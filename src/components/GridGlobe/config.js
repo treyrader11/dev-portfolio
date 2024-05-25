@@ -7,8 +7,10 @@ export const globeConfig = {
   emissive: "#062056",
   emissiveIntensity: 0.1,
   shininess: 0.9,
-  polygonColor: "rgba(255,255,255,0.7)",
-  ambientLight: "#38bdf8",
+  // polygonColor: "rgba(255,255,255,0.7)",
+  polygonColor: "rgb(176, 84, 3)",
+  // ambientLight: "#38bdf8",
+  ambientLight: "#9533F5",
   directionalLeftLight: "#ffffff",
   directionalTopLight: "#ffffff",
   pointLight: "#ffffff",
@@ -21,7 +23,7 @@ export const globeConfig = {
   autoRotateSpeed: 0.5,
 };
 
-export const colors = ["#06b6d4", "#3b82f6", "#6366f1"];
+export const colors = ["#9533F5", "#934E00", "#9533F5", "#934E00",];
 
 export const sampleArcs = [
   {
