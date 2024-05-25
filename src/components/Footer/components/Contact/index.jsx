@@ -17,7 +17,6 @@ export default function Contact({ style, rotate }) {
 
   const handleClick = (text) => {
     if (text) {
-      console.log(`Copying text: ${text}`);
       copy(text);
       addNotification({ text: `Copied: ${text}` });
     }
@@ -35,7 +34,7 @@ export default function Contact({ style, rotate }) {
         "relative"
       )}
     >
-      <Confetti copied={copied} />
+      {/* <Confetti copied={copied} /> */}
       <div
         className={cn(
           "border-b-[.5px]",
@@ -43,6 +42,7 @@ export default function Contact({ style, rotate }) {
           "justify-between",
           "items-center",
           "border-light-300/70"
+          // "relative"
         )}
       >
         <div>
@@ -57,14 +57,15 @@ export default function Contact({ style, rotate }) {
           </h2>
           <motion.div
             style={style}
-            className={cn(
-              "absolute",
-              "left-[calc(100%_-_275px)]",
-              "md:left-[calc(100%_-_380px)]",
-              "lg:left-[calc(100%_-_500px)]",
-              "top-[calc(100%_-_655px)]",
-              "md:top-[calc(100%_-_485px)]"
-            )}
+            className={
+              cn()
+              // "absolute",
+              // "left-[calc(100%_-_275px)]",
+              // "md:left-[calc(100%_-_380px)]",
+              // "lg:left-[calc(100%_-_500px)]",
+              // "top-[calc(100%_-_655px)]",
+              // "md:top-[calc(100%_-_485px)]"
+            }
           >
             <Rounded
               text="Get in touch"
@@ -75,6 +76,12 @@ export default function Contact({ style, rotate }) {
                 "rounded-full",
                 "bg-secondary",
                 "p-0",
+
+                "left-[calc(100%_-_0px)]",
+                "md:left-[calc(100%_-_-100px)]",
+                "lg:left-[calc(100%_-_-200px)]",
+                "xl:left-[calc(100%_-_-350px)]",
+                "top-[calc(100%_-_70px)]",
                 "absolute"
               )}
             />

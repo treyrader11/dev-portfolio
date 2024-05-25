@@ -9,11 +9,12 @@ const useCopyToClipboard = (timeout = 5000) => {
     (text) => {
       setCopied(true);
       navigator.clipboard.writeText(text);
-      const myTimeout = setTimeout(() => {
-        setCopied(false);
-      }, timeout);
+      // const myTimeout = setTimeout(() => {
+      //   setCopied(false);
+      // }, timeout);
 
-      return () => clearTimeout(myTimeout);
+      // return () => clearTimeout(myTimeout);
+      return () => setCopied(false);
     },
     [timeout]
   );

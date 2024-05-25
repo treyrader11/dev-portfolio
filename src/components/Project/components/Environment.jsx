@@ -10,7 +10,6 @@ import { useNotificationsContext } from "@/providers/notificationsProvider";
 export default function Environnment({ data, title }) {
   const [copied, copy] = useCopyToClipboard(5000);
 
-  // const { addNotification } = useNotifications();
   const { addNotification } = useNotificationsContext();
 
   const handleClick = (text) => {
