@@ -112,7 +112,14 @@ export default function ContactForm() {
             <Socials rounded />
           </div>
 
-          <div className={cn("flex gap-8 mt-[3.rem] flex-col")}>
+          <div
+            className={cn(
+              "flex gap-2",
+              // "mt-[3.rem]",
+              // "mt-[1.rem]",
+              "flex-col"
+            )}
+          >
             {/* <div className="relative w-2/5 mx-auto">
               <Image {...imageProps} alt="image of map" />
             </div> */}
@@ -127,8 +134,8 @@ export default function ContactForm() {
                 "min-h-48",
                 "flex",
                 "flex-col",
-                "p-5",
-                "lg:p-10",
+                // "p-5",
+                // "lg:p-10",
                 "overflow-hidden"
               )}
             >
