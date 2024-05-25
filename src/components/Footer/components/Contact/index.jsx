@@ -97,7 +97,6 @@ export default function Contact({ style, rotate }) {
       </div>
 
       <div
-        // onClick={() => handleClick("developertrey@gmail.com")}
         className={cn(
           "flex",
           "flex-col",
@@ -112,10 +111,7 @@ export default function Contact({ style, rotate }) {
           text="developertrey@gmail.com"
           className={cn("w-full md:w-fit py-5 px-10 border-[.3px]")}
         />
-        <div
-          // onClick={() => handleClick("5047564538")}
-          className={cn("w-full")}
-        >
+        <div className={cn("w-full")}>
           <Rounded
             onClick={() => handleClick("5047564538")}
             className={cn("md:w-fit py-5 px-10 border-[.3px]")}

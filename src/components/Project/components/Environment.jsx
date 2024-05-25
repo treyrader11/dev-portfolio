@@ -17,7 +17,7 @@ export default function Environnment({ data, title }) {
     if (text) {
       console.log(`Copying text: ${text}`);
       copy(text);
-      addNotification({ text: `Copied: ${text}` });
+      addNotification({ text: `Copied: .env variables` });
     }
   };
 
@@ -88,7 +88,6 @@ export default function Environnment({ data, title }) {
 
         {copied ? (
           <div
-            // onClick={() => setCopied(false)}
             className={cn(
               "right-[10px]",
               "top-[10px]",
@@ -108,9 +107,7 @@ export default function Environnment({ data, title }) {
           </div>
         ) : (
           <div
-            // onClick={() => copy(data[0].env)}
-            // onClick={() => handleClick(data[0].env)}
-            onClick={() => handleClick(data[0])}
+            onClick={() => handleClick(data)}
             className={cn(
               "right-[10px]",
               "top-[10px]",
