@@ -25,15 +25,15 @@ export default function Info() {
   });
 
   return (
-    <section ref={container} className=" bg-dark">
-      <motion.section className="">
+    <section ref={container} className="bg-[#F1F1F1]">
+      <motion.div className="">
         <PageTitle
           title="About."
           backgroundColor="#1c1d20"
           className=" #0f0f0f"
         />
 
-        <div className="bg-[#F1F1F1]">
+        <div className="md:w-[800px] mx-auto">
           <div className="max-w-6xl pt-20 mx-auto">
             <p className={cn("mx-4 text-2xl font-semibold md:text-4xl")}>
               {userData.about.title}. Currently working on{" "}
@@ -54,7 +54,7 @@ export default function Info() {
           </div>
         </div>
 
-        <div className="bg-[#F1F1F1] px-4">
+        <div className="px-4 md:w-[800px] mx-auto">
           <div
             className={cn(
               "grid",
@@ -69,17 +69,10 @@ export default function Info() {
             {/* Social Buttons */}
             <div className="inline-flex flex-col">
               <div>
-                <h1
-                  className={cn(
-                    "text-xl",
-                    "font-semibold",
-                    "text-gray-700",
-                    "dark:text-gray-200"
-                  )}
-                >
+                <h1 className={cn("text-xl", "font-semibold", "text-gray-700")}>
                   Contact
                 </h1>
-                <p className={cn("mt-4", "text-lg", "text-gray-500")}>
+                <p className={cn("mt-4 text-lg text-gray-500")}>
                   For any sort of help / enquiry, please shoot me an{" "}
                   <Link
                     // href={`mailto:${userData.email}`}
@@ -97,10 +90,10 @@ export default function Info() {
                 </p>
               </div>
               <div className="mt-8">
-                <h1 className="text-xl font-semibold text-gray-700 dark:text-gray-200">
+                <h1 className="text-xl font-semibold text-gray-700">
                   Job Opportunities
                 </h1>
-                <p className="relative mt-4 text-lg text-gray-500 dark:text-gray-300">
+                <p className="relative mt-4 text-lg text-gray-500">
                   I&apos;m looking for a job currently. If you see me as a good
                   fit, please have a look at my{" "}
                   <span>
@@ -148,7 +141,7 @@ export default function Info() {
             </div>
           </div>
         </div>
-      </motion.section>
+      </motion.div>
 
       <Experience scrollYProgress={scrollYProgress} />
     </section>

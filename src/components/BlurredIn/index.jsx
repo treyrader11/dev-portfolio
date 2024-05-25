@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 
-export default function BlurredIn({ className, children }) {
+export default function BlurredIn({ className, children, once = false }) {
   return (
     <motion.div
       initial={{
@@ -12,6 +12,7 @@ export default function BlurredIn({ className, children }) {
       whileInView={{
         filter: "blur(0px)",
       }}
+      viewport={{ once }}
       transition={{
         duration: 0.5,
         ease: "easeInOut",

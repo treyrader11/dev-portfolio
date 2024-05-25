@@ -14,15 +14,13 @@ export default function ProjectDetails({ data }) {
     video_key,
     about_this_app,
     technology_feature,
-    design_blog,
-    environment_desc,
     env,
     frontend_download_link,
     backend_download_link,
   } = data[0];
 
   return (
-    <section className="pb-28">
+    <section className="pb-28bg-[#F1F1F1]">
       <PageTitle
         title={title}
         backgroundColor="transparent"
@@ -40,7 +38,7 @@ export default function ProjectDetails({ data }) {
           "px-2.5",
           "sm:px-4",
           "md::px-0",
-          "bg-[#F1F1F1]"
+          // "bg-[#F1F1F1]"
         )}
       >
         <ProjectVideo src={video_key} />
@@ -56,16 +54,8 @@ export default function ProjectDetails({ data }) {
         </Block>
 
         <Block title="Environment">
-          <Environment
-            title="Frontend"
-            desc={environment_desc}
-            data={env.frontend}
-          />
-          <Environment
-            title="Backend"
-            desc={environment_desc}
-            data={env.backend}
-          />
+          <Environment title="Frontend" data={env.frontend} />
+          <Environment title="Backend" data={env.backend} />
         </Block>
         <Block title="Links">
           <ProjectLinks

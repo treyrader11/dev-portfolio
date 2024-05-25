@@ -22,7 +22,18 @@ export default function Environnment({ data, desc, title }) {
   return (
     <div className="w-full h-auto">
       <h3 className="text-xl font-bold">{title}</h3>
-      <p>{desc}</p>
+      <p className="mt-2">
+        Make sure to add these to either{" "}
+        <code className="inline-block p-1 bg-gray-200 rounded code-editor">
+          local.env
+        </code>{" "}
+        or{" "}
+        <code className="inline-block p-1 bg-gray-200 rounded code-editor">
+          .env
+        </code>{" "}
+        file
+      </p>
+
       <div
         className={cn(
           "my-4",
@@ -35,12 +46,15 @@ export default function Environnment({ data, desc, title }) {
           "border",
           "text-slate-200",
           "rounded-lg",
-          "bg-[linear-gradient(110deg,#000103,45%,#1e2631,55%,#000103)]",
+          "bg-[linear-gradient(110deg,#181818,45%,#1e2631,55%,#181818)]",
           "border",
           "border-purple-500",
           "shadow-2xl"
         )}
       >
+        <div className={cn("py-3", "px-3")}>
+          <code className="whitespace-pre text-[#588A44]"># .env</code>
+        </div>
         {data.map((data) => (
           <div
             key={data}
@@ -49,10 +63,13 @@ export default function Environnment({ data, desc, title }) {
               "h-auto",
               "hover:bg-gray-300/20",
               "rounded",
-              "px-4"
+              "px-4",
+              "text-[#4688CC]"
             )}
           >
             {data}
+            <span className="text-sm text-neutral-300">{`=`}</span>
+            <span className="text-[#BE7C64]">{`""`}</span>
           </div>
         ))}
 
