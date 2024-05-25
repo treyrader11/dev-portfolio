@@ -9,6 +9,7 @@ import Magnetic from "../Magnetic";
 import LinkDecorator from "../LinkDecorator";
 import { useScroll, motion } from "framer-motion";
 import { useRef, useState } from "react";
+import BlurredIn from "../BlurredIn";
 
 const socialLinks = [
   { name: "Facebook", href: userData.socialLinks.facebook },
@@ -33,7 +34,7 @@ export default function Info() {
           className=" #0f0f0f"
         />
 
-        <div className="md:w-[800px] mx-auto">
+        <BlurredIn once className="md:w-[800px] mx-auto">
           <div className="max-w-6xl pt-20 mx-auto">
             <p className={cn("mx-4 text-2xl font-semibold md:text-4xl")}>
               {userData.about.title}. Currently working on{" "}
@@ -52,7 +53,7 @@ export default function Info() {
               </a>
             </p>
           </div>
-        </div>
+        </BlurredIn>
 
         <div className="px-4 md:w-[800px] mx-auto">
           <div
@@ -68,7 +69,7 @@ export default function Info() {
           >
             {/* Social Buttons */}
             <div className="inline-flex flex-col">
-              <div>
+              <BlurredIn once>
                 <h1 className={cn("text-xl", "font-semibold", "text-gray-700")}>
                   Contact
                 </h1>
@@ -88,8 +89,8 @@ export default function Info() {
                   </Link>{" "}
                   and I&apos;ll get back the same day.
                 </p>
-              </div>
-              <div className="mt-8">
+              </BlurredIn>
+              <BlurredIn once className="mt-8">
                 <h1 className="text-xl font-semibold text-gray-700">
                   Job Opportunities
                 </h1>
@@ -112,12 +113,12 @@ export default function Info() {
                   </span>
                   and I&apos;d love to see what y&lsquo;all do!
                 </p>
-              </div>
+              </BlurredIn>
               <Socials />
             </div>
 
             {/* Text area */}
-            <div className="col-span-1 md:col-span-2">
+            <BlurredIn once className="col-span-1 md:col-span-2">
               {userData.about.description?.map((desc, idx) => (
                 <p key={idx} className="mb-4 text-xl text-gray-700">
                   {desc}
@@ -131,14 +132,14 @@ export default function Info() {
                   "py-1",
                   "text-3xl",
                   "font-bold",
-                  "bg-red-500",
+                  "bg-primary",
                   "rounded-md",
                   "text-gray-50"
                 )}
               >
                 Tech Stack
               </h1>
-            </div>
+            </BlurredIn>
           </div>
         </div>
       </motion.div>
