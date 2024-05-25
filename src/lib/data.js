@@ -28,7 +28,8 @@ export const userData = {
       `I began teaching myself to code back in 2016, HTML, CSS, and JS. I did well enough to eventually land my first job with an ed tech startup out of New Orleans, called TORSH. After having at TORSH, however, I hardly did anything tech-related except for develop and deploy a few websites for my musician friends`,
       `I've worked in React, Angular, Meteor, Svelte, Node.js, Express, KeystoneJS, MongoDB, MySQL, Prisma, Drizzle, Bootstrap, & Tailwind, to name a few. As of lately, most of my experience has been cosummed in honing in my frontend development skillset using Framer Motion & Gsap, often in tandem.`,
     ],
-    website_Url: "https://www.vouzot.com",
+    current_project_url: "https://www.vouzot.com",
+    current_project: "Vouzot"
   },
 };
 
@@ -60,8 +61,6 @@ export const projectsData = [
     //   icon: React.createElement(FaReact), //see byte grad
     about_this_app:
       "A Real Time Full Stack FoodOrder & Admin Dashboard application User Can Order and Contain Payment For Stripe And AdminDashBoard Feature Admin can make Product CRUD and Responsive Desing",
-    design_blog:
-      "desing and all of ui create by my own ideal , conatin Backend ",
     environment_desc: "Make sure to add these to either local.env or .env file",
     packages: {
       frontend: [
@@ -160,7 +159,6 @@ export const projectsData = [
     ],
     about_this_app:
       "It My First ReactNative App So The have a lot of Bug!, Feature Conatin Google Auth UserCanOrder Remove Order And Containe ReactNativeMap Justlike Deliveroo",
-    design_blog: "Desing From PapaReact YouTube Channel",
     environment_desc: "Make sure to add these to either local.env or .env file",
     packages: {
       frontend: [
@@ -261,8 +259,6 @@ export const projectsData = [
 
     about_this_app:
       "A Real Time Full Stack FoodOrder & Admin Dashboard application User Can Order and Contain Payment For Stripe And AdminDashBoard Feature Admin can make Product CRUD and Responsive Desing",
-    design_blog:
-      "desing and all of ui create by my own ideal , conatin Backend ",
     environment_desc: "Make sure to add these to either local.env or .env file",
     packages: {
       frontend: [
@@ -355,7 +351,6 @@ export const projectsData = [
 
     about_this_app:
       "This Appp Contain Chate Create , Read , Update , Delete and Google Authentication , Microsoft Authentication , JWT Authentication functionality ",
-    design_blog: "Desing From Realworld ChatGPT",
     environment_desc: "Make sure to add these to either local.env or .env file",
     packages: {
       frontend: [
@@ -448,8 +443,6 @@ export const projectsData = [
     ],
     about_this_app:
       "A Real Time Full Stack Responsive Shoe Ecommerce & Admin Dashboard application User Can Order and Contain Real World Payment For Stripe And AdminDashBoard Feature Admin can make Product CRUD and Promote Product CRUD Admin Can look How Much User & Chart Pie , Chart line and Auth Google , Nike Auth",
-    design_blog:
-      "I Found Very Basic Ui Desing From Youtube , Then i get ideal To Make This All Desing By me 💚💚 ",
     environment_desc: "Make sure to add these to either local.env or .env file",
     packages: {
       frontend: [
@@ -539,8 +532,6 @@ export const projectsData = [
       "Framer Motion",
     ],
     about_this_app:
-      "This is just some placeholder text until i make time to actually create the real deal. If you're seeing this, then it means I love you",
-    design_blog:
       "This is just some placeholder text until i make time to actually create the real deal. If you're seeing this, then it means I love you",
     environment_desc: "Make sure to add these to either local.env or .env file",
     packages: {

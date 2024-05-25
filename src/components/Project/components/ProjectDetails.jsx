@@ -39,7 +39,8 @@ export default function ProjectDetails({ data }) {
           "justify-start",
           "px-2.5",
           "sm:px-4",
-          "md::px-0"
+          "md::px-0",
+          "bg-[#F1F1F1]"
         )}
       >
         <ProjectVideo src={video_key} />
@@ -53,7 +54,7 @@ export default function ProjectDetails({ data }) {
             ))}
           </ul>
         </Block>
-        <Block title="Design" desc={design_blog} />
+
         <Block title="Environment">
           <Environment
             title="Frontend"

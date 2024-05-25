@@ -25,7 +25,7 @@ export default function Info() {
   });
 
   return (
-    <div ref={container} className=" bg-dark">
+    <section ref={container} className=" bg-dark">
       <motion.section className="">
         <PageTitle
           title="About."
@@ -35,16 +35,20 @@ export default function Info() {
 
         <div className="bg-[#F1F1F1]">
           <div className="max-w-6xl pt-20 mx-auto">
-            <p
-              className={cn("mx-4", "text-2xl", "font-semibold", "md:text-4xl")}
-            >
+            <p className={cn("mx-4 text-2xl font-semibold md:text-4xl")}>
               {userData.about.title}. Currently working on{" "}
               <a
-                className={cn("px-2", "py-1", "bg-purple-500", "rounded-md")}
+                className={cn(
+                  "px-2",
+                  "py-1",
+                  "bg-purple-500",
+                  "rounded-md",
+                  "text-white"
+                )}
                 target="_blank"
-                href={userData.about.currentProjectUrl}
+                href={userData.about.current_project_url}
               >
-                {userData.about.currentProject}
+                {userData.about.current_project}
               </a>
             </p>
           </div>
@@ -147,7 +151,7 @@ export default function Info() {
       </motion.section>
 
       <Experience scrollYProgress={scrollYProgress} />
-    </div>
+    </section>
   );
 }
 

@@ -2,7 +2,7 @@ import { cn } from "@/lib/utils";
 
 export default function Spinner({ className }) {
   return (
-    <div className={cn("grid place-content-center", className)}>
+    <div className={cn("", className)}>
       <svg
         className={cn(
           "mr-3",

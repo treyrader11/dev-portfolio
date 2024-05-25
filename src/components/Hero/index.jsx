@@ -8,6 +8,7 @@ import { slideUp } from "./anim";
 import Image from "next/image";
 import Rounded from "@/components/Rounded";
 import { userData } from "@/lib/data";
+import BlurredIn from "../BlurredIn";
 
 const phrase =
   "I'm a selectively skilled web developer focusing on delivering quality & impactful digital experiences.";
@@ -83,7 +84,7 @@ export default function Hero({ isLoading, scrollYProgress, className }) {
           "md:leading-[66px]"
         )}
       >
-        <p className={cn("w-[1000px]", "p-[40px]", "mt-[20%]")}>
+        <BlurredIn className={cn("w-[1000px] p-10 mt-[20%]")}>
           {phrase.split(" ").map((word, index) => {
             const isTargetedWord = targetedWords.includes(word.toLowerCase());
 
@@ -101,7 +102,7 @@ export default function Hero({ isLoading, scrollYProgress, className }) {
               </motion.span>
             );
           })}
-        </p>
+        </BlurredIn>
 
         <div
           className={cn(
@@ -129,31 +130,27 @@ export default function Hero({ isLoading, scrollYProgress, className }) {
           />
         </div>
       </div>
-      {/* <div data-scroll data-scroll-speed={1}>
-        <div
-          className={cn(
-            "z-[9999]",
-            "absolute",
-            "right-[10%]",
-            "top-[70%]",
-            "left-[calc(100%_-_275px)]"
-          )}
-        >
-          <Rounded
-            href={userData.resumeUrl}
-            text="Download CV"
-            target="__blank"
-            // className={cn(
-            //   "top-[80%]",
-            //   // "md:left-[clac(100%_-_400px)]",
-            //   "left-0",
-            //   "size-[140px]",
-            //   "bg-dark-400"
-            // )}
-            className={cn("w-full py-5 px-12 border-[.3px]")}
-          />
-        </div>
-      </div> */}
     </motion.section>
   );
 }
+
+const Card = ({ className, children }) => {
+  return (
+    <motion.div
+      initial={{
+        filter: "blur(4px)",
+      }}
+      whileInView={{
+        filter: "blur(0px)",
+      }}
+      transition={{
+        duration: 0.5,
+        ease: "easeInOut",
+        delay: 0.25,
+      }}
+      className={`relative h-full w-full overflow-hidden rounded-2xl border border-slate-800 bg-gradient-to-br from-slate-950/50 to-slate-900/80 p-6 ${className}`}
+    >
+      {children}
+    </motion.div>
+  );
+};

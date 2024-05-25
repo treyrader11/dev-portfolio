@@ -16,13 +16,14 @@ export default function ProjectVideo({ src }) {
   }, []);
 
   return (
-    <div className={cn("w-full h-auto mt-[5px]")}>
+    <div className={cn("w-full mt-[5px]")}>
       {isLoading ? (
         <div
           className={cn(
             "relative",
             "pt-[56.25%]",
-            "grid place-content-center"
+            "grid",
+            "place-content-center"
           )}
         >
           <Spinner className={cn("absolute inset-0")} />
