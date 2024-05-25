@@ -2,15 +2,23 @@ import { cn } from "@/lib/utils";
 
 export default function Spinner({ className }) {
   return (
-    <div className={cn("", className)}>
+    <div
+      className={cn(
+        className,
+        "flex",
+        "items-center",
+        "justify-center",
+        "absolute"
+      )}
+    >
       <svg
         className={cn(
           "mr-3",
           "-ml-1",
           "text-purple-500",
           "size-12",
-          "animate-spin",
-          className
+          "animate-spin"
+          // "absolute"
         )}
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
