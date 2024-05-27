@@ -4,7 +4,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { FiAlertCircle, FiX } from "react-icons/fi";
 import { useEffect } from "react";
 import { cn } from "@/lib/utils";
-import { useNotificationsContext } from "@/providers/NotificationsProvider";
+import { useNotificationsContext } from "@/components/providers/NotificationsProvider";
 
 export default function Notifications() {
   const { notifications, removeNotification } = useNotificationsContext();

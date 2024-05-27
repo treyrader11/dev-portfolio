@@ -2,7 +2,7 @@ import "@/globals.css";
 
 import Layout from "@/components/Layout";
 import Notifications from "@/components/Notifications";
-import { NotificationsProvider } from "@/providers/NotificationsProvider";
+import { NotificationsProvider } from "@/components/providers/NotificationsProvider";
 
 export default function App({ Component, pageProps, router }) {
   return (

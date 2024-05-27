@@ -9,7 +9,7 @@ import SlidingImages from "@/components/SlidingImages";
 import RecentProjects from "@/components/RecentProjects";
 import Hero from "@/components/Hero";
 import { useScroll } from "framer-motion";
-import PositionProvider from "@/providers/PositionProvider";
+import PositionProvider from "@/components/providers/PositionProvider";
 import References from "@/components/References";
 
 const inter = Inter({ subsets: ["latin"] });

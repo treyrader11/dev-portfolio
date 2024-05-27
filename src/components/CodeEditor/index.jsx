@@ -3,7 +3,7 @@ import { FaRegCheckCircle } from "react-icons/fa";
 import { MdOutlineFileCopy } from "react-icons/md";
 import Confetti from "../Confetti";
 import useCopyToClipboard from "@/hooks/useCopyClipboard";
-import { useNotificationsContext } from "@/providers/NotificationsProvider";
+import { useNotificationsContext } from "@/components/providers/NotificationsProvider";
 
 export default function CodeEditor({ className, data, fileType }) {
   const [copied, copy] = useCopyToClipboard(5000);

@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils";
 import { IoCopyOutline } from "react-icons/io5";
 import Confetti from "@/components/Confetti";
 import useCopyToClipboard from "@/hooks/useCopyClipboard";
-import { useNotificationsContext } from "@/providers/NotificationsProvider";
+import { useNotificationsContext } from "@/components/providers/NotificationsProvider";
 
 export default function Contact({ style, rotate }) {
   const [copied, copy] = useCopyToClipboard(500);
