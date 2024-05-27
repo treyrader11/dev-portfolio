@@ -2,27 +2,11 @@ import { cn } from "@/lib/utils";
 
 export default function ProjectCategories({
   categories,
-  className,
   selected,
   filterProjects,
 }) {
   return (
-    <div
-      className={cn(
-        "mt-8",
-        "pt-3",
-        "flex",
-        "relative",
-        "items-center",
-        "gap-[1.5rem]",
-        "overflow-x-auto",
-        "overflow-y-hidden",
-        "no-scrollbar",
-        "max-h-fit",
-        "min-h-fit",
-        className
-      )}
-    >
+    <>
       {categories.map((categ, index) => {
         const selectedClass = cn(
           "after:bg-purple-500",
@@ -76,6 +60,6 @@ export default function ProjectCategories({
           "lg:hidden"
         )}
       />
-    </div>
+    </>
   );
 }

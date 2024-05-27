@@ -15,9 +15,7 @@ export default function PortfolioItem({
   tech_image,
   tags,
 }) {
-  // const isMern = category.toLowerCase() === "mern";
-  // const isReactNative = category.includes("native");
-  // const isNext = category.includes("next");
+
 
   return (
     <Link

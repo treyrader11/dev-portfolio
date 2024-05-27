@@ -11,13 +11,20 @@ import Image from "next/image";
 import { scaleAnimation } from "./anim";
 import ProjectCategories from "./ProjectCategories";
 import BlurredIn from "../BlurredIn";
+import Search from "./Search";
 
 export default function Portfolio() {
   const [projects, setProjects] = useState(projectsData);
+  const [filteredProjects, setFilteredProjects] = useState(projects);
+  const [focused, setFocused] = useState(false);
+
   const [categories] = useState([
     "All",
     ...getUnique(projectsData, "category"),
   ]);
+
+  const inputRef = useRef(null);
+
   const [selected, setSelected] = useState(0);
   const [modal, setModal] = useState({ isModalActive: false, index: 0 });
   const { isModalActive, index } = modal;
@@ -78,6 +85,38 @@ export default function Portfolio() {
       },
     });
   };
+
+  const clearInput = () => {
+    // inputRef.current === "";
+    inputRef.current === null;
+    setFilteredProjects(projectsData);
+  };
+
+  const filterProjectsBySearch = (text) => {
+    const filtered = projects.filter((proj) =>
+      proj.tags.some((tag) => tag.toLowerCase().includes(text.toLowerCase()))
+    );
+
+    setFilteredProjects(filtered);
+  };
+
+  const handleSearch = () => {
+    setFocused((prev) => setFocused(!prev));
+    if (!focused) {
+      clearInput();
+    }
+  }
+
+  // const filterProjectsBySearch = (text) => {
+  //   if (!text.trim()) {
+  //     setFilteredProjects(projects);
+  //   } else {
+  //     const filtered = projects.filter((proj) =>
+  //       proj.tags.some((tag) => tag.toLowerCase().includes(text.toLowerCase()))
+  //     );
+  //     setFilteredProjects(filtered);
+  //   }
+  // };
 
   let xMoveContainer = useRef(null);
   let yMoveContainer = useRef(null);
@@ -146,11 +185,34 @@ export default function Portfolio() {
             ability to solve complex problems, work with different technologies,
             and manage projects effectively.
           </p>
-          <ProjectCategories
-            selected={selected}
-            filterProjects={filterProjects}
-            categories={categories}
-          />
+          <div
+            className={cn(
+              "mt-8",
+              "pt-3",
+              "flex",
+              "relative",
+              "items-center",
+              "gap-[1.5rem]",
+              "overflow-x-auto",
+              "overflow-y-hidden",
+              "no-scrollbar",
+              "max-h-fit",
+              "min-h-fit"
+            )}
+          >
+            <Search
+              ref={inputRef}
+              onChange={filterProjectsBySearch}
+              clearInput={clearInput}
+              onClick={() => handleSearch()}
+              isFocused={focused}
+            />
+            <ProjectCategories
+              selected={selected}
+              filterProjects={filterProjects}
+              categories={categories}
+            />
+          </div>
         </div>
       </BlurredIn>
 
@@ -166,7 +228,7 @@ export default function Portfolio() {
           "mb-[100px]"
         )}
       >
-        {projects.map((proj, i) => {
+        {filteredProjects.map((proj, i) => {
           return (
             <PortfolioItem
               index={i}
