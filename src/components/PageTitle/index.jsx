@@ -3,8 +3,9 @@
 import { cn } from "@/lib/utils";
 import { Vanish } from "../Vanish";
 import BlurredIn from "../BlurredIn";
+import React from "react";
 
-export default function PageTitle({
+function PageTitle({
   className,
   containerClass,
   backgroundColor,
@@ -12,7 +13,10 @@ export default function PageTitle({
   hasBlur = false,
 }) {
   const commonContainerClasses = cn(
-    "h-48 mx-auto bg-dark-400 px-6",
+    "h-48",
+    "mx-auto",
+    "bg-dark-400",
+    "px-6",
     containerClass
   );
   const commonVanishClasses = cn(
@@ -47,3 +51,5 @@ export default function PageTitle({
     </div>
   );
 }
+
+export default React.memo(PageTitle);

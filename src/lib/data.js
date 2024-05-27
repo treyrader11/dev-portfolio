@@ -47,6 +47,7 @@ export const projectsData = [
     // category: "Web Development",
     category: "Fullstack",
     tech_image: mern.src,
+    tags: ["react", "sass", "mongodb", "jwt", "express", "node"],
     stack: "MERN",
     technology_feature: [
       "Tailwind",
@@ -137,6 +138,7 @@ export const projectsData = [
     video_key: "QKGIvW886dc",
     stack: "Next JS",
     tech_image: next.src,
+    tags: ["next", "shadcn", "prisma", "next-auth", "mongodb"],
     category: "Fullstack",
     technology_feature: [
       "Tailwind CSS",
@@ -211,6 +213,7 @@ export const projectsData = [
     // category: "UI/UX Design",
     stack: "Next JS",
     category: "Fullstack",
+    tags: ["next", "shadcn", "prisma", "next-auth", "mongodb"],
     tech_image: next.src,
     technology_feature: [
       "Tailwind",
@@ -276,6 +279,7 @@ export const projectsData = [
     stack: "React/Vite",
     tech_image: vite.src,
     category: "Frontend",
+    tags: ["react", "cra", "shadcn"],
     technology_feature: [
       "html",
       "css",
@@ -361,6 +365,7 @@ export const projectsData = [
     video_key: "dX3WaXJ9ibw",
     category: "Frontend",
     tech_image: vite.src,
+    tags: ["react", "vite", "mui"],
     technology_feature: [
       "Tailwind",
       "React",
@@ -458,6 +463,7 @@ export const projectsData = [
       "Three js",
       "Framer Motion",
     ],
+    tags: ["React", ""],
     packages: {
       frontend: [
         "@reduxjs/toolkit",
