@@ -47,9 +47,9 @@ export default function ProjectCategories({
           </button>
         );
       })}
-      <div
+      {/* <div
         className={cn(
-          "absolute",
+          "fixed",
           "inset-y-0",
           "right-0",
           "z-10",
@@ -57,9 +57,10 @@ export default function ProjectCategories({
           "bg-gradient-to-l",
           "from-dark",
           "to-transparent",
-          "lg:hidden"
+          "lg:hidden",
+          "h-5"
         )}
-      />
+      /> */}
     </>
   );
 }

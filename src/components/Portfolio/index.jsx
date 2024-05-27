@@ -185,7 +185,8 @@ export default function Portfolio() {
               "overflow-y-hidden",
               "no-scrollbar",
               "max-h-fit",
-              "min-h-fit"
+              "min-h-fit",
+              "w-full",
             )}
           >
             <Search
@@ -194,11 +195,26 @@ export default function Portfolio() {
               clearInput={clearInput}
               onClick={() => handleSearch()}
               isFocused={focused}
+              className=""
             />
             <ProjectCategories
               selected={selected}
               filterProjects={filterProjects}
               categories={categories}
+            />
+            <div
+              className={cn(
+                "fixed",
+                "inset-y-0",
+                "right-0",
+                "z-10",
+                "w-24",
+                "bg-gradient-to-l",
+                "from-dark",
+                "to-transparent",
+                "lg:hidden",
+                // "h-5"
+              )}
             />
           </div>
         </div>

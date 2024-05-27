@@ -7,7 +7,7 @@ import { forwardRef } from "react";
 
 function Search({ className, onChange, clearInput, onClick, isFocused }, ref) {
   return (
-    <div className={cn("flex items-center text-white gap-x-2", className)}>
+    <div className={cn("flex w-full h-fit items-center text-white gap-x-2", className)}>
       <FiSearch onClick={onClick} className="text-2xl cursor-pointer" />
       
       <input
@@ -19,6 +19,7 @@ function Search({ className, onChange, clearInput, onClick, isFocused }, ref) {
         className={cn(
           "duration-700",
           "transition-[border,width]",
+          // "transition-all",
           "ease-in-out",
           "bg-transparent",
           "font-light",
@@ -27,7 +28,7 @@ function Search({ className, onChange, clearInput, onClick, isFocused }, ref) {
           "focus-visible:outline-none",
           "border-slate-200",
           isFocused
-            ? "w-[36vw] max-w-40 border-b-[.3px] opacity-100"
+            ? "flex-1 md:w-[36vw] md:max-w-40 border-b-[.3px] opacity-100"
             : "w-0 opacity-0 border-none outline-none ring-0"
         )}
       />
