@@ -166,15 +166,14 @@ export default function Portfolio() {
           "mb-[100px]"
         )}
       >
-        {projects.map((project, index) => {
+        {projects.map((proj, i) => {
           return (
             <PortfolioItem
-              index={index}
-              title={project.title}
-              category={project.category}
-              projectId={project.video_key}
+              index={i}
+              projectId={proj.video_key}
+              {...proj}
               manageModal={manageModal}
-              key={index}
+              key={i}
             />
           );
         })}

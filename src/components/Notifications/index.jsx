@@ -62,7 +62,6 @@ export function Notification({ text, id, removeNotif }) {
         "font-medium",
         "shadow-lg",
         "text-white",
-
         "bg-emerald-500",
         "fixed",
         "z-50",
@@ -80,7 +79,7 @@ export function Notification({ text, id, removeNotif }) {
           "rounded-full",
           "bg-white",
           // "text-purple-600",
-          "bg-emerald-500",
+          "text-emerald-500",
           "shadow"
         )}
       />

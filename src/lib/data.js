@@ -2,6 +2,11 @@ import torsh from "/public/images/company/torsh.png";
 import vouzot from "/public/images/company/vouzot.png";
 import pasteui from "/public/images/company/pasteui.png";
 
+import mern from "/public/images/tech/mern.png";
+import next from "/public/images/tech/next.png";
+import expo from "/public/images/tech/expo.png";
+import vite from "/public/images/tech/vite.png";
+
 import jason_humphrey from "/public/images/testimonials/jason-humphrey.png";
 
 export const userData = {
@@ -40,7 +45,8 @@ export const projectsData = [
     color: "#e3e5e7",
     video_key: "GJyPpc8qaHA",
     // category: "Web Development",
-    category: "MERN",
+    category: "Fullstack",
+    tech_image: mern.src,
     stack: "MERN",
     technology_feature: [
       "Tailwind",
@@ -130,7 +136,8 @@ export const projectsData = [
     isPriority: false,
     video_key: "QKGIvW886dc",
     stack: "Next JS",
-    category: "Next JS",
+    tech_image: next.src,
+    category: "Fullstack",
     technology_feature: [
       "Tailwind CSS",
       "Next JS 14 (App Router)",
@@ -203,7 +210,8 @@ export const projectsData = [
     video_key: "zHL1eT87OCw",
     // category: "UI/UX Design",
     stack: "Next JS",
-    category: "Next JS",
+    category: "Fullstack",
+    tech_image: next.src,
     technology_feature: [
       "Tailwind",
       "React",
@@ -265,8 +273,9 @@ export const projectsData = [
     isPriority: false,
     video_key: "iT6ahO0CHtM",
     // category: "UI/UX Design",
-    stack: "MERN",
-    category: "MERN",
+    stack: "React/Vite",
+    tech_image: vite.src,
+    category: "Frontend",
     technology_feature: [
       "html",
       "css",
@@ -350,7 +359,8 @@ export const projectsData = [
     desc: "This is just some placeholder text until i make time to actually create the real deal. If you're seeing this, then it means I love you",
     color: "#ec4e39",
     video_key: "dX3WaXJ9ibw",
-    category: "MERN",
+    category: "Frontend",
+    tech_image: vite.src,
     technology_feature: [
       "Tailwind",
       "React",
@@ -437,6 +447,7 @@ export const projectsData = [
     color: "#e1dad6",
     video_key: "PyaAp-eANRQ",
     category: "React Native",
+    tech_image: expo.src,
     technology_feature: [
       "html",
       "css",
