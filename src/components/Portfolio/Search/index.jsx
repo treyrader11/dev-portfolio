@@ -14,7 +14,7 @@ function Search({ className, onChange, clearInput, onClick, isFocused }, ref) {
         "text-white",
         "gap-x-2",
         "inline-flex",
-      
+        "w-full",
         className
       )}
     >
@@ -39,7 +39,7 @@ function Search({ className, onChange, clearInput, onClick, isFocused }, ref) {
       >
         <FiSearch
           onClick={onClick}
-          className="fixed flex flex-shrink-0 text-3xl cursor-pointer w-fit"
+          className="fixed flex flex-shrink-0 text-3xl cursor-pointer left-6 w-fit"
         />
         <input
           ref={ref}
