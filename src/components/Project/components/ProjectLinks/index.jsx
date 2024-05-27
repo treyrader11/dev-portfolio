@@ -1,13 +1,11 @@
 import Rounded from "@/components/Rounded";
 import { cn } from "@/lib/utils";
-import Image from "next/image";
 import { BsDownload } from "react-icons/bs";
 
 function LinkItem({ href, label, hidden, className }) {
   return (
     <Rounded
       backgroundColor="transparent"
-      // href={`${href}`}
       className={cn(
         "w-full",
         "md:w-fit",
@@ -24,6 +22,7 @@ function LinkItem({ href, label, hidden, className }) {
     >
       <a
         href={href}
+        target="_blank"
         className={cn(
           { hidden },
           "flex",

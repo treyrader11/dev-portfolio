@@ -6,10 +6,9 @@ import Project from "./components/Project";
 import Rounded from "@/components/Rounded";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
-import { projectsData } from "@/lib/data";
 import PageTitle from "../PageTitle";
 import Scrollbar from "../Scrollbar";
-import { projectPositions } from "./constants";
+import { projectPositions, recentProjects } from "./constants";
 
 export default function RecentProjects({ className }) {
   const container = useRef(null);
@@ -42,8 +41,8 @@ export default function RecentProjects({ className }) {
 
         <Scrollbar positions={projectPositions} />
 
-        {projectsData.map((project, index) => {
-          const targetScale = 1 - (projectsData.length - index) * 0.05;
+        {recentProjects.map((project, index) => {
+          const targetScale = 1 - (RecentProjects.length - index) * 0.05;
           return (
             <Project
               position={projectPositions[index]}

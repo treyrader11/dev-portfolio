@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
-import { LuCopyCheck } from "react-icons/lu";
 import { FaRegCheckCircle } from "react-icons/fa";
+import { MdOutlineFileCopy } from "react-icons/md";
 import Confetti from "../Confetti";
 import useCopyToClipboard from "@/hooks/useCopyClipboard";
 import { useNotificationsContext } from "@/providers/NotificationsProvider";
@@ -10,12 +10,12 @@ export default function CodeEditor({ className, data, fileType }) {
   const { addNotification } = useNotificationsContext();
 
   const handleClick = (text) => {
-    if (text) {
-      console.log(`Copying text: ${text}`);
+    if (text && !copied) {
       copy(text);
-      addNotification({ text: `Copied: .env variables` });
+      addNotification({ text: `Copied .env variables` });
     }
   };
+
   return (
     <div
       className={cn(
@@ -24,8 +24,7 @@ export default function CodeEditor({ className, data, fileType }) {
         "h-auto",
         "relative",
         "group",
-        "py-4",
-        "pt-8",
+        "py-8",
         "px-2.5",
         "border",
         "text-slate-200",
@@ -37,7 +36,7 @@ export default function CodeEditor({ className, data, fileType }) {
         className
       )}
     >
-      <div className={cn("py-3", "px-3")}>
+      <div className="p-3">
         <code className="whitespace-pre text-[#588A44]"># {fileType}</code>
       </div>
       <div
@@ -54,20 +53,12 @@ export default function CodeEditor({ className, data, fileType }) {
           "hover:cursor-pointer"
         )}
       >
-        {copied ? (
-          <div className="flex items-center justify-end">
-            <FaRegCheckCircle className="text-teal-400 size-4" />
-            <span className="ml-1.5 text-teal-400 text-sm">Copied!</span>
-          </div>
-        ) : (
-          <div
-            className="flex items-center justify-end"
-            onClick={() => handleClick(data)}
-          >
-            <LuCopyCheck className="size-4" />
-            <span className="ml-1.5 text-sm">Copy</span>
-          </div>
-        )}
+        <CopyIcon
+          onClick={() => handleClick(data)}
+          icon={copied ? FaRegCheckCircle : MdOutlineFileCopy}
+          colorClass={cn({ "text-teal-400": copied })}
+          text={copied ? "Copied!" : "Copy"}
+        />
       </div>
       {data.map((data) => (
         <div
@@ -97,26 +88,15 @@ export default function CodeEditor({ className, data, fileType }) {
       ))}
 
       <Confetti copied={copied} />
+    </div>
+  );
+}
 
-      {/* <div
-          onClick={() => handleClick(data)}
-          className={cn(
-            "right-[10px]",
-            "top-[10px]",
-            "absolute",
-            "hidden",
-            // "group-hover:flex",
-            "flex-row",
-            "items-center",
-            "px-4",
-            "py-[5px]",
-            "cursor-pointer",
-            "rounded-md"
-          )}
-        >
-          <LuCopyCheck className="text-white size-5" />
-          <span className="ml-1.5">Copy</span>
-        </div> */}
+function CopyIcon({ icon: Icon, onClick, colorClass, text }) {
+  return (
+    <div onClick={onClick} className="flex items-center justify-end">
+      <Icon className={cn("size-4", colorClass)} />
+      <span className={cn("ml-1.5 text-sm", colorClass)}>{text}</span>
     </div>
   );
 }

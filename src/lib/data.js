@@ -108,13 +108,20 @@ export const projectsData = [
       ],
     },
     youtube_link: "https://youtu.be/yF1oJ7wzvWY",
-    githhub_link: "https://github.com/treyrader11/JSearch-Expo",
-    frontend_download_link:
-      "https://github.com/treyrader11/JSearch-Expo/archive/refs/heads/main.zip",
-    backend_download_link:
-      "https://github.com/treyrader11/JSearch-Expo/archive/refs/heads/main.zip",
+    githhub_link: "https://github.com/treyrader11/musiana-client",
+    download_links: {
+      frontend:
+        "https://github.com/treyrader11/Vouzot/archive/refs/heads/main.zip",
+      backend:
+        "https://github.com/treyrader11/musiana-server/archive/refs/heads/main.zip",
+    },
     project_image: "c2.png",
+    image: {
+      isPriority: true,
+      src: "c2.png",
+    },
     website_url: "https://musiana.vercel.app",
+    isRecent: true,
   },
   {
     title: "Vouzot",
@@ -176,6 +183,10 @@ export const projectsData = [
         "https://github.com/treyrader11/Vouzot/archive/refs/heads/main.zip",
     },
     project_image: "decimal.png",
+    image: {
+      isPriority: true,
+      src: "decimal.png",
+    },
     project_Img_Mobile: [
       "/deliveroo1.jpg",
       "/roo2.jpg",
@@ -240,7 +251,12 @@ export const projectsData = [
         "https://github.com/treyrader11/PasteUI/archive/refs/heads/main.zip",
     },
     project_image: "funny.png",
+    image: {
+      isPriority: true,
+      src: "funny.png",
+    },
     website_url: "https://www.pasteui.io",
+    isRecent: true,
   },
   {
     title: "Leetcode Clone",
@@ -322,7 +338,12 @@ export const projectsData = [
         "https://github.com/treyrader11/JSearch-Expo/archive/refs/heads/main.zip",
     },
     project_image: "google.png",
+    image: {
+      isPriority: true,
+      src: "google.png",
+    },
     website_url: "",
+    isRecent: false,
   },
   {
     title: "UTube Study",
@@ -403,7 +424,12 @@ export const projectsData = [
         "https://github.com/treyrader11/JSearch-Expo/archive/refs/heads/main.zip",
     },
     project_image: "maven.png",
+    image: {
+      isPriority: true,
+      src: "maven.png",
+    },
     website_url: "",
+    isRecent: true,
   },
   {
     title: "Logo Maker",
@@ -482,7 +508,12 @@ export const projectsData = [
         "https://github.com/treyrader11/PasteUI/archive/refs/heads/main.zip",
     },
     project_image: "panda.png",
+    image: {
+      isPriority: true,
+      src: "panda.png",
+    },
     website_url: "",
+    isRecent: false,
   },
 ];
 
