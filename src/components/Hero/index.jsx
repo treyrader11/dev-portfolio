@@ -109,11 +109,11 @@ export default function Hero({ isLoading, scrollYProgress, className }) {
             "w-1/2",
             "h-full",
             "hidden",
-            "1140:flex",
+            "lg:flex",
             "flex-row",
             "items-center",
             "select-none",
-            "justify-between "
+            "justify-between"
           )}
         >
           <Image
@@ -130,6 +130,7 @@ export default function Hero({ isLoading, scrollYProgress, className }) {
           />
         </div>
       </div>
+      {/* <JumpingIcon /> */}
     </motion.section>
   );
 }
@@ -148,9 +149,66 @@ const Card = ({ className, children }) => {
         ease: "easeInOut",
         delay: 0.25,
       }}
-      className={`relative h-full w-full overflow-hidden rounded-2xl border border-slate-800 bg-gradient-to-br from-slate-950/50 to-slate-900/80 p-6 ${className}`}
+      className={cn(
+        "relative",
+        "size-full",
+        "overflow-hidden",
+        "rounded-2xl",
+        "border",
+        "border-slate-800",
+        "bg-gradient-to-br",
+        "from-slate-950/50",
+        "to-slate-900/80",
+        "p-6",
+        className
+      )}
     >
       {children}
     </motion.div>
   );
 };
+
+function JumpingIcon({ className }) {
+  return (
+    <div
+      className={cn(
+        "absolute",
+        "xs:bottom-10",
+        "bottom-32",
+        "w-full",
+        "flex",
+        "justify-center",
+        "items-center",
+        className
+      )}
+    >
+      <a href="#about">
+        <div
+          className={cn(
+            "w-[35px]",
+            "h-[64px]",
+            "rounded-3xl",
+            "border-4",
+            "border-secondary",
+            "flex",
+            "justify-center",
+            "items-start",
+            "p-2"
+          )}
+        >
+          <motion.div
+            animate={{
+              y: [0, 24, 0],
+            }}
+            transition={{
+              duration: 1.5,
+              repeat: Infinity,
+              repeatType: "loop",
+            }}
+            className="mb-1 rounded-full size-3 bg-secondary"
+          />
+        </div>
+      </a>
+    </div>
+  );
+}

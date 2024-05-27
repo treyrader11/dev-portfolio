@@ -5,7 +5,7 @@ import { LuCopyCheck } from "react-icons/lu";
 import { cn } from "@/lib/utils";
 import Confetti from "@/components/Confetti";
 import useCopyToClipboard from "@/hooks/useCopyClipboard";
-import { useNotificationsContext } from "@/providers/notificationsProvider";
+import { useNotificationsContext } from "@/providers/NotificationsProvider";
 
 export default function Environnment({ data, title }) {
   const [copied, copy] = useCopyToClipboard(5000);

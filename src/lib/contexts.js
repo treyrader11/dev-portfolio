@@ -1,3 +1,6 @@
 import { createContext } from "react";
 
-export const PositionContext = createContext(null);
+const PositionContext = createContext(null);
+const NotificationsContext = createContext();
+
+export { PositionContext, NotificationsContext };

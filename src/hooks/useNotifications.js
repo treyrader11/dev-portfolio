@@ -8,7 +8,7 @@ const useNotifications = () => {
   const [notifications, setNotifications] = useState([]);
 
   const addNotification = useCallback((notification) => {
-    const id = Math.random().toString(36).substr(2, 9);
+    const id = Math.random().toString(36).slice(2, 11);
     const newNotification = { ...notification, id };
 
     setNotifications((prev) => [...prev, newNotification]);

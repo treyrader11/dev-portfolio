@@ -1,9 +1,8 @@
 "use client";
 
-import { createContext, useContext } from "react";
+import { useContext } from "react";
 import useNotifications from "@/hooks/useNotifications";
-
-const NotificationsContext = createContext();
+import { NotificationsContext } from "@/lib/contexts";
 
 export const NotificationsProvider = ({ children }) => {
   const notifications = useNotifications();

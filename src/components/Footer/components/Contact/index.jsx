@@ -8,11 +8,10 @@ import { cn } from "@/lib/utils";
 import { IoCopyOutline } from "react-icons/io5";
 import Confetti from "@/components/Confetti";
 import useCopyToClipboard from "@/hooks/useCopyClipboard";
-import { useNotificationsContext } from "@/providers/notificationsProvider";
+import { useNotificationsContext } from "@/providers/NotificationsProvider";
 
 export default function Contact({ style, rotate }) {
   const [copied, copy] = useCopyToClipboard(500);
-
   const { addNotification } = useNotificationsContext();
 
   const handleClick = (text) => {
@@ -42,7 +41,6 @@ export default function Contact({ style, rotate }) {
           "justify-between",
           "items-center",
           "border-light-300/70"
-          // "relative"
         )}
       >
         <div>
@@ -76,7 +74,6 @@ export default function Contact({ style, rotate }) {
                 "rounded-full",
                 "bg-secondary",
                 "p-0",
-
                 "left-[calc(100%_-_0px)]",
                 "md:left-[calc(100%_-_-100px)]",
                 "lg:left-[calc(100%_-_-200px)]",
