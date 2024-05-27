@@ -9,7 +9,7 @@ function Search({ className, onChange, clearInput, onClick, isFocused }, ref) {
   return (
     <div className={cn("flex items-center text-white gap-x-2", className)}>
       <FiSearch onClick={onClick} className="text-2xl cursor-pointer" />
-
+      
       <input
         ref={ref}
         placeholder="Search by tech..."

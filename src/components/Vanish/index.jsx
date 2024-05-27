@@ -29,7 +29,10 @@ export function Vanish({ phrases, className, delay = 0 }) {
           }
 
           return (
-            <motion.div key={word} className="whitespace-nowrap">
+            <motion.div
+              key={word}
+              className="inline-flex"
+            >
               {word.split("").map((letter, letterIndex) => {
                 const content = (
                   <motion.span
@@ -48,7 +51,6 @@ export function Vanish({ phrases, className, delay = 0 }) {
                       damping: 12,
                       stiffness: 200,
                     }}
-                    className="inline-block"
                     key={letterIndex}
                   >
                     {letter}
