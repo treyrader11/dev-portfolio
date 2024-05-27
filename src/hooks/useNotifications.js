@@ -7,6 +7,10 @@ const NOTIFICATION_TTL = 5000;
 const useNotifications = () => {
   const [notifications, setNotifications] = useState([]);
 
+  const removeNotification = useCallback((id) => {
+    setNotifications((prev) => prev.filter((notif) => notif.id !== id));
+  }, []);
+
   const addNotification = useCallback((notification) => {
     const id = Math.random().toString(36).slice(2, 11);
     const newNotification = { ...notification, id };
@@ -16,11 +20,9 @@ const useNotifications = () => {
     setTimeout(() => {
       removeNotification(id);
     }, NOTIFICATION_TTL);
-  }, []);
+  }, [removeNotification]);
 
-  const removeNotification = useCallback((id) => {
-    setNotifications((prev) => prev.filter((notif) => notif.id !== id));
-  }, []);
+  
 
   return {
     notifications,

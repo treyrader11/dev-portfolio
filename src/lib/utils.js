@@ -1,5 +1,6 @@
 // "use client";
 
+// import { genRandomNumbers } from "@/components/GridGlobe/components/Globe";
 import { clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -32,15 +33,6 @@ export const createScrollPositions = (positions) => {
   }));
 };
 
-// export const getLocalTime = () => {
-//   const now = new Date();
-//   const time = now.toLocaleTimeString("en-US", {
-//     hour: "2-digit",
-//     minute: "2-digit",
-//   });
-//   return time + " CT";
-// };
-
 export const getLocalTime = () => {
   const now = new Date();
   let hours = now.getHours();
@@ -55,4 +47,30 @@ export const getLocalTime = () => {
   const formattedHours = hours < 10 ? hours : hours.toString().padStart(2, "0");
 
   return `${formattedHours}:${formattedMinutes} ${ampm} CT`;
+};
+
+export const genRandomNumbers = (min, max, count) => {
+  const arr = [];
+  while (arr.length < count) {
+    const r = Math.floor(Math.random() * (max - min)) + min;
+    if (arr.indexOf(r) === -1) arr.push(r);
+  }
+
+  return arr;
+};
+
+export const hexToRgb = (hex) => {
+  var shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
+  hex = hex.replace(shorthandRegex, function (m, r, g, b) {
+    return r + r + g + g + b + b;
+  });
+
+  var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+  return result
+    ? {
+        r: parseInt(result[1], 16),
+        g: parseInt(result[2], 16),
+        b: parseInt(result[3], 16),
+      }
+    : null;
 };
