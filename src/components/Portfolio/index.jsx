@@ -87,9 +87,15 @@ export default function Portfolio() {
   };
 
   const clearInput = () => {
-    // inputRef.current === "";
-    inputRef.current === null;
+    inputRef.current.value = "";
     setFilteredProjects(projectsData);
+  };
+
+  const handleSearch = () => {
+    setFocused((prev) => setFocused(!prev));
+    if (focused) {
+      clearInput();
+    }
   };
 
   const filterProjectsBySearch = (text) => {
@@ -99,24 +105,6 @@ export default function Portfolio() {
 
     setFilteredProjects(filtered);
   };
-
-  const handleSearch = () => {
-    setFocused((prev) => setFocused(!prev));
-    if (!focused) {
-      clearInput();
-    }
-  }
-
-  // const filterProjectsBySearch = (text) => {
-  //   if (!text.trim()) {
-  //     setFilteredProjects(projects);
-  //   } else {
-  //     const filtered = projects.filter((proj) =>
-  //       proj.tags.some((tag) => tag.toLowerCase().includes(text.toLowerCase()))
-  //     );
-  //     setFilteredProjects(filtered);
-  //   }
-  // };
 
   let xMoveContainer = useRef(null);
   let yMoveContainer = useRef(null);
