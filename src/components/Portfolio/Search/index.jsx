@@ -14,36 +14,46 @@ function Search({ className, onChange, clearInput, onClick, isFocused }, ref) {
         "text-white",
         "gap-x-2",
         "inline-flex",
-        "w-full",
+        "duration-700",
+        "transition-[border,width]",
+        "ease-in-out",
+        "w-6",
+        isFocused
+        ? cn("w-full", "md:max-w-1/2 border-b-[.3px]",)
+        : "border-none",
         className
       )}
     >
       <form
         className={cn(
-          "duration-700",
-          "transition-[border,width]",
-          "ease-in-out",
           "bg-transparent",
           "border-slate-200",
           "flex items-center",
           "overflow-hidden",
           "text-2xl",
-          "w-10",
+          // "w-10",
+          "w-full",
           "ml-0",
           "relative",
-          // "py-2",
-          isFocused
-            ? cn("w-full", "md:w-[36vw]", "md:max-w-[80]", "border-b-[.3px]")
-            : "border-none"
+          // isFocused
+          //   ? cn("border-b-[.3px]")
+          //   : "border-none"
         )}
       >
         <FiSearch
           onClick={onClick}
-          className="fixed flex flex-shrink-0 text-3xl cursor-pointer left-6 w-fit"
+          className={cn(
+            "fixed",
+            "flex",
+            "flex-shrink-0",
+            "text-3xl",
+            "cursor-pointer",
+            "left-6"
+          )}
         />
         <input
           ref={ref}
-          placeholder="Search by tech..."
+          placeholder="Search by stack..."
           onChange={(e) => onChange(e.target.value)}
           type="text"
           autoComplete="off"
@@ -51,11 +61,12 @@ function Search({ className, onChange, clearInput, onClick, isFocused }, ref) {
             "px-3",
             "ml-8",
             "sm:ml-12",
-            "font-light",
-            "placeholder:font-light",
+            "font-extralight",
+            "placeholder:font-extralight",
             "placeholder:text-slate-200",
             "focus-visible:outline-none",
             "bg-transparent"
+            // "w-auto"
           )}
         />
         {isFocused && (
