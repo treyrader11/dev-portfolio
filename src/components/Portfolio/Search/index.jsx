@@ -7,44 +7,75 @@ import { forwardRef } from "react";
 
 function Search({ className, onChange, clearInput, onClick, isFocused }, ref) {
   return (
-    <div className={cn("flex w-full h-fit items-center text-white gap-x-2", className)}>
-      <FiSearch onClick={onClick} className="text-2xl cursor-pointer" />
+    <div
+      className={cn(
+        "h-fit",
+        "items-center",
+        "text-white",
+        "gap-x-2",
+        "inline-flex",
       
-      <input
-        ref={ref}
-        placeholder="Search by tech..."
-        onChange={(e) => onChange(e.target.value)}
-        type="text"
-        autoComplete="off"
+        className
+      )}
+    >
+      <form
         className={cn(
           "duration-700",
           "transition-[border,width]",
-          // "transition-all",
           "ease-in-out",
           "bg-transparent",
-          "font-light",
-          "placeholder:font-light",
-          "placeholder:text-gray-500",
-          "focus-visible:outline-none",
           "border-slate-200",
+          "flex items-center",
+          "overflow-hidden",
+          "text-2xl",
+          "w-10",
+          "ml-0",
+          "relative",
+          // "py-2",
           isFocused
-            ? "flex-1 md:w-[36vw] md:max-w-40 border-b-[.3px] opacity-100"
-            : "w-0 opacity-0 border-none outline-none ring-0"
+            ? cn("w-full", "md:w-[36vw]", "md:max-w-[80]", "border-b-[.3px]")
+            : "border-none"
         )}
-      />
-      {isFocused && (
-        <MdClear
-          onClick={() => clearInput()}
+      >
+        <FiSearch
+          onClick={onClick}
+          className="fixed flex flex-shrink-0 text-3xl cursor-pointer w-fit"
+        />
+        <input
+          ref={ref}
+          placeholder="Search by tech..."
+          onChange={(e) => onChange(e.target.value)}
+          type="text"
+          autoComplete="off"
           className={cn(
-            "text-neutral-400",
-            "cursor-pointer",
-            "hover:opacity-80",
-            "duration-[400]",
-            "ease-in-out",
-            "transition-opacity"
+            "px-3",
+            "ml-8",
+            "sm:ml-12",
+            "font-light",
+            "placeholder:font-light",
+            "placeholder:text-slate-200",
+            "focus-visible:outline-none",
+            "bg-transparent"
           )}
         />
-      )}
+        {isFocused && (
+          <MdClear
+            onClick={() => clearInput()}
+            className={cn(
+              "text-neutral-400",
+              "cursor-pointer",
+              "hover:opacity-80",
+              "duration-[400]",
+              "ease-in-out",
+              "transition-opacity",
+              "ml-auto",
+              "flex-shrink-0",
+              "relative",
+              "z-[50]"
+            )}
+          />
+        )}
+      </form>
     </div>
   );
 }

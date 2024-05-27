@@ -91,8 +91,11 @@ export default function Portfolio() {
     setFilteredProjects(projectsData);
   };
 
-  const handleSearch = () => {
-    setFocused((prev) => setFocused(!prev));
+  const openSearch = () => {
+    setFocused((prev) => !prev);
+    if (!focused) {
+      inputRef.current.focus();
+    }
     if (focused) {
       clearInput();
     }
@@ -193,7 +196,7 @@ export default function Portfolio() {
               ref={inputRef}
               onChange={filterProjectsBySearch}
               clearInput={clearInput}
-              onClick={() => handleSearch()}
+              onClick={() => openSearch()}
               isFocused={focused}
               className=""
             />
