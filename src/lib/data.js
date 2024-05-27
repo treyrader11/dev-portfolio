@@ -29,23 +29,19 @@ export const userData = {
       `I've worked in React, Angular, Meteor, Svelte, Node.js, Express, KeystoneJS, MongoDB, MySQL, Prisma, Drizzle, Bootstrap, & Tailwind, to name a few. As of lately, most of my experience has been cosummed in honing in my frontend development skillset using Framer Motion & Gsap, often in tandem.`,
     ],
     current_project_url: "https://www.vouzot.com",
-    current_project: "Vouzot"
+    current_project: "Vouzot",
   },
 };
 
 export const projectsData = [
   {
     title: "Musiana",
-    description:
-      "Originally hailing from Austria, Berlin-based photographer Matthias Leindinger is a young creative brimming with talent and ideas.",
-    link: "https://www.ignant.com/2023/03/25/ad2186-matthias-leidingers-photographic-exploration-of-awe-and-wonder/",
+    desc: "This is just some placeholder text until i make time to actually create the real deal. If you're seeing this, then it means I love you",
     color: "#e3e5e7",
-    isPriority: true,
     video_key: "GJyPpc8qaHA",
-    say_hi: "Hi there 🤤",
-    category: "Web Development",
-    say_hi_blog:
-      "Food Shopping Project With Graphql server User Authentication  , Create , Read ,  Update , Delete And Google login , Github , Instgram , Facebook , JWT Auth  ",
+    // category: "Web Development",
+    category: "MERN",
+    stack: "MERN",
     technology_feature: [
       "Tailwind",
       "React",
@@ -59,8 +55,6 @@ export const projectsData = [
       "Stripe",
     ],
     //   icon: React.createElement(FaReact), //see byte grad
-    about_this_app:
-      "A Real Time Full Stack FoodOrder & Admin Dashboard application User Can Order and Contain Payment For Stripe And AdminDashBoard Feature Admin can make Product CRUD and Responsive Desing",
     packages: {
       frontend: [
         "@reduxjs/toolkit",
@@ -89,28 +83,28 @@ export const projectsData = [
     },
     env: {
       frontend: [
-        'DATABASE_URL',
-        'DIRECT_URL',
-        'GITHUB_CLIENT_ID',
-        'GITHUB_CLIENT_SECRET',
-        'GITHUB_AUTH_TOKEN',
-        'GOOGLE_CLIENT_ID',
-        'GOOGLE_CLIENT_SECRET',
-        'AUTH_SECRET',
-        'RESEND_API_KEY',
-        "NEXT_PUBLIC_APP_URL",
+        "VITE_APP_BACKEND_URL",
+        "VITE_APP_CLOUD_NAME",
+        "VITE_APP_GOOGLE_CLIENT_ID",
+        "VITE_APP_GOOGLE_CLIENT_SECRET",
+        "VITE_APP_FIREBASE_KEY",
       ],
       backend: [
-        'DATABASE_URL',
-        'DIRECT_URL',
-        'GITHUB_CLIENT_ID',
-        'GITHUB_CLIENT_SECRET',
-        'GITHUB_AUTH_TOKEN',
-        'GOOGLE_CLIENT_ID',
-        'GOOGLE_CLIENT_SECRET',
-        'AUTH_SECRET',
-        'RESEND_API_KEY',
-        "NEXT_PUBLIC_APP_URL",
+        "CLOUD_API_KEY",
+        "CLOUD_API_SECRET",
+        "CLOUD_NAME",
+        "JWT_LIFETIME",
+        "JWT_SECRET",
+        "MONGO_URI",
+        "MODE",
+        "PORT",
+        "EMAIL_HOST",
+        "EMAIL_USER",
+        "EMAIL_PASS",
+        "GOOGLE_CLIENT_SECRET",
+        "CRYPTR_KEY",
+        "GOOGLE_CLIENT_ID",
+        "FRONTEND_URL",
       ],
     },
     youtube_link: "https://youtu.be/yF1oJ7wzvWY",
@@ -119,26 +113,17 @@ export const projectsData = [
       "https://github.com/treyrader11/JSearch-Expo/archive/refs/heads/main.zip",
     backend_download_link:
       "https://github.com/treyrader11/JSearch-Expo/archive/refs/heads/main.zip",
-    // "https://github.com/HyatMyat4/DeshboardBackend/archive/refs/heads/main.zip",
     project_image: "c2.png",
-    project_blog:
-      "A Real Time Full Stack FoodOrder & Admin Dashboard application User Can Order and Contain Payment For Stripe And AdminDashBoard Feature Admin can make Product CRUD and",
-    Type: "Next js 13",
-    indevelopment: false,
     website_url: "https://musiana.vercel.app",
   },
   {
     title: "Vouzot",
-    description:
-      "This is a story on the border between reality and imaginary, about the contradictory feelings that the insularity of a rocky, arid, and wild territory provokes”—so French photographer Clément Chapillon describes his latest highly captivating project Les rochers fauves (French for ‘The tawny rocks’).",
-    link: "https://www.ignant.com/2022/09/30/clement-chapillon-questions-geographical-and-mental-isolation-with-les-rochers-fauves/",
+    desc: "This is just some placeholder text until i make time to actually create the real deal. If you're seeing this, then it means I love you",
     color: "#d6d7dc",
     isPriority: false,
     video_key: "QKGIvW886dc",
-    category: "Mobile Development",
-    say_hi: "Hi there 📱",
-    say_hi_blog:
-      "ReactNative First Project With Expo CLI Conatain Google AUthentication Contain Basic RestApi and Google Maps functionality ",
+    stack: "Next JS",
+    category: "Next JS",
     technology_feature: [
       "Tailwind CSS",
       "Next JS 14 (App Router)",
@@ -156,22 +141,8 @@ export const projectsData = [
       "Stroybook",
       "Docker",
     ],
-    about_this_app:
-      "It My First ReactNative App So The have a lot of Bug!, Feature Conatin Google Auth UserCanOrder Remove Order And Containe ReactNativeMap Justlike Deliveroo",
     packages: {
       frontend: [
-        "@reduxjs/toolkit",
-        "@uiball/loaders",
-        "firebase",
-        "firebase-admin",
-        "nextjs-progressbar",
-        "openai",
-        "react-firebase-hooks",
-        "react-icons",
-        "react-redux",
-        "react-simple-typewriter",
-      ],
-      backend: [
         "@reduxjs/toolkit",
         "@uiball/loaders",
         "firebase",
@@ -186,41 +157,25 @@ export const projectsData = [
     },
     env: {
       frontend: [
-        'DATABASE_URL',
-        'DIRECT_URL',
-        'GITHUB_CLIENT_ID',
-        'GITHUB_CLIENT_SECRET',
-        'GITHUB_AUTH_TOKEN',
-        'GOOGLE_CLIENT_ID',
-        'GOOGLE_CLIENT_SECRET',
-        'AUTH_SECRET',
-        'RESEND_API_KEY',
-        "NEXT_PUBLIC_APP_URL",
-      ],
-      backend: [
-        'DATABASE_URL',
-        'DIRECT_URL',
-        'GITHUB_CLIENT_ID',
-        'GITHUB_CLIENT_SECRET',
-        'GITHUB_AUTH_TOKEN',
-        'GOOGLE_CLIENT_ID',
-        'GOOGLE_CLIENT_SECRET',
-        'AUTH_SECRET',
-        'RESEND_API_KEY',
+        "DATABASE_URL",
+        "DIRECT_URL",
+        "GITHUB_CLIENT_ID",
+        "GITHUB_CLIENT_SECRET",
+        "GITHUB_AUTH_TOKEN",
+        "GOOGLE_CLIENT_ID",
+        "GOOGLE_CLIENT_SECRET",
+        "AUTH_SECRET",
+        "RESEND_API_KEY",
         "NEXT_PUBLIC_APP_URL",
       ],
     },
     youtube_link: "https://youtu.be/AxQ_Eli8gtk",
     githhub_link: "https://github.com/treyrader11/JSearch-Expo",
-    frontend_download_link:
-      "https://github.com/treyrader11/JSearch-Expo/archive/refs/heads/main.zip",
-    backend_download_link:
-      "https://github.com/treyrader11/JSearch-Expo/archive/refs/heads/main.zip",
-    // "https://github.com/HyatMyat4/Deliveroo/archive/refs/heads/main.zip",
+    download_links: {
+      frontend:
+        "https://github.com/treyrader11/Vouzot/archive/refs/heads/main.zip",
+    },
     project_image: "decimal.png",
-    project_blog:
-      "It My First ReactNative App So The have a lot of Bug!, Feature Conatin Google Auth UserCanOrder Remove Order And Containe ReactNativeMap Justlike Deliveroo",
-    Type: "React Native",
     project_Img_Mobile: [
       "/deliveroo1.jpg",
       "/roo2.jpg",
@@ -228,20 +183,16 @@ export const projectsData = [
       "/roo4.jpg",
       "/roo5.jpg",
     ],
-    indevelopment: false,
   },
   {
     title: "Paste UI",
-    description:
-      "Though he views photography as a medium for storytelling, Zissou’s images don’t insist on a narrative. Both crisp and ethereal, they’re encoded with an ambiguity—a certain tension—that lets the viewer find their own story within them.",
-    link: "https://www.ignant.com/2023/10/28/capturing-balis-many-faces-zissou-documents-the-sacred-and-the-mundane-of-a-fragile-island/",
+    desc: "This is just some placeholder text until i make time to actually create the real deal. If you're seeing this, then it means I love you",
     color: "#e3e3e3",
     isPriority: true,
     video_key: "zHL1eT87OCw",
-    category: "UI/UX Design",
-    say_hi: "Xi Form Responsive Food Project🤤",
-    say_hi_blog:
-      "Food Shopping Project With Graphql server User Authentication  , Create , Read ,  Update , Delete And Google login , Github , Instgram , Facebook , JWT Auth  ",
+    // category: "UI/UX Design",
+    stack: "Next JS",
+    category: "Next JS",
     technology_feature: [
       "Tailwind",
       "React",
@@ -254,23 +205,8 @@ export const projectsData = [
       "Graphql",
       "Stripe",
     ],
-
-    about_this_app:
-      "A Real Time Full Stack FoodOrder & Admin Dashboard application User Can Order and Contain Payment For Stripe And AdminDashBoard Feature Admin can make Product CRUD and Responsive Desing",
     packages: {
       frontend: [
-        "@reduxjs/toolkit",
-        "@uiball/loaders",
-        "firebase",
-        "firebase-admin",
-        "nextjs-progressbar",
-        "openai",
-        "react-firebase-hooks",
-        "react-icons",
-        "react-redux",
-        "react-simple-typewriter",
-      ],
-      backend: [
         "@reduxjs/toolkit",
         "@uiball/loaders",
         "firebase",
@@ -285,56 +221,36 @@ export const projectsData = [
     },
     env: {
       frontend: [
-        'DATABASE_URL',
-        'DIRECT_URL',
-        'GITHUB_CLIENT_ID',
-        'GITHUB_CLIENT_SECRET',
-        'GITHUB_AUTH_TOKEN',
-        'GOOGLE_CLIENT_ID',
-        'GOOGLE_CLIENT_SECRET',
-        'AUTH_SECRET',
-        'RESEND_API_KEY',
-        "NEXT_PUBLIC_APP_URL",
-      ],
-      backend: [
-        'DATABASE_URL',
-        'DIRECT_URL',
-        'GITHUB_CLIENT_ID',
-        'GITHUB_CLIENT_SECRET',
-        'GITHUB_AUTH_TOKEN',
-        'GOOGLE_CLIENT_ID',
-        'GOOGLE_CLIENT_SECRET',
-        'AUTH_SECRET',
-        'RESEND_API_KEY',
+        "DATABASE_URL",
+        "DIRECT_URL",
+        "GITHUB_CLIENT_ID",
+        "GITHUB_CLIENT_SECRET",
+        "GITHUB_AUTH_TOKEN",
+        "GOOGLE_CLIENT_ID",
+        "GOOGLE_CLIENT_SECRET",
+        "AUTH_SECRET",
+        "RESEND_API_KEY",
         "NEXT_PUBLIC_APP_URL",
       ],
     },
     youtube_link: "https://youtu.be/yF1oJ7wzvWY",
     githhub_link: "https://github.com/treyrader11/JSearch-Expo",
-    frontend_download_link:
-      "https://github.com/treyrader11/JSearch-Expo/archive/refs/heads/main.zip",
-    backend_download_link:
-      "https://github.com/treyrader11/JSearch-Expo/archive/refs/heads/main.zip",
+    download_links: {
+      frontend:
+        "https://github.com/treyrader11/PasteUI/archive/refs/heads/main.zip",
+    },
     project_image: "funny.png",
-    project_blog:
-      "A Real Time Full Stack FoodOrder & Admin Dashboard application User Can Order and Contain Payment For Stripe And AdminDashBoard Feature Admin can make Product CRUD and",
-    Type: "Next js 13",
-    indevelopment: false,
-    website_url: "",
+    website_url: "https://www.pasteui.io",
   },
   {
     title: "Leetcode Clone",
-    description:
-      "The coastlines of Denmark are documented in tonal colors in a pensive new series by Danish photographers Ulrik Hasemann and Mathias Svold; an ongoing project investigating how humans interact with and disrupt the Danish coast.",
-    src: "google.png",
-    link: "https://www.ignant.com/2019/03/13/a-photographic-series-depicting-the-uncertain-future-of-denmarks-treasured-coastlines/",
+    desc: "This is just some placeholder text until i make time to actually create the real deal. If you're seeing this, then it means I love you",
     color: "#21242b",
     isPriority: false,
     video_key: "iT6ahO0CHtM",
-    category: "UI/UX Design",
-    say_hi: "Hi there 💚",
-    say_hi_blog:
-      "This is my First AI Project data Coming From Opend AI , You can asked like RealTime Chat GPT   ",
+    // category: "UI/UX Design",
+    stack: "MERN",
+    category: "MERN",
     technology_feature: [
       "html",
       "css",
@@ -345,9 +261,6 @@ export const projectsData = [
       "Type Script",
       "Firebase",
     ],
-
-    about_this_app:
-      "This Appp Contain Chate Create , Read , Update , Delete and Google Authentication , Microsoft Authentication , JWT Authentication functionality ",
     packages: {
       frontend: [
         "@reduxjs/toolkit",
@@ -376,55 +289,47 @@ export const projectsData = [
     },
     env: {
       frontend: [
-        'DATABASE_URL',
-        'DIRECT_URL',
-        'GITHUB_CLIENT_ID',
-        'GITHUB_CLIENT_SECRET',
-        'GITHUB_AUTH_TOKEN',
-        'GOOGLE_CLIENT_ID',
-        'GOOGLE_CLIENT_SECRET',
-        'AUTH_SECRET',
-        'RESEND_API_KEY',
+        "DATABASE_URL",
+        "DIRECT_URL",
+        "GITHUB_CLIENT_ID",
+        "GITHUB_CLIENT_SECRET",
+        "GITHUB_AUTH_TOKEN",
+        "GOOGLE_CLIENT_ID",
+        "GOOGLE_CLIENT_SECRET",
+        "AUTH_SECRET",
+        "RESEND_API_KEY",
         "NEXT_PUBLIC_APP_URL",
       ],
       backend: [
-        'DATABASE_URL',
-        'DIRECT_URL',
-        'GITHUB_CLIENT_ID',
-        'GITHUB_CLIENT_SECRET',
-        'GITHUB_AUTH_TOKEN',
-        'GOOGLE_CLIENT_ID',
-        'GOOGLE_CLIENT_SECRET',
-        'AUTH_SECRET',
-        'RESEND_API_KEY',
+        "DATABASE_URL",
+        "DIRECT_URL",
+        "GITHUB_CLIENT_ID",
+        "GITHUB_CLIENT_SECRET",
+        "GITHUB_AUTH_TOKEN",
+        "GOOGLE_CLIENT_ID",
+        "GOOGLE_CLIENT_SECRET",
+        "AUTH_SECRET",
+        "RESEND_API_KEY",
         "NEXT_PUBLIC_APP_URL",
       ],
     },
     youtube_link: "https://youtu.be/R90bxY4UwPg",
     githhub_link: "https://github.com/treyrader11/JSearch-Expo",
-    frontend_download_link:
-      "https://github.com/treyrader11/JSearch-Expo/archive/refs/heads/main.zip",
-    backend_download_link:
-      "https://github.com/treyrader11/JSearch-Expo/archive/refs/heads/main.zip",
+    download_links: {
+      frontend:
+        "https://github.com/treyrader11/JSearch-Expo/archive/refs/heads/main.zip",
+      backend:
+        "https://github.com/treyrader11/JSearch-Expo/archive/refs/heads/main.zip",
+    },
     project_image: "google.png",
-    project_blog:
-      "A Real Time You Can Ask any thing & you can create new chat delete chat & Clear conversations Feature and google , microsoft Auth",
-    Type: "Next js 13",
-    indevelopment: false,
     website_url: "",
   },
   {
     title: "UTube Study",
-    description:
-      "Dutch photographer Mark Rammers has shared with IGNANT the first chapter of his latest photographic project, ‘all over again’—captured while in residency at Hektor, an old farm in Los Valles, Lanzarote. Titled ‘Beginnings’, the mesmerizing collection of images is a visual and meditative journey into the origins of regrets and the uncertainty of stepping into new unknowns.",
-    link: "https://www.ignant.com/2023/04/12/mark-rammers-all-over-again-is-a-study-of-regret-and-the-willingness-to-move-forward/",
+    desc: "This is just some placeholder text until i make time to actually create the real deal. If you're seeing this, then it means I love you",
     color: "#ec4e39",
-    isPriority: true,
     video_key: "dX3WaXJ9ibw",
-    category: "Web Development",
-    say_hi: "Hello my friends 👟",
-    say_hi_blog:
-      "Xi That is My  Fullstack Responsive Shoes Project I get A lot of SKill Form This Project Complex Ui , authentication , CRUD 💚💚 ",
+    category: "MERN",
     technology_feature: [
       "Tailwind",
       "React",
@@ -437,8 +342,6 @@ export const projectsData = [
       "Firebase",
       "Stripe",
     ],
-    about_this_app:
-      "A Real Time Full Stack Responsive Shoe Ecommerce & Admin Dashboard application User Can Order and Contain Real World Payment For Stripe And AdminDashBoard Feature Admin can make Product CRUD and Promote Product CRUD Admin Can look How Much User & Chart Pie , Chart line and Auth Google , Nike Auth",
     packages: {
       frontend: [
         "@reduxjs/toolkit",
@@ -467,55 +370,47 @@ export const projectsData = [
     },
     env: {
       frontend: [
-        'DATABASE_URL',
-        'DIRECT_URL',
-        'GITHUB_CLIENT_ID',
-        'GITHUB_CLIENT_SECRET',
-        'GITHUB_AUTH_TOKEN',
-        'GOOGLE_CLIENT_ID',
-        'GOOGLE_CLIENT_SECRET',
-        'AUTH_SECRET',
-        'RESEND_API_KEY',
+        "DATABASE_URL",
+        "DIRECT_URL",
+        "GITHUB_CLIENT_ID",
+        "GITHUB_CLIENT_SECRET",
+        "GITHUB_AUTH_TOKEN",
+        "GOOGLE_CLIENT_ID",
+        "GOOGLE_CLIENT_SECRET",
+        "AUTH_SECRET",
+        "RESEND_API_KEY",
         "NEXT_PUBLIC_APP_URL",
       ],
       backend: [
-        'DATABASE_URL',
-        'DIRECT_URL',
-        'GITHUB_CLIENT_ID',
-        'GITHUB_CLIENT_SECRET',
-        'GITHUB_AUTH_TOKEN',
-        'GOOGLE_CLIENT_ID',
-        'GOOGLE_CLIENT_SECRET',
-        'AUTH_SECRET',
-        'RESEND_API_KEY',
+        "DATABASE_URL",
+        "DIRECT_URL",
+        "GITHUB_CLIENT_ID",
+        "GITHUB_CLIENT_SECRET",
+        "GITHUB_AUTH_TOKEN",
+        "GOOGLE_CLIENT_ID",
+        "GOOGLE_CLIENT_SECRET",
+        "AUTH_SECRET",
+        "RESEND_API_KEY",
         "NEXT_PUBLIC_APP_URL",
       ],
     },
     youtube_link: "https://youtu.be/v3LJMcWbcDQ",
     githhub_link: "https://github.com/treyrader11/JSearch-Expo",
-    frontend_download_link:
-      "https://github.com/treyrader11/JSearch-Expo/archive/refs/heads/main.zip",
-    backend_download_link:
-      "https://github.com/treyrader11/JSearch-Expo/archive/refs/heads/main.zip",
+    download_links: {
+      frontend:
+        "https://github.com/treyrader11/JSearch-Expo/archive/refs/heads/main.zip",
+      backend:
+        "https://github.com/treyrader11/JSearch-Expo/archive/refs/heads/main.zip",
+    },
     project_image: "maven.png",
-    project_blog:
-      "This is just some placeholder text until i make time to actually create the real deal. If you're seeing this, then it means I love you",
-    Type: "Next js 13",
-    indevelopment: false,
     website_url: "",
   },
   {
     title: "Logo Maker",
-    description:
-      "Dutch photographer Mark Rammers has shared with IGNANT the first chapter of his latest photographic project, ‘all over again’—captured while in residency at Hektor, an old farm in Los Valles, Lanzarote. Titled ‘Beginnings’, the mesmerizing collection of images is a visual and meditative journey into the origins of regrets and the uncertainty of stepping into new unknowns.",
-    link: "https://www.ignant.com/2023/04/12/mark-rammers-all-over-again-is-a-study-of-regret-and-the-willingness-to-move-forward/",
+    desc: "This is just some placeholder text until i make time to actually create the real deal. If you're seeing this, then it means I love you",
     color: "#e1dad6",
-    isPriority: false,
     video_key: "PyaAp-eANRQ",
-    category: "Web Development",
-    say_hi: "Hi there! 👋🏼",
-    say_hi_blog:
-      "This is just some placeholder text until i make time to actually create the real deal. If you're seeing this, then it means I love you",
+    category: "React Native",
     technology_feature: [
       "html",
       "css",
@@ -526,8 +421,6 @@ export const projectsData = [
       "Three js",
       "Framer Motion",
     ],
-    about_this_app:
-      "This is just some placeholder text until i make time to actually create the real deal. If you're seeing this, then it means I love you",
     packages: {
       frontend: [
         "@reduxjs/toolkit",
@@ -556,41 +449,39 @@ export const projectsData = [
     },
     env: {
       frontend: [
-        'DATABASE_URL',
-        'DIRECT_URL',
-        'GITHUB_CLIENT_ID',
-        'GITHUB_CLIENT_SECRET',
-        'GITHUB_AUTH_TOKEN',
-        'GOOGLE_CLIENT_ID',
-        'GOOGLE_CLIENT_SECRET',
-        'AUTH_SECRET',
-        'RESEND_API_KEY',
-        // 'NEXT_PUBLIC_APP_URL="http://localhost:3000"',
+        "DATABASE_URL",
+        "DIRECT_URL",
+        "GITHUB_CLIENT_ID",
+        "GITHUB_CLIENT_SECRET",
+        "GITHUB_AUTH_TOKEN",
+        "GOOGLE_CLIENT_ID",
+        "GOOGLE_CLIENT_SECRET",
+        "AUTH_SECRET",
+        "RESEND_API_KEY",
         "NEXT_PUBLIC_APP_URL",
       ],
       backend: [
-        'DATABASE_URL',
-        'DIRECT_URL',
-        'GITHUB_CLIENT_ID',
-        'GITHUB_CLIENT_SECRET',
-        'GITHUB_AUTH_TOKEN',
-        'GOOGLE_CLIENT_ID',
-        'GOOGLE_CLIENT_SECRET',
-        'AUTH_SECRET',
-        'RESEND_API_KEY',
+        "DATABASE_URL",
+        "DIRECT_URL",
+        "GITHUB_CLIENT_ID",
+        "GITHUB_CLIENT_SECRET",
+        "GITHUB_AUTH_TOKEN",
+        "GOOGLE_CLIENT_ID",
+        "GOOGLE_CLIENT_SECRET",
+        "AUTH_SECRET",
+        "RESEND_API_KEY",
         "NEXT_PUBLIC_APP_URL",
       ],
     },
     youtube_link: "https://youtu.be/6wzf2ho-kzI",
     githhub_link: "https://github.com/treyrader11/JSearch-Expo",
-    frontend_download_link:
-      "https://github.com/treyrader11/JSearch-Expo/archive/refs/heads/main.zip",
-    backend_download_link:
-      "https://github.com/treyrader11/JSearch-Expo/archive/refs/heads/main.zip",
+    download_links: {
+      frontend:
+        "https://github.com/treyrader11/PasteUI/archive/refs/heads/main.zip",
+      backend:
+        "https://github.com/treyrader11/PasteUI/archive/refs/heads/main.zip",
+    },
     project_image: "panda.png",
-    project_blog: "An app that helps design logos",
-    Type: "React",
-    indevelopment: false,
     website_url: "",
   },
 ];

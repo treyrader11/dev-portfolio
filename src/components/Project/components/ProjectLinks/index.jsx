@@ -3,11 +3,11 @@ import { cn } from "@/lib/utils";
 import Image from "next/image";
 import { BsDownload } from "react-icons/bs";
 
-function LinkItem({ href, imageSrc, imageAlt, label, hidden, className }) {
+function LinkItem({ href, label, hidden, className }) {
   return (
     <Rounded
       backgroundColor="transparent"
-      href={`${href}`}
+      // href={`${href}`}
       className={cn(
         "w-full",
         "md:w-fit",
@@ -33,44 +33,14 @@ function LinkItem({ href, imageSrc, imageAlt, label, hidden, className }) {
           className
         )}
       >
-        {imageSrc ? (
-          <Image
-            src={imageSrc}
-            className="w-[25px] h-auto"
-            width={1920}
-            height={1080}
-            alt={imageAlt}
-          />
-        ) : (
-          <BsDownload strokeWidth={1} className="group-hover:animate-bounce" />
-        )}
+        <BsDownload strokeWidth={1} className="group-hover:animate-bounce" />
         <span className="font-semibold ml-[6px]">{label}</span>
       </a>
     </Rounded>
   );
 }
 
-export default function ProjectLinks({
-  className,
-  links: [ frontend_download_link, backend_download_link ],
-}) {
-  const links = [
-    {
-      href: frontend_download_link,
-      imageSrc: null,
-      imageAlt: "",
-      label: "Frontend",
-      hidden: !frontend_download_link.length,
-    },
-    {
-      href: backend_download_link,
-      imageSrc: null,
-      imageAlt: "",
-      label: "Backend",
-      hidden: !backend_download_link.length,
-    },
-  ];
-
+export default function ProjectLinks({ className, links }) {
   return (
     <div className={cn("w-full", className)}>
       <div
@@ -83,9 +53,12 @@ export default function ProjectLinks({
           "items-center"
         )}
       >
-        {links.map((link, index) => (
-          <LinkItem key={index} {...link} className="relative z-10" />
-        ))}
+        {links.map(
+          (link, index) =>
+            link.href && (
+              <LinkItem key={index} {...link} className="relative z-10" />
+            )
+        )}
       </div>
     </div>
   );

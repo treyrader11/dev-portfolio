@@ -9,15 +9,25 @@ import LinkDecorator from "@/components/LinkDecorator";
 import Block from "@/components/Block";
 
 export default function ProjectDetails({ data }) {
-  const {
-    title,
-    video_key,
-    about_this_app,
-    technology_feature,
-    env,
-    frontend_download_link,
-    backend_download_link,
-  } = data[0];
+  const { title, video_key, desc, technology_feature, env, download_links } =
+    data[0];
+
+  // const download_links = backend_download_link
+  //   ? [frontend_download_link, backend_download_link]
+  //   : [frontend_download_link];
+
+  const _links = [
+    {
+      href: download_links.frontend,
+      label: "Frontend",
+      hidden: !download_links.frontend.length,
+    },
+    {
+      href: download_links?.backend,
+      label: "Backend",
+      hidden: !download_links?.backend?.length,
+    },
+  ];
 
   return (
     <section className="pb-28bg-[#F1F1F1] px-6">
@@ -41,7 +51,7 @@ export default function ProjectDetails({ data }) {
         )}
       >
         <ProjectVideo src={video_key} />
-        <Block title="About this app" desc={about_this_app} />
+        <Block title="About this app" desc={desc} />
         <Block title="Technology & Features">
           <ul className="list-disc ml-5 mt-2.5 text-secondary">
             {technology_feature.map((data, index) => (
@@ -53,13 +63,14 @@ export default function ProjectDetails({ data }) {
         </Block>
 
         <Block title="Environment">
-          <Environment title="Frontend" data={env.frontend} />
-          <Environment title="Backend" data={env.backend} />
+          <Environment
+            title={env?.backend ? "Frontend" : null}
+            data={env.frontend}
+          />
+          {env?.backend && <Environment title="Backend" data={env.backend} />}
         </Block>
         <Block title="Links">
-          <ProjectLinks
-            links={[frontend_download_link, backend_download_link]}
-          />
+          <ProjectLinks links={_links} />
         </Block>
         <Magnetic>
           <Link

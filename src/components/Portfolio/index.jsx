@@ -117,12 +117,12 @@ export default function Portfolio() {
   }, []);
 
   const moveItems = (x, y) => {
-    xMoveContainer.current(x);
-    yMoveContainer.current(y);
-    xMoveCursor.current(x);
-    yMoveCursor.current(y);
-    xMoveCursorLabel.current(x);
-    yMoveCursorLabel.current(y);
+    xMoveContainer?.current(x);
+    yMoveContainer?.current(y);
+    xMoveCursor?.current(x);
+    yMoveCursor?.current(y);
+    xMoveCursorLabel?.current(x);
+    yMoveCursorLabel?.current(y);
   };
 
   const manageModal = (isModalActive, index, x, y) => {
