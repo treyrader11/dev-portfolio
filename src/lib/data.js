@@ -279,7 +279,7 @@ export const projectsData = [
     stack: "React/Vite",
     tech_image: vite.src,
     category: "Frontend",
-    tags: ["react", "cra", "shadcn"],
+    tags: ["react", "shadcn"],
     technology_feature: [
       "html",
       "css",
@@ -463,7 +463,7 @@ export const projectsData = [
       "Three js",
       "Framer Motion",
     ],
-    tags: ["React", ""],
+    tags: ["react", "redux"],
     packages: {
       frontend: [
         "@reduxjs/toolkit",
@@ -530,7 +530,7 @@ export const projectsData = [
       src: "panda.png",
     },
     website_url: "",
-    isRecent: false,
+    isRecent: true,
   },
 ];
 
@@ -1003,3 +1003,17 @@ export const otherSkills3 = [
     hight: 60,
   },
 ];
+
+export const tagColors = {
+  react: "teal",
+  mongodb: "green",
+  sass: "red",
+  shadcn: "purple",
+  next: "blue",
+  express: "orange",
+  mode: "indigo",
+  default: "#000000",
+  jwt: "pink",
+  "next-auth": "violet",
+  prisma: "aqua"
+};
