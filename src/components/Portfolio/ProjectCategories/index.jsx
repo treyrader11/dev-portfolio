@@ -13,8 +13,14 @@ export default function ProjectCategories({
         "pt-3",
         "px-6",
         "flex",
+        // "flex-nowrap",
         "items-center",
         "gap-[1.5rem]",
+        "overflow-x-auto",
+        "overflow-y-hidden",
+        "no-scrollbar",
+        "max-h-fit",
+        "min-h-fit",
         className
       )}
     >
@@ -31,6 +37,7 @@ export default function ProjectCategories({
             className={cn(
               selected === index && selectedClass,
               "inline-block",
+              "whitespace-nowrap",
               "font-semibold",
               "text-white",
               "border-none",
@@ -57,6 +64,19 @@ export default function ProjectCategories({
           </button>
         );
       })}
+      <div
+        className={cn(
+          "absolute",
+          "inset-y-0",
+          "right-0",
+          "z-10",
+          "w-20",
+          "bg-gradient-to-l",
+          "from-dark",
+          "to-transparent",
+          "lg:hidden"
+        )}
+      />
     </div>
   );
 }

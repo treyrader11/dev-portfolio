@@ -45,7 +45,7 @@ export const projectsData = [
     color: "#e3e5e7",
     video_key: "GJyPpc8qaHA",
     // category: "Web Development",
-    category: "Fullstack",
+    category: "Fullsjahdhhsdghdh",
     tech_image: mern.src,
     tags: ["react", "sass", "mongodb", "jwt", "express", "node"],
     stack: "MERN",
