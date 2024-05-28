@@ -12,7 +12,6 @@ import { scaleAnimation } from "./anim";
 import ProjectCategories from "./ProjectCategories";
 import BlurredIn from "../BlurredIn";
 import Search from "./Search";
-import CardFlip from "../CardFlip";
 
 export default function Portfolio() {
   const [projects, setProjects] = useState(projectsData);
