@@ -213,7 +213,8 @@ export default function Portfolio() {
                 "no-scrollbar",
                 "h-full",
                 "h-fit",
-                "items-center"
+                "items-center",
+                "py-3"
               )}
             />
 
