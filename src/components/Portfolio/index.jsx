@@ -169,8 +169,8 @@ export default function Portfolio() {
     >
       <BlurredIn once className="relative min-h-screen">
         <PageTitle title="Portfolio." />
-        <div className={cn("py-12 mx-0 px-6 bg-dark")}>
-          <p className="text-white">
+        <div className={cn("py-12 mx-0 bg-dark")}>
+          <p className="px-6 text-white">
             The following projects showcase my skills and experience through
             real-world examples of my work. Each project is briefly described
             with links to code repositories and live demos in it. It reflects my
@@ -188,7 +188,8 @@ export default function Portfolio() {
               // "relative",
               "items-center",
               "gap-[2rem]",
-              "w-full"
+              "w-full",
+              "pl-5"
               // "h-full"
             )}
           >

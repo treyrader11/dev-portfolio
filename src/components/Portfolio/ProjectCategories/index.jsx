@@ -52,8 +52,7 @@ export default function ProjectCategories({
         className={cn(
           "absolute",
           "inset-y-0",
-          "-right-5",
-          // "z-10",
+          "-right-4",
           "w-24",
           "bg-gradient-to-l",
           "from-dark",
