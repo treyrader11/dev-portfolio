@@ -19,8 +19,8 @@ function Search({ className, onChange, clearInput, onClick, isFocused }, ref) {
         "ease-in-out",
         "w-6",
         isFocused
-        ? cn("w-full", "md:max-w-1/2 border-b-[.3px]",)
-        : "border-none",
+          ? cn("w-full", "md:max-w-1/2 border-b-[.3px]")
+          : "border-none",
         className
       )}
     >
@@ -31,13 +31,9 @@ function Search({ className, onChange, clearInput, onClick, isFocused }, ref) {
           "flex items-center",
           "overflow-hidden",
           "text-2xl",
-          // "w-10",
           "w-full",
           "ml-0",
-          "relative",
-          // isFocused
-          //   ? cn("border-b-[.3px]")
-          //   : "border-none"
+          "relative"
         )}
       >
         <FiSearch
@@ -48,7 +44,8 @@ function Search({ className, onChange, clearInput, onClick, isFocused }, ref) {
             "flex-shrink-0",
             "text-3xl",
             "cursor-pointer",
-            "left-6"
+            "left-6",
+            // "pr-8",
           )}
         />
         <input
@@ -59,7 +56,7 @@ function Search({ className, onChange, clearInput, onClick, isFocused }, ref) {
           autoComplete="off"
           className={cn(
             "px-3",
-            "ml-8",
+            "ml-7",
             "sm:ml-12",
             "font-extralight",
             "placeholder:font-extralight",

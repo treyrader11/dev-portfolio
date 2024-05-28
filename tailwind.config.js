@@ -42,6 +42,7 @@ module.exports = {
         "octocat-wave": "octocat-wave 0.56s",
         "slide-up": "slide-up 0.5s ease-out",
         dash: "dash 1.5s ease-in-out infinite",
+        "rotate-gradient": "1.3s infinite ease-in-out",
       },
       keyframes: {
         slideleft2: {
@@ -61,6 +62,14 @@ module.exports = {
           },
           "40%, 80%": {
             transform: "rotate(10deg)",
+          },
+        },
+        "rotate-gradient": {
+          "0%": {
+            "background-position": "0% 0%",
+          },
+          "100%": {
+            "background-position": "100% 100%",
           },
         },
         dash: {

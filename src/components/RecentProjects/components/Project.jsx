@@ -8,10 +8,12 @@ import {
   motion,
   useScroll,
 } from "framer-motion";
-import { useRef, useContext } from "react";
+import { useRef, useContext, useState } from "react";
 import { cn } from "@/lib/utils";
 import Rounded from "@/components/Rounded";
 import { PositionContext } from "@/lib/contexts";
+import CardFlip from "@/components/CardFlip";
+import jason_humphrey from "/public/images/testimonials/jason-humphrey.png";
 
 export default function Project({
   index,
@@ -30,6 +32,16 @@ export default function Project({
   const positionContext = useContext(PositionContext);
   const { setActivePosition, setActivePositionProgress } =
     positionContext || {};
+
+  const [isFlipped, setIsFlipped] = useState(false);
+  const [isAnimating, setIsAnimating] = useState(false);
+
+  const handleFlip = () => {
+    if (!isAnimating) {
+      setIsFlipped(!isFlipped);
+      setIsAnimating(true);
+    }
+  };
 
   const { scrollYProgress } = useScroll({
     target: positionContainer,
@@ -53,11 +65,99 @@ export default function Project({
   // Position scrollbar logic end
 
   return (
-    <Link href={`/project/${video_key}`} className={className}>
-      <div
+    <a
+      // ref={positionContainer}
+      // href={isFlipped ? `/project/${video_key}` : undefined}
+      className={cn(
+        "cursor-pointer",
+        "flip",
+        "relative",
+        "-left-[9vw]",
+        className
+      )}
+      // onClick={handleFlip}
+      // ref={positionContainer}
+    >
+      {/* <CardFlip ref={positionContainer} imageSrc={project_image}> */}
+      <motion.div
         ref={positionContainer}
+        initial={false}
+        animate={{ rotateY: isFlipped ? 180 : 360 }}
+        transition={{ duration: 0.6, animationDirection: "normal" }}
+        onAnimationComplete={() => setIsAnimating(false)}
         style={{
           backgroundImage: `url(/shots/${project_image})`,
+          backgroundPosition: "center",
+          backgroundSize: "contain",
+          backgroundRepeat: "no-repeat",
+          top: getTopPosition(index),
+        }}
+        onClick={handleFlip}
+        className={cn(
+          "h-screen",
+          "flex",
+          "items-center",
+          "justify-center",
+          "sticky",
+          "top-0",
+          "inset-x-0",
+          //  "right-[-100vw]",
+          "z-[52]",
+          "w-[120%]",
+          // "mx-auto"
+
+          // "flip-card-inner",
+          // "flip-card-front"
+          //backface-visibility: hidden
+          // ""
+        )}
+      >
+        {/* <div className="bg-cover flip-card-back size-full">back</div> */}
+        {/* <div className="relative size-full group">
+          <ShotHoverOverlay
+            projectId={video_key}
+            title={title}
+            category={category}
+          />
+        </div> */}
+
+        {/* <div
+          ref={positionContainer}
+          onClick={handleFlip}
+          style={{
+            backgroundImage: `url(${jason_humphrey.src})`,
+            backgroundPosition: "center",
+            backgroundSize: "contain",
+            backgroundRepeat: "no-repeat",
+            top: getTopPosition(index),
+          }}
+          className={cn(
+            "h-screen",
+            "flex",
+            "items-center",
+            "justify-center",
+            "absolute",
+            "top-0",
+            "inset-x-0",
+            "z-[55]",
+            // "bg-cover",
+            "flip-card-back",
+            // "rotate-[100deg]",
+            // "absolute",
+            "bg-violet-500",
+            "size-full"
+          )}
+        /> */}
+      </motion.div>
+      {/* <motion.div
+        initial={false}
+        animate={{ rotateY: isFlipped ? 180 : 360 }}
+        transition={{ duration: 0.6, animationDirection: "normal" }}
+        onAnimationComplete={() => setIsAnimating(false)}
+        // ref={positionContainer}
+        onClick={handleFlip}
+        style={{
+          backgroundImage: `url(${jason_humphrey.src})`,
           backgroundPosition: "center",
           backgroundSize: "contain",
           backgroundRepeat: "no-repeat",
@@ -71,18 +171,41 @@ export default function Project({
           "sticky",
           "top-0",
           "inset-x-0",
-          "z-[52]"
+          "z-[55]",
+          // "bg-cover",
+          "flip-card-back",
+          // "rotate-[100deg]",
+          // "absolute",
+          "bg-violet-500",
+          "size-full"
         )}
-      >
-        {/* <div className="relative size-full group">
-          <ShotHoverOverlay
-            projectId={video_key}
-            title={title}
-            category={category}
-          />
-        </div> */}
-      </div>
-    </Link>
+      /> */}
+      {/* <div
+        style={{
+          // backgroundImage: `url(${project_image})`,
+          // backgroundPosition: "center",
+          // backgroundSize: "contain",
+          // backgroundRepeat: "no-repeat",
+          // top: getTopPosition(index),
+        }}
+        className={cn(
+          "h-screen",
+          "flex",
+          "items-center",
+          "justify-center",
+          "sticky",
+          "top-0",
+          "inset-x-0",
+          "z-[55]",
+          "bg-cover",
+          // "flip-card-back",
+          "rotate-[100deg]",
+          "absolute",
+          "bg-violet-500 size-full",
+          className
+        )}
+      /> */}
+    </a>
   );
 }
 

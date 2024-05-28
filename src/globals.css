@@ -47,6 +47,25 @@
   color: white;
 }
 
+.flip {
+  perspective: 1000px;
+}
+
+.flip-card-inner {
+  transition: transform 0.6s;
+  transform-style: perspective-3d;
+}
+
+.flip-card-front,
+.flip-card-back {
+  /* position: absolute; */
+  backface-visibility: hidden;
+}
+
+.flip-card-back {
+  transform: rotateY(100deg);
+}
+
 @layer base {
   :root {
     --navigation-height: 4.8rem;
