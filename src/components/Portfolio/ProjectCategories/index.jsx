@@ -48,20 +48,20 @@ export default function ProjectCategories({
           </button>
         );
       })}
-      {/* <div
+      <div
         className={cn(
-          "fixed",
+          "absolute",
           "inset-y-0",
-          "right-0",
-          "z-10",
+          "-right-5",
+          // "z-10",
           "w-24",
           "bg-gradient-to-l",
           "from-dark",
           "to-transparent",
           "lg:hidden",
-          "h-5"
+          // "h-5"
         )}
-      /> */}
+      />
     </div>
   );
 }

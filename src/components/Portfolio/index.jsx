@@ -165,8 +165,9 @@ export default function Portfolio() {
       onMouseMove={(e) => {
         moveItems(e.clientX, e.clientY);
       }}
+      className="relative "
     >
-      <BlurredIn once>
+      <BlurredIn once className="relative min-h-screen">
         <PageTitle title="Portfolio." />
         <div className={cn("py-12 mx-0 px-6 bg-dark")}>
           <p className="text-white">
@@ -178,19 +179,17 @@ export default function Portfolio() {
           </p>
           <div
             className={cn(
+              "sticky",
+              // "h-screen",
+              "top-0",
               "mt-8",
               "pt-3",
               "flex",
-              "relative",
+              // "relative",
               "items-center",
               "gap-[2rem]",
-              // "overflow-x-auto",
-              // "overflow-y-hidden",
-              // "no-scrollbar",
-              // "max-h-fit",
-              // "min-h-fit",
-              "w-full",
-              "h-full"
+              "w-full"
+              // "h-full"
             )}
           >
             <Search
@@ -207,29 +206,17 @@ export default function Portfolio() {
               filterProjects={filterProjects}
               categories={categories}
               className={cn(
-                "flex gap-3 overflow-auto",
+                "flex",
+                "gap-4",
+                "overflow-auto",
                 "overflow-x-auto",
                 "overflow-y-hidden",
                 "no-scrollbar",
                 "h-full",
                 "h-fit",
                 "items-center",
-                "py-3"
-              )}
-            />
-
-            <div
-              className={cn(
-                "fixed",
-                "inset-y-0",
-                "right-0",
-                "z-10",
-                "w-24",
-                "bg-gradient-to-l",
-                "from-dark",
-                "to-transparent",
-                "lg:hidden"
-                // "h-5"
+                "py-3",
+                "pr-8"
               )}
             />
           </div>

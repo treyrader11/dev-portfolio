@@ -43,7 +43,7 @@ function Search({ className, onChange, clearInput, onClick, isFocused }, ref) {
             "absolute",
             "flex",
             "flex-shrink-0",
-            "text-3xl",
+            "text-2xl",
             "cursor-pointer",
             // "left-6",
             // "pr-8",
