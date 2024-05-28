@@ -12,10 +12,6 @@ export default function ProjectDetails({ data }) {
   const { title, video_key, desc, technology_feature, env, download_links } =
     data[0];
 
-  // const download_links = backend_download_link
-  //   ? [frontend_download_link, backend_download_link]
-  //   : [frontend_download_link];
-
   const _links = [
     {
       href: download_links.frontend,
@@ -30,7 +26,7 @@ export default function ProjectDetails({ data }) {
   ];
 
   return (
-    <section className="pb-28bg-[#F1F1F1] px-6">
+    <section className="pb-28 bg-[#F1F1F1] px-6">
       <PageTitle
         title={title}
         backgroundColor="transparent"
@@ -47,7 +43,8 @@ export default function ProjectDetails({ data }) {
           "justify-start",
           "px-2.5",
           "sm:px-4",
-          "md::px-0"
+          "md::px-0",
+        
         )}
       >
         <ProjectVideo src={video_key} />

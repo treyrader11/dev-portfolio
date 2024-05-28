@@ -12,8 +12,9 @@ import { useRef, useContext, useState } from "react";
 import { cn } from "@/lib/utils";
 import Rounded from "@/components/Rounded";
 import { PositionContext } from "@/lib/contexts";
-import CardFlip from "@/components/CardFlip";
-import jason_humphrey from "/public/images/testimonials/jason-humphrey.png";
+import blank_shot from "/public/shots/blank-shot.png";
+import { useRouter } from "next/navigation";
+// import blank_shot from "/blank-shot.png";
 
 export default function Project({
   index,
@@ -35,6 +36,8 @@ export default function Project({
 
   const [isFlipped, setIsFlipped] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
+
+  const router = useRouter();
 
   const handleFlip = () => {
     if (!isAnimating) {
@@ -65,147 +68,97 @@ export default function Project({
   // Position scrollbar logic end
 
   return (
-    <a
-      // ref={positionContainer}
-      // href={isFlipped ? `/project/${video_key}` : undefined}
-      className={cn(
-        "cursor-pointer",
-        "flip",
-        "relative",
-        "-left-[9vw]",
-        className
-      )}
-      // onClick={handleFlip}
-      // ref={positionContainer}
-    >
-      {/* <CardFlip ref={positionContainer} imageSrc={project_image}> */}
-      <motion.div
-        ref={positionContainer}
-        initial={false}
-        animate={{ rotateY: isFlipped ? 180 : 360 }}
-        transition={{ duration: 0.6, animationDirection: "normal" }}
-        onAnimationComplete={() => setIsAnimating(false)}
-        style={{
-          backgroundImage: `url(/shots/${project_image})`,
-          backgroundPosition: "center",
-          backgroundSize: "contain",
-          backgroundRepeat: "no-repeat",
-          top: getTopPosition(index),
-        }}
-        onClick={handleFlip}
+    <>
+      <a
+        // ref={positionContainer}
+        // href={`/project/${video_key}`}
         className={cn(
-          "h-screen",
-          "flex",
-          "items-center",
-          "justify-center",
-          "sticky",
-          "top-0",
-          "inset-x-0",
-          //  "right-[-100vw]",
-          "z-[52]",
-          "w-[120%]",
-          // "mx-auto"
-
-          // "flip-card-inner",
-          // "flip-card-front"
-          //backface-visibility: hidden
-          // ""
+          "cursor-pointer",
+          "flip",
+          // "relative",
+          // "-left-[9vw]",
+          className
         )}
+        onClick={handleFlip}
+        // ref={positionContainer}
       >
-        {/* <div className="bg-cover flip-card-back size-full">back</div> */}
-        {/* <div className="relative size-full group">
-          <ShotHoverOverlay
-            projectId={video_key}
-            title={title}
-            category={category}
-          />
-        </div> */}
-
-        {/* <div
+        <motion.div
           ref={positionContainer}
-          onClick={handleFlip}
+          initial={false}
+          animate={{ rotateY: isFlipped ? 180 : 360 }}
+          transition={{ duration: 0.6, animationDirection: "normal" }}
+          onAnimationComplete={() => setIsAnimating(false)}
           style={{
-            backgroundImage: `url(${jason_humphrey.src})`,
+            backgroundImage: `url(/shots/${project_image})`,
             backgroundPosition: "center",
             backgroundSize: "contain",
             backgroundRepeat: "no-repeat",
             top: getTopPosition(index),
           }}
+          // onClick={handleFlip}
           className={cn(
             "h-screen",
             "flex",
             "items-center",
             "justify-center",
-            "absolute",
+            "sticky",
             "top-0",
             "inset-x-0",
-            "z-[55]",
-            // "bg-cover",
-            "flip-card-back",
-            // "rotate-[100deg]",
-            // "absolute",
-            "bg-violet-500",
-            "size-full"
+            //  "right-[-100vw]",
+            "z-[52]",
+            "w-[120%]",
+
+            "flip-card-inner",
+            "flip-card-front"
           )}
-        /> */}
-      </motion.div>
-      {/* <motion.div
-        initial={false}
-        animate={{ rotateY: isFlipped ? 180 : 360 }}
-        transition={{ duration: 0.6, animationDirection: "normal" }}
-        onAnimationComplete={() => setIsAnimating(false)}
-        // ref={positionContainer}
-        onClick={handleFlip}
-        style={{
-          backgroundImage: `url(${jason_humphrey.src})`,
-          backgroundPosition: "center",
-          backgroundSize: "contain",
-          backgroundRepeat: "no-repeat",
-          top: getTopPosition(index),
-        }}
-        className={cn(
-          "h-screen",
-          "flex",
-          "items-center",
-          "justify-center",
-          "sticky",
-          "top-0",
-          "inset-x-0",
-          "z-[55]",
-          // "bg-cover",
-          "flip-card-back",
-          // "rotate-[100deg]",
-          // "absolute",
-          "bg-violet-500",
-          "size-full"
-        )}
-      /> */}
-      {/* <div
-        style={{
-          // backgroundImage: `url(${project_image})`,
-          // backgroundPosition: "center",
-          // backgroundSize: "contain",
-          // backgroundRepeat: "no-repeat",
-          // top: getTopPosition(index),
-        }}
-        className={cn(
-          "h-screen",
-          "flex",
-          "items-center",
-          "justify-center",
-          "sticky",
-          "top-0",
-          "inset-x-0",
-          "z-[55]",
-          "bg-cover",
-          // "flip-card-back",
-          "rotate-[100deg]",
-          "absolute",
-          "bg-violet-500 size-full",
-          className
-        )}
-      /> */}
-    </a>
+        />
+
+        <motion.div
+          // onClick={() => router.push(`/project/${video_key}`)}
+          initial={false}
+          animate={{ rotateY: isFlipped ? 360 : 180 }}
+          transition={{ duration: 0.6, animationDirection: "normal" }}
+          onAnimationComplete={() => setIsAnimating(false)}
+          style={{
+            backgroundImage: `url(${blank_shot.src})`,
+            backgroundPosition: "center",
+            backgroundSize: "contain",
+            backgroundRepeat: "no-repeat",
+            top: getTopPosition(index),
+          }}
+          onClick={handleFlip}
+          className={cn(
+            "h-[102vh]",
+            "fixed",
+            // "absolute",
+            // "top-0",
+            "inset-x-0",
+            "right-[-100vw]",
+            "z-[53]",
+            "w-[120%]",
+            "flex",
+            "items-center",
+            "flex-col",
+            "justify-center",
+            "flip-card-inner",
+            "flip-card-back"
+          )}
+        >
+          <Link
+            className={cn(
+              "p-6",
+              "text-white",
+              "bg-purple-400",
+              "rounded-full",
+              "size-fit"
+            )}
+            href={`/project/${video_key}`}
+          >
+            View Project
+          </Link>
+        </motion.div>
+      </a>
+    </>
   );
 }
 

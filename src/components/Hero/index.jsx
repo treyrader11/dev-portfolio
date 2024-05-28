@@ -6,10 +6,7 @@ import useMousePosition from "@/hooks/useMousePosition";
 import { cn } from "@/lib/utils";
 import { slideUp } from "./anim";
 import Image from "next/image";
-import Rounded from "@/components/Rounded";
-import { userData } from "@/lib/data";
 import BlurredIn from "../BlurredIn";
-import CardFlip from "../CardFlip";
 
 const phrase =
   "I'm a selectively skilled web developer focusing on delivering quality & impactful digital experiences.";
@@ -42,7 +39,7 @@ export default function Hero({ isLoading, scrollYProgress, className }) {
       )}
     >
       {/* cursor mask */}
-      {/* <motion.div
+      <motion.div
         className={cn(
           "size-full",
           "flex",
@@ -72,7 +69,7 @@ export default function Hero({ isLoading, scrollYProgress, className }) {
           <span className="text-purple-400"> 7 years</span> and making good shit
           only if the paycheck is equally good.
         </p>
-      </motion.div> */}
+      </motion.div>
 
       <div
         className={cn(
@@ -85,7 +82,6 @@ export default function Hero({ isLoading, scrollYProgress, className }) {
           "md:leading-[66px]"
         )}
       >
-         <CardFlip />
         <BlurredIn className={cn("w-[1000px] p-10 mt-[20%]")}>
           {phrase.split(" ").map((word, index) => {
             const isTargetedWord = targetedWords.includes(word.toLowerCase());
