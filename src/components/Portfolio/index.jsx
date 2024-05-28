@@ -12,6 +12,7 @@ import { scaleAnimation } from "./anim";
 import ProjectCategories from "./ProjectCategories";
 import BlurredIn from "../BlurredIn";
 import Search from "./Search";
+import CardFlip from "../CardFlip";
 
 export default function Portfolio() {
   const [projects, setProjects] = useState(projectsData);
@@ -189,7 +190,7 @@ export default function Portfolio() {
               "no-scrollbar",
               "max-h-fit",
               "min-h-fit",
-              "w-full",
+              "w-full"
             )}
           >
             <Search
@@ -215,7 +216,7 @@ export default function Portfolio() {
                 "bg-gradient-to-l",
                 "from-dark",
                 "to-transparent",
-                "lg:hidden",
+                "lg:hidden"
                 // "h-5"
               )}
             />
@@ -223,6 +224,7 @@ export default function Portfolio() {
         </div>
       </BlurredIn>
 
+      {/* <CardFlip /> */}
       <div
         ref={projContainer}
         className={cn(

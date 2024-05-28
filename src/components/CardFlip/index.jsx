@@ -3,8 +3,10 @@
 import { cn } from "@/lib/utils";
 import { useState, forwardRef } from "react";
 import { motion } from "framer-motion";
+import jason from "/public/images/testimonials/jason-humphrey.png";
+import vite from "/public/images/tech/vite.png";
 
-function CardFlip({ className, children }, ref) {
+function CardFlip({ className }, ref) {
   const [isFlipped, setIsFlipped] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
 
@@ -20,7 +22,7 @@ function CardFlip({ className, children }, ref) {
       <div
         ref={ref}
         onClick={handleFlip}
-        className={cn("flip-card rounded-md")}
+        className={cn("flip rounded-md")}
       >
         <motion.div
           initial={false}
@@ -33,16 +35,26 @@ function CardFlip({ className, children }, ref) {
 
           <div
             style={{
-            //   backgroundImage: `url(${imageSrc})`,
+              backgroundImage: `url(${jason.src})`,
               backgroundPosition: "center",
               backgroundSize: "contain",
               backgroundRepeat: "no-repeat",
             }}
             className={cn("bg-cover flip-card-front size-full", className)}
           >
-            {children}
+            
           </div>
-          {/* <div className="bg-cover flip-card-back size-full">back</div> */}
+          <div
+            style={{
+              backgroundImage: `url(${vite.src})`,
+              backgroundPosition: "center",
+              backgroundSize: "contain",
+              backgroundRepeat: "no-repeat",
+            }}
+            className={cn("bg-cover flip-card-back size-full", className)}
+          >
+            
+          </div>
         </motion.div>
       </div>
     </div>
