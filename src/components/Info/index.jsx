@@ -10,6 +10,7 @@ import LinkDecorator from "../LinkDecorator";
 import { useScroll, motion } from "framer-motion";
 import { useRef, useState } from "react";
 import BlurredIn from "../BlurredIn";
+import TechStack from "./TechStack";
 
 const socialLinks = [
   { name: "Facebook", href: userData.socialLinks.facebook },
@@ -125,20 +126,8 @@ export default function Info() {
                 </p>
               ))}
 
-              <h1
-                className={cn(
-                  "inline-block",
-                  "px-2",
-                  "py-1",
-                  "text-3xl",
-                  "font-bold",
-                  "bg-primary",
-                  "rounded-md",
-                  "text-gray-50"
-                )}
-              >
-                Tech Stack
-              </h1>
+              {/* <TechStack className="bg-amber-200" /> */}
+              <TechStack className="" />
             </BlurredIn>
           </div>
         </div>

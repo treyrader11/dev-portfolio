@@ -165,9 +165,9 @@ export default function Portfolio() {
       onMouseMove={(e) => {
         moveItems(e.clientX, e.clientY);
       }}
-      className="relative "
+      className="relative"
     >
-      <BlurredIn once className="relative min-h-screen">
+      <BlurredIn once className="relative">
         <PageTitle title="Portfolio." />
         <div className={cn("py-12 mx-0 bg-dark")}>
           <p className="px-6 text-white">
@@ -179,13 +179,13 @@ export default function Portfolio() {
           </p>
           <div
             className={cn(
-              "sticky",
+              // "sticky",
               // "h-screen",
-              "top-0",
+              // "top-0",
               "mt-8",
               "pt-3",
               "flex",
-              // "relative",
+              "relative",
               "items-center",
               "gap-[2rem]",
               "w-full",
@@ -206,19 +206,7 @@ export default function Portfolio() {
               selected={selected}
               filterProjects={filterProjects}
               categories={categories}
-              className={cn(
-                "flex",
-                "gap-4",
-                "overflow-auto",
-                "overflow-x-auto",
-                "overflow-y-hidden",
-                "no-scrollbar",
-                "h-full",
-                "h-fit",
-                "items-center",
-                "py-3",
-                "pr-8"
-              )}
+              className={cn("")}
             />
           </div>
         </div>

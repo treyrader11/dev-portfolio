@@ -7,7 +7,22 @@ export default function ProjectCategories({
   className,
 }) {
   return (
-    <div className={cn(className)}>
+    <div
+      className={cn(
+        "flex",
+        "gap-6",
+        "overflow-auto",
+        "overflow-x-auto",
+        "overflow-y-hidden",
+        "no-scrollbar",
+        "h-full",
+        "h-fit",
+        "items-center",
+        "py-3",
+        "pr-8",
+        className
+      )}
+    >
       {categories.map((categ, index) => {
         const selectedClass = cn(
           "after:bg-purple-500",
@@ -57,7 +72,7 @@ export default function ProjectCategories({
           "bg-gradient-to-l",
           "from-dark",
           "to-transparent",
-          "lg:hidden",
+          "lg:hidden"
           // "h-5"
         )}
       />
