@@ -39,12 +39,13 @@ function Search({ className, onChange, clearInput, onClick, isFocused }, ref) {
         <FiSearch
           onClick={onClick}
           className={cn(
-            "fixed",
+            // "fixed",
+            "absolute",
             "flex",
             "flex-shrink-0",
             "text-3xl",
             "cursor-pointer",
-            "left-6",
+            // "left-6",
             // "pr-8",
           )}
         />
@@ -63,7 +64,6 @@ function Search({ className, onChange, clearInput, onClick, isFocused }, ref) {
             "placeholder:text-slate-200",
             "focus-visible:outline-none",
             "bg-transparent"
-            // "w-auto"
           )}
         />
         {isFocused && (

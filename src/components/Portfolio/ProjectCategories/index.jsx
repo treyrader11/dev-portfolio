@@ -4,9 +4,10 @@ export default function ProjectCategories({
   categories,
   selected,
   filterProjects,
+  className,
 }) {
   return (
-    <>
+    <div className={cn(className)}>
       {categories.map((categ, index) => {
         const selectedClass = cn(
           "after:bg-purple-500",
@@ -61,6 +62,6 @@ export default function ProjectCategories({
           "h-5"
         )}
       /> */}
-    </>
+    </div>
   );
 }

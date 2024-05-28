@@ -183,13 +183,14 @@ export default function Portfolio() {
               "flex",
               "relative",
               "items-center",
-              "gap-[1.5rem]",
-              "overflow-x-auto",
-              "overflow-y-hidden",
-              "no-scrollbar",
-              "max-h-fit",
-              "min-h-fit",
-              "w-full"
+              "gap-[2rem]",
+              // "overflow-x-auto",
+              // "overflow-y-hidden",
+              // "no-scrollbar",
+              // "max-h-fit",
+              // "min-h-fit",
+              "w-full",
+              "h-full"
             )}
           >
             <Search
@@ -200,11 +201,22 @@ export default function Portfolio() {
               isFocused={focused}
               className=""
             />
+
             <ProjectCategories
               selected={selected}
               filterProjects={filterProjects}
               categories={categories}
+              className={cn(
+                "flex gap-3 overflow-auto",
+                "overflow-x-auto",
+                "overflow-y-hidden",
+                "no-scrollbar",
+                "h-full",
+                "h-fit",
+                "items-center"
+              )}
             />
+
             <div
               className={cn(
                 "fixed",
