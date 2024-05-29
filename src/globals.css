@@ -47,25 +47,21 @@
   color: white;
 }
 
-.flip {
-  perspective: 1000px;
-}
-
-.flip-card-inner {
+/* .flip-card-inner {
   transition: transform 0.6s;
   transform-style: perspective-3d;
-}
+} */
 
-.flip-card-front,
+/* .flip-card-front,
 .flip-card-back {
-  /* position: absolute; */
+  position: absolute; 
   backface-visibility: hidden;
   z-index: 9999;
 }
 
 .flip-card-back {
   transform: rotateY(100deg);
-}
+} */
 
 @layer base {
   :root {

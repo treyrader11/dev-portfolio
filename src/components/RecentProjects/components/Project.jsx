@@ -70,15 +70,15 @@ export default function Project({
   return (
     <>
       <a
+        style={{ perspective: 1000 }}
         ref={positionContainer}
         className={cn(
           "cursor-pointer",
-          "flip",
+          // "flip",
           "sticky",
           "top-0",
           "h-screen",
           "flex",
-          // "-left-[9vw]",
           className
         )}
         onClick={handleFlip}
@@ -89,13 +89,14 @@ export default function Project({
           transition={{ duration: 0.6, animationDirection: "normal" }}
           onAnimationComplete={() => setIsAnimating(false)}
           style={{
+            transition: "transform 0.6s",
             backgroundImage: `url(/shots/${project_image})`,
             backgroundPosition: "center",
             backgroundSize: "contain",
             backgroundRepeat: "no-repeat",
+            backfaceVisibility: "hidden",
             top: getTopPosition(index),
           }}
-          // onClick={handleFlip}
           className={cn(
             "h-screen",
             "flex",
@@ -104,9 +105,7 @@ export default function Project({
             "sticky",
             "inset-x-0",
             "z-[52]",
-            "w-[120%]",
-            "flip-card-inner",
-            "flip-card-front"
+            "w-[120%]"
           )}
         />
 
@@ -116,10 +115,12 @@ export default function Project({
           transition={{ duration: 0.6, animationDirection: "normal" }}
           onAnimationComplete={() => setIsAnimating(false)}
           style={{
+            transition: "transform 0.6s",
             backgroundImage: `url(${blank_shot.src})`,
             backgroundPosition: "center",
             backgroundSize: "contain",
             backgroundRepeat: "no-repeat",
+            backfaceVisibility: "hidden",
             top: getTopPosition(index),
           }}
           onClick={handleFlip}
@@ -127,13 +128,11 @@ export default function Project({
             "h-[102vh]",
             "fixed",
             "inset-x-0",
-            // "w-[120%]",
             "flex",
             "items-center",
             "flex-col",
             "justify-center",
-            "flip-card-inner",
-            "flip-card-back"
+            "rotate-[100deg]"
           )}
         >
           <Rounded
