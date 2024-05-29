@@ -70,26 +70,28 @@ export default function Project({
   return (
     <>
       <a
-        // ref={positionContainer}
-        // href={`/project/${video_key}`}
+        ref={positionContainer}
         className={cn(
           "cursor-pointer",
           "flip",
-          // "relative",
+          "sticky",
+          "top-0",
+          "h-screen",
+          "flex",
           // "-left-[9vw]",
           className
         )}
         onClick={handleFlip}
-        // ref={positionContainer}
       >
         <motion.div
-          ref={positionContainer}
+          // ref={positionContainer}
           initial={false}
           animate={{ rotateY: isFlipped ? 180 : 360 }}
           transition={{ duration: 0.6, animationDirection: "normal" }}
           onAnimationComplete={() => setIsAnimating(false)}
           style={{
             backgroundImage: `url(/shots/${project_image})`,
+            // backgroundImage: `url(/shots/${isFlipped ? "blank-shot.png" : project_image })`,
             backgroundPosition: "center",
             backgroundSize: "contain",
             backgroundRepeat: "no-repeat",
@@ -102,19 +104,19 @@ export default function Project({
             "items-center",
             "justify-center",
             "sticky",
-            "top-0",
+            // "top-1/2",
             "inset-x-0",
             //  "right-[-100vw]",
             "z-[52]",
             "w-[120%]",
 
             "flip-card-inner",
-            "flip-card-front"
+            // isFlipped ? "flip-card-back" : "flip-card-front"
+            "flip-card-back"
           )}
         />
 
         <motion.div
-          // onClick={() => router.push(`/project/${video_key}`)}
           initial={false}
           animate={{ rotateY: isFlipped ? 360 : 180 }}
           transition={{ duration: 0.6, animationDirection: "normal" }}
@@ -130,11 +132,8 @@ export default function Project({
           className={cn(
             "h-[102vh]",
             "fixed",
-            // "absolute",
-            // "top-0",
             "inset-x-0",
             "right-[-100vw]",
-            "z-[53]",
             "w-[120%]",
             "flex",
             "items-center",
@@ -144,7 +143,9 @@ export default function Project({
             "flip-card-back"
           )}
         >
-          <Link
+          <Rounded
+            text="View Project"
+            backgroundColor="purple"
             className={cn(
               "p-6",
               "text-white",
@@ -153,9 +154,7 @@ export default function Project({
               "size-fit"
             )}
             href={`/project/${video_key}`}
-          >
-            View Project
-          </Link>
+          />
         </motion.div>
       </a>
     </>

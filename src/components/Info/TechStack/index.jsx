@@ -28,7 +28,7 @@ import {
 export default function TeckStack({ className }) {
   return (
     <section className={cn("py-24", className)}>
-      <h1
+      {/* <h1
         className={cn(
           "inline-block",
           "px-2",
@@ -42,7 +42,7 @@ export default function TeckStack({ className }) {
         )}
       >
         Tech Stack
-      </h1>
+      </h1> */}
       <div
         className={cn(
           "flex",
@@ -107,7 +107,7 @@ export function TranslateWrapper({ children, reverse }) {
 function LogoItem({ Icon, name }) {
   return (
     <a
-      href="/"
+      // href="/"
       rel="nofollow"
       target="_blank"
       className={cn(
@@ -118,7 +118,7 @@ function LogoItem({ Icon, name }) {
         "p-4",
         "text-black",
         "transition-colors",
-        "hover:bg-neutral-200",
+        // "hover:bg-neutral-200",
         "md:py-6"
       )}
     >

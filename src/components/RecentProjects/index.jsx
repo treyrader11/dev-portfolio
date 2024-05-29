@@ -32,7 +32,7 @@ export default function RecentProjects({ className }) {
         className
       )}
     >
-      <div className="sticky">
+      <div className="relative">
         <PageTitle
           hasBlur
           backgroundColor="white"
@@ -46,56 +46,17 @@ export default function RecentProjects({ className }) {
         {recentProjects.map((project, index) => {
           const targetScale = 1 - (RecentProjects.length - index) * 0.05;
           return (
-            <>
-              <Project
-                position={projectPositions[index]}
-                key={`p_${index}`}
-                index={index}
-                {...project}
-                progress={scrollYProgress}
-                range={[index * 0.25, 1]}
-                targetScale={targetScale}
-                overlap="full"
-              />
-              {/* <Project
-                position={projectPositions[index]}
-                key={`p_${index}`}
-                index={index}
-                {...project}
-                progress={scrollYProgress}
-                range={[index * 0.25, 1]}
-                targetScale={targetScale}
-                overlap="full"
-              /> */}
-
-              {/* <div
-                // ref={positionContainer}
-                // onClick={handleFlip}
-                style={{
-                  backgroundImage: `url(${jason.src})`,
-                  backgroundPosition: "center",
-                  backgroundSize: "contain",
-                  backgroundRepeat: "no-repeat",
-                  // top: getTopPosition(index),
-                }}
-                className={cn(
-                  "h-screen",
-                  "flex",
-                  "items-center",
-                  "justify-center",
-                  "fixed",
-                  "top-0",
-                  "inset-x-0",
-                  "z-[55]",
-                  "bg-cover",
-                  "flip-card-back",
-                  "rotate-[100deg]",
-                  // "absolute",
-                  "bg-violet-500",
-                  "size-full"
-                )}
-              /> */}
-            </>
+            <Project
+              position={projectPositions[index]}
+              key={`p_${index}`}
+              index={index}
+              {...project}
+              progress={scrollYProgress}
+              range={[index * 0.25, 1]}
+              targetScale={targetScale}
+              overlap="full"
+              className=""
+            />
           );
         })}
 
