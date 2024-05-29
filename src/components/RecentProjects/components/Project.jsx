@@ -84,14 +84,12 @@ export default function Project({
         onClick={handleFlip}
       >
         <motion.div
-          // ref={positionContainer}
           initial={false}
           animate={{ rotateY: isFlipped ? 180 : 360 }}
           transition={{ duration: 0.6, animationDirection: "normal" }}
           onAnimationComplete={() => setIsAnimating(false)}
           style={{
             backgroundImage: `url(/shots/${project_image})`,
-            // backgroundImage: `url(/shots/${isFlipped ? "blank-shot.png" : project_image })`,
             backgroundPosition: "center",
             backgroundSize: "contain",
             backgroundRepeat: "no-repeat",
@@ -104,15 +102,11 @@ export default function Project({
             "items-center",
             "justify-center",
             "sticky",
-            // "top-1/2",
             "inset-x-0",
-            //  "right-[-100vw]",
             "z-[52]",
             "w-[120%]",
-
             "flip-card-inner",
-            // isFlipped ? "flip-card-back" : "flip-card-front"
-            "flip-card-back"
+            "flip-card-front"
           )}
         />
 
@@ -133,8 +127,7 @@ export default function Project({
             "h-[102vh]",
             "fixed",
             "inset-x-0",
-            "right-[-100vw]",
-            "w-[120%]",
+            // "w-[120%]",
             "flex",
             "items-center",
             "flex-col",
