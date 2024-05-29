@@ -9,8 +9,6 @@ import { motion } from "framer-motion";
 import PageTitle from "../PageTitle";
 import Scrollbar from "../Scrollbar";
 import { projectPositions, recentProjects } from "./constants";
-import jason from "/public/images/testimonials/jason-humphrey.png";
-import vite from "/public/images/tech/vite.png";
 
 export default function RecentProjects({ className }) {
   const container = useRef(null);
@@ -29,6 +27,7 @@ export default function RecentProjects({ className }) {
         "z-[2]",
         "mx-4",
         "pb-[124vh]",
+        "pb-[160vh]",
         className
       )}
     >
@@ -59,14 +58,7 @@ export default function RecentProjects({ className }) {
           );
         })}
 
-        <div
-          className={cn(
-            // "pt-[14vh]",
-            // "sm:pt-[30vh]",
-            // "relative",
-            "py-20"
-          )}
-        >
+        <div className={cn("py-20 sm:py-0")}>
           <Rounded
             backgroundColor="#934e00"
             text="See all projects"
@@ -78,7 +70,8 @@ export default function RecentProjects({ className }) {
               "mx-auto",
               "py-6",
               "text-black",
-              "-mt-[10rem]"
+              "-mt-[10rem]",
+              "sm:-mt-0"
               // "p-[10rem]",
             )}
           />
