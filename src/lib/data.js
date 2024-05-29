@@ -45,7 +45,7 @@ export const projectsData = [
     color: "#e3e5e7",
     video_key: "GJyPpc8qaHA",
     // category: "Web Development",
-    category: "Fullsjahdhhsdghdh",
+    category: "Mern",
     tech_image: mern.src,
     tags: ["react", "sass", "mongodb", "jwt", "express", "node"],
     stack: "MERN",
@@ -139,7 +139,7 @@ export const projectsData = [
     stack: "Next JS",
     tech_image: next.src,
     tags: ["next", "shadcn", "prisma", "next-auth", "mongodb"],
-    category: "Fullstack",
+    category: "Next js",
     technology_feature: [
       "Tailwind CSS",
       "Next JS 14 (App Router)",
@@ -212,7 +212,7 @@ export const projectsData = [
     video_key: "zHL1eT87OCw",
     // category: "UI/UX Design",
     stack: "Next JS",
-    category: "Fullstack",
+    category: "Next js",
     tags: ["next", "shadcn", "prisma", "next-auth", "mongodb"],
     tech_image: next.src,
     technology_feature: [
@@ -278,7 +278,7 @@ export const projectsData = [
     // category: "UI/UX Design",
     stack: "React/Vite",
     tech_image: vite.src,
-    category: "Frontend",
+    category: "React",
     tags: ["react", "shadcn"],
     technology_feature: [
       "html",
@@ -363,7 +363,7 @@ export const projectsData = [
     desc: "This is just some placeholder text until i make time to actually create the real deal. If you're seeing this, then it means I love you",
     color: "#ec4e39",
     video_key: "dX3WaXJ9ibw",
-    category: "Frontend",
+    category: "React",
     tech_image: vite.src,
     tags: ["react", "vite", "mui"],
     technology_feature: [

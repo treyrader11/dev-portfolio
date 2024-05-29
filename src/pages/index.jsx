@@ -46,11 +46,11 @@ export default function Home() {
         <Hero
           isLoading={isLoading}
           scrollYProgress={scrollYProgress}
-          className="sticky z-[1] top-0 min-h-screen"
+          className="sticky top-0 min-h-screen"
         />
         <Description
           scrollYProgress={scrollYProgress}
-          className={cn("sticky top-0 min-h-[170vh]pt-[20vh] bg-white")}
+          className={cn("sticky top-0 min-h-[170vh] pt-[20vh] bg-white")}
         />
         <PositionProvider>
           <RecentProjects className="sticky top-0 bg-white" />
@@ -59,11 +59,8 @@ export default function Home() {
         <div
           className={cn(
             "relative",
-            // "flex",
-            // "flex-col",
-            // "gap-y-[20vh]",
             "z-[3]",
-            "min-h-screen",
+            "min-h-screen"
             // "py-[30vh]"
           )}
         >

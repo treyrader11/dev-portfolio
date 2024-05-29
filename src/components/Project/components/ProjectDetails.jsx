@@ -35,20 +35,21 @@ export default function ProjectDetails({ data }) {
       />
       <div
         className={cn(
-          "w-full",
+          // "w-full",
           "md:w-[800px]",
-          "h-auto",
-          "flex",
-          "flex-col",
-          "items-start",
-          "justify-start",
+          // "h-auto",
+          // "flex",
+          // "flex-col",
+          // "items-start",
+          // "justify-start",
           "px-2.5",
+          // "px-6",
           "sm:px-4",
           "md::px-0"
         )}
       >
         <ProjectVideo src={video_key} />
-        <Block title="About this app" desc={desc} />
+        <Block title="About this app" desc={desc}/>
         <Block title="Technology & Features">
           <ul className="list-disc ml-5 mt-2.5 text-secondary">
             {technology_feature.map((data, index) => (
