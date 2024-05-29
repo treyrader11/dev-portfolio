@@ -68,88 +68,155 @@ export default function Project({
   // Position scrollbar logic end
 
   return (
-    <>
-      <a
-        style={{ perspective: 1000 }}
-        ref={positionContainer}
+    <a
+      style={{ perspective: 1000 }}
+      ref={positionContainer}
+      className={cn(
+        "cursor-pointer",
+        "sticky",
+        "top-0",
+        "h-screen",
+        "flex",
+        className
+      )}
+      onClick={handleFlip}
+    >
+      {/* <CardFlip
+        imageSrc={`/shots/${project_image}`}
+        style={{ top: getTopPosition(index) }}
+      />
+
+      <CardFlip
+        imageSrc={blank_shot.src}
+        style={{ top: getTopPosition(index) }}
+        className={cn("rotate-[100deg]")}
+      >
+        <Rounded
+          text="View Project"
+          backgroundColor="purple"
+          className={cn(
+            "p-6",
+            "text-white",
+            "bg-purple-400",
+            "rounded-full",
+            "size-fit"
+          )}
+          href={`/project/${video_key}`}
+        />
+      </CardFlip> */}
+      <motion.div
+        initial={false}
+        animate={{ rotateY: isFlipped ? 180 : 360 }}
+        transition={{ duration: 0.6, animationDirection: "normal" }}
+        onAnimationComplete={() => setIsAnimating(false)}
+        style={{
+          transition: "transform 0.6s",
+          backgroundImage: `url(/shots/${project_image})`,
+          backgroundPosition: "center",
+          backgroundSize: "contain",
+          backgroundRepeat: "no-repeat",
+          backfaceVisibility: "hidden",
+          top: getTopPosition(index),
+        }}
         className={cn(
-          "cursor-pointer",
-          // "flip",
-          "sticky",
-          "top-0",
           "h-screen",
           "flex",
-          className
+          "items-center",
+          "justify-center",
+          "sticky",
+          "inset-x-0",
+          "z-[52]",
+          "w-[120%]"
         )}
-        onClick={handleFlip}
-      >
-        <motion.div
-          initial={false}
-          animate={{ rotateY: isFlipped ? 180 : 360 }}
-          transition={{ duration: 0.6, animationDirection: "normal" }}
-          onAnimationComplete={() => setIsAnimating(false)}
-          style={{
-            transition: "transform 0.6s",
-            backgroundImage: `url(/shots/${project_image})`,
-            backgroundPosition: "center",
-            backgroundSize: "contain",
-            backgroundRepeat: "no-repeat",
-            backfaceVisibility: "hidden",
-            top: getTopPosition(index),
-          }}
-          className={cn(
-            "h-screen",
-            "flex",
-            "items-center",
-            "justify-center",
-            "sticky",
-            "inset-x-0",
-            "z-[52]",
-            "w-[120%]"
-          )}
-        />
+      />
 
-        <motion.div
-          initial={false}
-          animate={{ rotateY: isFlipped ? 360 : 180 }}
-          transition={{ duration: 0.6, animationDirection: "normal" }}
-          onAnimationComplete={() => setIsAnimating(false)}
-          style={{
-            transition: "transform 0.6s",
-            backgroundImage: `url(${blank_shot.src})`,
-            backgroundPosition: "center",
-            backgroundSize: "contain",
-            backgroundRepeat: "no-repeat",
-            backfaceVisibility: "hidden",
-            top: getTopPosition(index),
-          }}
-          onClick={handleFlip}
+      <motion.div
+        initial={false}
+        animate={{ rotateY: isFlipped ? 360 : 180 }}
+        transition={{ duration: 0.6, animationDirection: "normal" }}
+        onAnimationComplete={() => setIsAnimating(false)}
+        style={{
+          transition: "transform 0.6s",
+          backgroundImage: `url(${blank_shot.src})`,
+          backgroundPosition: "center",
+          backgroundSize: "contain",
+          backgroundRepeat: "no-repeat",
+          backfaceVisibility: "hidden",
+          top: getTopPosition(index),
+        }}
+        onClick={handleFlip}
+        className={cn(
+          "transition-transform",
+          "duration-[600]",
+          "h-screen",
+          "fixed",
+          "inset-x-0",
+          "flex",
+          "items-center",
+          "flex-col",
+          "justify-center",
+          "rotate-[100deg]"
+        )}
+      >
+        <Rounded
+          text="View Project"
+          backgroundColor="purple"
           className={cn(
-            "h-screen",
-            "fixed",
-            "inset-x-0",
-            "flex",
-            "items-center",
-            "flex-col",
-            "justify-center",
-            "rotate-[100deg]"
+            "p-6",
+            "text-white",
+            "bg-purple-400",
+            "rounded-full",
+            "size-fit"
           )}
-        >
-          <Rounded
-            text="View Project"
-            backgroundColor="purple"
-            className={cn(
-              "p-6",
-              "text-white",
-              "bg-purple-400",
-              "rounded-full",
-              "size-fit"
-            )}
-            href={`/project/${video_key}`}
-          />
-        </motion.div>
-      </a>
-    </>
+          href={`/project/${video_key}`}
+        />
+      </motion.div>
+    </a>
+  );
+}
+
+function CardFlip({ className, imageSrc, children, style }) {
+  const [isFlipped, setIsFlipped] = useState(false);
+  const [isAnimating, setIsAnimating] = useState(false);
+
+  const handleFlip = () => {
+    if (!isAnimating) {
+      setIsFlipped(!isFlipped);
+      setIsAnimating(true);
+    }
+  };
+
+  return (
+    <motion.div
+      initial={false}
+      animate={{ rotateY: isFlipped ? 180 : 360 }}
+      transition={{ duration: 0.6, animationDirection: "normal" }}
+      onAnimationComplete={() => setIsAnimating(false)}
+      style={{
+        ...style,
+        transition: "transform 0.6s",
+        backgroundImage: `url(${imageSrc})`,
+        backgroundPosition: "center",
+        backgroundSize: "contain",
+        backgroundRepeat: "no-repeat",
+        backfaceVisibility: "hidden",
+        // top,
+      }}
+      onClick={handleFlip}
+      className={cn(
+        "h-screen",
+        "flex",
+        "items-center",
+        "justify-center",
+        "sticky",
+        "inset-x-0",
+        "z-[52]",
+        "w-[120%]",
+        className
+      )}
+    >
+      {children}
+    </motion.div>
   );
 }
 

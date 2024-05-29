@@ -60,7 +60,14 @@ export default function RecentProjects({ className }) {
           );
         })}
 
-        <div className="pt-[14vh] sm:pt-[30vh] relative">
+        <div
+          className={cn(
+            // "pt-[14vh]",
+            // "sm:pt-[30vh]",
+            // "relative",
+            "py-20"
+          )}
+        >
           <Rounded
             backgroundColor="#934e00"
             text="See all projects"
@@ -72,7 +79,8 @@ export default function RecentProjects({ className }) {
               "mx-auto",
               "py-6",
               "text-black",
-              "-mt-20"
+              "-mt-[10rem]",
+              // "p-[10rem]",
             )}
           />
         </div>
