@@ -27,7 +27,7 @@ export default function RecentProjects({ className }) {
         "z-[2]",
         "mx-4",
         "pb-[124vh]",
-        "pb-[160vh]",
+        "sm:pb-[160vh]",
         className
       )}
     >
@@ -72,7 +72,6 @@ export default function RecentProjects({ className }) {
               "text-black",
               "-mt-[10rem]",
               "sm:-mt-0"
-              // "p-[10rem]",
             )}
           />
         </div>
