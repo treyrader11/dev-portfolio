@@ -59,9 +59,9 @@ export default function Home() {
         <div
           className={cn(
             "relative",
-            "flex",
-            "flex-col",
-            "gap-y-[20vh]",
+            // "flex",
+            // "flex-col",
+            // "gap-y-[20vh]",
             "z-[3]",
             "min-h-screen",
             // "py-[30vh]"
@@ -69,7 +69,7 @@ export default function Home() {
         >
           <References />
 
-          <SlidingImages className="bg-white mt-[200px] absolute bottom-0 " />
+          <SlidingImages className="bg-white" />
         </div>
       </Inner>
     </main>
