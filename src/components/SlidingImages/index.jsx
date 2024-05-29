@@ -28,6 +28,8 @@ export default function SlidingImages({ className }) {
         "relative",
         "bg-white",
         "z-[1]",
+        "py-20",
+        // "mt-20",
         className
       )}
     >

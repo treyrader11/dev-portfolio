@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { references } from "@/lib/data";
 import ProfilePicture from "../ProfilePicture";
-import BlurredIn from "../BlurredIn";
+import PageTitle from "../PageTitle";
 
 export default function References({ className }) {
   const [selected, setSelected] = useState(0);
@@ -28,12 +28,14 @@ export default function References({ className }) {
       )}
     >
       <div className="relative p-4 mt-0 ">
-        <BlurredIn
-          once
-          className="my-4 text-[10vw] font-bold text-secondary/90"
-        >
-          References.
-        </BlurredIn>
+        <PageTitle
+          once={false}
+          delay={0.8}
+          backgroundColor="white"
+          containerClass={cn("p-0", "pl-0", "h-[6rem]")}
+          title="References."
+          className={cn("py-0 text-[10vw]")}
+        />
         <SelectBtns
           numTracks={references.length}
           setSelected={setSelected}

@@ -21,8 +21,8 @@ const imageProps = {
 
 export default function ContactForm() {
   return (
-    <section once className="bg-dark">
-      <PageTitle title="Contact." />
+    <section className="bg-dark">
+      <PageTitle once title="Contact." />
       <BlurredIn
         once
         className={cn(

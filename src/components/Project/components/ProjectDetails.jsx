@@ -28,6 +28,7 @@ export default function ProjectDetails({ data }) {
   return (
     <section className="pb-28 bg-[#F1F1F1] px-6">
       <PageTitle
+        once
         title={title}
         backgroundColor="transparent"
         className={cn("p-0 pt-20")}
@@ -43,8 +44,7 @@ export default function ProjectDetails({ data }) {
           "justify-start",
           "px-2.5",
           "sm:px-4",
-          "md::px-0",
-        
+          "md::px-0"
         )}
       >
         <ProjectVideo src={video_key} />

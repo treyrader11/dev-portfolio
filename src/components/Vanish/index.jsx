@@ -8,9 +8,26 @@ const ONE_SECOND = 1000;
 const WAIT_TIME = ONE_SECOND * 5;
 const STAGGER = 0.025;
 
-export function Vanish({ phrases, className, delay = 0 }) {
+export function Vanish({ phrases, className, delay = 0, once = false }) {
   const countRef = useRef(0);
   const [active, setActive] = useState(0);
+
+  const variants = {
+    animate: {
+      opacity: 1,
+      scale: 1,
+      transition: {
+        delay: delay || countRef.current * STAGGER,
+        type: "spring",
+        damping: 12,
+        stiffness: 200,
+      },
+    },
+    exit: {
+      opacity: 0,
+      scale: 0,
+    },
+  };
 
   useEffect(() => {
     const intervalRef = setInterval(() => {
@@ -31,21 +48,10 @@ export function Vanish({ phrases, className, delay = 0 }) {
               {word.split("").map((letter, letterIndex) => {
                 const content = (
                   <motion.span
+                    variants={variants}
                     initial={{ opacity: 0, scale: 0 }}
-                    animate={{
-                      opacity: 1,
-                      scale: 1,
-                    }}
-                    exit={{
-                      opacity: 0,
-                      scale: 0,
-                    }}
-                    transition={{
-                      delay: delay || countRef.current * STAGGER,
-                      type: "spring",
-                      damping: 12,
-                      stiffness: 200,
-                    }}
+                    whileInView="animate"
+                    viewport={{ once }}
                     key={letterIndex}
                   >
                     {letter}

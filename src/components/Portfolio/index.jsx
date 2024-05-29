@@ -168,7 +168,7 @@ export default function Portfolio() {
       className="relative"
     >
       <BlurredIn once className="relative">
-        <PageTitle title="Portfolio." />
+        <PageTitle once title="Portfolio." />
         <div className={cn("py-12 mx-0 bg-dark")}>
           <p className="px-6 text-white">
             The following projects showcase my skills and experience through

@@ -30,6 +30,7 @@ export default function Info() {
     <section ref={container} className="bg-[#F1F1F1]">
       <motion.div className="">
         <PageTitle
+          once
           title="About."
           backgroundColor="#1c1d20"
           className=" #0f0f0f"

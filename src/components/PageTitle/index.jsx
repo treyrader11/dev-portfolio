@@ -11,6 +11,7 @@ function PageTitle({
   backgroundColor,
   title,
   hasBlur = false,
+  once = false,
 }) {
   const commonContainerClasses = cn(
     "h-48",
@@ -34,7 +35,12 @@ function PageTitle({
   );
 
   const Content = () => (
-    <Vanish className={commonVanishClasses} delay={0.2} phrases={[title]} />
+    <Vanish
+      once={once}
+      className={commonVanishClasses}
+      delay={0.2}
+      phrases={[title]}
+    />
   );
 
   return hasBlur ? (

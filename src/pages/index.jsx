@@ -46,22 +46,31 @@ export default function Home() {
         <Hero
           isLoading={isLoading}
           scrollYProgress={scrollYProgress}
-          className="sticky top-0 min-h-screen"
+          className="sticky z-[1] top-0 min-h-screen"
         />
         <Description
           scrollYProgress={scrollYProgress}
-          className={cn("sticky top-0 min-h-[170vh] pt-[20vh] bg-white")}
+          className={cn("sticky top-0 min-h-[170vh]pt-[20vh] bg-white")}
         />
         <PositionProvider>
           <RecentProjects className="sticky top-0 bg-white" />
         </PositionProvider>
 
-        <div className="relative z-[2] min-h-screen pb-[30vh]">
+        <div
+          className={cn(
+            "relative",
+            "flex",
+            "flex-col",
+            "gap-y-[20vh]",
+            "z-[3]",
+            "min-h-screen",
+            // "py-[30vh]"
+          )}
+        >
           <References />
-          
+
           <SlidingImages className="bg-white mt-[200px] absolute bottom-0 " />
         </div>
-      
       </Inner>
     </main>
   );

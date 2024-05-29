@@ -31,16 +31,12 @@ export default function RecentProjects({ className }) {
         className
       )}
     >
-      <div className="relative">
+      <div className={cn()}>
         <PageTitle
-          hasBlur
+          once={false}
+          delay={0.8}
           backgroundColor="white"
-          containerClass={cn(
-            "h-0",
-            "sticky",
-            "top-0",
-            "p-0"
-          )}
+          containerClass={cn("h-0", "sticky", "top-0", "p-0", "pt-10")}
           title="Recent projects."
           className={cn("py-0")}
         />

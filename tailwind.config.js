@@ -38,20 +38,20 @@ module.exports = {
         full: "360deg",
       },
       animation: {
-        slideright2: "slideright2 1.3s ease-in-out",
+        "slide-left": "slide-left 1.3s ease-in-out",
         "octocat-wave": "octocat-wave 0.56s",
         "slide-up": "slide-up 0.5s ease-out",
         dash: "dash 1.5s ease-in-out infinite",
         "rotate-gradient": "1.3s infinite ease-in-out",
       },
       keyframes: {
-        slideleft2: {
+        "slide-left": {
           from: { opacity: 0, transform: "translateX(-500px)" },
           to: { opacity: 1, transform: "translateX(0)" },
-          "slide-up": {
-            "0%": { transform: "translateY(30px) scale(0.9)" },
-            "100%": { transform: "translateY(0) scale(1)" },
-          },
+        },
+        "slide-up": {
+          "0%": { transform: "translateY(30px) scale(0.9)" },
+          "100%": { transform: "translateY(0) scale(1)" },
         },
         "octocat-wave": {
           "0%, 100%": {
