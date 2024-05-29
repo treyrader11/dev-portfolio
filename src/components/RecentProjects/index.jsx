@@ -23,60 +23,68 @@ export default function RecentProjects({ className }) {
       ref={container}
       className={cn(
         "relative",
-        "min-h-screen",
+        // "min-h-screen",
         "z-[2]",
         "mx-4",
         "pb-[124vh]",
         "sm:pb-[160vh]",
+        "flex",
+        "flex-col",
+        "gap-y-10",
+        // "sticky",
+        // "top-0",
         className
       )}
     >
-      <div className={cn()}>
-        <PageTitle
-          once={false}
-          delay={0.8}
-          backgroundColor="white"
-          containerClass={cn("h-0", "sticky", "top-0", "p-0", "pt-10")}
-          title="Recent projects."
-          className={cn("py-0")}
-        />
+      <PageTitle
+        once={false}
+        delay={0.8}
+        backgroundColor="white"
+        containerClass={cn(
+          "h-0",
+          "sticky",
+          "top-0",
+          "md:p-0", //makes menu button look good
+          "pt-10",
+          "min-h-screen",
+        )}
+        title="Recent projects."
+        className={cn("py-0 md:text-[5vw]")}
+      />
 
-        <Scrollbar positions={projectPositions} />
+      <Scrollbar positions={projectPositions} />
 
-        {recentProjects.map((project, index) => {
-          const targetScale = 1 - (RecentProjects.length - index) * 0.05;
-          return (
-            <Project
-              position={projectPositions[index]}
-              key={`p_${index}`}
-              index={index}
-              {...project}
-              progress={scrollYProgress}
-              range={[index * 0.25, 1]}
-              targetScale={targetScale}
-              overlap="full"
-            />
-          );
-        })}
-
-        <div className={cn("py-20 sm:py-0")}>
-          <Rounded
-            backgroundColor="#934e00"
-            text="See all projects"
-            href="/portfolio"
-            className={cn(
-              "border-secondary",
-              "rounded-full",
-              "w-fit",
-              "mx-auto",
-              "py-6",
-              "text-black",
-              "-mt-[10rem]",
-              "sm:-mt-0"
-            )}
+      {recentProjects.map((project, index) => {
+        return (
+          <Project
+            position={projectPositions[index]}
+            key={`p_${index}`}
+            index={index}
+            {...project}
+            progress={scrollYProgress}
+            overlap="full"
           />
-        </div>
+        );
+      })}
+
+      <div className={cn("py-20 sm:py-0", "")}>
+        <Rounded
+          backgroundColor="#934e00"
+          text="See all projects"
+          href="/portfolio"
+          className={cn(
+            "border-secondary",
+            "rounded-full",
+            "w-fit",
+            "mx-auto",
+            "py-6",
+            "text-black",
+            "-mt-[10rem]",
+            "sm:-mt-0"
+          )}
+        />
       </div>
+      {/* </div> */}
     </motion.section>
   );
 }

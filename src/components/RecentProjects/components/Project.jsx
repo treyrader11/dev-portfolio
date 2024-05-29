@@ -13,14 +13,9 @@ import { cn } from "@/lib/utils";
 import Rounded from "@/components/Rounded";
 import { PositionContext } from "@/lib/contexts";
 import blank_shot from "/public/shots/blank-shot.png";
-import { useRouter } from "next/navigation";
-// import blank_shot from "/blank-shot.png";
 
 export default function Project({
   index,
-  progress,
-  range,
-  targetScale,
   project_image,
   video_key,
   category,
@@ -29,7 +24,7 @@ export default function Project({
   overlap,
   className,
 }) {
-  const positionContainer = useRef(null);
+  const container = useRef(null); // for position context
   const positionContext = useContext(PositionContext);
   const { setActivePosition, setActivePositionProgress } =
     positionContext || {};
@@ -44,13 +39,11 @@ export default function Project({
     }
   };
 
+  // scrollbar/position logic
   const { scrollYProgress } = useScroll({
-    target: positionContainer,
+    target: container,
     offset: ["start center", "end center"],
   });
-
-  const getTopPosition = (pos) =>
-    overlap === "full" ? 0 : `calc(-5vh + ${pos * 25}px)`;
 
   useMotionValueEvent(scrollYProgress, "change", (value) => {
     if (
@@ -63,18 +56,18 @@ export default function Project({
       setActivePositionProgress(value);
     }
   });
-  // Position scrollbar logic end
+  // Position scrollbar/position logic end
 
   return (
     <a
       style={{ perspective: 1000 }}
-      ref={positionContainer}
+      ref={container}
       className={cn(
         "cursor-pointer",
         "sticky",
         "top-0",
-        "h-screen",
-        "flex",
+        "min-h-screen",
+        // "flex",
         className
       )}
       onClick={handleFlip}
@@ -120,20 +113,12 @@ export default function Project({
           backgroundSize: "contain",
           backgroundRepeat: "no-repeat",
           backfaceVisibility: "hidden",
-          top: getTopPosition(index),
         }}
         className={cn(
           "h-screen",
-          "flex",
-          "items-center",
-          "justify-center",
-          // "sticky",
-          // "inset-x-0",
-          // "z-[52]",
-          // "w-[120%]"
-          "fixed", // need to take out of position for width to work
+          "fixed", // need to take ele out of page flow for width to work
           "w-[120%]",
-          "-left-[10%]" // 10% === 1/2 of 20%
+          "-left-[calc(20%-10%)]" // 10% === 1/2 of 20%
         )}
       />
 
@@ -149,7 +134,6 @@ export default function Project({
           backgroundSize: "contain",
           backgroundRepeat: "no-repeat",
           backfaceVisibility: "hidden",
-          top: getTopPosition(index),
         }}
         onClick={handleFlip}
         className={cn(
@@ -159,7 +143,6 @@ export default function Project({
           "flex-col",
           "justify-center",
           "rotate-[100deg]",
-
           "fixed",
           "inset-x-0",
           "w-[120%]",
@@ -169,12 +152,7 @@ export default function Project({
         <Rounded
           text="View"
           backgroundColor="purple"
-          className={cn(
-            "bg-purple-400",
-            "rounded-full",
-            "size-fit",
-            "p-4"
-          )}
+          className={cn("bg-purple-400", "p-4")}
           href={`/project/${video_key}`}
         />
       </motion.div>

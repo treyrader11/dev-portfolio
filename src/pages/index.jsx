@@ -53,7 +53,7 @@ export default function Home() {
           className={cn("sticky top-0 min-h-[170vh] pt-[20vh] bg-white")}
         />
         <PositionProvider>
-          <RecentProjects className="sticky top-0 bg-white" />
+          <RecentProjects className="sticky top-0 bg-white md:pb-[200vh]" />
         </PositionProvider>
 
         <div
