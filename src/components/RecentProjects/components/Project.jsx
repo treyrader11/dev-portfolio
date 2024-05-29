@@ -1,13 +1,7 @@
 "use client";
 
-import Link from "next/link";
 import Image from "next/image";
-import {
-  useTransform,
-  useMotionValueEvent,
-  motion,
-  useScroll,
-} from "framer-motion";
+import { useMotionValueEvent, motion, useScroll } from "framer-motion";
 import { useRef, useContext, useState } from "react";
 import { cn } from "@/lib/utils";
 import Rounded from "@/components/Rounded";
@@ -15,13 +9,9 @@ import { PositionContext } from "@/lib/contexts";
 import blank_shot from "/public/shots/blank-shot.png";
 
 export default function Project({
-  index,
   project_image,
   video_key,
-  category,
-  title,
   position,
-  overlap,
   className,
 }) {
   const container = useRef(null); // for position context
@@ -59,7 +49,7 @@ export default function Project({
   // Position scrollbar/position logic end
 
   return (
-    <a
+    <div
       style={{ perspective: 1000 }}
       ref={container}
       className={cn(
@@ -67,14 +57,12 @@ export default function Project({
         "sticky",
         "top-0",
         "min-h-screen",
-        // "flex",
         className
       )}
       onClick={handleFlip}
     >
       {/* <CardFlip
         imageSrc={`/shots/${project_image}`}
-        style={{ top: getTopPosition(index) }}
         setIsAnimating={setIsAnimating}
         isFlipped={isFlipped}
         onClick={() => handleFlip()}
@@ -82,7 +70,6 @@ export default function Project({
 
       <CardFlip
         imageSrc={blank_shot.src}
-        style={{ top: getTopPosition(index) }}
         className={cn("rotate-[100deg]", "fixed")}
         setIsAnimating={setIsAnimating}
         isFlipped={isFlipped}
@@ -156,7 +143,7 @@ export default function Project({
           href={`/project/${video_key}`}
         />
       </motion.div>
-    </a>
+    </div>
   );
 }
 
@@ -169,17 +156,6 @@ function CardFlip({
   isFlipped,
   setIsAnimating,
 }) {
-  // const [isFlipped, setIsFlipped] = useState(false);
-  // const [isAnimating, setIsAnimating] = useState(false);
-
-  // const handleFlip = () => {
-  //   if (!isAnimating) {
-  //     setIsFlipped(!isFlipped);
-  //     setIsAnimating(true);
-  //   }
-  // };
-
-  // console.log("isFlipped", isFlipped);
   return (
     <motion.div
       initial={false}
@@ -194,7 +170,6 @@ function CardFlip({
         backgroundSize: "contain",
         backgroundRepeat: "no-repeat",
         backfaceVisibility: "hidden",
-        // top,
       }}
       onClick={onClick}
       className={cn(
@@ -207,8 +182,7 @@ function CardFlip({
         "z-[52]",
         "w-[120%]",
         "-left-[10%]", // 10% === 1/2 of 20%
-
-        "fixed",
+        "-left-[calc(20%-10%)]", // 10% === 1/2 of 20%
         className
       )}
     >

@@ -23,7 +23,6 @@ export default function RecentProjects({ className }) {
       ref={container}
       className={cn(
         "relative",
-        // "min-h-screen",
         "z-[2]",
         "mx-4",
         "pb-[124vh]",
@@ -31,8 +30,6 @@ export default function RecentProjects({ className }) {
         "flex",
         "flex-col",
         "gap-y-10",
-        // "sticky",
-        // "top-0",
         className
       )}
     >
@@ -46,7 +43,7 @@ export default function RecentProjects({ className }) {
           "top-0",
           "md:p-0", //makes menu button look good
           "pt-10",
-          "min-h-screen",
+          "min-h-screen"
         )}
         title="Recent projects."
         className={cn("py-0 md:text-[5vw]")}
@@ -59,10 +56,8 @@ export default function RecentProjects({ className }) {
           <Project
             position={projectPositions[index]}
             key={`p_${index}`}
-            index={index}
             {...project}
             progress={scrollYProgress}
-            overlap="full"
           />
         );
       })}

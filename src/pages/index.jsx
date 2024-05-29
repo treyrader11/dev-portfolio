@@ -50,20 +50,19 @@ export default function Home() {
         />
         <Description
           scrollYProgress={scrollYProgress}
-          className={cn("sticky top-0 min-h-[170vh] pt-[20vh] bg-white")}
+          className={cn(
+            "sticky",
+            "top-0",
+            "min-h-[170vh]",
+            "pt-[20vh]",
+            "bg-white"
+          )}
         />
         <PositionProvider>
           <RecentProjects className="sticky top-0 bg-white md:pb-[200vh]" />
         </PositionProvider>
 
-        <div
-          className={cn(
-            "relative",
-            "z-[3]",
-            "min-h-screen"
-            // "py-[30vh]"
-          )}
-        >
+        <div className={cn("relative", "z-[3]", "min-h-screen")}>
           <References />
 
           <SlidingImages className="bg-white" />

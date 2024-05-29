@@ -32,7 +32,7 @@ export default function References({ className }) {
           delay={0.8}
           backgroundColor="white"
           containerClass={cn("p-0 pl-0 h-[6rem]")}
-          title="Prospects."
+          title="References."
           className={cn("py-0 text-[14vw]")}
         />
         <SelectBtns
