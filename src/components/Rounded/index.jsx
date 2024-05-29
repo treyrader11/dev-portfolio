@@ -10,7 +10,6 @@ export default function Rounded({
   children,
   className,
   text,
-  // backgroundColor = "#8550C2",
   backgroundColor = "#292929",
   href,
   ...attributes
@@ -69,8 +68,8 @@ export default function Rounded({
           "flex",
           "items-center",
           "justify-center",
-          "py-[15px]",
-          "px-[60px]",
+          "py-3.5",
+          "px-14",
           "text-white",
           "shadow-lg",
           className

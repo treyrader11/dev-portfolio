@@ -55,7 +55,6 @@ export default function RecentProjects({ className }) {
               range={[index * 0.25, 1]}
               targetScale={targetScale}
               overlap="full"
-              className=""
             />
           );
         })}
@@ -79,7 +78,7 @@ export default function RecentProjects({ className }) {
               "mx-auto",
               "py-6",
               "text-black",
-              "-mt-[10rem]",
+              "-mt-[10rem]"
               // "p-[10rem]",
             )}
           />

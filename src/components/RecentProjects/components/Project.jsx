@@ -37,8 +37,6 @@ export default function Project({
   const [isFlipped, setIsFlipped] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
 
-  const router = useRouter();
-
   const handleFlip = () => {
     if (!isAnimating) {
       setIsFlipped(!isFlipped);
@@ -84,12 +82,18 @@ export default function Project({
       {/* <CardFlip
         imageSrc={`/shots/${project_image}`}
         style={{ top: getTopPosition(index) }}
+        setIsAnimating={setIsAnimating}
+        isFlipped={isFlipped}
+        onClick={() => handleFlip()}
       />
 
       <CardFlip
         imageSrc={blank_shot.src}
         style={{ top: getTopPosition(index) }}
-        className={cn("rotate-[100deg]")}
+        className={cn("rotate-[100deg]", "fixed")}
+        setIsAnimating={setIsAnimating}
+        isFlipped={isFlipped}
+        onClick={() => handleFlip()}
       >
         <Rounded
           text="View Project"
@@ -123,10 +127,13 @@ export default function Project({
           "flex",
           "items-center",
           "justify-center",
-          "sticky",
-          "inset-x-0",
-          "z-[52]",
-          "w-[120%]"
+          // "sticky",
+          // "inset-x-0",
+          // "z-[52]",
+          // "w-[120%]"
+          "fixed", // need to take out of position for width to work
+          "w-[120%]",
+          "-left-[10%]" // 10% === 1/2 of 20%
         )}
       />
 
@@ -146,27 +153,27 @@ export default function Project({
         }}
         onClick={handleFlip}
         className={cn(
-          "transition-transform",
-          "duration-[600]",
           "h-screen",
-          "fixed",
-          "inset-x-0",
           "flex",
           "items-center",
           "flex-col",
           "justify-center",
-          "rotate-[100deg]"
+          "rotate-[100deg]",
+
+          "fixed",
+          "inset-x-0",
+          "w-[120%]",
+          "-left-[10%]" // 10% === 1/2 of 20%
         )}
       >
         <Rounded
-          text="View Project"
+          text="View"
           backgroundColor="purple"
           className={cn(
-            "p-6",
-            "text-white",
             "bg-purple-400",
             "rounded-full",
-            "size-fit"
+            "size-fit",
+            "p-4"
           )}
           href={`/project/${video_key}`}
         />
@@ -175,17 +182,26 @@ export default function Project({
   );
 }
 
-function CardFlip({ className, imageSrc, children, style }) {
-  const [isFlipped, setIsFlipped] = useState(false);
-  const [isAnimating, setIsAnimating] = useState(false);
+function CardFlip({
+  className,
+  imageSrc,
+  children,
+  style,
+  onClick,
+  isFlipped,
+  setIsAnimating,
+}) {
+  // const [isFlipped, setIsFlipped] = useState(false);
+  // const [isAnimating, setIsAnimating] = useState(false);
 
-  const handleFlip = () => {
-    if (!isAnimating) {
-      setIsFlipped(!isFlipped);
-      setIsAnimating(true);
-    }
-  };
+  // const handleFlip = () => {
+  //   if (!isAnimating) {
+  //     setIsFlipped(!isFlipped);
+  //     setIsAnimating(true);
+  //   }
+  // };
 
+  // console.log("isFlipped", isFlipped);
   return (
     <motion.div
       initial={false}
@@ -202,20 +218,23 @@ function CardFlip({ className, imageSrc, children, style }) {
         backfaceVisibility: "hidden",
         // top,
       }}
-      onClick={handleFlip}
+      onClick={onClick}
       className={cn(
         "h-screen",
         "flex",
         "items-center",
         "justify-center",
-        "sticky",
+        // "sticky",
         "inset-x-0",
         "z-[52]",
         "w-[120%]",
+        "-left-[10%]", // 10% === 1/2 of 20%
+
+        "fixed",
         className
       )}
     >
-      {children}
+      {children || <></>}
     </motion.div>
   );
 }
