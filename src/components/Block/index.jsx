@@ -18,17 +18,7 @@ export default function Block({ className, title, desc, children }) {
       )}
     >
       <h1 className="my-5 text-3xl font-bold">{title}</h1>
-      {desc && (
-        // <p className={cn("w-[1000px]", "p-[40px]", "mt-[20%]")}>
-        //   {desc.split(" ").map((word, index) => {
-        //     const isTargetedWord = targetedWords.includes(word.toLowerCase());
-
-        //     return isTargetedWord ? <code key={index}>{word}</code> : word ;
-        //   })}
-        // </p>
-
-        <p>{desc}</p>
-      )}
+      {desc && <p>{desc}</p>}
       {children}
     </div>
   );
