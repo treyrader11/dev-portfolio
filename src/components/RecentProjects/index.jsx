@@ -35,9 +35,14 @@ export default function RecentProjects({ className }) {
         <PageTitle
           hasBlur
           backgroundColor="white"
-          containerClass={cn("h-0 sticky -top-[20%] p-0")}
+          containerClass={cn(
+            "h-0",
+            "sticky",
+            "top-0",
+            "p-0"
+          )}
           title="Recent projects."
-          className={cn("top-16 pt-[10vh] w-full bg-white")}
+          className={cn("py-0")}
         />
 
         <Scrollbar positions={projectPositions} />

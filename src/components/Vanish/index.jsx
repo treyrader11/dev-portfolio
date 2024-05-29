@@ -24,15 +24,10 @@ export function Vanish({ phrases, className, delay = 0 }) {
     <div className={cn("gap-1.5 sm:gap-2", className)}>
       <AnimatePresence mode="popLayout">
         {phrases[active].split(" ").map((word, wordIndex) => {
-          if (wordIndex === 0) {
-            countRef.current = 0;
-          }
+          if (wordIndex === 0) countRef.current = 0;
 
           return (
-            <motion.div
-              key={word}
-              className="inline-flex"
-            >
+            <motion.div key={word} className="inline-flex">
               {word.split("").map((letter, letterIndex) => {
                 const content = (
                   <motion.span
