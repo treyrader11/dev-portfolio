@@ -125,7 +125,7 @@ export default function Project({
           }}
           onClick={handleFlip}
           className={cn(
-            "h-[102vh]",
+            "h-screen",
             "fixed",
             "inset-x-0",
             "flex",

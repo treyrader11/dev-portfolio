@@ -72,7 +72,7 @@ export default function RecentProjects({ className }) {
               "mx-auto",
               "py-6",
               "text-black",
-              "-mt-28"
+              "-mt-20"
             )}
           />
         </div>
