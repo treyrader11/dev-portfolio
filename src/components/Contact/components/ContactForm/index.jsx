@@ -158,6 +158,7 @@ export default function ContactForm() {
           </div>
         </div>
       </BlurredIn>
+      <div className={cn("bg-white h-[10vh]")} />
     </section>
   );
 }
