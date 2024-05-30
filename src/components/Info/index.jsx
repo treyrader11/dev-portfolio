@@ -4,14 +4,13 @@ import { userData } from "@/lib/data";
 import { cn } from "@/lib/utils";
 import Experience from "./Experience";
 import Link from "next/link";
-import Magnetic from "../Magnetic";
-import LinkDecorator from "../LinkDecorator";
 import { useScroll, motion } from "framer-motion";
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import BlurredIn from "../BlurredIn";
 import TechStack from "./TechStack";
+import Socials from "./Socials";
 
-const socialLinks = [
+const socials = [
   { name: "Facebook", href: userData.socialLinks.facebook },
   { name: "GitHub", href: userData.socialLinks.github },
   { name: "LinkedIn", href: userData.socialLinks.linkedin },
@@ -120,7 +119,7 @@ export default function Info() {
               ))}
             </BlurredIn>
           </div>
-          <Socials className="w-full" />
+          <Socials links={socials} className="w-full" />
         </div>
         <TechStack />
       </motion.div>
@@ -130,65 +129,5 @@ export default function Info() {
   );
 }
 
-function SocialLink({ name, href }) {
-  const [isHovered, setIsHovered] = useState(false);
 
-  return (
-    <Magnetic>
-      <a
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
-        href={href}
-        className={cn("p-4 text-left")}
-      >
-        <span className={cn("flex flex-row-reverse md:flex-col gap-2")}>
-          {name}
-          <LinkDecorator
-            isActive={isHovered}
-            className="bg-gray-500 text-left size-1.5"
-          />
-        </span>
-      </a>
-    </Magnetic>
-  );
-}
 
-function Socials({ className }) {
-  return (
-    <section className={className}>
-      <h1
-        className={cn(
-          "mt-8",
-          "mb-4",
-          "text-xl",
-          "font-semibold",
-          "text-gray-700"
-        )}
-      >
-        Socials
-      </h1>
-
-      <div
-        className={cn(
-          "font-mono",
-          "text-lg",
-          "text-gray-500",
-          "gap-4",
-          "flex",
-          "items-start",
-          "flex-col",
-          "md:flex-row",
-          "justify-end",
-          "cursor-pointer",
-          "w-fit",
-          "md:pb-[20vh]",
-          "text-left"
-        )}
-      >
-        {socialLinks.map((link) => (
-          <SocialLink key={link.name} name={link.name} href={link.href} />
-        ))}
-      </div>
-    </section>
-  );
-}
