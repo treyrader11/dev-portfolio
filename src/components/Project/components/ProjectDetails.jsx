@@ -28,12 +28,12 @@ export default function ProjectDetails({ data }) {
     <section className="pb-28 bg-[#F1F1F1] w-full">
       <div className={cn("md:w-[800px]", "px-2.5", "sm:px-4", "md::px-0")}>
         <ProjectVideo src={video_key} />
-        <Block title="About this app" desc={desc} />
+        <Block title="About this project" desc={desc} />
         <Block title="Technology & Features">
           <ul className="list-disc ml-5 mt-2.5 text-secondary">
             {technology_feature.map((data, index) => (
               <Magnetic key={index}>
-                <li key={data}>{data}</li>
+                <li className="w-fit" key={data}>{data}</li>
               </Magnetic>
             ))}
           </ul>
@@ -49,37 +49,45 @@ export default function ProjectDetails({ data }) {
         <Block title="Links">
           <ProjectLinks links={_links} />
         </Block>
-        <Magnetic>
-          <Link
-            href={"/portfolio"}
-            className={cn(
-              "flex",
-              "flex-row",
-              "items-center",
-              "font-extralight",
-              "text-gray-500",
-              "my-20",
-              "mx-8",
-              "group"
-            )}
-          >
-            <LinkDecorator isActive className="my-auto mr-2" />
-            See all
-            <span
-              className={cn(
-                "text-purple-500",
-                "ml-[5px]",
-                "hover:underline",
-                "font-normal",
-                "text-lg",
-                "animate-pulse"
-              )}
-            >
-              Projects
-            </span>
-          </Link>
-        </Magnetic>
       </div>
+      <SeeAll />
     </section>
+  );
+}
+
+function SeeAll({ className }) {
+  return (
+    <Magnetic>
+      <Link
+        href={"/portfolio"}
+        className={cn(
+          "flex",
+          "items-center",
+          "font-extralight",
+          "text-gray-500",
+          "my-20",
+          "mx-8",
+          "group",
+          "flex",
+          "w-fit",
+          className
+        )}
+      >
+        <LinkDecorator isActive className="my-auto mr-2" />
+        See all
+        <span
+          className={cn(
+            "text-purple-500",
+            "ml-[5px]",
+            "hover:underline",
+            "font-normal",
+            "text-lg",
+            "animate-pulse"
+          )}
+        >
+          Projects
+        </span>
+      </Link>
+    </Magnetic>
   );
 }
