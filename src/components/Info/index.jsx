@@ -6,10 +6,9 @@ import Experience from "./Experience";
 import Link from "next/link";
 import { useScroll, motion } from "framer-motion";
 import { useRef } from "react";
-import BlurredIn from "../BlurredIn";
 import TechStack from "./TechStack";
 import Socials from "./Socials";
-import TextSlider from "../TextSider";
+import Image from "next/image";
 
 const socials = [
   { name: "Facebook", href: userData.socialLinks.facebook },
@@ -120,9 +119,24 @@ export default function Info() {
               ))}
             </div>
           </div>
-          <Socials links={socials} className="w-full" />
+          <div className="relative grid-cols-2 mx-8 sm:mx:0 sm:grid">
+            <Socials links={socials} className="w-full relative z-[1] " />
+            <div className={cn("absolute sm:relative top-0 inset-x-0 flex items-center h-[400px]")}>
+              <Image
+                // width={150}
+                // height={150}
+                fill
+                priority
+                alt="profile picture"
+                src={`/images/portraits/profile.png`}
+                className="object-contain rounded-lg"
+                sizes={{}}
+              />
+            </div>
+          </div>
         </div>
-        <div className="w-full">
+
+        <div className="w-full pt-40 sm:pt-20">
           <TechStack />
         </div>
 

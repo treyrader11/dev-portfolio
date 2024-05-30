@@ -7,14 +7,18 @@ import { useState } from "react";
 
 export default function Socials({ className, links }) {
   return (
-    <section className={className}>
+    <section className={cn(className, "mx-6")}>
       <h1
         className={cn(
           "mt-8",
+          "pt-10",
+          "sm:pt-0",
           "mb-4",
-          "text-xl",
+          "text-2xl",
           "font-semibold",
-          "text-gray-700"
+          "sm:text-gray-700",
+          "text-purple-300",
+          "underline"
         )}
       >
         Socials
@@ -24,11 +28,12 @@ export default function Socials({ className, links }) {
         className={cn(
           "font-mono",
           "text-lg",
-          "text-gray-500",
+          "sm:text-gray-500",
+          "text-white",
           "flex",
           "items-start",
           "flex-col",
-          "md:flex-row",
+          // "md:flex-row",
           "justify-end",
           "cursor-pointer",
           "w-fit",
@@ -52,13 +57,20 @@ function SocialLink({ name, href }) {
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
         href={href}
-        className={cn("py-4 text-left")}
+        className={cn("py-2 text-left")}
       >
-        <span className={cn("flex flex-row-reverse md:flex-col gap-2")}>
+        <span
+          className={cn(
+            "flex",
+             "flex-row-reverse",
+            // "md:flex-col",
+            "gap-2"
+          )}
+        >
           {name}
           <LinkDecorator
             isActive={isHovered}
-            className="bg-gray-500 text-left size-1.5"
+            className="sm:bg-gray-500 bg-white text-left size-1.5"
           />
         </span>
       </a>
