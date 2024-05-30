@@ -12,7 +12,7 @@ import { useControls } from "leva";
 
 export default function Model() {
   const { viewport } = useThree();
-  const { nodes } = useGLTF("/medias/shards.glb");
+  const { nodes } = useGLTF("/shards.glb");
 
   return (
     <group scale={viewport.width / 1.5}>

@@ -2,10 +2,8 @@
 
 import { motion } from "framer-motion";
 import Rounded from "@/components/Rounded";
-import profilePicture from "/public/images/portraits/coffee-portrait-grey.png";
 import ProfilePicture from "@/components/ProfilePicture";
 import { cn } from "@/lib/utils";
-import { IoCopyOutline } from "react-icons/io5";
 import Confetti from "@/components/Confetti";
 import useCopyToClipboard from "@/hooks/useCopyClipboard";
 import { useNotificationsContext } from "@/components/providers/NotificationsProvider";
@@ -45,7 +43,10 @@ export default function Contact({ style, rotate }) {
       >
         <div>
           <span className="flex items-center">
-            <ProfilePicture className="size-[9vw]" src={profilePicture} />
+            <ProfilePicture
+              className="size-[9vw]"
+              src={"/images/portraits/profile-coffee.png"}
+            />
             <h2 className="ml-[0.3em] tracking-tighter text-[9vw] md:text-[6vw]">
               Let&apos;s talk
             </h2>
@@ -55,14 +56,13 @@ export default function Contact({ style, rotate }) {
           </h2>
           <motion.div
             style={style}
-            className={
-              cn()
-              // "absolute",
-              // "left-[calc(100%_-_275px)]",
-              // "md:left-[calc(100%_-_380px)]",
-              // "lg:left-[calc(100%_-_500px)]",
-              // "top-[calc(100%_-_655px)]",
-              // "md:top-[calc(100%_-_485px)]"
+            className={cn()
+            // "absolute",
+            // "left-[calc(100%_-_275px)]",
+            // "md:left-[calc(100%_-_380px)]",
+            // "lg:left-[calc(100%_-_500px)]",
+            // "top-[calc(100%_-_655px)]",
+            // "md:top-[calc(100%_-_485px)]"
             }
           >
             <Rounded

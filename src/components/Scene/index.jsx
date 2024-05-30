@@ -1,7 +1,7 @@
 "use client";
 
 import { Canvas } from "@react-three/fiber";
-import { Environment, CameraControls } from "@react-three/drei";
+import { Environment } from "@react-three/drei";
 import Model from "./Model";
 
 export default function Scene() {

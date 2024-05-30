@@ -4,11 +4,15 @@ import { userData } from "@/lib/data";
 import { cn } from "@/lib/utils";
 import Experience from "./Experience";
 import Link from "next/link";
-import { useScroll, motion } from "framer-motion";
+import { useScroll, motion, useTransform } from "framer-motion";
 import { useRef } from "react";
 import TechStack from "./TechStack";
 import Socials from "./Socials";
 import Image from "next/image";
+
+import Picture1 from "/public/images/references/jason.png";
+import Picture2 from "/public/images/references/daniel.png";
+import Picture3 from "/public/images/references/janine.png";
 
 const socials = [
   { name: "Youtube", href: userData.socialLinks.youtube },
@@ -17,36 +21,112 @@ const socials = [
   { name: "Instagram", href: userData.socialLinks.instagram },
 ];
 
+const word = userData.about.title;
+
 export default function Info() {
   const container = useRef();
+
   const { scrollYProgress } = useScroll({
     target: container,
     offset: ["start start", "end end"],
   });
 
+  const sm = useTransform(scrollYProgress, [0, 1], [0, -50]);
+  const md = useTransform(scrollYProgress, [0, 1], [0, -150]);
+  const lg = useTransform(scrollYProgress, [0, 1], [0, -250]);
+
+  const images = [
+    {
+      src: Picture1,
+      y: 0,
+    },
+    {
+      src: Picture2,
+      y: lg,
+    },
+    {
+      src: Picture3,
+      y: md,
+    },
+  ];
+
   return (
-    <section ref={container} className="bg-[#F1F1F1] w-ful pb-40">
-      <motion.div>
-        <div className="md:w-[800px] mx-auto">
-          <div className="max-w-6xl pt-20 mx-auto">
-            <p className={cn("mx-4 text-2xl font-semibold md:text-4xl")}>
-              {userData.about.title}. Currently working on{" "}
-              <a
-                className={cn(
-                  "px-2",
-                  "py-1",
-                  "bg-purple-500",
-                  "rounded-md",
-                  "text-white"
-                )}
-                target="_blank"
-                href={userData.about.current_project_url}
-              >
-                {userData.about.current_project}
-              </a>
+    <section
+      ref={container}
+      className={cn(
+        "bg-[#F1F1F1]",
+        "w-ful",
+        "pb-40",
+        "min-h-screen",
+        "text-gray-500"
+      )}
+    >
+      <motion.div className={cn("pt-[10vh]", "")}>
+        {/* Experiemnting */}
+        <div className={cn("ml-[10vw]")}>
+          <motion.h1
+            className={cn(
+              "m-0",
+              "mt-2.5",
+              "text-[5vw]",
+              "leading-[5vw]",
+              "text-gray-700"
+            )}
+            style={{ y: sm }}
+          >
+            Hi there
+          </motion.h1>
+
+          <div>
+            <p className="m-0 mt-2.5 text-[3vw] uppercase">
+              {word.split("").map((letter, i) => {
+                const y = useTransform(
+                  scrollYProgress,
+                  [0, 1],
+                  [0, Math.floor(Math.random() * -75) - 25]
+                );
+                return (
+                  <motion.span
+                    className="relative"
+                    style={{ top: y }}
+                    key={`l_${i}`}
+                  >
+                    {letter}
+                  </motion.span>
+                );
+              })}
             </p>
           </div>
         </div>
+        <div
+          className={cn(
+            "flex",
+            "w-full",
+            "justify-center",
+            "relative",
+            "mt-[5vh]"
+          )}
+        >
+          {images.map(({ src, y }, i) => {
+            return (
+              <motion.div style={{ y }} key={`i_${i}`} className={"absolute h-[300px]"}>
+                <Image
+                  src={src}
+                  placeholder="blur"
+                  className={cn("object-cover", {
+                    "h-[60vh] w-[50vh] z-[1]": i === 0,
+                    "left-[55vw] top-[15vh] h-[40vh] w-[30vh] z-[2]": i === 1,
+                    "left-[27.5vw] top-[40vh] h-[25vh] w-[20vh] z-[3]": i === 2,
+                  })}
+                  alt="image"
+                  fill
+                  sizes={{}}
+                />
+              </motion.div>
+            );
+          })}
+        </div>
+        {/* Experiemnting end */}
 
         <div className="px-4 md:w-[800px] mx-auto">
           <div
