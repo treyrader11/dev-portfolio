@@ -24,13 +24,12 @@ export default function Header() {
   const button = useRef(null);
 
   const path = usePathname();
-
   const { width } = useWindowDimensions();
+
   const isMobile = width < 600;
   const showButton = isMobile && isNavOpen;
 
   const isProjectPage = path.includes("project");
-
   const backgroundHasColor = !isProjectPage;
 
   const handleNavMenu = useCallback(() => {
@@ -96,7 +95,8 @@ export default function Header() {
       >
         <ProfilePicture
           isMagnetic
-          src={profilePicture}
+          // src={profilePicture}
+          src={`/images/portraits/headshot.png`}
           className="size-[100px]"
         />
         <Link

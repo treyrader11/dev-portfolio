@@ -121,7 +121,17 @@ export default function Info() {
           </div>
           <div className="relative grid-cols-2 mx-8 sm:mx:0 sm:grid">
             <Socials links={socials} className="w-full relative z-[1] " />
-            <div className={cn("absolute sm:relative top-0 inset-x-0 flex items-center h-[400px]")}>
+            <div
+              className={cn(
+                "absolute",
+                "sm:relative",
+                "top-0",
+                "inset-x-0",
+                "flex",
+                "items-center",
+                "h-[400px]"
+              )}
+            >
               <Image
                 // width={150}
                 // height={150}
