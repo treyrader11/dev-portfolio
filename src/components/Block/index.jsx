@@ -1,10 +1,6 @@
 import { cn } from "@/lib/utils";
 
 export default function Block({ className, title, desc, children }) {
-  const targetedWords = desc
-    ?.split(" ")
-    ?.filter((word) => word.includes(".env") || word.includes("local.env"));
-
   return (
     <div
       className={cn(
@@ -13,7 +9,6 @@ export default function Block({ className, title, desc, children }) {
         "flex-col",
         "gap-y-2",
         "w-full",
-        "px-6",
         className
       )}
     >

@@ -5,7 +5,6 @@ import { cn, getUnique } from "@/lib/utils";
 import { useRef, useState, useEffect } from "react";
 import gsap from "gsap";
 import PortfolioItem from "./PortfolioItem";
-import PageTitle from "@/components/PageTitle";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { scaleAnimation } from "./anim";
@@ -165,10 +164,9 @@ export default function Portfolio() {
       onMouseMove={(e) => {
         moveItems(e.clientX, e.clientY);
       }}
-      className="relative"
     >
-      <BlurredIn once className="relative">
-        <PageTitle once title="Portfolio." />
+      {/* <BlurredIn once> */}
+      <div>
         <div className={cn("py-12 mx-0 bg-dark")}>
           <p className="px-6 text-white">
             The following projects showcase my skills and experience through
@@ -179,9 +177,6 @@ export default function Portfolio() {
           </p>
           <div
             className={cn(
-              // "sticky",
-              // "h-screen",
-              // "top-0",
               "mt-8",
               "pt-3",
               "flex",
@@ -190,7 +185,6 @@ export default function Portfolio() {
               "gap-[2rem]",
               "w-full",
               "pl-5"
-              // "h-full"
             )}
           >
             <Search
@@ -210,7 +204,8 @@ export default function Portfolio() {
             />
           </div>
         </div>
-      </BlurredIn>
+      </div>
+      {/* </BlurredIn> */}
 
       {/* <CardFlip /> */}
       <div

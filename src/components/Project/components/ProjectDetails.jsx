@@ -4,7 +4,6 @@ import { cn } from "@/lib/utils";
 import Environment from "./Environment";
 import Magnetic from "@/components/Magnetic";
 import ProjectLinks from "./ProjectLinks";
-import PageTitle from "@/components/PageTitle";
 import LinkDecorator from "@/components/LinkDecorator";
 import Block from "@/components/Block";
 
@@ -26,30 +25,10 @@ export default function ProjectDetails({ data }) {
   ];
 
   return (
-    <section className="pb-28 bg-[#F1F1F1] px-6">
-      <PageTitle
-        once
-        title={title}
-        backgroundColor="transparent"
-        className={cn("p-0 pt-20")}
-      />
-      <div
-        className={cn(
-          // "w-full",
-          "md:w-[800px]",
-          // "h-auto",
-          // "flex",
-          // "flex-col",
-          // "items-start",
-          // "justify-start",
-          "px-2.5",
-          // "px-6",
-          "sm:px-4",
-          "md::px-0"
-        )}
-      >
+    <section className="pb-28 bg-[#F1F1F1] w-full">
+      <div className={cn("md:w-[800px]", "px-2.5", "sm:px-4", "md::px-0")}>
         <ProjectVideo src={video_key} />
-        <Block title="About this app" desc={desc}/>
+        <Block title="About this app" desc={desc} />
         <Block title="Technology & Features">
           <ul className="list-disc ml-5 mt-2.5 text-secondary">
             {technology_feature.map((data, index) => (

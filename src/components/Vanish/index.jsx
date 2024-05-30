@@ -8,7 +8,13 @@ const ONE_SECOND = 1000;
 const WAIT_TIME = ONE_SECOND * 5;
 const STAGGER = 0.025;
 
-export function Vanish({ phrases, className, delay = 0, once = false }) {
+export function Vanish({
+  // phrases = ["placeholder"],
+  phrases,
+  className,
+  delay = 0,
+  once = false,
+}) {
   const countRef = useRef(0);
   const [active, setActive] = useState(0);
 
@@ -40,7 +46,7 @@ export function Vanish({ phrases, className, delay = 0, once = false }) {
   return (
     <div className={cn("gap-1.5 sm:gap-2", className)}>
       <AnimatePresence mode="popLayout">
-        {phrases[active].split(" ").map((word, wordIndex) => {
+        {phrases[active]?.split(" ").map((word, wordIndex) => {
           if (wordIndex === 0) countRef.current = 0;
 
           return (

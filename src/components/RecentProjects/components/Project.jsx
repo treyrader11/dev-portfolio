@@ -66,11 +66,12 @@ export default function Project({
         setIsAnimating={setIsAnimating}
         isFlipped={isFlipped}
         onClick={() => handleFlip()}
+        className={cn("")}
       />
 
       <CardFlip
         imageSrc={blank_shot.src}
-        className={cn("rotate-[100deg]", "fixed")}
+        className={cn("rotate-[100deg]")}
         setIsAnimating={setIsAnimating}
         isFlipped={isFlipped}
         onClick={() => handleFlip()}
@@ -143,6 +144,7 @@ export default function Project({
           href={`/project/${video_key}`}
         />
       </motion.div>
+     
     </div>
   );
 }
@@ -177,16 +179,18 @@ function CardFlip({
         "flex",
         "items-center",
         "justify-center",
-        // "sticky",
+        "sticky",
         "inset-x-0",
         "z-[52]",
         "w-[120%]",
+
         "-left-[10%]", // 10% === 1/2 of 20%
         "-left-[calc(20%-10%)]", // 10% === 1/2 of 20%
+        // "-mt-[100vh]",
         className
       )}
     >
-      {children || <></>}
+      {children}
     </motion.div>
   );
 }

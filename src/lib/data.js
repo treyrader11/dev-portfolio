@@ -270,7 +270,7 @@ export const projectsData = [
     isRecent: true,
   },
   {
-    title: "Leetcode Clone",
+    title: "Leetcode",
     desc: "This is just some placeholder text until i make time to actually create the real deal. If you're seeing this, then it means I love you",
     color: "#21242b",
     isPriority: false,

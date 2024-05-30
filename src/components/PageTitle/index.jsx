@@ -14,21 +14,17 @@ function PageTitle({
   once = false,
 }) {
   const commonContainerClasses = cn(
-    "h-48",
     "mx-auto",
     "bg-dark-400",
     "px-6",
+    "relative",
     containerClass
   );
   const commonVanishClasses = cn(
-    "py-[125px]",
-    "sm:py-[130px]",
-    "md:py-[110px]",
     "text-7xl",
-    "font-bold",
-    "md:text-left",
-    "text-left",
     "md:text-9xl",
+    "font-bold",
+    "text-left",
     "text-secondary",
     "relative",
     className

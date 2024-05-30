@@ -1,6 +1,5 @@
 "use client";
 
-import PageTitle from "@/components/PageTitle";
 import { userData } from "@/lib/data";
 import { cn } from "@/lib/utils";
 import Experience from "./Experience";
@@ -28,14 +27,7 @@ export default function Info() {
 
   return (
     <section ref={container} className="bg-[#F1F1F1]">
-      <motion.div className="">
-        <PageTitle
-          once
-          title="About."
-          backgroundColor="#1c1d20"
-          className=" #0f0f0f"
-        />
-
+      <motion.div>
         <BlurredIn once className="md:w-[800px] mx-auto">
           <div className="max-w-6xl pt-20 mx-auto">
             <p className={cn("mx-4 text-2xl font-semibold md:text-4xl")}>
@@ -128,7 +120,7 @@ export default function Info() {
               ))}
 
               {/* <TechStack className="bg-amber-200" /> */}
-              <TechStack className="" />
+              <TechStack />
             </BlurredIn>
           </div>
         </div>

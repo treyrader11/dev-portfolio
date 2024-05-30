@@ -1,7 +1,5 @@
 import { cn } from "@/lib/utils";
 import Address from "../../../Address";
-import PageTitle from "@/components/PageTitle";
-import Image from "next/image";
 import Input from "@/components/Input";
 import Rounded from "@/components/Rounded";
 import Magnetic from "@/components/Magnetic";
@@ -12,17 +10,9 @@ import Socials from "@/components/Socials";
 import BlurredIn from "@/components/BlurredIn";
 import GridGlobe from "@/components/GridGlobe";
 
-const imageProps = {
-  width: 100,
-  height: 100,
-  className: "w-full object-cover opacity-[0.1]",
-  src: "/images/map.png",
-};
-
 export default function ContactForm() {
   return (
     <section className="bg-dark">
-      <PageTitle once title="Contact." />
       <BlurredIn
         once
         className={cn(
@@ -112,17 +102,7 @@ export default function ContactForm() {
             <Socials rounded />
           </div>
 
-          <div
-            className={cn(
-              "flex gap-2",
-              // "mt-[3.rem]",
-              // "mt-[1.rem]",
-              "flex-col"
-            )}
-          >
-            {/* <div className="relative w-2/5 mx-auto">
-              <Image {...imageProps} alt="image of map" />
-            </div> */}
+          <div className={cn("flex gap-2 flex-col")}>
             <div
               className={cn(
                 "hover:translate-x-2",
@@ -130,12 +110,9 @@ export default function ContactForm() {
                 "duration-200",
                 "relative",
                 "md:h-full",
-                // "min-h-40",
                 "min-h-48",
                 "flex",
                 "flex-col",
-                // "p-5",
-                // "lg:p-10",
                 "overflow-hidden"
               )}
             >

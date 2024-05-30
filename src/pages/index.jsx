@@ -59,7 +59,15 @@ export default function Home() {
           )}
         />
         <PositionProvider>
-          <RecentProjects className="sticky top-0 bg-white md:pb-[200vh]" />
+          <RecentProjects
+            className={cn(
+              "sticky",
+              "top-0",
+              "bg-white",
+              "md:pb-[200vh]",
+              // "max-w-[1200px]" // this is where the padding breaks
+            )}
+          />
         </PositionProvider>
 
         <div className={cn("relative", "z-[3]", "min-h-screen")}>

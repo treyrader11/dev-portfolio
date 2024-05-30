@@ -1,59 +1,31 @@
-import Link from "next/link";
 import { cn } from "@/lib/utils";
 import ProjectDetails from "@/components/Project/components/ProjectDetails";
 import { projectsData } from "@/lib/data";
 import Inner from "@/components/layout/Inner";
-import { GoArrowLeft } from "react-icons/go";
+import PageTitle from "@/components/PageTitle";
+import GoBack from "@/components/GoBack";
 
 export default function ProjectPage({ project }) {
   return (
-    <Inner backgroundColor="#934E00">
-      <div
+    <Inner backgroundColor="#934E00" className="">
+      <PageTitle
+        once
+        title={`${project[0].title}`}
+        backgroundColor="transparent"
         className={cn(
-          "w-full",
-          "min-h-screen",
-          "m-auto",
-          "pt-[62px]",
-          "flex",
-          "flex-col",
-          "items-center",
-          "justify-start"
+          "absolute",
+          "mt-12",
+          "z-50",
+          "inset-x-0",
+          "sm:mt-10",
+          "md:mt-5",
+          "px-3",
+          "pt-20"
         )}
-      >
-        <div
-          className={cn(
-            "w-full",
-            "1250:w-[1210px]",
-            "min-h-[70px]",
-            "flex",
-            "flex-row",
-            "items-center",
-            "justify-start",
-            "px-2.5",
-            "600:px-[15px]",
-            "1250:px-0"
-          )}
-        >
-          <Link
-            href={"/"}
-            className={cn(
-              "static",
-              "flex",
-              "flex-row",
-              "items-center",
-              "justify-start",
-              "cursor-pointer",
-              "1000:fixed",
-              "text-slate-200",
-              "hover:text-sky-500"
-            )}
-          >
-            <GoArrowLeft className="size-4 mr-[5px]" />
-            <span className="text-base">Back</span>
-          </Link>
-        </div>
-        {project && <ProjectDetails data={project} />}
-      </div>
+        containerClass={cn("h-48 z-50")}
+      />
+      {/* <GoBack /> */}
+      {project && <ProjectDetails data={project} />}
     </Inner>
   );
 }
