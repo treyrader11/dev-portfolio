@@ -1,16 +1,16 @@
 "use client";
 
-import { cn } from "@/lib/utils";
 import { memo } from "react";
 import { motion } from "framer-motion";
+import { cn } from "@/lib/utils";
 
-function Stars() {
+function Stars({ className }) {
   const randomMove = () => Math.random() * 4 - 2;
   const randomOpacity = () => Math.random();
   const random = () => Math.random();
 
   return (
-    <div className="absolute inset-0">
+    <div className={cn("absolute inset-0", className)}>
       {[...Array(80)].map((_, i) => (
         <motion.span
           key={`star-${i}`}

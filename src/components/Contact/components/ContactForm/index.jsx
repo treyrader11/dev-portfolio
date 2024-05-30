@@ -12,6 +12,7 @@ import GridGlobe from "@/components/GridGlobe";
 import { useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
 import PageCurve from "@/components/PageCurve";
+import Stars from "@/components/Stars";
 
 export default function ContactForm() {
   const container = useRef(null);
@@ -39,6 +40,7 @@ export default function ContactForm() {
           "-mt-4"
         )}
       >
+         <Stars className="z-[-1]" />
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           <div className="md:ml-4">
             <header className="pt-10">
