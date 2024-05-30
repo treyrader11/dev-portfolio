@@ -39,7 +39,7 @@ export default function Hero({ isLoading, scrollYProgress, className }) {
         className
       )}
     >
-      <Stars className="opacity-60" backgroundColor="#cd9f79" />
+      {/* <Stars className="opacity-60" backgroundColor="#cd9f79" /> */}
       {/* cursor mask */}
       <motion.div
         className={cn(
