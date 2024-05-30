@@ -10,14 +10,14 @@ import useIsomorphicLayoutEffect from "@/hooks/useIsomorphicLayoutEffect";
 import ProfilePicture from "@/components/ProfilePicture";
 import { cn } from "@/lib/utils";
 import { usePathname } from "next/navigation";
-import Link from "next/link";
 import Brand from "@/components/Brand";
 import BurgerMenu from "./BurgerMenu";
 import { useWindowDimensions } from "@/hooks/useWindowDimensions";
 import BlurredIn from "../BlurredIn";
+import { useNav } from "../providers/NavProvider";
 
 export default function Header() {
-  const [isNavOpen, setIsNavOpen] = useState(false);
+  const { isNavOpen, setIsNavOpen } = useNav();
 
   const header = useRef(null);
   const button = useRef(null);
@@ -97,14 +97,7 @@ export default function Header() {
           src={`/images/portraits/headshot.png`}
           className="size-[100px]"
         />
-        {/* <Link
-          href="/"
-          className={cn(
-            "pl-3",
-            "mr-auto",
-            backgroundHasColor ? "text-white" : "text-gray-500"
-          )}
-        > */}
+
         <Brand
           className={cn(
             "pl-3",
@@ -112,7 +105,6 @@ export default function Header() {
             backgroundHasColor ? "text-white" : "text-gray-500"
           )}
         />
-        {/* </Link> */}
 
         <NavMenu
           handleNavMenu={handleNavMenu}

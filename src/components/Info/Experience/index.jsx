@@ -4,11 +4,10 @@ import {
   VerticalTimeline,
   VerticalTimelineElement,
 } from "react-vertical-timeline-component";
-import { motion } from "framer-motion";
 import "react-vertical-timeline-component/style.min.css";
+import { motion } from "framer-motion";
 import { experiences } from "@/lib/data";
 import { cn } from "@/lib/utils";
-import { textVariant } from "./anim";
 import Image from "next/image";
 import PageTitle from "@/components/PageTitle";
 
@@ -70,9 +69,9 @@ function ExperienceCard({ experience }) {
       </div>
 
       <ul className="mt-5 ml-5 space-y-2 list-disc">
-        {experience.points.map((point, index) => (
+        {experience.points.map((point, i) => (
           <li
-            key={`experience-point-${index}`}
+            key={`experience-point-${i}`}
             className={cn("pl-1 tracking-wider text-white-100")}
           >
             {point}
@@ -86,19 +85,6 @@ function ExperienceCard({ experience }) {
 export default function Experience({ className }) {
   return (
     <motion.section className={cn("py-10 bg-dark", className)}>
-      {/* <motion.div variants={textVariant()}>
-        <div
-          className={cn(
-            "text-center",
-            "text-white",
-            "font-black",
-            "text-3xl",
-            "text-[7vw]"
-          )}
-        >
-          Work Experience.
-        </div>
-      </motion.div> */}
       <PageTitle
         once
         className={cn("text-center text-white font-black text-[7vw]")}
@@ -108,11 +94,8 @@ export default function Experience({ className }) {
 
       <div className="flex flex-col mt-20">
         <VerticalTimeline>
-          {experiences.map((experience, index) => (
-            <ExperienceCard
-              key={`experience-${index}`}
-              experience={experience}
-            />
+          {experiences.map((experience, i) => (
+            <ExperienceCard key={`experience-${i}`} experience={experience} />
           ))}
         </VerticalTimeline>
       </div>

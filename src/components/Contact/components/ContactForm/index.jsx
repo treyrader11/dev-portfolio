@@ -21,7 +21,7 @@ export default function ContactForm() {
     target: container,
     offset: ["start end", "end start"],
   });
-  // const height = useTransform(scrollYProgress, [0, 0.9], [50, 0]);
+
   const height = useTransform(scrollYProgress, [0, 0.9], [50, 0]);
   return (
     <section className="bg-dark">
@@ -40,7 +40,7 @@ export default function ContactForm() {
           "-mt-4"
         )}
       >
-         <Stars className="opacity-60 z-[-1]" backgroundColor="#cd9f79" />
+        <Stars className="opacity-60 z-[-1]" backgroundColor="#cd9f79" />
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           <div className="md:ml-4">
             <header className="pt-10">
@@ -172,7 +172,7 @@ export default function ContactForm() {
         </div>
       </BlurredIn>
       <div className={cn("bg-slate-100 h-[5vh]")} />
-      <PageCurve height={height} />
+      {/* <PageCurve height={height} /> */}
     </section>
   );
 }

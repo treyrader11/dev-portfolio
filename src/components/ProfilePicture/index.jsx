@@ -1,7 +1,6 @@
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import Magnetic from "../Magnetic";
-import Link from "next/link";
 
 export default function ProfilePicture({
   src,
@@ -41,5 +40,5 @@ export default function ProfilePicture({
     </div>
   );
 
-  return <div>{content}</div>;
+  return content;
 }

@@ -7,14 +7,7 @@ import { useState } from "react";
 
 export default function Socials({ className, links }) {
   return (
-    <section
-      className={cn(
-        className,
-        // "mx-6"
-        //  ""
-        
-      )}
-    >
+    <section className={cn(className)}>
       <h1
         className={cn(
           // "mt-8",
@@ -24,8 +17,6 @@ export default function Socials({ className, links }) {
           "text-2xl",
           "font-semibold",
           "sm:text-gray-700"
-          // "text-purple-300",
-          // "underline"
         )}
       >
         Socials
@@ -36,7 +27,6 @@ export default function Socials({ className, links }) {
           "font-mono",
           "text-lg",
           "sm:text-gray-500",
-          // "text-white",
           "flex",
           "items-start",
           "flex-col",
@@ -49,8 +39,8 @@ export default function Socials({ className, links }) {
           "mx-3"
         )}
       >
-        {links.map((link) => (
-          <SocialLink key={link.name} name={link.name} href={link.href} />
+        {links.map(({ name, href }) => (
+          <SocialLink key={name} name={name} href={href} />
         ))}
       </div>
     </section>
