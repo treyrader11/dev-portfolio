@@ -25,24 +25,32 @@ import {
   SiGodaddy,
 } from "react-icons/si";
 
+import react from "/public/images/tech/react.png";
+import tailwind from "/public/images/tech/tailwind.png";
+import js from "/public/images/tech/javascript.png";
+import ts from "/public/images/tech/typescript.png";
+import next from "/public/images/tech/next.png";
+import github from "/public/images/tech/github.png";
+import figma from "/public/images/tech/figma.png";
+import vite from "/public/images/tech/vite.png";
+import svelt from "/public/images/tech/svelt.png";
+import css from "/public/images/tech/css.png";
+import html from "/public/images/tech/html.png";
+import framer from "/public/images/tech/framer.png";
+import vercel from "/public/images/tech/vercel.png";
+import gsap from "/public/images/tech/gsap.png";
+import expo from "/public/images/tech/expo.png";
+import express from "/public/images/tech/express.png";
+import node from "/public/images/tech/node.png";
+import sass from "/public/images/tech/sass.png";
+import storybook from "/public/images/tech/storybook.png";
+import shadcn from "/public/images/tech/shadcn.png";
+
+import Image from "next/image";
+
 export default function TeckStack({ className }) {
   return (
     <section className={cn("py-24", className)}>
-      {/* <h1
-        className={cn(
-          "inline-block",
-          "px-2",
-          "py-1",
-          "text-3xl",
-          "font-bold",
-          "bg-primary",
-          "rounded-md",
-          "text-gray-50",
-          "mb-28"
-        )}
-      >
-        Tech Stack
-      </h1> */}
       <div
         className={cn(
           "flex",
@@ -104,7 +112,7 @@ export function TranslateWrapper({ children, reverse }) {
   );
 }
 
-function LogoItem({ Icon, name }) {
+function LogoItem({ name, imgSrc }) {
   return (
     <a
       // href="/"
@@ -119,10 +127,20 @@ function LogoItem({ Icon, name }) {
         "text-black",
         "transition-colors",
         // "hover:bg-neutral-200",
-        "md:py-6"
+        "md:py-6",
+        ""
       )}
     >
-      <Icon className="text-3xl md:text-4xl" />
+      {/* <Icon className="text-3xl md:text-4xl" /> */}
+      <div className="flex relatve size-12">
+        <Image
+          width={100}
+          height={100}
+          src={imgSrc}
+          className="object-contain text-3xl rounded-full md:text-4xl"
+        />
+      </div>
+
       <span
         className={cn(
           "text-2xl",
@@ -141,16 +159,16 @@ function LogoItem({ Icon, name }) {
 function LogoItemsTop() {
   return (
     <>
-      <LogoItem Icon={SiNike} name="Nike" />
-      <LogoItem Icon={Si3M} name="3M" />
-      <LogoItem Icon={SiAbstract} name="Abstract" />
-      <LogoItem Icon={SiAdobe} name="Adobe" />
-      <LogoItem Icon={SiAirtable} name="Airtable" />
-      <LogoItem Icon={SiAmazon} name="Amazon" />
-      <LogoItem Icon={SiBox} name="Box" />
-      <LogoItem Icon={SiBytedance} name="Bytedance" />
-      <LogoItem Icon={SiChase} name="Chase" />
-      <LogoItem Icon={SiCloudbees} name="Cloudebees" />
+      <LogoItem imgSrc={js} name="Javascript" />
+      <LogoItem imgSrc={node} name="Node" />
+      <LogoItem imgSrc={express} name="Express" />
+      <LogoItem imgSrc={ts} name="Typescript" />
+      <LogoItem imgSrc={html} name="html" />
+      <LogoItem imgSrc={sass} name="Sass" />
+      <LogoItem imgSrc={css} name="Css" />
+      <LogoItem imgSrc={react} name="React" />
+      <LogoItem imgSrc={next} name="Next" />
+      <LogoItem imgSrc={vite} name="Vite" />
     </>
   );
 }
@@ -158,16 +176,16 @@ function LogoItemsTop() {
 function LogoItemsBottom() {
   return (
     <>
-      <LogoItem Icon={SiBmw} name="BMW" />
-      <LogoItem Icon={SiBurton} name="Burton" />
-      <LogoItem Icon={SiBuildkite} name="Buildkite" />
-      <LogoItem Icon={SiCouchbase} name="Couchbase" />
-      <LogoItem Icon={SiDailymotion} name="Dailymotion" />
-      <LogoItem Icon={SiDeliveroo} name="deliveroo" />
-      <LogoItem Icon={SiEpicgames} name="Epic Games" />
-      <LogoItem Icon={SiGenius} name="Genius" />
-      <LogoItem Icon={SiGodaddy} name="GoDaddy" />
-      <LogoItem Icon={SiHeroku} name="Heroku" />
+      <LogoItem imgSrc={figma.src} name="Figma" />
+      <LogoItem imgSrc={storybook.src} name="Storybook" />
+      <LogoItem imgSrc={gsap.src} name="Gsap" />
+      <LogoItem imgSrc={framer.src} name="Framer Motion" />
+      <LogoItem imgSrc={tailwind} name="Tailwind" />
+      <LogoItem imgSrc={shadcn} name="Shadcn" />
+      <LogoItem imgSrc={vercel} name="Vercel" />
+      <LogoItem imgSrc={expo} name="Expo" />
+      <LogoItem imgSrc={github} name="Github" />
+      <LogoItem imgSrc={svelt} name="Svelt" />
     </>
   );
 }
