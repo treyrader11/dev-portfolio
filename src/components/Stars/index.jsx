@@ -4,7 +4,7 @@ import { memo } from "react";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 
-function Stars({ className }) {
+function Stars({ className, backgroundColor = "white" }) {
   const randomMove = () => Math.random() * 4 - 2;
   const randomOpacity = () => Math.random();
   const random = () => Math.random();
@@ -31,7 +31,7 @@ function Stars({ className }) {
             left: `${random() * 100}%`,
             width: `2px`,
             height: `2px`,
-            backgroundColor: "white",
+            backgroundColor,
             borderRadius: "50%",
             zIndex: 1,
           }}
