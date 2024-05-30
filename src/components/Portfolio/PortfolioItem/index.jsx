@@ -27,7 +27,6 @@ export default function PortfolioItem({
       }}
       className={cn(
         "w-full",
-        // "relative",
         "border",
         "border-t-neutral-400",
         "transition-all",

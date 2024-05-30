@@ -33,21 +33,40 @@ export default function RecentProjects({ className }) {
         className
       )}
     >
-      <PageTitle
+      {/* <div className={cn("")}> */}
+        
+        <PageTitle
+          once={false}
+          delay={0.8}
+          backgroundColor="transparent"
+          containerClass={cn(
+            // "h-0",
+            "sticky",
+            "top-0",
+            "md:p-0", //makes menu button look good
+            "pt-10",
+            "mt-[100%]",
+            "min-h-screen"
+          )}
+          title="Recent projects."
+          className={cn("py-0 md:text-[5vw]")}
+        />
+      {/* </div> */}
+      {/* <PageTitle
         once={false}
         delay={0.8}
         backgroundColor="white"
         containerClass={cn(
-          "h-0",
+          // "h-0",
           "sticky",
           "top-0",
           "md:p-0", //makes menu button look good
           "pt-10",
-          "min-h-screen"
+          "h-screen"
         )}
         title="Recent projects."
         className={cn("py-0 md:text-[5vw]")}
-      />
+      /> */}
 
       <Scrollbar positions={projectPositions} />
 
@@ -62,7 +81,7 @@ export default function RecentProjects({ className }) {
         );
       })}
 
-      <div className={cn("py-20 sm:py-0", "")}>
+      <div className={cn("py-20 sm:py-0")}>
         <Rounded
           backgroundColor="#934e00"
           text="See all projects"
