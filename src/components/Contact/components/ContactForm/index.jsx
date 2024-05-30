@@ -40,7 +40,7 @@ export default function ContactForm() {
           "-mt-4"
         )}
       >
-         <Stars className="z-[-1]" />
+         <Stars className="z-[-1] opacity-40" />
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           <div className="md:ml-4">
             <header className="pt-10">
