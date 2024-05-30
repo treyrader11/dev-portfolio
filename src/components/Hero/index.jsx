@@ -182,7 +182,7 @@ function JumpingIcon({ className }) {
         className
       )}
     >
-      <a href="#about">
+      <a href="#">
         <div
           className={cn(
             "w-[35px]",
