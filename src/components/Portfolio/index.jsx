@@ -164,6 +164,7 @@ export default function Portfolio() {
       onMouseMove={(e) => {
         moveItems(e.clientX, e.clientY);
       }}
+      className="pb-[100px]"
     >
       {/* <BlurredIn once> */}
       <div>

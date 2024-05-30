@@ -36,7 +36,7 @@ export default function PortfolioItem({
         // "hover:blur-sm"
       )}
     >
-      <BlurredIn once className={cn("relative")}>
+      <div once className={cn("relative")}>
         <div
           className={cn(
             "md:flex justify-between items-center",
@@ -82,7 +82,7 @@ export default function PortfolioItem({
           data={tags}
           className={cn("absolute bottom-2 left-16 flex-nowrap max-w-none")}
         />
-      </BlurredIn>
+      </div>
     </Link>
   );
 }

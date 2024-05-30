@@ -28,7 +28,7 @@ export default function Info() {
   return (
     <section ref={container} className="bg-[#F1F1F1] w-full">
       <motion.div>
-        <BlurredIn once className="md:w-[800px] mx-auto">
+        <div className="md:w-[800px] mx-auto">
           <div className="max-w-6xl pt-20 mx-auto">
             <p className={cn("mx-4 text-2xl font-semibold md:text-4xl")}>
               {userData.about.title}. Currently working on{" "}
@@ -47,7 +47,7 @@ export default function Info() {
               </a>
             </p>
           </div>
-        </BlurredIn>
+        </div>
 
         <div className="px-4 md:w-[800px] mx-auto">
           <div
@@ -64,7 +64,7 @@ export default function Info() {
           >
             {/* Social Buttons */}
             <div className="inline-flex flex-col">
-              <BlurredIn once>
+              <div>
                 <h1 className={cn("text-xl", "font-semibold", "text-gray-700")}>
                   Contact
                 </h1>
@@ -84,8 +84,8 @@ export default function Info() {
                   </Link>{" "}
                   and I&apos;ll get back the same day.
                 </p>
-              </BlurredIn>
-              <BlurredIn once className="mt-8">
+              </div>
+              <div className="mt-8">
                 <h1 className="text-xl font-semibold text-gray-700">
                   Job Opportunities
                 </h1>
@@ -108,17 +108,17 @@ export default function Info() {
                   </span>
                   and I&apos;d love to see what y&lsquo;all do!
                 </p>
-              </BlurredIn>
+              </div>
             </div>
 
             {/* Text area */}
-            <BlurredIn once className="col-span-1 md:col-span-2">
+            <div className="col-span-1 md:col-span-2">
               {userData.about.description?.map((desc, idx) => (
                 <p key={idx} className="mb-4 text-xl text-gray-700">
                   {desc}
                 </p>
               ))}
-            </BlurredIn>
+            </div>
           </div>
           <Socials links={socials} className="w-full" />
         </div>

@@ -39,48 +39,46 @@ function ExperienceCard({ experience }) {
         </div>
       }
     >
-      <BlurredIn once>
-        <div>
-          <h3 className="text-2xl font-bold text-white">{experience.title}</h3>
-          <p
-            className="text-lg font-semibold text-secondary"
-            style={{ margin: 0 }}
+      <div>
+        <h3 className="text-2xl font-bold text-white">{experience.title}</h3>
+        <p
+          className="text-lg font-semibold text-secondary"
+          style={{ margin: 0 }}
+        >
+          {experience.company_name}
+        </p>
+      </div>
+      <div>
+        <h3 className="text-sm font-light text-neutral-400">
+          (Visit {experience.company_name}{" "}
+          <a
+            href={experience.website_url}
+            target="_blank"
+            className={cn(
+              "font-light",
+              "text-blue-600",
+              "hover:underline",
+              "duration-300",
+              "transition-all",
+              "ease-in-out"
+            )}
           >
-            {experience.company_name}
-          </p>
-        </div>
-        <div>
-          <h3 className="text-sm font-light text-neutral-400">
-            (Visit {experience.company_name}{" "}
-            <a
-              href={experience.website_url}
-              target="_blank"
-              className={cn(
-                "font-light",
-                "text-blue-600",
-                "hover:underline",
-                "duration-300",
-                "transition-all",
-                "ease-in-out"
-              )}
-            >
-              here
-            </a>
-            )
-          </h3>
-        </div>
+            here
+          </a>
+          )
+        </h3>
+      </div>
 
-        <ul className="mt-5 ml-5 space-y-2 list-disc">
-          {experience.points.map((point, index) => (
-            <li
-              key={`experience-point-${index}`}
-              className={cn("pl-1 tracking-wider text-white-100")}
-            >
-              {point}
-            </li>
-          ))}
-        </ul>
-      </BlurredIn>
+      <ul className="mt-5 ml-5 space-y-2 list-disc">
+        {experience.points.map((point, index) => (
+          <li
+            key={`experience-point-${index}`}
+            className={cn("pl-1 tracking-wider text-white-100")}
+          >
+            {point}
+          </li>
+        ))}
+      </ul>
     </VerticalTimelineElement>
   );
 }
@@ -89,8 +87,7 @@ export default function Experience({ className }) {
   return (
     <motion.section className={cn("py-10 bg-dark", className)}>
       <motion.div variants={textVariant()}>
-        <BlurredIn
-          once
+        <div
           className={cn(
             "text-center",
             "text-white",
@@ -100,7 +97,7 @@ export default function Experience({ className }) {
           )}
         >
           Work Experience.
-        </BlurredIn>
+        </div>
       </motion.div>
 
       <div className="flex flex-col mt-20">
