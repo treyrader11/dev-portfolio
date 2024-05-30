@@ -9,6 +9,7 @@ import { useRef } from "react";
 import BlurredIn from "../BlurredIn";
 import TechStack from "./TechStack";
 import Socials from "./Socials";
+import TextSlider from "../TextSider";
 
 const socials = [
   { name: "Facebook", href: userData.socialLinks.facebook },
@@ -121,13 +122,14 @@ export default function Info() {
           </div>
           <Socials links={socials} className="w-full" />
         </div>
-        <TechStack />
+        <div className="w-full">
+          <TechStack />
+        </div>
+
+        {/* <TextSlider text="TeckStack" /> */}
       </motion.div>
 
       <Experience scrollYProgress={scrollYProgress} />
     </section>
   );
 }
-
-
-

@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import Link from "next/link";
 import Image from "next/image";
 import Tags from "./Tags";
+import Video from "@/components/Video";
 
 export default function PortfolioItem({
   index,
@@ -15,8 +16,6 @@ export default function PortfolioItem({
   tech_image,
   tags,
 }) {
-
-
   return (
     <Link
       href={`/project/${projectId}`}
@@ -58,9 +57,7 @@ export default function PortfolioItem({
           >
             {title}
           </h2>
-          <div>
-            
-          </div>
+          <div></div>
           <div
             className={cn(
               "transition-all",
@@ -82,10 +79,11 @@ export default function PortfolioItem({
           </div>
           {/* <Tags data={tags} className={cn("")} /> */}
         </div>
-        <Tags data={tags} className={cn("absolute bottom-2 left-16 flex-nowrap max-w-none")} />
+        <Tags
+          data={tags}
+          className={cn("absolute bottom-2 left-16 flex-nowrap max-w-none")}
+        />
       </BlurredIn>
     </Link>
   );
 }
-
-

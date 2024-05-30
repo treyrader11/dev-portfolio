@@ -9,8 +9,8 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import { scaleAnimation } from "./anim";
 import ProjectCategories from "./ProjectCategories";
-import BlurredIn from "../BlurredIn";
 import Search from "./Search";
+import Video from "../Video";
 
 export default function Portfolio() {
   const [projects, setProjects] = useState(projectsData);
@@ -220,6 +220,8 @@ export default function Portfolio() {
           "mb-[100px]"
         )}
       >
+        {/* <Video cover src={`/videos/code-editor1.mp4`} muted loop autoPlay /> */}
+
         {filteredProjects.map((proj, i) => {
           return (
             <PortfolioItem
@@ -277,14 +279,15 @@ export default function Portfolio() {
                   style={{ backgroundColor: color }}
                   key={`modal_${index}`}
                 >
-                  <Image
+                  {/* <Image
                     src={`/images/${project_image}`}
                     width={300}
                     priority={project.isPriority}
                     height={0}
                     alt="image"
                     className="md:h-[24vh] md:w-[20vw] h-[20vh] w-[38vw]"
-                  />
+                  /> */}
+                  <Video src={`/videos/tech-meeting.mp4`} muted loop autoPlay />
                 </div>
               );
             })}

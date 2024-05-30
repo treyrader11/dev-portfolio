@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils";
 import Rounded from "@/components/Rounded";
 import { PositionContext } from "@/lib/contexts";
 import blank_shot from "/public/shots/blank-shot.png";
+import Video from "@/components/Video";
 
 export default function Project({
   project_image,
@@ -140,11 +141,19 @@ export default function Project({
         <Rounded
           text="View"
           backgroundColor="purple"
-          className={cn("bg-purple-400", "p-4")}
+          className={cn("bg-purple-400", "p-4", "absolute")}
           href={`/project/${video_key}`}
         />
+        {/* {isFlipped && !isAnimating && (
+          <Video
+            src={`/videos/tech-meeting.mp4`}
+            className={cn("w-[64%]")}
+            muted
+            loop
+            autoPlay
+          />
+        )} */}
       </motion.div>
-     
     </div>
   );
 }

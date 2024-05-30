@@ -25,7 +25,6 @@ export default function Socials({ className, links }) {
           "font-mono",
           "text-lg",
           "text-gray-500",
-          "gap-4",
           "flex",
           "items-start",
           "flex-col",
@@ -53,7 +52,7 @@ function SocialLink({ name, href }) {
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
         href={href}
-        className={cn("p-4 text-left")}
+        className={cn("py-4 text-left")}
       >
         <span className={cn("flex flex-row-reverse md:flex-col gap-2")}>
           {name}
