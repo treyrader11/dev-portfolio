@@ -8,16 +8,17 @@ import Description from "@/components/Description";
 import SlidingImages from "@/components/SlidingImages";
 import RecentProjects from "@/components/RecentProjects";
 import Hero from "@/components/Hero";
-import { useScroll } from "framer-motion";
+import { useScroll, useTransform } from "framer-motion";
 import PositionProvider from "@/components/providers/PositionProvider";
 import References from "@/components/References";
+import PageCurve from "@/components/PageCurve";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export default function Home() {
   const [isLoading, setIsLoading] = useState(false);
-
   const container = useRef();
+
   const { scrollYProgress } = useScroll({
     target: container,
     offset: ["start start", "end end"],
@@ -63,7 +64,7 @@ export default function Home() {
             className={cn(
               "sticky",
               "top-0",
-              "bg-white",
+              "bg-white"
               // "-mt-[50%]",
               // "md:pb-[200vh]",
               // "max-w-[1200px]" // this is where the padding breaks
@@ -75,6 +76,9 @@ export default function Home() {
           <References />
           <SlidingImages className="bg-white" />
         </div>
+
+        {/* <div className={cn("bg-white h-[5vh]")} />
+        <PageCurve height={height} /> */}
       </Inner>
     </main>
   );

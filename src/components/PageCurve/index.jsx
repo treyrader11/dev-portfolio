@@ -10,7 +10,8 @@ function PageCurve({ className, height }, ref) {
       ref={ref}
       style={{ height }}
       className={cn(
-        "bg-white relative",
+        "bg-slate-100",
+        "relative",
         // "pt-[100px]",
         "-mt-[2px]",
         className
@@ -19,15 +20,11 @@ function PageCurve({ className, height }, ref) {
       <div
         className={cn(
           "h-[1550%]",
-          //   "h-[1300%]",
           "w-[120%]",
-
           "-left-[10%]",
-          "rounded-tl-none",
-          "rounded-tr-none",
           "rounded-bl-full",
           "rounded-br-full",
-          "bg-white",
+          "bg-slate-100",
           "z-[1]",
           "absolute",
           ""

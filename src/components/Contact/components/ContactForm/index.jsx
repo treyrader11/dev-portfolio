@@ -169,8 +169,8 @@ export default function ContactForm() {
           </div>
         </div>
       </BlurredIn>
-      <div className={cn("bg-white h-[5vh]")} />
-      <PageCurve height={height} className="" />
+      <div className={cn("bg-slate-100 h-[5vh]")} />
+      <PageCurve height={height} />
     </section>
   );
 }

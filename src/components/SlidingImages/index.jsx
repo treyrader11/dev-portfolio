@@ -5,10 +5,11 @@ import { useScroll, useTransform, motion } from "framer-motion";
 import Image from "next/image";
 import { slider1, slider2 } from "./sliders";
 import { cn } from "@/lib/utils";
+import PageCurve from "../PageCurve";
 
 export default function SlidingImages({ className }) {
   const container = useRef(null);
-  
+
   const { scrollYProgress } = useScroll({
     target: container,
     offset: ["start end", "end start"],
@@ -104,29 +105,11 @@ export default function SlidingImages({ className }) {
             </div>
           );
         })}
+        <PageCurve height={height} />
       </motion.div>
 
-      {/* Big Circle */}
-      {/* <motion.div
-        style={{ height }}
-        className={cn("bg-red-500 relative mt-[100px]")}
-      >
-        <div
-          className={cn(
-            "h-[1550%]",
-            "w-[120%]",
-            "-left-[10%]",
-            "rounded-tl-none",
-            "rounded-tr-none",
-            "rounded-bl-full",
-            "rounded-br-full",
-            "bg-white",
-            "z-[1]",
-            "absolute",
-            "custom-shadow"
-          )}
-        />
-      </motion.div> */}
+      {/* <div className={cn("bg-white h-[5vh]")} /> */}
+      {/* <PageCurve height={height} /> */}
     </div>
   );
 }
