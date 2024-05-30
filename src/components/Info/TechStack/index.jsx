@@ -124,30 +124,29 @@ function LogoItem({ name, imgSrc }) {
         "justify-center",
         "gap-4",
         "p-4",
-        "text-black",
+        "text-gray-500",
         "transition-colors",
         // "hover:bg-neutral-200",
         "md:py-6",
         ""
       )}
     >
-      {/* <Icon className="text-3xl md:text-4xl" /> */}
-      <div className="flex relatve size-12">
+      <div className="flex aspect-video relatve size-12">
         <Image
-          width={100}
-          height={100}
+          width={50}
+          height={50}
           src={imgSrc}
-          className="object-contain text-3xl rounded-full md:text-4xl"
+          className="object-contain rounded-full md:text-4xl"
         />
       </div>
 
       <span
         className={cn(
-          "text-2xl",
+          "text-xl",
           "font-semibold",
           "uppercase",
           "whitespace-nowrap",
-          "md:text-3xl"
+          "md:text-2xl"
         )}
       >
         {name}
