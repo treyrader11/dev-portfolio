@@ -17,7 +17,8 @@ import BlurredIn from "../BlurredIn";
 import { useNav } from "../providers/NavProvider";
 
 export default function Header() {
-  const { isNavOpen, setIsNavOpen } = useNav();
+  // const { isNavOpen, setIsNavOpen } = useNav();
+  const [isNavOpen, setIsNavOpen] = useState(false);
 
   const header = useRef(null);
   const button = useRef(null);

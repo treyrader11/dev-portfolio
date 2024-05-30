@@ -26,8 +26,8 @@ export default function Description({ scrollYProgress, className }) {
       ref={description}
       className={cn("px-[200px] mt-[200px] flex justify-center", className)}
     >
-      <div className="flex gap-[50px] relative skew-y-2 max-w-[1400px]">
-        <p className="m-0 text-4xl gap-2 leading-[1.3]">
+      <div className="flex gap-[50px] relative max-w-[1400px]">
+        <p className="m-0 text-4xl gap-2 leading-[1.3] skew-y-2">
           {phrase.split(" ").map((word, index) => {
             return (
               // Mask
@@ -51,7 +51,7 @@ export default function Description({ scrollYProgress, className }) {
         <motion.p
           variants={opacity}
           animate={isInView ? "open" : "closed"}
-          className="w-4/5 m-0 text-lg"
+          className="w-4/5 m-0 text-lg skew-y-2"
         >
           The combination of my passion for design, code & interaction positions
           me in a unique place in the web design world.
@@ -69,7 +69,7 @@ function AboutButton({ className }) {
     // <div className={cn("absolute right-0 top-[40%] md:top-[35%]", className)}>
     <div className={cn("absolute right-0 top-[40%] md:top-[35%]", className)}>
       <Rounded
-        text="About me"
+        text="About"
         href="/info"
         className="size-[180px] bg-dark-400"
       />
