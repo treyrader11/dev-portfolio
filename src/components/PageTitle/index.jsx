@@ -22,7 +22,7 @@ function PageTitle({
   );
   const commonVanishClasses = cn(
     "text-7xl",
-    "md:text-9xl",
+    // "md:text-9xl",
     "font-bold",
     "text-left",
     "text-secondary",

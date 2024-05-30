@@ -10,7 +10,7 @@ import { experiences } from "@/lib/data";
 import { cn } from "@/lib/utils";
 import { textVariant } from "./anim";
 import Image from "next/image";
-import BlurredIn from "@/components/BlurredIn";
+import PageTitle from "@/components/PageTitle";
 
 const imageProps = {
   className: "object-contain size-3/5",
@@ -86,7 +86,7 @@ function ExperienceCard({ experience }) {
 export default function Experience({ className }) {
   return (
     <motion.section className={cn("py-10 bg-dark", className)}>
-      <motion.div variants={textVariant()}>
+      {/* <motion.div variants={textVariant()}>
         <div
           className={cn(
             "text-center",
@@ -98,7 +98,13 @@ export default function Experience({ className }) {
         >
           Work Experience.
         </div>
-      </motion.div>
+      </motion.div> */}
+      <PageTitle
+        once
+        className={cn("text-center text-white font-black text-[7vw]")}
+        containerClass={cn("h-0")}
+        title="Work Experience."
+      />
 
       <div className="flex flex-col mt-20">
         <VerticalTimeline>

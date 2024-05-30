@@ -156,8 +156,6 @@ export function Portrait({ className }) {
         "items-center",
         "h-[40vh]",
         "md:h-[50vh]",
-        // "border border-double ",
-        // "",
         className
       )}
     >

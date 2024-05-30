@@ -30,13 +30,12 @@ export default function PortfolioItem({
         "border",
         "border-t-neutral-400",
         "transition-all",
-        "duration-200",
+        "duration-500",
         "group",
-        "hover:opacity-50",
-        // "hover:blur-sm"
+        "hover:opacity-50"
       )}
     >
-      <div once className={cn("relative")}>
+      <div className={"relative"}>
         <div
           className={cn(
             "md:flex justify-between items-center",
@@ -50,7 +49,7 @@ export default function PortfolioItem({
               "text-[6vw]",
               "m-0",
               "transition-all",
-              "duration-[400]",
+              "duration-[800]",
               "group-hover:-translate-x-2.5"
             )}
           >

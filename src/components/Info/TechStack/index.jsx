@@ -120,6 +120,7 @@ function LogoItem({ name, imgSrc }) {
           width={50}
           height={50}
           src={imgSrc}
+          alt="tech logo"
           className="object-contain rounded-full"
         />
       </div>
