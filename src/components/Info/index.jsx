@@ -121,28 +121,7 @@ export default function Info() {
           </div>
           <div className="relative grid-cols-2 mx-8 sm:mx:0 sm:grid">
             <Socials links={socials} className="w-full relative z-[1] " />
-            <div
-              className={cn(
-                "absolute",
-                "sm:relative",
-                "top-0",
-                "inset-x-0",
-                "flex",
-                "items-center",
-                "h-[400px]"
-              )}
-            >
-              <Image
-                // width={150}
-                // height={150}
-                fill
-                priority
-                alt="profile picture"
-                src={`/images/portraits/profile.png`}
-                className="object-contain rounded-lg"
-                sizes={{}}
-              />
-            </div>
+            <Portrait />
           </div>
         </div>
 
@@ -155,5 +134,33 @@ export default function Info() {
 
       <Experience scrollYProgress={scrollYProgress} />
     </section>
+  );
+}
+
+export function Portrait({ className }) {
+  return (
+    <div
+      className={cn(
+        "absolute",
+        "sm:relative",
+        "top-0",
+        "inset-x-0",
+        "flex",
+        "items-center",
+        "h-[400px]",
+        className
+      )}
+    >
+      <Image
+        // width={150}
+        // height={150}
+        fill
+        priority
+        alt="profile picture"
+        src={`/images/portraits/profile.png`}
+        className="object-contain rounded-lg"
+        sizes={{}}
+      />
+    </div>
   );
 }

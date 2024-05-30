@@ -1,3 +1,5 @@
+"use client";
+
 import OldPreloader from "@/components/Preloader/OldPreloader";
 import { useState, useRef, useEffect } from "react";
 import { Inter } from "next/font/google";
