@@ -40,12 +40,12 @@ export default function RecentProjects({ className }) {
           delay={0.8}
           backgroundColor="transparent"
           containerClass={cn(
-            // "h-0",
+            "h-0",
             "sticky",
             "top-0",
             "md:p-0", //makes menu button look good
             "pt-10",
-            "mt-[100%]",
+            "mt-[100%]", // puts title way at bottom
             "min-h-screen"
           )}
           title="Recent projects."

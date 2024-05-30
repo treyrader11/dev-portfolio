@@ -9,8 +9,19 @@ import { VscCoffee } from "react-icons/vsc";
 import Socials from "@/components/Socials";
 import BlurredIn from "@/components/BlurredIn";
 import GridGlobe from "@/components/GridGlobe";
+import { useScroll, useTransform } from "framer-motion";
+import { useRef } from "react";
+import PageCurve from "@/components/PageCurve";
 
 export default function ContactForm() {
+  const container = useRef(null);
+
+  const { scrollYProgress } = useScroll({
+    target: container,
+    offset: ["start end", "end start"],
+  });
+  // const height = useTransform(scrollYProgress, [0, 0.9], [50, 0]);
+  const height = useTransform(scrollYProgress, [0, 0.9], [50, 0]);
   return (
     <section className="bg-dark">
       <BlurredIn
@@ -158,7 +169,8 @@ export default function ContactForm() {
           </div>
         </div>
       </BlurredIn>
-      <div className={cn("bg-white h-[10vh]")} />
+      <div className={cn("bg-white h-[5vh]")} />
+      <PageCurve height={height} className="" />
     </section>
   );
 }

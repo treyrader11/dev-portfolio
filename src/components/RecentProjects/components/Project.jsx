@@ -126,7 +126,6 @@ export default function Project({
         }}
         onClick={handleFlip}
         className={cn(
-          "-mt-[120vh]",
           "h-screen",
           "flex",
           "items-center",

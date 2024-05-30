@@ -64,7 +64,7 @@ export default function Home() {
               "sticky",
               "top-0",
               "bg-white",
-              "-mt-[50%]",
+              // "-mt-[50%]",
               // "md:pb-[200vh]",
               // "max-w-[1200px]" // this is where the padding breaks
             )}

@@ -32,7 +32,7 @@ export default function ContactPage() {
         containerClass={cn("py-[90px] sm:py-[100px] z-50")}
       />
       <ContactForm />
-      <PageCurve height={height} />
+      {/* <PageCurve height={height} /> */}
     </Inner>
   );
 }

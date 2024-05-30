@@ -9,7 +9,12 @@ function PageCurve({ className, height }, ref) {
     <motion.div
       ref={ref}
       style={{ height }}
-      className={cn("bg-white relative mt-[100px]", className)}
+      className={cn(
+        "bg-white relative",
+        // "pt-[100px]",
+        "-mt-[2px]",
+        className
+      )}
     >
       <div
         className={cn(
