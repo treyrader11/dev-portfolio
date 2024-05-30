@@ -1,4 +1,4 @@
-import Preloader from "@/components/Preloader";
+import OldPreloader from "@/components/Preloader/OldPreloader";
 import { useState, useRef, useEffect } from "react";
 import { Inter } from "next/font/google";
 import Inner from "@/components/layout/Inner";
@@ -10,7 +10,6 @@ import Hero from "@/components/Hero";
 import { useScroll, AnimatePresence } from "framer-motion";
 import PositionProvider from "@/components/providers/PositionProvider";
 import References from "@/components/References";
-import Transition from "@/components/layout/Transition";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -39,10 +38,9 @@ export default function Home() {
 
   return (
     <main className={cn(inter.className, "overflow-clip")}>
-      <AnimatePresence mode="wait">
-        {/* {isLoading && <Preloader />} */}
-        <Transition />
-      </AnimatePresence>
+      {/* <AnimatePresence mode="wait">
+        {isLoading && <OldPreloader />}
+      </AnimatePresence> */}
       <Inner ref={container} backgroundColor="#934E00">
         <Hero
           isLoading={isLoading}

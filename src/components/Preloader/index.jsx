@@ -1,87 +1,89 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { calcRandomBlockDelay, cn } from "@/lib/utils";
 import { motion } from "framer-motion";
-import { opacity, slideUp } from "./anim";
-import styles from "./styles";
-
-const words = [
-  "Hello",
-  "Bonjour",
-  "Ciao",
-  "Olà",
-  "やあ",
-  "Hallå",
-  "Guten tag",
-  "Hallo",
-];
 
 export default function Preloader() {
-  const [index, setIndex] = useState(0);
-  const [dimension, setDimension] = useState({ width: 0, height: 0 });
-
-  useEffect(() => {
-    setDimension({ width: window.innerWidth, height: window.innerHeight });
-  }, []);
-
-  useEffect(() => {
-    if (index == words.length - 1) return;
-    setTimeout(
-      () => {
-        setIndex(index + 1);
-      },
-      index == 0 ? 1000 : 150
-    );
-  }, [index]);
-
-  const initialPath = `M0 0 L${dimension.width} 0 L${dimension.width} ${
-    dimension.height
-  } Q${dimension.width / 2} ${dimension.height + 300} 0 ${
-    dimension.height
-  }  L0 0`;
-  const targetPath = `M0 0 L${dimension.width} 0 L${dimension.width} ${
-    dimension.height
-  } Q${dimension.width / 2} ${dimension.height} 0 ${dimension.height}  L0 0`;
-
-  const curve = {
-    initial: {
-      d: initialPath,
-      transition: { duration: 0.7, ease: [0.76, 0, 0.24, 1] },
-    },
-    exit: {
-      d: targetPath,
-      transition: { duration: 0.7, ease: [0.76, 0, 0.24, 1], delay: 0.3 },
-    },
-  };
-
   return (
-    <motion.div
-      variants={slideUp}
-      initial="initial"
-      exit="exit"
-      className={styles.introduction}
-    >
-      {dimension.width > 0 && (
-        <>
-          <motion.p
-            className={styles.p}
-            variants={opacity}
-            initial="initial"
-            animate="enter"
-          >
-            <span className={styles.span}></span>
-            {words[index]}
-          </motion.p>
-          <svg>
-            <motion.path
-              className={styles.path}
-              variants={curve}
-              initial="initial"
-              exit="exit"
-            ></motion.path>
-          </svg>
-        </>
-      )}
-    </motion.div>
+    <>
+      <div
+        className={cn(
+          "fixed",
+          "inset-0",
+          "flex",
+          "flex-col",
+          "z-[999]",
+          "pointer-events-none"
+        )}
+      >
+        {Array.from({ length: 10 }).map((_, rowIndex) => (
+          // .row
+          <div key={rowIndex} className={cn("flex-1", "w-full", "flex")}>
+            {Array.from({ length: 11 }).map((_, blockIndex) => (
+              // .block
+              <motion.div
+                key={blockIndex}
+                className={cn(
+                  "relative",
+                  "flex-1",
+                  "bg-dark-600",
+                  "-m-[0.25px]",
+                  "origin-top"
+                )}
+                initial={{ scaleY: 1 }}
+                animate={{ scaleY: 0 }}
+                exit={{ scaleY: 0 }}
+                transition={{
+                  duration: 1,
+                  ease: [0.22, 1, 0.36, 1],
+                  delay: calcRandomBlockDelay(rowIndex, 10),
+                }}
+              />
+            ))}
+          </div>
+        ))}
+      </div>
+
+      {/* .transition-out.blocks-container */}
+      <div
+        className={cn(
+          "fixed",
+          "top-0",
+          "left-0",
+          "w-screen",
+          "h-screen",
+          "flex",
+          "flex-col",
+          "pointer-events-none"
+        )}
+      >
+        {Array.from({ length: 10 }).map((_, rowIndex) => (
+          // .row
+          <div key={rowIndex} className={cn("flex-1", "w-full", "flex")}>
+            {Array.from({ length: 11 }).map((_, blockIndex) => (
+              // .block
+              <motion.div
+                key={blockIndex}
+                className={cn(
+                  "relative",
+                  "flex-1",
+                  "bg-dark-600",
+                  "-m-[0.25px]",
+                  "origin-bottom"
+                )}
+                initial={{ scaleY: 0 }}
+                animate={{ scaleY: 0 }}
+                exit={{ scaleY: 1 }}
+                transition={{
+                  duration: 1,
+                  ease: [0.22, 1, 0.36, 1],
+                  delay: calcRandomBlockDelay(rowIndex, 10),
+                }}
+              />
+            ))}
+          </div>
+        ))}
+      </div>
+    </>
   );
 }

@@ -145,30 +145,51 @@ export default function Portfolio() {
     });
   }, []);
 
+  // const moveItems = (x, y) => {
+  //   if (xMoveContainer.current) {
+  //     xMoveContainer?.current(x);
+  //   }
+
+  //   if (yMoveContainer.current) {
+  //     yMoveContainer?.current(y);
+  //   }
+
+  //   if (xMoveCursor?.current) {
+  //     xMoveCursor?.current(x);
+  //   }
+
+  //   if (yMoveCursor?.current) {
+  //     yMoveCursor?.current(y);
+  //   }
+
+  //   if (xMoveCursorLabel?.current) {
+  //     xMoveCursorLabel?.current(x);
+  //   }
+
+  //   if (yMoveCursorLabel?.current) {
+  //     yMoveCursorLabel?.current(y);
+  //   }
+  // };
+
   const moveItems = (x, y) => {
-    if (xMoveContainer.current) {
-      xMoveContainer?.current(x);
-    }
+    const elements = [
+      xMoveContainer,
+      yMoveContainer,
+      xMoveCursor,
+      yMoveCursor,
+      xMoveCursorLabel,
+      yMoveCursorLabel,
+    ];
 
-    if (yMoveContainer.current) {
-      yMoveContainer?.current(y);
-    }
-
-    if (xMoveCursor?.current) {
-      xMoveCursor?.current(x);
-    }
-
-    if (yMoveCursor?.current) {
-      yMoveCursor?.current(y);
-    }
-
-    if (xMoveCursorLabel?.current) {
-      xMoveCursorLabel?.current(x);
-    }
-
-    if (yMoveCursorLabel?.current) {
-      yMoveCursorLabel?.current(y);
-    }
+    elements.forEach((element, index) => {
+      if (element?.current) {
+        if (index % 2 === 0) {
+          element.current(x);
+        } else {
+          element.current(y);
+        }
+      }
+    });
   };
 
   const manageModal = (isModalActive, index, x, y) => {
