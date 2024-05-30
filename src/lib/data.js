@@ -25,6 +25,7 @@ export const userData = {
     linkedin: "https://linkedin.com/in/trey-rader",
     github: "https://github.com/treyrader11",
     facebook: "https://facebook.com/",
+    youtube: "https://youtube.com/channel/developertrey",
   },
   about: {
     title:
@@ -1015,5 +1016,5 @@ export const tagColors = {
   default: "#000000",
   jwt: "pink",
   "next-auth": "violet",
-  prisma: "aqua"
+  prisma: "aqua",
 };

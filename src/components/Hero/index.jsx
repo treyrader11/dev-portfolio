@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils";
 import { slideUp } from "./anim";
 import Image from "next/image";
 import BlurredIn from "../BlurredIn";
+import Stars from "../Stars";
 
 const phrase =
   "I'm a selectively skilled web developer focusing on delivering quality & impactful digital experiences.";
@@ -38,6 +39,7 @@ export default function Hero({ isLoading, scrollYProgress, className }) {
         className
       )}
     >
+      <Stars />
       {/* cursor mask */}
       <motion.div
         className={cn(
