@@ -34,7 +34,7 @@ export default function PortfolioItem({
         "duration-200",
         "group",
         "hover:opacity-50",
-        "hover:blur-sm"
+        // "hover:blur-sm"
       )}
     >
       <BlurredIn once className={cn("relative")}>
