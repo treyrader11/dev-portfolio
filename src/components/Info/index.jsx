@@ -25,7 +25,7 @@ export default function Info() {
   });
 
   return (
-    <section ref={container} className="bg-[#F1F1F1] w-full">
+    <section ref={container} className="bg-[#F1F1F1] w-ful pb-40">
       <motion.div>
         <div className="md:w-[800px] mx-auto">
           <div className="max-w-6xl pt-20 mx-auto">
@@ -119,7 +119,17 @@ export default function Info() {
               ))}
             </div>
           </div>
-          <div className="relative grid-cols-2 mx-8 sm:mx:0 sm:grid">
+          <div
+            className={cn(
+              // "space-y-20",
+              "pt-20",
+              "relative",
+              "grid-cols-2",
+              // "mx-8",
+              "grid",
+              "gap-x-5"
+            )}
+          >
             <Socials links={socials} className="w-full relative z-[1] " />
             <Portrait />
           </div>
@@ -141,13 +151,13 @@ export function Portrait({ className }) {
   return (
     <div
       className={cn(
-        "absolute",
-        "sm:relative",
-        "top-0",
-        "inset-x-0",
+        "relative",
         "flex",
         "items-center",
-        "h-[400px]",
+        "h-[40vh]",
+        "md:h-[50vh]",
+        // "border border-double ",
+        // "",
         className
       )}
     >
@@ -156,9 +166,17 @@ export function Portrait({ className }) {
         // height={150}
         fill
         priority
-        alt="profile picture"
+        alt="Full profile picture"
         src={`/images/portraits/profile.png`}
-        className="object-contain rounded-lg"
+        // src={`/images/portraits/profile-truncated.png`}
+        // src={`/images/portraits/profile-standing.png`}
+        // className="object-contain rounded-lg" old classes
+        className={cn(
+          "md:object-contain",
+          "object-cover",
+          "border border-double "
+          // "rounded-lg"
+        )}
         sizes={{}}
       />
     </div>

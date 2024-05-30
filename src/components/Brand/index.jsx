@@ -1,10 +1,11 @@
 "use client";
 
 import { cn } from "@/lib/utils";
+import Link from "next/link";
 
 export default function Brand({ className }) {
   return (
-    <div className={cn("group flex cursor-pointer", className)}>
+    <Link href="/" className={cn("group flex", className)}>
       <p
         className={cn(
           "m-0",
@@ -26,7 +27,7 @@ export default function Brand({ className }) {
           "transition-all",
           "duration-500",
           // "custom-ease-in-out",
-          "ease-in-out",
+          "ease-in-out"
         )}
       >
         <p
@@ -78,6 +79,6 @@ export default function Brand({ className }) {
           Rader
         </p>
       </div>
-    </div>
+    </Link>
   );
 }

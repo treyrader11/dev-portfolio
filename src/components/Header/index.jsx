@@ -8,7 +8,6 @@ import Nav from "./nav";
 import NavMenu from "./nav/NavMenu";
 import useIsomorphicLayoutEffect from "@/hooks/useIsomorphicLayoutEffect";
 import ProfilePicture from "@/components/ProfilePicture";
-import profilePicture from "/public/images/portraits/headshot-sit-blackbg.png";
 import { cn } from "@/lib/utils";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
@@ -95,20 +94,25 @@ export default function Header() {
       >
         <ProfilePicture
           isMagnetic
-          // src={profilePicture}
           src={`/images/portraits/headshot.png`}
           className="size-[100px]"
         />
-        <Link
+        {/* <Link
           href="/"
           className={cn(
             "pl-3",
             "mr-auto",
             backgroundHasColor ? "text-white" : "text-gray-500"
           )}
-        >
-          <Brand />
-        </Link>
+        > */}
+        <Brand
+          className={cn(
+            "pl-3",
+            "mr-auto",
+            backgroundHasColor ? "text-white" : "text-gray-500"
+          )}
+        />
+        {/* </Link> */}
 
         <NavMenu
           handleNavMenu={handleNavMenu}

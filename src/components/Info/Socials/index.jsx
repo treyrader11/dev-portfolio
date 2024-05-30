@@ -7,18 +7,24 @@ import { useState } from "react";
 
 export default function Socials({ className, links }) {
   return (
-    <section className={cn(className, "mx-6")}>
+    <section
+      className={cn(
+        className,
+        // "mx-6"
+        //  ""
+      )}
+    >
       <h1
         className={cn(
-          "mt-8",
-          "pt-10",
-          "sm:pt-0",
+          // "mt-8",
+          // "pt-10",
+          // "sm:pt-0",
           "mb-4",
           "text-2xl",
           "font-semibold",
-          "sm:text-gray-700",
-          "text-purple-300",
-          "underline"
+          "sm:text-gray-700"
+          // "text-purple-300",
+          // "underline"
         )}
       >
         Socials
@@ -29,7 +35,7 @@ export default function Socials({ className, links }) {
           "font-mono",
           "text-lg",
           "sm:text-gray-500",
-          "text-white",
+          // "text-white",
           "flex",
           "items-start",
           "flex-col",
@@ -38,7 +44,8 @@ export default function Socials({ className, links }) {
           "cursor-pointer",
           "w-fit",
           "md:pb-[20vh]",
-          "text-left"
+          "text-left",
+          "mx-3"
         )}
       >
         {links.map((link) => (
@@ -57,20 +64,27 @@ function SocialLink({ name, href }) {
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
         href={href}
-        className={cn("py-2 text-left")}
+        className={cn("py-2 text-left w-fit")}
       >
         <span
           className={cn(
             "flex",
-             "flex-row-reverse",
+            "flex-row-reverse",
             // "md:flex-col",
+            "w-fit",
             "gap-2"
           )}
         >
           {name}
           <LinkDecorator
             isActive={isHovered}
-            className="sm:bg-gray-500 bg-white text-left size-1.5"
+            className={cn(
+              "sm:bg-gray-500",
+              "text-left",
+              "size-1.5",
+              "absolute",
+              "-left-3"
+            )}
           />
         </span>
       </a>
