@@ -74,3 +74,9 @@ export const hexToRgb = (hex) => {
       }
     : null;
 };
+
+export const calcRandomBlockDelay = (rowIndex, totalRows) => {
+  const blockDelay = Math.random() * 0.5;
+  const rowDelay = (totalRows - rowIndex - 1) * 0.05;
+  return blockDelay + rowDelay;
+};

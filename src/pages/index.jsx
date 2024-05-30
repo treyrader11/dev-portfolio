@@ -1,5 +1,4 @@
 import Preloader from "@/components/Preloader";
-import { AnimatePresence } from "framer-motion";
 import { useState, useRef, useEffect } from "react";
 import { Inter } from "next/font/google";
 import Inner from "@/components/layout/Inner";
@@ -8,15 +7,15 @@ import Description from "@/components/Description";
 import SlidingImages from "@/components/SlidingImages";
 import RecentProjects from "@/components/RecentProjects";
 import Hero from "@/components/Hero";
-import { useScroll, useTransform } from "framer-motion";
+import { useScroll, AnimatePresence } from "framer-motion";
 import PositionProvider from "@/components/providers/PositionProvider";
 import References from "@/components/References";
-import PageCurve from "@/components/PageCurve";
+import Transition from "@/components/layout/Transition";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export default function Home() {
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const container = useRef();
 
   const { scrollYProgress } = useScroll({
@@ -34,14 +33,15 @@ export default function Home() {
         document.body.style.cursor = "default";
         window.scrollTo(0, 0);
         // }, 2000);
-      }, 800);
+      }, 1200);
     })();
   }, []);
 
   return (
     <main className={cn(inter.className, "overflow-clip")}>
       <AnimatePresence mode="wait">
-        {isLoading && <Preloader />}
+        {/* {isLoading && <Preloader />} */}
+        <Transition />
       </AnimatePresence>
       <Inner ref={container} backgroundColor="#934E00">
         <Hero
@@ -72,13 +72,10 @@ export default function Home() {
           />
         </PositionProvider>
 
-        <div className={cn("relative", "z-[3]", "min-h-screen")}>
+        <div className={cn("relative z-[3] min-h-screen")}>
           <References />
           <SlidingImages className="bg-white" />
         </div>
-
-        {/* <div className={cn("bg-white h-[5vh]")} />
-        <PageCurve height={height} /> */}
       </Inner>
     </main>
   );

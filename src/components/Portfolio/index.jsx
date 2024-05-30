@@ -146,12 +146,29 @@ export default function Portfolio() {
   }, []);
 
   const moveItems = (x, y) => {
-    xMoveContainer?.current(x);
-    yMoveContainer?.current(y);
-    xMoveCursor?.current(x);
-    yMoveCursor?.current(y);
-    xMoveCursorLabel?.current(x);
-    yMoveCursorLabel?.current(y);
+    if (xMoveContainer.current) {
+      xMoveContainer?.current(x);
+    }
+
+    if (yMoveContainer.current) {
+      yMoveContainer?.current(y);
+    }
+
+    if (xMoveCursor?.current) {
+      xMoveCursor?.current(x);
+    }
+
+    if (yMoveCursor?.current) {
+      yMoveCursor?.current(y);
+    }
+
+    if (xMoveCursorLabel?.current) {
+      xMoveCursorLabel?.current(x);
+    }
+
+    if (yMoveCursorLabel?.current) {
+      yMoveCursorLabel?.current(y);
+    }
   };
 
   const manageModal = (isModalActive, index, x, y) => {
