@@ -11,7 +11,7 @@ import Socials from "./Socials";
 import Image from "next/image";
 
 const socials = [
-  { name: "Facebook", href: userData.socialLinks.facebook },
+  { name: "Youtube", href: userData.socialLinks.youtube },
   { name: "GitHub", href: userData.socialLinks.github },
   { name: "LinkedIn", href: userData.socialLinks.linkedin },
   { name: "Instagram", href: userData.socialLinks.instagram },
@@ -136,7 +136,7 @@ export default function Info() {
         </div>
 
         <div className="w-full pt-40 sm:pt-20">
-          <TechStack />
+          <TechStack className="w-full " />
         </div>
 
         {/* <TextSlider text="TeckStack" /> */}

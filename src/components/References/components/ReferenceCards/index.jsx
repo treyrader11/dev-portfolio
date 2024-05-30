@@ -82,7 +82,7 @@ function Card({
     >
       <ProfilePicture
         isBordered
-        src={image_url.src}
+        src={image_url}
         className={cn(
           "size-[100px]",
           "mx-auto",

@@ -12,6 +12,7 @@ export default function Socials({ className, links }) {
         className,
         // "mx-6"
         //  ""
+        
       )}
     >
       <h1

@@ -7,7 +7,10 @@ import next from "/public/images/tech/next.png";
 import expo from "/public/images/tech/expo.png";
 import vite from "/public/images/tech/vite.png";
 
-import jason_humphrey from "/public/images/testimonials/jason-humphrey.png";
+import jason from "/public/images/references/jason.png";
+import daniel from "/public/images/references/daniel.png";
+import wilson from "/public/images/references/wilson.png";
+import janine from "/public/images/references/janine.png";
 
 export const userData = {
   githubUsername: "treyrader11",
@@ -537,28 +540,31 @@ export const projectsData = [
 
 export const references = [
   {
-    image_url: jason_humphrey,
+    image_url: "/images/references/jason.png",
     desc: "If given the opportunity I would hire Trey for any of my coding needs. I know that he will be an excellent addition to any prospective company in the near future.",
     name: "Jason Humphrey",
-    title: "Senior Developer, Nike",
+    title: "Senior Developer, Former Mentor",
+    linkedIn: "https://www.linkedin.com/in/meet-jason-humphrey"
   },
   {
-    image_url: jason_humphrey,
+    image_url: "/images/references/wilson.png",
     desc: "If given the opportunity I would hire Trey for any of my coding needs. I know that he will be an excellent addition to any prospective company in the near future.",
     name: "Wilson Savoy",
     title: "Musician, Pine Leaf Boys",
   },
   {
-    image_url: jason_humphrey,
-    desc: "If given the opportunity I would hire Trey for any of my coding needs. I know that he will be an excellent addition to any prospective company in the near future.",
-    name: "Daniel Dekerlegand",
-    title: "Senior Developer, Evolve",
-  },
-  {
-    image_url: jason_humphrey,
+    image_url: "/images/references/janine.png",
     desc: "If given the opportunity I would hire Trey for any of my coding needs. I know that he will be an excellent addition to any prospective company in the near future.",
     name: "Janine Bonilla",
-    title: "Marketing Director, Nasty",
+    title: "Marketing Specialist, Nasty",
+    linkedIn: "https://www.linkedin.com/in/j9bonilla"
+  },
+  {
+    image_url: "/images/references/daniel.png",
+    desc: "If given the opportunity I would hire Trey for any of my coding needs. I know that he will be an excellent addition to any prospective company in the near future.",
+    name: "Daniel Dekerlegand",
+    title: "Senior Developer, Evolve Media",
+    linkedIn: "https://www.linkedin.com/company/evolve-media-ai-inc"
   },
 ];
 

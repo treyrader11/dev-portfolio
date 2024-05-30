@@ -41,5 +41,5 @@ export default function ProfilePicture({
     </div>
   );
 
-  return <Link href="/">{content}</Link>;
+  return <div>{content}</div>;
 }
