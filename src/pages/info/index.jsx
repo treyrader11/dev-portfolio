@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 export default function InfoPage() {
   return (
     <Inner backgroundColor="#934E00">
-      <PageTitle
+       <PageTitle
         once
         backgroundColor="#1c1d20"
         title="About."

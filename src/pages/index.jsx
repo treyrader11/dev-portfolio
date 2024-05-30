@@ -72,7 +72,6 @@ export default function Home() {
 
         <div className={cn("relative", "z-[3]", "min-h-screen")}>
           <References />
-
           <SlidingImages className="bg-white" />
         </div>
       </Inner>
