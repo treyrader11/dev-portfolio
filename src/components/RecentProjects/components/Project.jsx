@@ -7,7 +7,6 @@ import { cn } from "@/lib/utils";
 import Rounded from "@/components/Rounded";
 import { PositionContext } from "@/lib/contexts";
 import blank_shot from "/public/shots/blank-shot.png";
-import Video from "@/components/Video";
 
 export default function Project({
   project_image,
@@ -62,34 +61,7 @@ export default function Project({
       )}
       onClick={handleFlip}
     >
-      {/* <CardFlip
-        imageSrc={`/shots/${project_image}`}
-        setIsAnimating={setIsAnimating}
-        isFlipped={isFlipped}
-        onClick={() => handleFlip()}
-        className={cn("")}
-      />
-
-      <CardFlip
-        imageSrc={blank_shot.src}
-        className={cn("rotate-[100deg]")}
-        setIsAnimating={setIsAnimating}
-        isFlipped={isFlipped}
-        onClick={() => handleFlip()}
-      >
-        <Rounded
-          text="View Project"
-          backgroundColor="purple"
-          className={cn(
-            "p-6",
-            "text-white",
-            "bg-purple-400",
-            "rounded-full",
-            "size-fit"
-          )}
-          href={`/project/${video_key}`}
-        />
-      </CardFlip> */}
+      {/* Front of card */}
       <motion.div
         initial={false}
         animate={{ rotateY: isFlipped ? 180 : 360 }}
@@ -110,7 +82,7 @@ export default function Project({
           "-left-[calc(20%-10%)]" // 10% === 1/2 of 20%
         )}
       />
-
+      {/* Back of card */}
       <motion.div
         initial={false}
         animate={{ rotateY: isFlipped ? 360 : 180 }}
@@ -144,63 +116,8 @@ export default function Project({
           className={cn("bg-purple-400", "p-4", "absolute")}
           href={`/project/${video_key}`}
         />
-        {/* {isFlipped && !isAnimating && (
-          <Video
-            src={`/videos/tech-meeting.mp4`}
-            className={cn("w-[64%]")}
-            muted
-            loop
-            autoPlay
-          />
-        )} */}
       </motion.div>
     </div>
-  );
-}
-
-function CardFlip({
-  className,
-  imageSrc,
-  children,
-  style,
-  onClick,
-  isFlipped,
-  setIsAnimating,
-}) {
-  return (
-    <motion.div
-      initial={false}
-      animate={{ rotateY: isFlipped ? 180 : 360 }}
-      transition={{ duration: 0.6, animationDirection: "normal" }}
-      onAnimationComplete={() => setIsAnimating(false)}
-      style={{
-        ...style,
-        transition: "transform 0.6s",
-        backgroundImage: `url(${imageSrc})`,
-        backgroundPosition: "center",
-        backgroundSize: "contain",
-        backgroundRepeat: "no-repeat",
-        backfaceVisibility: "hidden",
-      }}
-      onClick={onClick}
-      className={cn(
-        "h-screen",
-        "flex",
-        "items-center",
-        "justify-center",
-        "sticky",
-        "inset-x-0",
-        "z-[52]",
-        "w-[120%]",
-
-        "-left-[10%]", // 10% === 1/2 of 20%
-        "-left-[calc(20%-10%)]", // 10% === 1/2 of 20%
-        // "-mt-[100vh]",
-        className
-      )}
-    >
-      {children}
-    </motion.div>
   );
 }
 

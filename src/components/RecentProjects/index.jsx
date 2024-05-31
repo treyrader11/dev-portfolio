@@ -1,7 +1,93 @@
+// "use client";
+
+// import { useScroll } from "framer-motion";
+// import { useRef } from "react";
+// import Project from "./components/Project";
+// import Rounded from "@/components/Rounded";
+// import { cn } from "@/lib/utils";
+// import { motion } from "framer-motion";
+// import PageTitle from "../PageTitle";
+// import Scrollbar from "../Scrollbar";
+// import { projectPositions, recentProjects } from "./constants";
+
+// export default function RecentProjects({ className }) {
+//   const container = useRef(null);
+
+//   const { scrollYProgress } = useScroll({
+//     target: container,
+//     offset: ["start start", "end end"],
+//   });
+
+//   return (
+//     <motion.section
+//       ref={container}
+//       className={cn(
+//         "relative",
+//         "z-[2]",
+//         "mx-4",
+//         "pb-[124vh]",
+//         "sm:pb-[160vh]",
+//         "flex",
+//         "flex-col",
+//         "gap-y-10",
+//         className
+//       )}
+//     >
+//       <PageTitle
+//         once={false}
+//         delay={0.8}
+//         backgroundColor="transparent"
+//         containerClass={cn(
+//           "h-0",
+//           "sticky",
+//           "top-0",
+//           "md:p-0", //makes menu button look good
+//           "pt-10",
+//           "mt-[100%]", // puts title way at bottom
+//           "min-h-screen"
+//         )}
+//         title="Recent projects."
+//         className={cn("py-0 md:text-[5vw]")}
+//       />
+
+//       <Scrollbar positions={projectPositions} />
+
+//       {recentProjects.map((project, index) => {
+//         return (
+//           <Project
+//             position={projectPositions[index]}
+//             key={`p_${index}`}
+//             {...project}
+//             progress={scrollYProgress}
+//           />
+//         );
+//       })}
+
+//       <div className={cn("py-20 sm:py-0")}>
+//         <Rounded
+//           backgroundColor="#934e00"
+//           text="See all projects"
+//           href="/portfolio"
+//           className={cn(
+//             "border-secondary",
+//             "rounded-full",
+//             "w-fit",
+//             "mx-auto",
+//             "py-6",
+//             "text-black",
+//             "-mt-[10rem]",
+//             "sm:-mt-0"
+//           )}
+//         />
+//       </div>
+//     </motion.section>
+//   );
+// }
+
 "use client";
 
 import { useScroll } from "framer-motion";
-import { useRef } from "react";
+import { useRef, useMemo, memo } from "react";
 import Project from "./components/Project";
 import Rounded from "@/components/Rounded";
 import { cn } from "@/lib/utils";
@@ -10,13 +96,26 @@ import PageTitle from "../PageTitle";
 import Scrollbar from "../Scrollbar";
 import { projectPositions, recentProjects } from "./constants";
 
-export default function RecentProjects({ className }) {
+function RecentProjects({ className }) {
   const container = useRef(null);
 
   const { scrollYProgress } = useScroll({
     target: container,
     offset: ["start start", "end end"],
   });
+
+  const projects = useMemo(
+    () =>
+      recentProjects.map((project, index) => (
+        <MemoizedProject
+          key={`p_${index}`}
+          position={projectPositions[index]}
+          {...project}
+          progress={scrollYProgress}
+        />
+      )),
+    [scrollYProgress]
+  );
 
   return (
     <motion.section
@@ -33,56 +132,29 @@ export default function RecentProjects({ className }) {
         className
       )}
     >
-      {/* <div className={cn("")}> */}
-        
-        <PageTitle
-          once={false}
-          delay={0.8}
-          backgroundColor="transparent"
-          containerClass={cn(
-            "h-0",
-            "sticky",
-            "top-0",
-            "md:p-0", //makes menu button look good
-            "pt-10",
-            "mt-[100%]", // puts title way at bottom
-            "min-h-screen"
-          )}
-          title="Recent projects."
-          className={cn("py-0 md:text-[5vw]")}
-        />
-      {/* </div> */}
-      {/* <PageTitle
+      <MemoizedPageTitle
         once={false}
         delay={0.8}
-        backgroundColor="white"
+        backgroundColor="transparent"
         containerClass={cn(
-          // "h-0",
+          "h-0",
           "sticky",
           "top-0",
-          "md:p-0", //makes menu button look good
+          "md:p-0", // makes menu button look good
           "pt-10",
-          "h-screen"
+          "mt-[100%]", // puts title way at bottom
+          "min-h-screen"
         )}
         title="Recent projects."
         className={cn("py-0 md:text-[5vw]")}
-      /> */}
+      />
 
-      <Scrollbar positions={projectPositions} />
+      <MemoizedScrollbar positions={projectPositions} />
 
-      {recentProjects.map((project, index) => {
-        return (
-          <Project
-            position={projectPositions[index]}
-            key={`p_${index}`}
-            {...project}
-            progress={scrollYProgress}
-          />
-        );
-      })}
+      {projects}
 
       <div className={cn("py-20 sm:py-0")}>
-        <Rounded
+        <MemoizedRounded
           backgroundColor="#934e00"
           text="See all projects"
           href="/portfolio"
@@ -98,7 +170,13 @@ export default function RecentProjects({ className }) {
           )}
         />
       </div>
-      {/* </div> */}
     </motion.section>
   );
 }
+
+const MemoizedProject = memo(Project);
+const MemoizedPageTitle = memo(PageTitle);
+const MemoizedScrollbar = memo(Scrollbar);
+const MemoizedRounded = memo(Rounded);
+
+export default RecentProjects;
