@@ -1,3 +1,5 @@
+"use client";
+
 import "@/globals.css";
 
 import { AnimatePresence } from "framer-motion";

@@ -3,7 +3,6 @@
 import { useRef } from "react";
 import { useScroll, motion, useTransform } from "framer-motion";
 import { cn, getLocalTime } from "@/lib/utils";
-import StyledLink from "@/components/StyledLink";
 import Brand from "@/components/Brand";
 import Socials from "./components/Socials";
 import Contact from "./components/Contact";
@@ -59,7 +58,7 @@ export default function Footer() {
               "gap-3.5"
             )}
           >
-            <StyledLink onColor className="flex gap-1">
+            <div className="flex gap-1">
               <span className="font-mono">
                 {new Date().toLocaleDateString("en-US", {
                   year: "numeric",
@@ -67,7 +66,7 @@ export default function Footer() {
               </span>
 
               <Brand />
-            </StyledLink>
+            </div>
             <span className="flex flex-col gap-3">
               <h5 className="text-[10px] uppercase text-light-100">
                 local time

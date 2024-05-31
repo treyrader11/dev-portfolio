@@ -142,13 +142,10 @@ export default function Rounded({
 
   const router = useRouter();
 
-  console.log("...attributes", { ...attributes });
-
-  const handleClick = useCallback(() => {
-    if (href) {
-      router.push(`${href}`);
-    }
-  }, [href, router]);
+  const handleClick = useCallback(
+    () => href && router.push(`${href}`),
+    [href, router]
+  );
 
   useEffect(() => {
     timeline.current = gsap.timeline({ paused: true });

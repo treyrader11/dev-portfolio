@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 export default function Preloader() {
   return (
     <>
+      {/* transition in */}
       <div
         className={cn(
           "fixed",
@@ -17,10 +18,10 @@ export default function Preloader() {
         )}
       >
         {Array.from({ length: 10 }).map((_, rowIndex) => (
-          // .row
+          // row
           <div key={rowIndex} className={cn("flex-1", "w-full", "flex")}>
             {Array.from({ length: 11 }).map((_, blockIndex) => (
-              // .block
+              // block
               <motion.div
                 key={blockIndex}
                 className={cn(
@@ -44,7 +45,7 @@ export default function Preloader() {
         ))}
       </div>
 
-      {/* .transition-out.blocks-container */}
+      {/* .transition out */}
       <div
         className={cn(
           "fixed",
@@ -58,10 +59,10 @@ export default function Preloader() {
         )}
       >
         {Array.from({ length: 10 }).map((_, rowIndex) => (
-          // .row
+          // row
           <div key={rowIndex} className={cn("flex-1", "w-full", "flex")}>
             {Array.from({ length: 11 }).map((_, blockIndex) => (
-              // .block
+              // block
               <motion.div
                 key={blockIndex}
                 className={cn(

@@ -548,20 +548,20 @@ export const references = [
   },
   {
     image_url: "/images/references/wilson.png",
-    desc: "If given the opportunity I would hire Trey for any of my coding needs. I know that he will be an excellent addition to any prospective company in the near future.",
+    desc: "Baptiste is a true javascript soldier.",
     name: "Wilson Savoy",
     title: "Musician, Pine Leaf Boys",
   },
   {
     image_url: "/images/references/janine.png",
-    desc: "If given the opportunity I would hire Trey for any of my coding needs. I know that he will be an excellent addition to any prospective company in the near future.",
+    desc: "Whether in the office or in the bed, homie is as thorough as it gets 🙄",
     name: "Janine Bonilla",
     title: "Marketing Specialist, Nasty",
     linkedIn: "https://www.linkedin.com/in/j9bonilla"
   },
   {
     image_url: "/images/references/daniel.png",
-    desc: "If given the opportunity I would hire Trey for any of my coding needs. I know that he will be an excellent addition to any prospective company in the near future.",
+    desc: "Bro 🔥",
     name: "Daniel Dekerlegand",
     title: "Senior Developer, Evolve Media",
     linkedIn: "https://www.linkedin.com/company/evolve-media-ai-inc"

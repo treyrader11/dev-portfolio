@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { opacity, slideUp } from "./anim";
-import styles from "./styles";
+import { cn } from "@/lib/utils";
 
 const words = [
   "Hello",
@@ -15,6 +15,30 @@ const words = [
   "Guten tag",
   "Hallo",
 ];
+
+const styles = {
+  introduction: cn(
+    "h-screen",
+    "w-screen",
+    "flex",
+    "items-center",
+    "justify-center",
+    "fixed",
+    "z-[99]",
+    "bg-dark"
+  ),
+  svg: cn("absolute", "top-0", "w-full", "h-[calc(100%+300px)]"),
+  path: "fill-dark",
+  p: cn("flex", "text-white", "text-6xl", "items-center", "absolute", "z-10"),
+  span: cn(
+    "block",
+    "w-[10px]",
+    "h-[10px]",
+    "bg-white",
+    "rounded-[50%]",
+    "mr-[10px]"
+  ),
+};
 
 export default function Preloader() {
   const [index, setIndex] = useState(0);

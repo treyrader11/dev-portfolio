@@ -26,20 +26,15 @@ export default function Brand({ className }) {
           "ml-[5px]",
           "transition-all",
           "duration-500",
-          // "custom-ease-in-out",
-          "ease-in-out"
+          "custom-ease-in-out"
         )}
       >
         <p
           className={cn(
             "m-0",
-            "transition-all",
-            "duration-500",
-            "relative",
             "transition-transform",
             "duration-500",
-            // "custom-ease-in-out",
-            "ease-in-out",
+            "custom-ease-in-out",
             "group-hover:-translate-x-full"
           )}
         >
@@ -48,10 +43,6 @@ export default function Brand({ className }) {
         <p
           className={cn(
             "m-0",
-            "transition-all",
-            "duration-500",
-            "custom-ease-in-out",
-            "relative",
             "transition-transform",
             "duration-500",
             "custom-ease-in-out",
@@ -64,15 +55,11 @@ export default function Brand({ className }) {
         <p
           className={cn(
             "m-0",
-            "transition-all",
-            "duration-500",
-            "custom-ease-in-out",
-            "relative",
+            "absolute",
+            "left-[152px]",
             "transition-transform",
             "duration-500",
             "custom-ease-in-out",
-            "absolute",
-            "left-[152px]",
             "group-hover:-translate-x-[115px]"
           )}
         >

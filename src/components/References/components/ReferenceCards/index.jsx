@@ -88,10 +88,9 @@ function Card({
           "mx-auto",
           "mt-16",
           "border-secondary"
-          // background !== dark ? "border-purple-500" : "border-secondary"
         )}
       />
-      <p className={cn("my-8 text-lg italic font-light lg:text-xl")}>
+      <p className={cn("my-8 text-lg text-center italic font-light lg:text-xl")}>
         &quot;{desc}&quot;
       </p>
       <div>
