@@ -481,32 +481,33 @@ export default function Info() {
           </div>
           <div
             className={cn(
-              // "space-y-20",
               "pt-20",
               "relative",
               "grid-cols-2",
-              // "mx-8",
+              "mx-8",
               "grid",
               "gap-x-5",
-
               "mt-[5vh]"
             )}
           >
-            <Socials links={socials} className="w-full relative z-[1] " />
-            <Portrait md={lg} />
+            <Socials
+              md={md}
+              links={socials}
+              className="w-full relative z-[1] "
+            />
+            {/* <Portrait md={lg} /> */}
             <motion.div
-              style={{ top: md }}
+              style={{ top: lg }}
               className={cn(
                 "relative",
-                // "absolute",
                 "right-10",
                 "flex",
                 "items-center",
-                "w-[25vh]",
-                "h-[40vh]",
-                "md:h-[50vh]"
-
-                // className
+                "sm:w-[35vh]",
+                "sm:h-[70vh]",
+                "h-[50vh]",
+                "w-[20vh]",
+                
               )}
             >
               {/* <Image
@@ -527,9 +528,9 @@ export default function Info() {
                   "object-cover",
                   "absolute",
                   "h-[60vh] w-[50vh] z-[1]",
-                  // "left-[55vw] top-[15vh] h-[40vh] w-[30vh] z-[2]"
-                 
-                  "left-[27.5vw] top-[40vh] h-[25vh] w-[20vh] z-[3]",
+                  "left-[55vw] top-[15vh] h-[40vh] w-[30vh] z-[2]",
+
+                  "left-[27.5vw] top-[40vh] h-[25vh] w-[20vh] z-[3]"
                 )}
                 src={`/images/portraits/profile.png`}
                 placeholder="blur"
