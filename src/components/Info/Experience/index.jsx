@@ -5,7 +5,6 @@ import {
   VerticalTimelineElement,
 } from "react-vertical-timeline-component";
 import "react-vertical-timeline-component/style.min.css";
-import { motion } from "framer-motion";
 import { experiences } from "@/lib/data";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
@@ -84,7 +83,7 @@ function ExperienceCard({ experience }) {
 
 export default function Experience({ className }) {
   return (
-    <motion.section className={cn("py-10 bg-dark", className)}>
+    <section className={cn("py-10 bg-dark", className)}>
       <PageTitle
         once
         className={cn("text-center text-white font-black text-[7vw]")}
@@ -99,6 +98,6 @@ export default function Experience({ className }) {
           ))}
         </VerticalTimeline>
       </div>
-    </motion.section>
+    </section>
   );
 }

@@ -5,10 +5,12 @@ import { cn } from "@/lib/utils";
 import Experience from "./Experience";
 import Link from "next/link";
 import { useScroll, motion, useTransform } from "framer-motion";
-import { useRef } from "react";
+import { useRef, useLayoutEffect } from "react";
 import TechStack from "./TechStack";
 import Socials from "./Socials";
 import Image from "next/image";
+import gsap from "gsap";
+import ScrollTrigger from "gsap/dist/ScrollTrigger";
 
 import Picture1 from "/public/images/references/jason.png";
 import Picture2 from "/public/images/references/daniel.png";
@@ -21,34 +23,52 @@ const socials = [
   { name: "Instagram", href: userData.socialLinks.instagram },
 ];
 
+gsap.registerPlugin(ScrollTrigger);
 const word = userData.about.title;
 
 export default function Info() {
-  const container = useRef();
+  const container = useRef(null);
 
-  const { scrollYProgress } = useScroll({
-    target: container,
-    offset: ["start start", "end end"],
-  });
+  const images = [Picture1, Picture2, Picture3];
+  const lettersRef = useRef([]);
+  const imagesRef = useRef([]);
+  const title1 = useRef(null);
 
-  const sm = useTransform(scrollYProgress, [0, 1], [0, -50]);
-  const md = useTransform(scrollYProgress, [0, 1], [0, -150]);
-  const lg = useTransform(scrollYProgress, [0, 1], [0, -250]);
+  // const { scrollYProgress } = useScroll({
+  //   target: container,
+  //   offset: ["start start", "end end"],
+  // });
 
-  const images = [
-    {
-      src: Picture1,
-      y: 0,
-    },
-    {
-      src: Picture2,
-      y: lg,
-    },
-    {
-      src: Picture3,
-      y: md,
-    },
-  ];
+  // const sm = useTransform(scrollYProgress, [0, 1], [0, -50]);
+  // const md = useTransform(scrollYProgress, [0, 1], [0, -150]);
+  // const lg = useTransform(scrollYProgress, [0, 1], [0, -250]);
+
+  useLayoutEffect(() => {
+    const context = gsap.context(() => {
+      const tl = gsap
+        .timeline({
+          scrollTrigger: {
+            trigger: container.current,
+            start: "top bottom",
+            end: "bottom top",
+            scrub: true,
+          },
+        })
+        .to(title1.current, { y: -50 }, 0)
+        .to(imagesRef.current[1], { y: -150 }, 0)
+        .to(imagesRef.current[2], { y: -255 }, 0);
+      lettersRef.current.forEach((letter, i) => {
+        tl.to(
+          letter,
+          {
+            top: Math.floor(Math.random() * -75) - 25,
+          },
+          0
+        );
+      });
+    });
+    return () => context.revert();
+  }, []);
 
   return (
     <section
@@ -61,10 +81,11 @@ export default function Info() {
         "text-gray-500"
       )}
     >
-      <motion.div className={cn("pt-[10vh]", "")}>
+      <div className={cn("pt-[10vh]", "")}>
         {/* Experiemnting */}
         <div className={cn("ml-[10vw]")}>
-          <motion.h1
+          <h1
+            ref={title1}
             className={cn(
               "m-0",
               "mt-2.5",
@@ -72,27 +93,22 @@ export default function Info() {
               "leading-[5vw]",
               "text-gray-700"
             )}
-            style={{ y: sm }}
+            // style={{ y: sm }}
           >
             Hi there
-          </motion.h1>
+          </h1>
 
           <div>
             <p className="m-0 mt-2.5 text-[3vw] uppercase">
               {word.split("").map((letter, i) => {
-                const y = useTransform(
-                  scrollYProgress,
-                  [0, 1],
-                  [0, Math.floor(Math.random() * -75) - 25]
-                );
                 return (
-                  <motion.span
+                  <span
                     className="relative"
-                    style={{ top: y }}
                     key={`l_${i}`}
+                    ref={(el) => (lettersRef.current[i] = el)}
                   >
                     {letter}
-                  </motion.span>
+                  </span>
                 );
               })}
             </p>
@@ -107,22 +123,25 @@ export default function Info() {
             "mt-[5vh]"
           )}
         >
-          {images.map(({ src, y }, i) => {
+          {images.map((image, i) => {
             return (
-              <motion.div style={{ y }} key={`i_${i}`} className={"absolute h-[300px]"}>
+              <div
+                key={`i_${i}`}
+                ref={(el) => (imagesRef.current[i] = el)}
+                className={"absolute h-[300px]"}
+              >
                 <Image
-                  src={src}
-                  placeholder="blur"
                   className={cn("object-cover", {
                     "h-[60vh] w-[50vh] z-[1]": i === 0,
                     "left-[55vw] top-[15vh] h-[40vh] w-[30vh] z-[2]": i === 1,
                     "left-[27.5vw] top-[40vh] h-[25vh] w-[20vh] z-[3]": i === 2,
                   })}
+                  src={image}
+                  placeholder="blur"
                   alt="image"
                   fill
-                  sizes={{}}
                 />
-              </motion.div>
+              </div>
             );
           })}
         </div>
@@ -220,9 +239,9 @@ export default function Info() {
         </div>
 
         {/* <TextSlider text="TeckStack" /> */}
-      </motion.div>
+      </div>
 
-      <Experience scrollYProgress={scrollYProgress} />
+      <Experience />
     </section>
   );
 }
@@ -240,20 +259,15 @@ export function Portrait({ className }) {
       )}
     >
       <Image
-        // width={150}
-        // height={150}
         fill
         priority
         alt="Full profile picture"
         src={`/images/portraits/profile.png`}
-        // src={`/images/portraits/profile-truncated.png`}
-        // src={`/images/portraits/profile-standing.png`}
         // className="object-contain rounded-lg" old classes
         className={cn(
           "md:object-contain",
-          "object-cover",
-          "border border-double "
-          // "rounded-lg"
+          "object-cover"
+          // "border border-double"
         )}
         sizes={{}}
       />
