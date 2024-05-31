@@ -6,31 +6,18 @@ import Header from "./Header";
 import { NavProvider, useNav } from "./providers/NavProvider";
 import { cn } from "@/lib/utils";
 
-function MainLayout({ children, route }) {
-  const { isNavOpen } = useNav();
+export default function Layout({ children, route }) {
+  // const { isNavOpen } = useNav();
 
   return (
     <AnimatePresence mode="wait">
-      <main
-        key={route}
-        className={cn(
-          "mx-auto",
-          "overflow-clip",
-          // isNavOpen ? "fixed w-screen h-screen" : "mx-auto overflow-clip"
-        )}
-      >
-        <Header />
-        {children}
-        <Footer />
+      <main key={route} className={cn("mx-auto", "overflow-clip")}>
+        <NavProvider>
+          <Header />
+          {children}
+          <Footer />
+        </NavProvider>
       </main>
     </AnimatePresence>
-  );
-}
-
-export default function Layout({ children, route }) {
-  return (
-    <NavProvider>
-      <MainLayout route={route}>{children}</MainLayout>
-    </NavProvider>
   );
 }
