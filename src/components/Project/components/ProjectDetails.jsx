@@ -30,10 +30,12 @@ export default function ProjectDetails({ data }) {
         <ProjectVideo src={video_key} />
         <Block title="About this project" desc={desc} />
         <Block title="Technology & Features">
-          <ul className="list-disc ml-5 mt-2.5 text-secondary">
+          <ul className="list-disc  font-pp-acma ml-5 mt-2.5 text-secondary">
             {technology_feature.map((data, index) => (
               <Magnetic key={index}>
-                <li className="w-fit" key={data}>{data}</li>
+                <li className="w-fit" key={data}>
+                  {data}
+                </li>
               </Magnetic>
             ))}
           </ul>

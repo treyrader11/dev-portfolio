@@ -38,7 +38,9 @@ export default function PortfolioItem({
       <div className={"relative"}>
         <div
           className={cn(
-            "md:flex justify-between items-center",
+            "md:flex",
+            "justify-between",
+            "items-center",
             "py-12",
             "px-16",
             "md:px-24"
@@ -50,7 +52,8 @@ export default function PortfolioItem({
               "m-0",
               "transition-all",
               "duration-[800]",
-              "group-hover:-translate-x-2.5"
+              "group-hover:-translate-x-2.5",
+              "font-pp-acma"
             )}
           >
             {title}

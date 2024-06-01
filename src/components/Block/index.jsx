@@ -12,7 +12,7 @@ export default function Block({ className, title, desc, children }) {
         className
       )}
     >
-      <h1 className="my-5 text-3xl font-bold">{title}</h1>
+      <h1 className="my-5 text-3xl font-bold font-pp-acma">{title}</h1>
       {desc && <p>{desc}</p>}
       {children}
     </div>

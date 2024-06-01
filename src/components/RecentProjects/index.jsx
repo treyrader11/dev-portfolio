@@ -44,7 +44,8 @@ export default function RecentProjects({ className }) {
           "md:p-0", //makes menu button look good
           "pt-10",
           "mt-[100%]", // puts title way at bottom
-          "min-h-screen"
+          "min-h-screen",
+          "font-pp-acma"
         )}
         title="Recent projects."
         className={cn("py-0 md:text-[5vw]")}

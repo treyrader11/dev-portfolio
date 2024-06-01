@@ -88,7 +88,13 @@ export default function Experience({ className }) {
     <section className={cn("py-10 bg-dark", className)}>
       <PageTitle
         once
-        className={cn("text-center text-white font-black text-[7vw]")}
+        className={cn(
+          "text-center",
+          "font-pp-acma",
+          "text-white",
+          "font-black",
+          "text-[7vw]"
+        )}
         containerClass={cn("h-0")}
         title="Work Experience."
       />

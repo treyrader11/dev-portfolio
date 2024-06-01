@@ -33,7 +33,7 @@ export default function References({ className }) {
           backgroundColor="white"
           containerClass={cn("p-0 pl-0 h-[6rem]")}
           title="References."
-          className={cn("py-0 text-[14vw]")}
+          className={cn("py-0 font-pp-acma text-[14vw]")}
         />
         <SelectBtns
           numTracks={references.length}
