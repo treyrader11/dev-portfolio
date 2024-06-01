@@ -1,5 +1,3 @@
-"use client";
-
 import WobbleContainer from "@/components/WobbleContainer";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
@@ -12,24 +10,10 @@ export function Portrait({ className, style }) {
         "rounded-none",
         "bg-transparent",
         "w-[25vh]",
-        "h-[60vh]"
+        "h-[60vh]",
+        className
       )}
     >
-      {/* <motion.div
-        //   style={{ top: md }}
-        // style={{ style }}
-        className={cn(
-          "relative",
-          // "absolute",
-          "right-0",
-          "flex",
-          "items-center",
-          "w-[25vh]",
-          "h-[40vh]",
-          "md:h-[50vh]",
-          className
-        )}
-      > */}
       <Image
         fill
         priority
@@ -44,7 +28,6 @@ export function Portrait({ className, style }) {
         )}
         sizes={{}}
       />
-      {/* </motion.div> */}
     </WobbleContainer>
   );
 }

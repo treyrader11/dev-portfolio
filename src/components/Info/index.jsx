@@ -9,10 +9,7 @@ import { useRef } from "react";
 import TechStack from "./TechStack";
 import Socials from "./Socials";
 import { Portrait } from "./Portrait";
-
-import Picture1 from "/public/images/references/jason.png";
-import Picture2 from "/public/images/references/daniel.png";
-import Picture3 from "/public/images/references/janine.png";
+import ParalaxScrollText from "./ParalaxScrollText";
 
 const socials = [
   { name: "Youtube", href: userData.socialLinks.youtube },
@@ -21,7 +18,7 @@ const socials = [
   { name: "Instagram", href: userData.socialLinks.instagram },
 ];
 
-const word = userData.about.title;
+const heading = userData.about.title;
 
 export default function Info() {
   const container = useRef();
@@ -35,20 +32,20 @@ export default function Info() {
   const md = useTransform(scrollYProgress, [0, 1], [0, -150]);
   const lg = useTransform(scrollYProgress, [0, 1], [0, -250]);
 
-  const images = [
-    {
-      src: Picture1,
-      y: 0,
-    },
-    {
-      src: Picture2,
-      y: lg,
-    },
-    {
-      src: Picture3,
-      y: md,
-    },
-  ];
+  // const images = [
+  //   {
+  //     src: Picture1,
+  //     y: 0,
+  //   },
+  //   {
+  //     src: Picture2,
+  //     y: lg,
+  //   },
+  //   {
+  //     src: Picture3,
+  //     y: md,
+  //   },
+  // ];
 
   return (
     <section
@@ -84,59 +81,9 @@ export default function Info() {
             Hi there
           </motion.h1>
 
-          <div>
-            <p className="m-0 mt-2.5 text-[3vw] uppercase">
-              {word.split("").map((letter, i) => {
-                // const y = useTransform(
-                //   scrollYProgress,
-                //   [0, 1],
-                //   [0, Math.floor(Math.random() * -75) - 25]
-                // );
-                return (
-                  <motion.span
-                    className="relative"
-                    // style={{ top: y }}
-                    key={`l_${i}`}
-                  >
-                    {letter}
-                  </motion.span>
-                );
-              })}
-            </p>
-          </div>
+          <ParalaxScrollText text={heading} scrollYProgress={scrollYProgress} />
         </div>
-        {/* <div
-          className={cn(
-            "flex",
-            "w-full",
-            "justify-center",
-            "relative",
-            "mt-[5vh]"
-          )}
-        >
-          {images.map(({ src, y }, i) => {
-            return (
-              <motion.div
-                style={{ y }}
-                key={`i_${i}`}
-                className={"absolute h-[300px]"}
-              >
-                <Image
-                  src={src}
-                  placeholder="blur"
-                  className={cn("object-cover", {
-                    "h-[60vh] w-[50vh] z-[1]": i === 0,
-                    "left-[55vw] top-[15vh] h-[40vh] w-[30vh] z-[2]": i === 1,
-                    "left-[27.5vw] top-[40vh] h-[25vh] w-[20vh] z-[3]": i === 2,
-                  })}
-                  alt="image"
-                  fill
-                  sizes={{}}
-                />
-              </motion.div>
-            );
-          })}
-        </div> */}
+
         {/* Experiemnting end */}
 
         <div className="px-4 md:w-[800px] mx-auto">
@@ -227,47 +174,6 @@ export default function Info() {
               className="w-full relative z-[1] "
             />
             <Portrait style={{ top: lg }} />
-            {/* <WobbleCard>
-              <motion.div
-                style={{ top: lg }}
-                className={cn(
-                  "relative",
-                  "right-10",
-                  "flex",
-                  "items-center",
-                  "sm:w-[35vh]",
-                  "sm:h-[70vh]",
-                  "h-[50vh]",
-                  "w-[20vh]"
-                )}
-              >
-                <Image
-                  blurDataURL={`/images/portraits/profile.png`}
-                  className={cn(
-                    "object-cover",
-                    "absolute",
-                    "h-[60vh]",
-                    "w-[50vh]",
-                    "z-[1]",
-                    "left-[55vw]",
-                    "top-[15vh]",
-                    "h-[40vh]",
-                    "w-[30vh]",
-                    "z-[2]",
-
-                    "left-[27.5vw]",
-                    "top-[40vh]",
-                    "h-[25vh]",
-                    "w-[20vh]",
-                    "z-[3]"
-                  )}
-                  src={`/images/portraits/profile.png`}
-                  placeholder="blur"
-                  alt="image"
-                  fill
-                />
-              </motion.div>
-            </WobbleCard> */}
           </div>
         </div>
 
