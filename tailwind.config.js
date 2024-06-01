@@ -8,6 +8,9 @@ module.exports = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        "pp-acma": ["var(--font-pp-acma)"],
+      },
       colors: {
         primary: {
           DEFAULT: "#ec4e39",

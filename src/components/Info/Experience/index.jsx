@@ -38,9 +38,11 @@ function ExperienceCard({ experience }) {
       }
     >
       <div>
-        <h3 className="text-2xl font-bold text-white">{experience.title}</h3>
+        <h3 className="text-2xl font-bold text-white font-pp-acma">
+          {experience.title}
+        </h3>
         <p
-          className="text-lg font-semibold text-secondary"
+          className="text-lg font-semibold font-pp-acma text-secondary"
           style={{ margin: 0 }}
         >
           {experience.company_name}
@@ -48,7 +50,7 @@ function ExperienceCard({ experience }) {
       </div>
       <div>
         <h3 className="text-sm font-light text-neutral-400">
-          (Visit {experience.company_name}{" "}
+          (visit {experience.company_name}{" "}
           <a
             href={experience.website_url}
             target="_blank"

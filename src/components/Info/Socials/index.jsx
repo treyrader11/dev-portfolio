@@ -14,6 +14,7 @@ export default function Socials({ className, links, md }) {
           // "mt-8",
           // "pt-10",
           // "sm:pt-0",
+          "font-pp-acma",
           "mb-4",
           "text-2xl",
           "font-semibold",

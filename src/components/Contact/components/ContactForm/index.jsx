@@ -44,7 +44,17 @@ export default function ContactForm() {
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           <div className="md:ml-4">
             <header className="pt-10">
-              <h1 className="flex items-center text-2xl font-semibold gap-x-2 text-gray-50">
+              <h1
+                className={cn(
+                  "flex",
+                  "items-center",
+                  "text-2xl",
+                  "font-semibold",
+                  "gap-x-2",
+                  "text-gray-50",
+                  "font-pp-acma"
+                )}
+              >
                 Let&apos;s talk. <VscCoffee className="text-28" />
               </h1>
               <p className="mt-2 text-base font-light text-gray-200">
@@ -171,7 +181,7 @@ export default function ContactForm() {
           </div>
         </div>
       </BlurredIn>
-      <div className={cn("bg-slate-100 h-[5vh]")} />
+      <div className={cn("bg-slate-100 h-[20vh]")} />
       {/* <PageCurve height={height} /> */}
     </section>
   );

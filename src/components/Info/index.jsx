@@ -335,9 +335,15 @@ export default function Info() {
         "pb-40",
         "min-h-screen",
         "text-gray-500"
+        // "font-pp-acma"
       )}
     >
-      <motion.div className={cn("pt-[10vh]", "")}>
+      <motion.div
+        className={cn(
+          "pt-[10vh]"
+          // "font-pp-acma"
+        )}
+      >
         {/* Experiemnting */}
         <div className={cn("ml-[10vw]")}>
           <motion.h1
@@ -346,7 +352,8 @@ export default function Info() {
               "mt-2.5",
               "text-[5vw]",
               "leading-[5vw]",
-              "text-gray-700"
+              "text-gray-700",
+              "font-pp-acma"
             )}
             style={{ y: sm }}
           >
@@ -422,7 +429,7 @@ export default function Info() {
             )}
           >
             {/* Social Buttons */}
-            <div className="inline-flex flex-col">
+            <div className="inline-flex flex-col font-pp-acma">
               <div>
                 <h1 className={cn("text-xl", "font-semibold", "text-gray-700")}>
                   Contact
@@ -471,7 +478,7 @@ export default function Info() {
             </div>
 
             {/* Text area */}
-            <div className="col-span-1 md:col-span-2">
+            <div className="col-span-1 font-pp-acma md:col-span-2">
               {userData.about.description?.map((desc, idx) => (
                 <p key={idx} className="mb-4 text-xl text-gray-700">
                   {desc}
@@ -506,8 +513,7 @@ export default function Info() {
                 "sm:w-[35vh]",
                 "sm:h-[70vh]",
                 "h-[50vh]",
-                "w-[20vh]",
-                
+                "w-[20vh]"
               )}
             >
               {/* <Image

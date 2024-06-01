@@ -3,7 +3,7 @@
 import { variants } from "@/lib/motion";
 import { calcRandomBlockDelay, cn } from "@/lib/utils";
 import { motion } from "framer-motion";
-import { scaleIn, scaleOut, collapse } from "./anim";
+import { collapse } from "./anim";
 
 export default function Collapse({ nbOfRows = 10, nbOfBlocks = 11, children }) {
   return (
