@@ -83,21 +83,19 @@ function Card({
       <ProfilePicture
         isBordered
         src={image_url}
-        className={cn(
-          "size-[100px]",
-          "mx-auto",
-          "mt-16",
-          "border-secondary"
-        )}
+        className={cn("size-[100px]", "mx-auto", "mt-16", "border-secondary")}
       />
-      <p className={cn("my-8 text-lg text-center italic font-light lg:text-xl")}>
+      <p
+        className={cn("my-8 text-lg text-center italic font-light lg:text-xl")}
+      >
         &quot;{desc}&quot;
       </p>
       <div>
         <h3
           className={cn(
             "block",
-            "text-lg",
+            "text-xl",
+            "font-pp-acma",
             background === dark ? "text-purple-500" : "text-secondary"
           )}
         >
