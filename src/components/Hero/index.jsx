@@ -166,44 +166,47 @@ const Card = ({ className, children }) => {
   );
 };
 
-function JumpingIcon({ className }) {
+export function JumpingIcon({ className, containerClassName }) {
   return (
     <div
       className={cn(
-        "absolute",
+        // "absolute",
         "xs:bottom-10",
         "bottom-32",
         "w-full",
         "flex",
         "justify-center",
         "items-center",
-        className
+        containerClassName
       )}
     >
       <a href="#">
         <div
           className={cn(
-            "w-[35px]",
-            "h-[64px]",
+            // "w-[35px]",
+            // "h-[64px]",
+            "size-8-fit",
             "rounded-3xl",
             "border-4",
             "border-secondary",
             "flex",
             "justify-center",
             "items-start",
-            "p-2"
+            "p-2",
+            className
           )}
         >
           <motion.div
             animate={{
-              y: [0, 24, 0],
+              // y: [0, 24, 0],
+              x: [10, 1],
             }}
             transition={{
               duration: 1.5,
               repeat: Infinity,
               repeatType: "loop",
             }}
-            className="mb-1 rounded-full size-3 bg-secondary"
+            className="mb-1 rounded-full size-2 bg-secondary"
           />
         </div>
       </a>

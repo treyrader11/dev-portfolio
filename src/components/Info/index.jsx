@@ -56,7 +56,6 @@ export default function Info() {
         "pb-40",
         "min-h-screen",
         "text-gray-500"
-        // "font-pp-acma"
       )}
     >
       <motion.div className={cn("pt-[10vh]")}>
@@ -153,10 +152,11 @@ export default function Info() {
             className={cn(
               "pt-20",
               "relative",
+              "grid",
               "grid-cols-2",
               "mx-8",
-              "grid",
-              "gap-x-5",
+              "gap-5",
+              "md:gap-0",
               "mt-[5vh]"
             )}
           >
@@ -165,7 +165,7 @@ export default function Info() {
               links={socials}
               className="w-full relative z-[1] "
             />
-            <Portrait style={{ top: lg }} />
+            <Portrait className="" style={{ top: lg }} />
           </div>
         </div>
 

@@ -10,8 +10,11 @@ export function Portrait({ className, style }) {
         "rounded-none",
         "bg-transparent",
         "w-[25vh]",
+        "md:w-[50vh]",
         "h-[60vh]",
         "mr-4",
+        // "md:ml-auto",
+        // "border border-red-600",
         className
       )}
     >

@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import LinkDecorator from "@/components/LinkDecorator";
+import { JumpingIcon } from "@/components/Hero";
 
 export default function NavMenu({
   handleNavMenu,
@@ -72,11 +73,12 @@ export default function NavMenu({
             "cursor-pointer"
           )}
         >
-          <LinkDecorator
+          {/* <LinkDecorator
             className={cn("m-0", "scale-100", "animate-ping", {
               "bg-gray-500": !backgroundHasColor,
             })}
-          />
+          /> */}
+          <JumpingIcon className={cn("flex border-none")} />
           <p>Menu</p>
         </div>
       </Magnetic>
