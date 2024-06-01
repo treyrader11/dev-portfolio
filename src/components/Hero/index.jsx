@@ -95,7 +95,7 @@ export default function Hero({ isLoading, scrollYProgress, className }) {
                 animate={!isLoading ? (isInView ? "open" : "closed") : ""}
                 key={index}
                 className={cn("mr-3 inline-flex text-light-400", {
-                  "text-purple-400": isTargetedWord,
+                  "text-purple-400 font-pp-acma": isTargetedWord,
                 })}
               >
                 {word}
