@@ -70,9 +70,9 @@ export default function Header() {
       },
     });
 
-    return () => {
-      ScrollTrigger.refresh();
-    };
+    // return () => {
+    //   ScrollTrigger.refresh();
+    // };
   }, [showButton]);
 
   return (

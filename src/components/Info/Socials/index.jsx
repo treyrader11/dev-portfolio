@@ -4,11 +4,11 @@ import LinkDecorator from "@/components/LinkDecorator";
 import Magnetic from "@/components/Magnetic";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
-import { useScroll, motion, useTransform } from "framer-motion";
+import { motion } from "framer-motion";
 
 export default function Socials({ className, links, md }) {
   return (
-    <motion.section style={{ top: md }} className={cn(className)}>
+    <motion.section style={{ bottom: md }} className={cn(className)}>
       <h1
         className={cn(
           // "mt-8",

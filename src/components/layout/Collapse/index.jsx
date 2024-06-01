@@ -1,10 +1,11 @@
 "use client";
 
+import { variants } from "@/lib/motion";
 import { calcRandomBlockDelay, cn } from "@/lib/utils";
 import { motion } from "framer-motion";
-import Collapse from "../layout/Collapse";
+import { scaleIn, scaleOut, collapse } from "./anim";
 
-export default function Preloader() {
+export default function Collapse({ nbOfRows = 10, nbOfBlocks = 11, children }) {
   return (
     <>
       {/* transition in */}
@@ -18,12 +19,16 @@ export default function Preloader() {
           "pointer-events-none"
         )}
       >
-        {Array.from({ length: 10 }).map((_, rowIndex) => (
+        {Array.from(nbOfRows).map((_, rowIndex) => (
           // row
-          <div key={rowIndex} className={cn("flex-1", "w-full", "flex")}>
-            {Array.from({ length: 11 }).map((_, blockIndex) => (
+          <div key={rowIndex} className={cn("flex-1 w-full flex")}>
+            {Array.from(nbOfBlocks).map((_, blockIndex) => (
               // block
               <motion.div
+                {...variants(
+                  collapse,
+                  calcRandomBlockDelay(rowIndex, nbOfRows)
+                )}
                 key={blockIndex}
                 className={cn(
                   "relative",
@@ -32,20 +37,13 @@ export default function Preloader() {
                   "-m-[0.25px]",
                   "origin-top"
                 )}
-                initial={{ scaleY: 1 }}
-                animate={{ scaleY: 0 }}
-                exit={{ scaleY: 0 }}
-                transition={{
-                  duration: 1,
-                  ease: [0.22, 1, 0.36, 1],
-                  delay: calcRandomBlockDelay(rowIndex, 10),
-                }}
               />
             ))}
           </div>
         ))}
+        {children}
       </div>
-
+  
       {/* .transition out */}
       <div
         className={cn(
@@ -59,13 +57,17 @@ export default function Preloader() {
           "pointer-events-none"
         )}
       >
-        {Array.from({ length: 10 }).map((_, rowIndex) => (
+        {Array.from(nbOfRows).map((_, rowIndex) => (
           // row
-          <div key={rowIndex} className={cn("flex-1", "w-full", "flex")}>
-            {Array.from({ length: 11 }).map((_, blockIndex) => (
+          <div key={rowIndex} className={cn("flex-1 w-full flex")}>
+            {Array.from(nbOfBlocks).map((_, blockIndex) => (
               // block
               <motion.div
                 key={blockIndex}
+                {...variants(
+                  collapse,
+                  calcRandomBlockDelay(rowIndex, nbOfRows)
+                )}
                 className={cn(
                   "relative",
                   "flex-1",
@@ -73,19 +75,14 @@ export default function Preloader() {
                   "-m-[0.25px]",
                   "origin-bottom"
                 )}
-                initial={{ scaleY: 0 }}
-                animate={{ scaleY: 0 }}
-                exit={{ scaleY: 1 }}
-                transition={{
-                  duration: 1,
-                  ease: [0.22, 1, 0.36, 1],
-                  delay: calcRandomBlockDelay(rowIndex, 10),
-                }}
               />
             ))}
+                
           </div>
         ))}
+        
       </div>
+
     </>
   );
 }

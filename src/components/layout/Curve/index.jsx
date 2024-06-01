@@ -1,29 +1,18 @@
-// "use client";
+"use client";
 
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { useRouter } from "next/router";
 import { text, curve, translate } from "./anim";
-import styles from "./styles";
 import { cn } from "@/lib/utils";
-// import { routes } from "@/components/Header/nav/routes";
+import { routes } from "@/components/Header/nav/routes";
+import { variants } from "@/lib/motion";
 
-const routes = {
-  "/": "Home",
-  "/about": "About",
-  "/contact": "Contact",
-};
-
-const anim = (variants) => {
-  return {
-    variants,
-    initial: "initial",
-    animate: "enter",
-    exit: "exit",
-  };
-};
-
-export default function Curve({ children, backgroundColor, className }) {
+export default function Curve({
+  children,
+  backgroundColor = "white",
+  className,
+}) {
   const router = useRouter();
   const [dimensions, setDimensions] = useState({
     width: null,
@@ -45,12 +34,43 @@ export default function Curve({ children, backgroundColor, className }) {
   }, []);
 
   return (
-    <div className={cn(styles.curve, className)} style={{ backgroundColor }}>
+    <div
+      className={cn("p-10 min-h-screen", className)}
+      style={{ backgroundColor }}
+    >
+      {/* Background */}
       <div
         style={{ opacity: dimensions.width == null ? 1 : 0 }}
-        className={styles.background}
+        className={cn(
+          "fixed",
+          "left-0",
+          "top-0",
+          "z-[999]",
+          "w-screen",
+          "h-[calc(100vh_+_600px)]",
+          "pointer-events-none",
+          "bg-white",
+          "transition-opacity",
+          // "duration-none",
+          "duration-0",
+          "ease-linear",
+          "delay-100"
+        )}
       />
-      <motion.p className={styles.route} {...anim(text)}>
+      <motion.p
+        className={cn(
+          "absolute",
+          "left-1/2",
+          "top-[40%]",
+          "text-white",
+          "text-5xl",
+          "z-[99]",
+          "text-center",
+          "transform",
+          "-translate-x-1/2"
+        )}
+        {...variants(text)}
+      >
         {routes[router.route]}
       </motion.p>
       {dimensions.width != null && <SVG {...dimensions} />}
@@ -80,8 +100,25 @@ function SVG({ height, width }) {
 `;
 
   return (
-    <motion.svg {...anim(translate)} className={styles.background}>
-      <motion.path {...anim(curve(initialPath, targetPath))} />
+    <motion.svg
+      {...variants(translate)}
+      className={cn(
+        "fixed",
+        "left-0",
+        "top-0",
+        "z-[999]",
+        "w-screen",
+        "h-[calc(100vh_+_600px)]",
+        "pointer-events-none",
+        "bg-dark-600",
+        "transition-opacity",
+        // "duration-none",
+        "duration-0",
+        "ease-linear",
+        "delay-100"
+      )}
+    >
+      <motion.path {...variants(curve(initialPath, targetPath))} />
     </motion.svg>
   );
 }

@@ -1,6 +1,3 @@
-// "use client";
-
-// import { genRandomNumbers } from "@/components/GridGlobe/components/Globe";
 import { clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 
