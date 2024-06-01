@@ -59,13 +59,7 @@ export default function Info() {
         // "font-pp-acma"
       )}
     >
-      <motion.div
-        className={cn(
-          "pt-[10vh]"
-          // "font-pp-acma"
-        )}
-      >
-        {/* Experiemnting */}
+      <motion.div className={cn("pt-[10vh]")}>
         <div className={cn("ml-[10vw]")}>
           <motion.h1
             className={cn(
@@ -83,8 +77,6 @@ export default function Info() {
 
           <ParalaxScrollText text={heading} scrollYProgress={scrollYProgress} />
         </div>
-
-        {/* Experiemnting end */}
 
         <div className="px-4 md:w-[800px] mx-auto">
           <div

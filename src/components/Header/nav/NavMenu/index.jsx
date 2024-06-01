@@ -73,7 +73,7 @@ export default function NavMenu({
           )}
         >
           <LinkDecorator
-            className={cn("m-0", "scale-100", {
+            className={cn("m-0", "scale-100", "animate-ping", {
               "bg-gray-500": !backgroundHasColor,
             })}
           />
@@ -83,26 +83,3 @@ export default function NavMenu({
     </nav>
   );
 }
-
-// function Indicator({ className, isActive }) {
-//   return (
-//     <div
-//       className={cn(
-//         "size-[5px]",
-//         "transition-transform",
-//         "duration-200",
-//         "custom-ease-in-out",
-//         "transform",
-//         "-translate-x-1/2",
-//         "rounded-full",
-//         "bg-white",
-//         "mx-auto",
-//         "mt-3",
-//         "scale-0",
-//         "group-hover:scale-100",
-//         isActive && cn("scale-100"),
-//         className
-//       )}
-//     />
-//   );
-// }
