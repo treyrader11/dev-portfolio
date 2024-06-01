@@ -50,7 +50,8 @@ export default function Brand({ className }) {
             "pl-[0.3em]",
             "group-hover:-translate-x-[100px]",
             "font-cursive",
-            "mt-px"
+            "-mt-px",
+            "text-lg"
           )}
         >
           Trey
@@ -59,13 +60,14 @@ export default function Brand({ className }) {
           className={cn(
             "m-0",
             "absolute",
-            "left-[152px]",
+            "left-[156px]",
             "transition-transform",
             "duration-500",
             "custom-ease-in-out",
             "group-hover:-translate-x-[115px]",
             "font-cursive",
-            "mt-px"
+            "-mt-px",
+            "text-lg"
           )}
         >
           Rader
