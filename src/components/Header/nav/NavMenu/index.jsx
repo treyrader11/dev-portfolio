@@ -73,12 +73,12 @@ export default function NavMenu({
             "cursor-pointer"
           )}
         >
-          {/* <LinkDecorator
-            className={cn("m-0", "scale-100", "animate-ping", {
+          <LinkDecorator
+            className={cn("m-0", "scale-100", "animate-pulse", {
               "bg-gray-500": !backgroundHasColor,
             })}
-          /> */}
-          <JumpingIcon className={cn("flex border-none")} />
+          />
+          {/* <JumpingIcon className={cn("flex border-none")} /> */}
           <p>Menu</p>
         </div>
       </Magnetic>

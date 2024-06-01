@@ -171,12 +171,13 @@ export function JumpingIcon({ className, containerClassName }) {
     <div
       className={cn(
         // "absolute",
-        "xs:bottom-10",
-        "bottom-32",
+        // "xs:bottom-10",
+        // "bottom-32",
         "w-full",
         "flex",
         "justify-center",
         "items-center",
+        "relative",
         containerClassName
       )}
     >
@@ -185,7 +186,9 @@ export function JumpingIcon({ className, containerClassName }) {
           className={cn(
             // "w-[35px]",
             // "h-[64px]",
-            "size-8-fit",
+            // "absolute",
+            // "xs:bottom-10",
+            // "bottom-32",
             "rounded-3xl",
             "border-4",
             "border-secondary",
@@ -199,7 +202,7 @@ export function JumpingIcon({ className, containerClassName }) {
           <motion.div
             animate={{
               // y: [0, 24, 0],
-              x: [10, 1],
+              x: [0, 10, 5],
             }}
             transition={{
               duration: 1.5,
