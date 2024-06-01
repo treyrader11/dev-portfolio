@@ -5,7 +5,7 @@ import Footer from "./Footer";
 import Header from "./Header";
 import { NavProvider, useNav } from "./providers/NavProvider";
 import { cn } from "@/lib/utils";
-import { fontPP } from "@/lib/fonts";
+import { fontPP, fontCursive } from "@/lib/fonts";
 
 function MainLayout({ children, route }) {
   const { isNavOpen } = useNav();
@@ -16,6 +16,7 @@ function MainLayout({ children, route }) {
         key={route}
         className={cn(
           fontPP.variable,
+          fontCursive.variable,
           "mx-auto",
           "overflow-clip"
         )}

@@ -10,6 +10,7 @@ module.exports = {
     extend: {
       fontFamily: {
         "pp-acma": ["var(--font-pp-acma)"],
+        cursive: ["var(--font-cursive)"],
       },
       colors: {
         primary: {

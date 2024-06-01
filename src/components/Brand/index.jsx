@@ -26,7 +26,8 @@ export default function Brand({ className }) {
           "ml-[5px]",
           "transition-all",
           "duration-500",
-          "custom-ease-in-out"
+          "custom-ease-in-out",
+         
         )}
       >
         <p
@@ -35,7 +36,7 @@ export default function Brand({ className }) {
             "transition-transform",
             "duration-500",
             "custom-ease-in-out",
-            "group-hover:-translate-x-full"
+            "group-hover:-translate-x-full",
           )}
         >
           Developed by
@@ -47,7 +48,9 @@ export default function Brand({ className }) {
             "duration-500",
             "custom-ease-in-out",
             "pl-[0.3em]",
-            "group-hover:-translate-x-[100px]"
+            "group-hover:-translate-x-[100px]",
+            "font-cursive",
+            "mt-px"
           )}
         >
           Trey
@@ -60,7 +63,9 @@ export default function Brand({ className }) {
             "transition-transform",
             "duration-500",
             "custom-ease-in-out",
-            "group-hover:-translate-x-[115px]"
+            "group-hover:-translate-x-[115px]",
+            "font-cursive",
+            "mt-px"
           )}
         >
           Rader
