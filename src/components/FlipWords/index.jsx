@@ -12,7 +12,7 @@ export default function FlipWords({ words, duration = 3000, className }) {
     const word = words[words.indexOf(currentWord) + 1] || words[0];
     setCurrentWord(word);
     setIsAnimating(true);
-  }, [currentWord, words]);
+  }, [currentWord, words, setIsAnimating]);
 
   useEffect(() => {
     if (!isAnimating)

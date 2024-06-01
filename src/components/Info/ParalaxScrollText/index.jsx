@@ -11,15 +11,21 @@ function ParalaxScrollText({ text, style, className, scrollYProgress }, ref) {
   //   offset: ["start start", "end end"],
   // });
 
+  const y = useTransform(
+    scrollYProgress,
+    [0, 1],
+    [0, Math.floor(Math.random() * -75) - 25]
+  );
+
   return (
     <div className={className} ref={ref || container}>
       <p className="m-0 mt-2.5 text-[3vw] uppercase">
         {text.split("").map((letter, i) => {
-          const y = useTransform(
-            scrollYProgress,
-            [0, 1],
-            [0, Math.floor(Math.random() * -75) - 25]
-          );
+          // const y = useTransform(
+          //   scrollYProgress,
+          //   [0, 1],
+          //   [0, Math.floor(Math.random() * -75) - 25]
+          // );
           return (
             <motion.span className="relative" style={{ top: y }} key={`l_${i}`}>
               {letter}

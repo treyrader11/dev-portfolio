@@ -11,6 +11,7 @@ export function Portrait({ className, style }) {
         "bg-transparent",
         "w-[25vh]",
         "h-[60vh]",
+        "mr-4",
         className
       )}
     >
