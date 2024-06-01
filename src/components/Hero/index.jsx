@@ -7,6 +7,8 @@ import { cn } from "@/lib/utils";
 import { slideUp } from "./anim";
 import Image from "next/image";
 import BlurredIn from "../BlurredIn";
+import FlipWords from "../FlipWords";
+import { variants } from "@/lib/motion";
 
 const phrase =
   "I'm a selectively skilled web developer focusing on delivering quality & impactful digital experiences.";
@@ -83,21 +85,39 @@ export default function Hero({ isLoading, scrollYProgress, className }) {
         )}
       >
         <BlurredIn className={cn("w-[1000px] p-10 mt-[20%]")}>
-          {phrase.split(" ").map((word, index) => {
+          {phrase.split(" ").map((word, i) => {
             const isTargetedWord = targetedWords.includes(word.toLowerCase());
 
             return (
               <motion.span
                 variants={slideUp}
-                custom={index}
-                animate={!isLoading ? (isInView ? "open" : "closed") : ""}
-                key={index}
+                initial={{ opacity: 0, y: 10, filter: "blur(8px)" }} //added as experiemnt not working yet
+                custom={i}
+                // animate={!isLoading ? (isInView ? "open" : "closed") : ""}
+                animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                key={i}
                 className={cn("mr-3 inline-flex text-light-400", {
                   "text-purple-400 font-pp-acma": isTargetedWord,
                 })}
               >
-                {word}
+                {isTargetedWord
+                  ? word.split("").map((letter, i) => (
+                      <motion.span
+                        key={word + i}
+                        initial={{ opacity: 0, y: 10, filter: "blur(8px)" }}
+                        animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                        transition={{
+                          delay: i * 0.08,
+                          duration: 0.4,
+                        }}
+                        className="inline-block"
+                      >
+                        {letter}
+                      </motion.span>
+                    ))
+                  : word}
               </motion.span>
+              // <FlipWords words={phrase} />
             );
           })}
         </BlurredIn>
@@ -128,7 +148,6 @@ export default function Hero({ isLoading, scrollYProgress, className }) {
           />
         </div>
       </div>
-      {/* <JumpingIcon /> */}
     </motion.section>
   );
 }
