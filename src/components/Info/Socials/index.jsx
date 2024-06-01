@@ -11,17 +11,18 @@ export default function Socials({ className, links, md }) {
     <motion.section style={{ bottom: md }} className={cn(className)}>
       <h1
         className={cn(
-          // "mt-8",
-          // "pt-10",
-          // "sm:pt-0",
           "font-pp-acma",
           "mb-4",
           "text-2xl",
           "font-semibold",
-          "sm:text-gray-700"
+          "sm:text-gray-700",
+          "flex",
+          "items-end",
+          "gap-px"
         )}
       >
         Socials
+        <span className="text-2xl">.</span>
       </h1>
 
       <div
@@ -32,7 +33,6 @@ export default function Socials({ className, links, md }) {
           "flex",
           "items-start",
           "flex-col",
-          // "md:flex-row",
           "justify-end",
           "cursor-pointer",
           "w-fit",

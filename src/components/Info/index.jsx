@@ -32,30 +32,16 @@ export default function Info() {
   const md = useTransform(scrollYProgress, [0, 1], [0, -150]);
   const lg = useTransform(scrollYProgress, [0, 1], [0, -250]);
 
-  // const images = [
-  //   {
-  //     src: Picture1,
-  //     y: 0,
-  //   },
-  //   {
-  //     src: Picture2,
-  //     y: lg,
-  //   },
-  //   {
-  //     src: Picture3,
-  //     y: md,
-  //   },
-  // ];
-
   return (
     <section
       ref={container}
       className={cn(
-        "bg-[#F1F1F1]",
-        "w-ful",
+        "bg-neutral-100",
         "pb-40",
         "min-h-screen",
-        "text-gray-500"
+        "text-gray-500",
+        // "max-w-[70vw]",
+        "mx-auto"
       )}
     >
       <motion.div className={cn("pt-[10vh]")}>
