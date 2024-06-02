@@ -87,12 +87,12 @@ export default function BlockGrid({ className }) {
       ref={blockContainerRef}
       className={cn(
         "bg-dark",
-        // "w-[105vw]",
+        "w-[105vw]",
         "h-screen",
-        // "flex-wrap",
+        "flex-wrap",
         "justify-start",
         "items-start",
-        // "overflow-hidden",
+        "overflow-hidden",
         className
       )}
       id="blocks"

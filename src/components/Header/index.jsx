@@ -15,7 +15,7 @@ import BurgerMenu from "./BurgerMenu";
 import { useWindowDimensions } from "@/hooks/useWindowDimensions";
 import BlurredIn from "../BlurredIn";
 import { useNav } from "../providers/NavProvider";
-import { slideDown } from "./anim";
+import { slideDown, blur } from "./motion";
 import { motion } from "framer-motion";
 
 export default function Header() {
@@ -28,11 +28,14 @@ export default function Header() {
   const path = usePathname();
   const { width } = useWindowDimensions();
 
-  const isMobile = width < 600;
+  const isMobile = width < 760;
   const showButton = isMobile && isNavOpen;
 
   const isProjectPage = path.includes("project");
   const backgroundHasColor = !isProjectPage;
+
+  const isHomePage = path === "/";
+  const headerVariants = isHomePage ? slideDown : blur;
 
   const handleNavMenu = useCallback(() => {
     setIsNavOpen((prevIsNavOpen) => !prevIsNavOpen);
@@ -79,12 +82,20 @@ export default function Header() {
 
   return (
     <>
-      <BlurredIn once ref={header} className={cn("absolute flex z-[4] w-full")}>
-        <motion.header
-          variants={slideDown}
-          initial="hidden"
-          whileInView="show"
-          viewport={{ once: true }}
+      <motion.header
+        variants={headerVariants}
+        initial="hidden"
+        whileInView="show"
+        viewport={{ once: true }}
+        // once
+        ref={header}
+        className={cn("absolute flex z-[4] w-full")}
+      >
+        <div
+          // variants={blur} // need header conditional header variants if home page slide down else blur
+          // initial="hidden"
+          // whileInView="show"
+          // viewport={{ once: true }}
           className={cn(
             "flex",
             "top-0",
@@ -114,8 +125,8 @@ export default function Header() {
             handleNavMenu={handleNavMenu}
             backgroundHasColor={backgroundHasColor}
           />
-        </motion.header>
-      </BlurredIn>
+        </div>
+      </motion.header>
       <AnimatePresence mode="wait">{isNavOpen && <Nav />}</AnimatePresence>
       <BurgerMenu
         isOpen={isNavOpen}

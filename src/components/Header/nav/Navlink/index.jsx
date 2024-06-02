@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { scale, slide } from "../../anim";
+import { scale, slide } from "../../motion";
 import { cn } from "@/lib/utils";
 import LinkDecorator from "@/components/LinkDecorator";
 

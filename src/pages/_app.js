@@ -7,7 +7,6 @@ import Layout from "@/components/Layout";
 import Notifications from "@/components/Notifications";
 import { NotificationsProvider } from "@/components/providers/NotificationsProvider";
 import Preloader from "@/components/Preloader";
-// import Collapse from "@/components/layout/Collapse";
 
 export default function App({ Component, pageProps, router }) {
   return (

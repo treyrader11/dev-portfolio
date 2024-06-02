@@ -44,3 +44,23 @@ export const slideDown = {
     },
   },
 };
+
+export const blur = {
+  initial: { filter: "blur(4px)" },
+  enter: {
+    filter: "blur(0px)",
+    transition: {
+      duration: 0.5,
+      ease: "easeInOut",
+      delay: 0.25,
+    },
+  },
+  exit: {
+    filter: "blur(4px)",
+    transition: {
+      duration: 0.5,
+      ease: "easeInOut",
+      delay: 0.25,
+    },
+  },
+};

@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { usePathname } from "next/navigation";
-import { menuSlide } from "../anim";
+import { menuSlide } from "../motion";
 import Navlink from "./Navlink";
 import Curve from "./Curve";
 import Footer from "./Footer";
