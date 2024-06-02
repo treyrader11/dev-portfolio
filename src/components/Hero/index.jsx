@@ -8,7 +8,7 @@ import { slideUp } from "./anim";
 import Image from "next/image";
 import BlurredIn from "../BlurredIn";
 import FlipWords from "../FlipWords";
-import { variants } from "@/lib/motion";
+// import BlockGrid from "../BlockGrid";
 
 const phrase =
   "I'm a selectively skilled web developer focusing on delivering quality & impactful digital experiences.";
@@ -17,7 +17,7 @@ const targetedWords = phrase
   .split(" ")
   .filter((word) => word.includes("selectively") || word.includes("skilled"));
 
-export default function Hero({ isLoading, scrollYProgress, className }) {
+export default function Hero({ scrollYProgress, className }) {
   const [isHovered, setIsHovered] = useState(false);
   const { x, y } = useMousePosition();
   const size = isHovered ? 400 : 40;
@@ -33,7 +33,7 @@ export default function Hero({ isLoading, scrollYProgress, className }) {
       style={{ scale, rotate }}
       className={cn(
         "h-screen",
-        "bg-dark",
+        "bg-transparent",
         // "custom-font",
         "relative",
         "flex",
@@ -74,6 +74,7 @@ export default function Hero({ isLoading, scrollYProgress, className }) {
       </motion.div>
 
       <div
+        // style={{ position: "absolute", zIndex: "1000" }}
         className={cn(
           "size-full",
           "flex",

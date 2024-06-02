@@ -22,7 +22,8 @@ export default function Footer() {
           <StyledLink key={i} href={link.href}>
             {link.label === "Resume" ? (
               <span className="flex items-center gap-2">
-                Resume <BsDownload className="text-purple-200 animate-bounce" />
+                Resume{" "}
+                <BsDownload className="text-[#ebfb1d] animate-bounce" />
               </span>
             ) : (
               link.label

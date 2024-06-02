@@ -1,6 +1,5 @@
 "use client";
 
-import OldPreloader from "@/components/Preloader/OldPreloader";
 import { useState, useRef, useEffect } from "react";
 import { Inter } from "next/font/google";
 import Inner from "@/components/layout/Inner";
@@ -12,6 +11,7 @@ import Hero from "@/components/Hero";
 import { useScroll, AnimatePresence } from "framer-motion";
 import PositionProvider from "@/components/providers/PositionProvider";
 import References from "@/components/References";
+import BlockGrid from "@/components/BlockGrid";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -39,15 +39,21 @@ export default function Home() {
 
   return (
     <main className={cn(inter.className, "overflow-clip")}>
-      {/* <AnimatePresence mode="wait">
-        {isLoading && <OldPreloader />}
-      </AnimatePresence> */}
       <Inner ref={container} backgroundColor="#934E00">
+        {/* <BlockGrid>
+          <Hero
+            isLoading={isLoading}
+            scrollYProgress={scrollYProgress}
+            className="sticky z-[99] top-0 min-h-screen"
+          />
+        </BlockGrid> */}
+        {/* <BlockGrid className="fixed inset-0"  /> */}
         <Hero
           isLoading={isLoading}
           scrollYProgress={scrollYProgress}
-          className="sticky top-0 min-h-screen"
+          className="sticky top-0 min-h-screen bg-dark"
         />
+
         <Description
           scrollYProgress={scrollYProgress}
           className={cn(

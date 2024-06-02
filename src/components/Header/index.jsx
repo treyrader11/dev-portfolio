@@ -15,6 +15,8 @@ import BurgerMenu from "./BurgerMenu";
 import { useWindowDimensions } from "@/hooks/useWindowDimensions";
 import BlurredIn from "../BlurredIn";
 import { useNav } from "../providers/NavProvider";
+import { slideDown } from "./anim";
+import { motion } from "framer-motion";
 
 export default function Header() {
   // const { isNavOpen, setIsNavOpen } = useNav();
@@ -70,47 +72,49 @@ export default function Header() {
       },
     });
 
-    // return () => {
-    //   ScrollTrigger.refresh();
-    // };
+    return () => {
+      ScrollTrigger.refresh();
+    };
   }, [showButton]);
 
   return (
     <>
-      <BlurredIn
-        once
-        ref={header}
-        className={cn(
-          "absolute",
-          "flex",
-          "z-[4]",
-          "top-0",
-          "font-extralight",
-          "text-white",
-          "p-[35px]",
-          "justify-between",
-          "items-center",
-          "w-full"
-        )}
-      >
-        <ProfilePicture
-          isMagnetic
-          src={`/images/portraits/headshot.png`}
-          className="size-[100px]"
-        />
-
-        <Brand
+      <BlurredIn once ref={header} className={cn("absolute flex z-[4] w-full")}>
+        <motion.header
+          variants={slideDown}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true }}
           className={cn(
-            "pl-3",
-            "mr-auto",
-            backgroundHasColor ? "text-white" : "text-gray-500"
+            "flex",
+            "top-0",
+            "font-extralight",
+            "text-white",
+            "p-[35px]",
+            "justify-between",
+            "items-center",
+            "w-full"
           )}
-        />
+        >
+          <ProfilePicture
+            isMagnetic
+            src={`/images/portraits/headshot.png`}
+            className="size-[100px]"
+          />
 
-        <NavMenu
-          handleNavMenu={handleNavMenu}
-          backgroundHasColor={backgroundHasColor}
-        />
+          <Brand
+            className={cn(
+              "pl-3",
+              "mr-auto",
+              backgroundHasColor ? "text-white" : "text-gray-500"
+            )}
+          />
+
+          <NavMenu
+            handleNavMenu={handleNavMenu}
+            backgroundHasColor={backgroundHasColor}
+          />
+        </motion.header>
       </BlurredIn>
       <AnimatePresence mode="wait">{isNavOpen && <Nav />}</AnimatePresence>
       <BurgerMenu

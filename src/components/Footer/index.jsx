@@ -55,11 +55,11 @@ export default function Footer() {
               "w-full",
               "justify-between",
               "md:justify-normal",
-              "gap-3.5"
+              "gap-5"
             )}
           >
             <div className="flex gap-1">
-              <span className="font-mono">
+              <span className="">
                 {new Date().toLocaleDateString("en-US", {
                   year: "numeric",
                 })}
@@ -67,12 +67,12 @@ export default function Footer() {
 
               <Brand />
             </div>
-            <span className="flex flex-col gap-3">
+            <div className="flex flex-col gap-3">
               <h5 className="text-[10px] uppercase text-light-100">
                 local time
               </h5>
               {getLocalTime()}
-            </span>
+            </div>
           </span>
         </div>
       </footer>

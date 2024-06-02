@@ -26,8 +26,7 @@ export default function Brand({ className }) {
           "ml-[5px]",
           "transition-all",
           "duration-500",
-          "custom-ease-in-out",
-         
+          "custom-ease-in-out"
         )}
       >
         <p
@@ -36,7 +35,7 @@ export default function Brand({ className }) {
             "transition-transform",
             "duration-500",
             "custom-ease-in-out",
-            "group-hover:-translate-x-full",
+            "group-hover:-translate-x-full"
           )}
         >
           Developed by
@@ -52,6 +51,7 @@ export default function Brand({ className }) {
             "font-cursive",
             "-mt-px",
             "text-lg"
+            // "text-[#ebfb1d]"
           )}
         >
           Trey
@@ -68,6 +68,7 @@ export default function Brand({ className }) {
             "font-cursive",
             "-mt-px",
             "text-lg"
+            // "text-[#ebfb1d]"
           )}
         >
           Rader
