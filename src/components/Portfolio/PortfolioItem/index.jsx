@@ -6,25 +6,30 @@ import Link from "next/link";
 import Image from "next/image";
 import Tags from "./Tags";
 import Video from "@/components/Video";
+import { motion } from "framer-motion";
 
 export default function PortfolioItem({
   index,
   title,
   category,
-  manageModal,
+  // manageModal,
   projectId,
+  project_image,
   tech_image,
   tags,
+  mousePosition,
 }) {
+  const { x, y } = mousePosition;
   return (
     <Link
+      style={{ clipPath: "polygon(0 0, 0 100%, 100% 100%, 100% 0)" }}
       href={`/project/${projectId}`}
-      onMouseEnter={(e) => {
-        manageModal(true, index, e.clientX, e.clientY);
-      }}
-      onMouseLeave={(e) => {
-        manageModal(false, index, e.clientX, e.clientY);
-      }}
+      // onMouseEnter={(e) => {
+      //   manageModal(true, index, e.clientX, e.clientY);
+      // }}
+      // onMouseLeave={(e) => {
+      //   manageModal(false, index, e.clientX, e.clientY);
+      // }}
       className={cn(
         "w-full",
         "border",
@@ -53,7 +58,8 @@ export default function PortfolioItem({
               "transition-all",
               "duration-[800]",
               "group-hover:-translate-x-2.5",
-              "font-pp-acma"
+              "font-pp-acma",
+              "text-slate-700"
             )}
           >
             {title}
@@ -85,6 +91,24 @@ export default function PortfolioItem({
           className={cn("absolute bottom-2 left-16 flex-nowrap max-w-none")}
         />
       </div>
+      <motion.div
+        className={cn(
+          "h-[30vw]",
+          "w-[25vw]",
+          "fixed",
+          "top-0",
+          "rounded-[1.5vw]",
+          "overflow-hidden"
+        )}
+        style={{ x, y }}
+      >
+        <Image
+          className="object-cover w-full"
+          src={`/images/${project_image}`}
+          alt="image"
+          fill
+        />
+      </motion.div>
     </Link>
   );
 }

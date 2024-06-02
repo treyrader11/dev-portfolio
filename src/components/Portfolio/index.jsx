@@ -5,7 +5,7 @@ import { cn, getUnique } from "@/lib/utils";
 import { useRef, useState, useEffect } from "react";
 import gsap from "gsap";
 import PortfolioItem from "./PortfolioItem";
-import { motion } from "framer-motion";
+import { motion, useSpring } from "framer-motion";
 import Image from "next/image";
 import { scaleAnimation } from "./anim";
 import ProjectCategories from "./ProjectCategories";
@@ -108,74 +108,31 @@ export default function Portfolio() {
     setFilteredProjects(filtered);
   };
 
-  let xMoveContainer = useRef(null);
-  let yMoveContainer = useRef(null);
-  let xMoveCursor = useRef(null);
-  let yMoveCursor = useRef(null);
-  let xMoveCursorLabel = useRef(null);
-  let yMoveCursorLabel = useRef(null);
-
-  useEffect(() => {
-    //Move Container
-    xMoveContainer.current = gsap.quickTo(modalContainer.current, "left", {
-      duration: 0.8,
-      ease: "power3",
-    });
-    yMoveContainer.current = gsap.quickTo(modalContainer.current, "top", {
-      duration: 0.8,
-      ease: "power3",
-    });
-    //Move cursor
-    xMoveCursor.current = gsap.quickTo(cursor.current, "left", {
-      duration: 0.5,
-      ease: "power3",
-    });
-    yMoveCursor.current = gsap.quickTo(cursor.current, "top", {
-      duration: 0.5,
-      ease: "power3",
-    });
-    //Move cursor label
-    xMoveCursorLabel.current = gsap.quickTo(cursorLabel.current, "left", {
-      duration: 0.45,
-      ease: "power3",
-    });
-    yMoveCursorLabel.current = gsap.quickTo(cursorLabel.current, "top", {
-      duration: 0.45,
-      ease: "power3",
-    });
-  }, []);
-
-  const moveItems = (x, y) => {
-    const elements = [
-      xMoveContainer,
-      yMoveContainer,
-      xMoveCursor,
-      yMoveCursor,
-      xMoveCursorLabel,
-      yMoveCursorLabel,
-    ];
-
-    elements.forEach((element, index) => {
-      if (element?.current) {
-        if (index % 2 === 0) {
-          element.current(x);
-        } else {
-          element.current(y);
-        }
-      }
-    });
+  const spring = {
+    stiffness: 150,
+    damping: 15,
+    mass: 0.1,
   };
 
-  const manageModal = (isModalActive, index, x, y) => {
-    moveItems(x, y);
-    setModal({ isModalActive, index });
+  const mousePosition = {
+    x: useSpring(0, spring),
+    y: useSpring(0, spring),
+  };
+
+  const mouseMove = (e) => {
+    const { clientX, clientY } = e;
+    const targetX = clientX - (window.innerWidth / 2) * 0.25;
+    const targetY = clientY - (window.innerWidth / 2) * 0.3;
+    mousePosition.x.set(targetX);
+    mousePosition.y.set(targetY);
   };
 
   return (
     <section
-      onMouseMove={(e) => {
-        moveItems(e.clientX, e.clientY);
-      }}
+      // onMouseMove={(e) => {
+      //   moveItems(e.clientX, e.clientY);
+      // }}
+      onMouseMove={mouseMove}
       className="pb-[100px]"
     >
       {/* <BlurredIn once> */}
@@ -241,15 +198,16 @@ export default function Portfolio() {
               index={i}
               projectId={proj.video_key}
               {...proj}
-              manageModal={manageModal}
+              // manageModal={manageModal}
+              mousePosition={mousePosition}
               key={i}
             />
           );
         })}
       </div>
 
-      <>
-        {/* Modal */}
+      {/* <>
+      
         <motion.div
           ref={modalContainer}
           variants={scaleAnimation}
@@ -292,14 +250,7 @@ export default function Portfolio() {
                   style={{ backgroundColor: color }}
                   key={`modal_${index}`}
                 >
-                  {/* <Image
-                    src={`/images/${project_image}`}
-                    width={300}
-                    priority={project.isPriority}
-                    height={0}
-                    alt="image"
-                    className="md:h-[24vh] md:w-[20vw] h-[20vh] w-[38vw]"
-                  /> */}
+                  
                   <Video src={`/videos/tech-meeting.mp4`} muted loop autoPlay />
                 </div>
               );
@@ -349,7 +300,7 @@ export default function Portfolio() {
         >
           View
         </motion.div>
-      </>
+      </> */}
     </section>
   );
 }
