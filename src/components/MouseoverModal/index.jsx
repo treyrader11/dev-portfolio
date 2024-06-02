@@ -4,8 +4,6 @@ import { useRef, useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 import { projectsData } from "@/lib/data";
-import { cn } from "@/lib/utils";
-import { useRef, useState, useEffect } from "react";
 import gsap from "gsap";
 import Image from "next/image";
 import { scaleAnimation } from "../Portfolio/anim";

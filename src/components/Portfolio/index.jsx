@@ -177,7 +177,6 @@ export default function Portfolio() {
       </div>
       {/* </BlurredIn> */}
 
-      {/* <CardFlip /> */}
       <div
         ref={projContainer}
         className={cn(

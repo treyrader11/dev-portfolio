@@ -48,7 +48,7 @@ export default function ProjectDetails({ data }) {
           />
           {env?.backend && <Environment title="Backend" data={env.backend} />}
         </Block>
-        <Block title="Links">
+        <Block title="Source code">
           <ProjectLinks links={_links} />
         </Block>
       </div>
