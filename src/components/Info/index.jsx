@@ -40,12 +40,11 @@ export default function Info() {
         "pb-40",
         "min-h-screen",
         "text-gray-500",
-        // "max-w-[70vw]",
         "mx-auto"
       )}
     >
       <motion.div className={cn("pt-[10vh]")}>
-        <div className={cn("ml-[10vw]")}>
+        <div className="mx-[10vw]">
           <motion.h1
             className={cn(
               "m-0",
@@ -77,9 +76,16 @@ export default function Info() {
             )}
           >
             {/* Social Buttons */}
-            <div className="inline-flex flex-col font-pp-acma">
+            <div className="inline-flex flex-col ">
               <div>
-                <h1 className={cn("text-xl", "font-semibold", "text-gray-700")}>
+                <h1
+                  className={cn(
+                    "text-xl",
+                    "font-semibold",
+                    // "font-pp-acma",
+                    "text-gray-700"
+                  )}
+                >
                   Contact
                 </h1>
                 <p className={cn("mt-4 text-lg text-gray-500")}>
@@ -126,9 +132,21 @@ export default function Info() {
             </div>
 
             {/* Text area */}
-            <div className="col-span-1 font-pp-acma md:col-span-2">
-              {userData.about.description?.map((desc, idx) => (
-                <p key={idx} className="mb-4 text-xl text-gray-700">
+            <div
+              className={cn(
+                "col-span-1",
+                "mx-[10vw]",
+                // "font-pp-acma",
+                // "font-mono",
+                // "text-slate-400",
+                "text-[3vw]",
+                // "uppercase",
+                "md:col-span-2",
+                "text-extralight"
+              )}
+            >
+              {userData.about.description?.map((desc, i) => (
+                <p key={i} className="mb-4 text-xl">
                   {desc}
                 </p>
               ))}
