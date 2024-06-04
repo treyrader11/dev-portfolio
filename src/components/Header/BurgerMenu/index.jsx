@@ -10,8 +10,8 @@ function BurgerMenu({ isOpen, handleNavMenu }, ref) {
       ref={ref}
       className={cn(
         "fixed",
-        // "transform",
-        // "scale-0",
+        "transform",
+        "scale-0",
         "right-0",
         "z-[4]",
         "after:top-[-5px]",

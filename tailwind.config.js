@@ -11,6 +11,7 @@ module.exports = {
       fontFamily: {
         "pp-acma": ["var(--font-pp-acma)"],
         cursive: ["var(--font-cursive)"],
+        mono: ["var(--font-mono)"],
       },
       colors: {
         primary: {
