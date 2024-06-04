@@ -6,16 +6,13 @@ import { scaleAnimation } from "../../anim";
 import { useRef, useEffect, forwardRef } from "react";
 import gsap from "gsap";
 
-function Modal(
-  { className, style, isActive, children, onClick, showWhileHovering = false },
-  ref
-) {
-  const modal = useRef(null);
+function Modal({ className, style, isActive, children, onClick }, ref) {
+  // const modal = useRef(null);
   const cursor = useRef(null);
   const cursorLabel = useRef(null);
 
-  let xMoveContainer = useRef(null);
-  let yMoveContainer = useRef(null);
+  // let xMoveContainer = useRef(null);
+  // let yMoveContainer = useRef(null);
   let xMoveCursor = useRef(null);
   let yMoveCursor = useRef(null);
   let xMoveCursorLabel = useRef(null);
@@ -23,14 +20,14 @@ function Modal(
 
   useEffect(() => {
     // //Move Container
-    xMoveContainer.current = gsap.quickTo(modal.current, "left", {
-      duration: 0.8,
-      ease: "power3",
-    });
-    yMoveContainer.current = gsap.quickTo(modal.current, "top", {
-      duration: 0.8,
-      ease: "power3",
-    });
+    // xMoveContainer.current = gsap.quickTo(modal.current, "left", {
+    //   duration: 0.8,
+    //   ease: "power3",
+    // });
+    // yMoveContainer.current = gsap.quickTo(modal.current, "top", {
+    //   duration: 0.8,
+    //   ease: "power3",
+    // });
     //Move cursor
     xMoveCursor.current = gsap.quickTo(cursor.current, "left", {
       duration: 0.5,
@@ -53,18 +50,23 @@ function Modal(
 
   return (
     <motion.div
-      ref={modal}
+      ref={ref}
       style={style}
       className={cn(
         "h-[20vh]",
         "md:h-[30vh]",
         "w-[50vw]",
         "md:w-[60vw]",
-        "fixed",
+
         "z-[10]",
         "top-0",
         "rounded-xl",
         "overflow-hidden",
+
+        "fixed",
+        // "transform",
+        // "hidden",
+        // "scale-0",
         className
       )}
     >

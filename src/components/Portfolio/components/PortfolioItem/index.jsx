@@ -7,6 +7,7 @@ import Tags from "./Tags";
 import Video from "@/components/Video";
 import Modal from "../Modal";
 import MouseoverModal from "@/components/MouseoverModal";
+// import { useScroll, motion, useTransform } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useIsMobile } from "@/hooks/useWindowDimensions";
@@ -15,7 +16,6 @@ export default function PortfolioItem({
   index,
   title,
   category,
-  // manageModal,
   projectId,
   project_image,
   project_video,
@@ -23,18 +23,35 @@ export default function PortfolioItem({
   tags,
   color,
   mousePosition,
+  isInView,
+  modalRef,
 }) {
   const [isModalActive, setIsModalActive] = useState(false);
 
   const { x, y } = mousePosition;
-  const router = useRouter();
 
+  const router = useRouter();
   const isMobile = useIsMobile();
 
+  console.log("isInView", isInView);
   return (
-    <Link
+    // <Link
+    //   style={{ clipPath: "polygon(0 0, 0 100%, 100% 100%, 100% 0)" }}
+    //   href={`/project/${projectId}`}
+    //   onMouseEnter={() => setIsModalActive(true)}
+    //   onMouseLeave={() => setIsModalActive(false)}
+    //   className={cn(
+    //     "w-full",
+    //     "border",
+    //     "border-t-neutral-400",
+    //     "transition-all",
+    //     "duration-500",
+    //     "group"
+    //     // "hover:opacity-50"
+    //   )}
+    // >
+    <div
       style={{ clipPath: "polygon(0 0, 0 100%, 100% 100%, 100% 0)" }}
-      href={`/project/${projectId}`}
       onMouseEnter={() => setIsModalActive(true)}
       onMouseLeave={() => setIsModalActive(false)}
       className={cn(
@@ -98,21 +115,24 @@ export default function PortfolioItem({
         />
       </div>
 
-      <Modal
-        showWhileHovering
-        style={isMobile ? { x: 180, y: 655 } : { x, y }}
-        isActive={isModalActive}
-        imageUrl={project_image}
-        // onClick={() => router.push(`/project/${video_key}`)}
-        // className={cn({ " right-3": isMobile })}
-      >
-        <div
-          className={cn("size-full flex items-center justify-center")}
-          style={{ backgroundColor: color }}
+      <Link href={`/project/${projectId}`}>
+        <Modal
+          ref={modalRef}
+          style={isMobile ? { x: 180, y: 655 } : { x, y }}
+          // style={isMobile ? { x: 180, y: 550 } : { x, y }}
+          isActive={isModalActive}
+          imageUrl={project_image}
+          // className={cn(isInView ? "scale-100 flex" : "hidden scale-0")}
         >
-          <Video src={`/videos/${project_video}`} muted loop autoPlay />
-        </div>
-      </Modal>
-    </Link>
+          <div
+            className={cn("size-full flex items-center justify-center")}
+            style={{ backgroundColor: color }}
+          >
+            <span className="text-white">{title}</span>
+            <Video src={`/videos/${project_video}`} muted loop autoPlay />
+          </div>
+        </Modal>
+      </Link>
+    </div>
   );
 }

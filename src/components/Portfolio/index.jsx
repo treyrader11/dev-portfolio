@@ -5,7 +5,12 @@ import { cn, getUnique } from "@/lib/utils";
 import { useRef, useState, useEffect } from "react";
 import gsap from "gsap";
 import PortfolioItem from "./components/PortfolioItem";
-import { motion, useSpring } from "framer-motion";
+import {
+  motion,
+  useSpring,
+  useScroll,
+  useMotionValueEvent,
+} from "framer-motion";
 import Image from "next/image";
 import { scaleAnimation } from "./anim";
 import ProjectCategories from "./components/ProjectCategories";
@@ -13,6 +18,7 @@ import Search from "./components/Search";
 import Video from "../Video";
 import MouseoverModal from "../MouseoverModal";
 import Modal from "./components/Modal";
+import { useIsInView } from "@/hooks/useIsInView";
 
 export default function Portfolio() {
   const [projects, setProjects] = useState(projectsData);
@@ -20,28 +26,36 @@ export default function Portfolio() {
 
   const [focused, setFocused] = useState(false);
   const [selected, setSelected] = useState(0);
-  
+
+  const [isInView, setIsInView] = useState(false);
+
   const [categories] = useState([
     "All",
     ...getUnique(projectsData, "category"),
   ]);
 
+  const { scrollY } = useScroll();
+
   const inputRef = useRef(null);
-  const projContainer = useRef();
-  // const modalContainer = useRef(null);
+  const container = useRef(null);
+  const modalRef = useRef(null);
+
+  // useIsInView(container.current, modalRef.current);
+
+  const isElementInView = useIsInView(container?.current, modalRef?.current, 100);
 
   const selectedCategory = (index) => setSelected(index);
 
   const filterProjects = (category, index) => {
     if (category === "All") {
-      gsap.to(projContainer.current, {
+      gsap.to(container.current, {
         duration: 0.5,
         opacity: 0,
         y: 20,
         ease: "power4.out",
         onComplete: () => {
           gsap.fromTo(
-            projContainer.current,
+            container.current,
             {
               y: 20,
               opacity: 0,
@@ -65,13 +79,13 @@ export default function Portfolio() {
     const filtered = projectsData.filter((proj) => proj.category === category);
 
     selectedCategory(index);
-    gsap.to(projContainer.current, {
+    gsap.to(container.current, {
       duration: 0.5,
       opacity: 0,
       y: 25,
       ease: "power4.out",
       onComplete: () => {
-        gsap.to(projContainer.current, {
+        gsap.to(container.current, {
           duration: 0.5,
           y: 20,
           opacity: 1,
@@ -124,35 +138,25 @@ export default function Portfolio() {
     mousePosition.y.set(targetY);
   };
 
-  // const moveItems = (x, y) => {
-  //   const elements = [
-  //     xMoveContainer,
-  //     yMoveContainer,
-  //     xMoveCursor,
-  //     yMoveCursor,
-  //     xMoveCursorLabel,
-  //     yMoveCursorLabel,
-  //   ];
+  const { scrollYProgress } = useScroll({
+    target: container,
+    offset: ["start end", "end end"],
+  });
 
-  //   elements.forEach((element, index) => {
-  //     if (element?.current) {
-  //       if (index % 2 === 0) {
-  //         element.current(x);
-  //       } else {
-  //         element.current(y);
-  //       }
-  //     }
-  //   });
-  // };
+  useEffect(() => {
+    if (scrollYProgress.prev > 20 && scrollYProgress.prev < 300) {
+      setIsInView(true);
+    } else {
+      setIsInView(false);
+    }
+  }, scrollYProgress.prev);
+
+  useMotionValueEvent(scrollY, "change", (latest) => {
+    setIsInView(latest > 200);
+  });
 
   return (
-    <section
-      // onMouseMove={(e) => {
-      //   moveItems(e.clientX, e.clientY);
-      // }}
-      onMouseMove={mouseMove}
-      className="pb-[100px]"
-    >
+    <section onMouseMove={mouseMove} className="pb-[100px]">
       <div className={cn("py-12 mx-0 bg-dark")}>
         <p className="px-6 text-white">
           The following projects showcase my skills and experience through
@@ -190,7 +194,7 @@ export default function Portfolio() {
       </div>
 
       <div
-        ref={projContainer}
+        ref={container}
         className={cn(
           "max-w-[1400px]",
           "w-full",
@@ -201,18 +205,17 @@ export default function Portfolio() {
           "mb-[100px]"
         )}
       >
-        {/* <Video cover src={`/videos/code-editor1.mp4`} muted loop autoPlay /> */}
-
         {filteredProjects.map((proj, i) => {
           return (
             <PortfolioItem
               index={i}
               projectId={proj.video_key}
               {...proj}
-              // isModalActive={isModalActive}
-              // manageModal={manageModal}
+              isInView={isInView}
+              // isInView={isElementInView}
               mousePosition={mousePosition}
               key={i}
+              modalRef={modalRef}
             />
           );
         })}
