@@ -87,6 +87,7 @@ export default function PageTitle({
     "text-left",
     "text-secondary",
     "relative",
+    // "whitespace-nowrap",
     className
   );
 

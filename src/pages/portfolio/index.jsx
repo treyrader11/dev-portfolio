@@ -1,9 +1,11 @@
 import Inner from "@/components/layout/Inner";
 import PageTitle from "@/components/PageTitle";
 import Portfolio from "@/components/Portfolio";
+import { userData } from "@/lib/data";
+import { getLatestRepos } from "@/lib/getLatestRepos";
 import { cn } from "@/lib/utils";
 
-export default function PortfolioPage() {
+export default function PortfolioPage({ repositories }) {
   return (
     <Inner backgroundColor="#934E00">
       <PageTitle
@@ -25,7 +27,17 @@ export default function PortfolioPage() {
           "z-50"
         )}
       />
-      <Portfolio />
+      <Portfolio repositories={repositories} />
     </Inner>
   );
 }
+
+export const getServerSideProps = async () => {
+  let token = process.env.GITHUB_AUTH_TOKEN;
+  const repositories = await getLatestRepos(userData, token);
+  return {
+    props: {
+      repositories,
+    },
+  };
+};

@@ -19,8 +19,11 @@ import Video from "../Video";
 import MouseoverModal from "../MouseoverModal";
 import Modal from "./components/Modal";
 import { useIsInView } from "@/hooks/useIsInView";
+import LatestRepo from "./components/LatestRepo";
+import PageTitle from "../PageTitle";
 
-export default function Portfolio() {
+export default function Portfolio({ repositories }) {
+  const [latestRepos, setLatestRepos] = useState(repositories);
   const [projects, setProjects] = useState(projectsData);
   const [filteredProjects, setFilteredProjects] = useState(projects);
 
@@ -42,7 +45,11 @@ export default function Portfolio() {
 
   // useIsInView(container.current, modalRef.current);
 
-  const isElementInView = useIsInView(container?.current, modalRef?.current, 100);
+  const isElementInView = useIsInView(
+    container?.current,
+    modalRef?.current,
+    100
+  );
 
   const selectedCategory = (index) => setSelected(index);
 
@@ -219,6 +226,45 @@ export default function Portfolio() {
             />
           );
         })}
+
+        {/* <div className="flex flex-col justify-center gap-y-6">
+          <PageTitle
+            backgroundColor="transparent"
+            title="Misc repos."
+            className="text-left whitespace-nowrap"
+            containerClass={cn("p-0 m-0")}
+          />
+          <p>A few smaller projects fetched from github</p>
+        </div> */}
+        <div
+          className={cn(
+            "pt-52",
+            "grid",
+            "max-w-6xl",
+            "grid-cols-1",
+            "gap-8",
+            "px-10",
+            "mx-auto",
+            "md:grid-cols-2",
+            "lg:grid-cols-3",
+            "lg:-mt-10",
+            "gap-y-20"
+          )}
+        >
+          <div className="relative flex flex-col justify-center gap-y-6">
+            <PageTitle
+              backgroundColor="transparent"
+              title="Misc repos."
+              className="text-left whitespace-nowrap"
+              containerClass={cn("p-0 m-0")}
+            />
+            <p>A few smaller projects fetched from github</p>
+          </div>
+
+          {/* Single github Repo */}
+          {latestRepos &&
+            latestRepos.map((repo) => <LatestRepo {...repo} key={repo.name} />)}
+        </div>
       </div>
 
       {/* <MouseoverModal data={projectsData} /> */}
