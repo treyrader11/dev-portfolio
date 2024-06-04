@@ -4,34 +4,31 @@ import { projectsData } from "@/lib/data";
 import { cn, getUnique } from "@/lib/utils";
 import { useRef, useState, useEffect } from "react";
 import gsap from "gsap";
-import PortfolioItem from "./PortfolioItem";
+import PortfolioItem from "./components/PortfolioItem";
 import { motion, useSpring } from "framer-motion";
 import Image from "next/image";
 import { scaleAnimation } from "./anim";
-import ProjectCategories from "./ProjectCategories";
-import Search from "./Search";
+import ProjectCategories from "./components/ProjectCategories";
+import Search from "./components/Search";
 import Video from "../Video";
+import MouseoverModal from "../MouseoverModal";
+import Modal from "./components/Modal";
 
 export default function Portfolio() {
   const [projects, setProjects] = useState(projectsData);
   const [filteredProjects, setFilteredProjects] = useState(projects);
-  const [focused, setFocused] = useState(false);
 
+  const [focused, setFocused] = useState(false);
+  const [selected, setSelected] = useState(0);
+  
   const [categories] = useState([
     "All",
     ...getUnique(projectsData, "category"),
   ]);
 
   const inputRef = useRef(null);
-
-  const [selected, setSelected] = useState(0);
-  const [modal, setModal] = useState({ isModalActive: false, index: 0 });
-  const { isModalActive, index } = modal;
-
   const projContainer = useRef();
-  const modalContainer = useRef(null);
-  const cursor = useRef(null);
-  const cursorLabel = useRef(null);
+  // const modalContainer = useRef(null);
 
   const selectedCategory = (index) => setSelected(index);
 
@@ -127,6 +124,27 @@ export default function Portfolio() {
     mousePosition.y.set(targetY);
   };
 
+  // const moveItems = (x, y) => {
+  //   const elements = [
+  //     xMoveContainer,
+  //     yMoveContainer,
+  //     xMoveCursor,
+  //     yMoveCursor,
+  //     xMoveCursorLabel,
+  //     yMoveCursorLabel,
+  //   ];
+
+  //   elements.forEach((element, index) => {
+  //     if (element?.current) {
+  //       if (index % 2 === 0) {
+  //         element.current(x);
+  //       } else {
+  //         element.current(y);
+  //       }
+  //     }
+  //   });
+  // };
+
   return (
     <section
       // onMouseMove={(e) => {
@@ -135,47 +153,41 @@ export default function Portfolio() {
       onMouseMove={mouseMove}
       className="pb-[100px]"
     >
-      {/* <BlurredIn once> */}
-      <div>
-        <div className={cn("py-12 mx-0 bg-dark")}>
-          <p className="px-6 text-white">
-            The following projects showcase my skills and experience through
-            real-world examples of my work. Each project is briefly described
-            with links to code repositories and live demos in it. It reflects my
-            ability to solve complex problems, work with different technologies,
-            and manage projects effectively.
-          </p>
-          <div
-            className={cn(
-              "mt-8",
-              "pt-3",
-              "flex",
-              "relative",
-              "items-center",
-              "gap-[2rem]",
-              "w-full",
-              "pl-5"
-            )}
-          >
-            <Search
-              ref={inputRef}
-              onChange={filterProjectsBySearch}
-              clearInput={clearInput}
-              onClick={() => openSearch()}
-              isFocused={focused}
-              className=""
-            />
+      <div className={cn("py-12 mx-0 bg-dark")}>
+        <p className="px-6 text-white">
+          The following projects showcase my skills and experience through
+          real-world examples of my work. Each project is briefly described with
+          links to code repositories and live demos in it. It reflects my
+          ability to solve complex problems, work with different technologies,
+          and manage projects effectively.
+        </p>
+        <div
+          className={cn(
+            "mt-8",
+            "pt-3",
+            "flex",
+            "relative",
+            "items-center",
+            "gap-[2rem]",
+            "w-full",
+            "pl-5"
+          )}
+        >
+          <Search
+            ref={inputRef}
+            onChange={filterProjectsBySearch}
+            clearInput={clearInput}
+            onClick={() => openSearch()}
+            isFocused={focused}
+          />
 
-            <ProjectCategories
-              selected={selected}
-              filterProjects={filterProjects}
-              categories={categories}
-              className={cn("")}
-            />
-          </div>
+          <ProjectCategories
+            selected={selected}
+            filterProjects={filterProjects}
+            categories={categories}
+          />
         </div>
       </div>
-      {/* </BlurredIn> */}
 
       <div
         ref={projContainer}
@@ -197,6 +209,7 @@ export default function Portfolio() {
               index={i}
               projectId={proj.video_key}
               {...proj}
+              // isModalActive={isModalActive}
               // manageModal={manageModal}
               mousePosition={mousePosition}
               key={i}
@@ -205,6 +218,8 @@ export default function Portfolio() {
         })}
       </div>
 
+      {/* <MouseoverModal data={projectsData} /> */}
+      {/* <Modal ref={modalContainer}></Modal> */}
       {/* <>
       
         <motion.div

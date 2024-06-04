@@ -35,3 +35,9 @@ export function useWindowScroll(callback) {
     };
   }, [callback]);
 }
+
+// Hook to check if the device is mobile (width <= 760)
+export function useIsMobile() {
+  const { width } = useWindowDimensions();
+  return width <= 760;
+}

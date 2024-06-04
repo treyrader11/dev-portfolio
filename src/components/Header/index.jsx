@@ -12,7 +12,7 @@ import { cn } from "@/lib/utils";
 import { usePathname } from "next/navigation";
 import Brand from "@/components/Brand";
 import BurgerMenu from "./BurgerMenu";
-import { useWindowDimensions } from "@/hooks/useWindowDimensions";
+import { useIsMobile } from "@/hooks/useWindowDimensions";
 import BlurredIn from "../BlurredIn";
 import { useNav } from "../providers/NavProvider";
 import { slideDown, blur } from "./motion";
@@ -26,9 +26,8 @@ export default function Header() {
   const button = useRef(null);
 
   const path = usePathname();
-  const { width } = useWindowDimensions();
 
-  const isMobile = width < 760;
+  const isMobile = useIsMobile();
   const showButton = isMobile && isNavOpen;
 
   const isProjectPage = path.includes("project");

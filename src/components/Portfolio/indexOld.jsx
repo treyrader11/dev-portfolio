@@ -161,12 +161,12 @@ import { projectsData } from "@/lib/data";
 import { cn, getUnique } from "@/lib/utils";
 import { useRef, useState, useEffect } from "react";
 import gsap from "gsap";
-import PortfolioItem from "./PortfolioItem";
+import PortfolioItem from "./components/PortfolioItem";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { scaleAnimation } from "./anim";
-import ProjectCategories from "./ProjectCategories";
-import Search from "./Search";
+import ProjectCategories from "./components/ProjectCategories";
+import Search from "./components/Search";
 import Video from "../Video";
 
 export default function Portfolio() {

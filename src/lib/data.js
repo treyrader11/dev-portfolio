@@ -127,6 +127,7 @@ export const projectsData = [
         "https://github.com/treyrader11/musiana-server/archive/refs/heads/main.zip",
     },
     project_image: "c2.png",
+    project_video: "tech-meeting.mp4",
     image: {
       isPriority: true,
       src: "c2.png",
@@ -196,6 +197,7 @@ export const projectsData = [
         "https://github.com/treyrader11/Vouzot/archive/refs/heads/main.zip",
     },
     project_image: "decimal.png",
+    project_video: "code-editor1.mp4",
     image: {
       isPriority: true,
       src: "decimal.png",
@@ -266,6 +268,7 @@ export const projectsData = [
         "https://github.com/treyrader11/PasteUI/archive/refs/heads/main.zip",
     },
     project_image: "funny.png",
+    project_video: "code-editor2.mp4",
     image: {
       isPriority: true,
       src: "funny.png",
@@ -355,6 +358,7 @@ export const projectsData = [
         "https://github.com/treyrader11/JSearch-Expo/archive/refs/heads/main.zip",
     },
     project_image: "google.png",
+    project_video: "tech-meeting.mp4",
     image: {
       isPriority: true,
       src: "google.png",
@@ -443,6 +447,7 @@ export const projectsData = [
         "https://github.com/treyrader11/JSearch-Expo/archive/refs/heads/main.zip",
     },
     project_image: "maven.png",
+    project_video: "code-editor1.mp4",
     image: {
       isPriority: true,
       src: "maven.png",
@@ -529,6 +534,7 @@ export const projectsData = [
         "https://github.com/treyrader11/PasteUI/archive/refs/heads/main.zip",
     },
     project_image: "panda.png",
+    project_video: "code-editor2.mp4",
     image: {
       isPriority: true,
       src: "panda.png",
@@ -544,7 +550,7 @@ export const references = [
     desc: "If given the opportunity I would hire Trey for any of my coding needs. I know that he will be an excellent addition to any prospective company in the near future.",
     name: "Jason Humphrey",
     title: "Senior Developer, Former Mentor",
-    linkedIn: "https://www.linkedin.com/in/meet-jason-humphrey"
+    linkedIn: "https://www.linkedin.com/in/meet-jason-humphrey",
   },
   {
     image_url: "/images/references/wilson.png",
@@ -557,14 +563,14 @@ export const references = [
     desc: "Whether in the office or in the bed, homie is as thorough as it gets 🙄",
     name: "Janine Bonilla",
     title: "Marketing Specialist, Nasty",
-    linkedIn: "https://www.linkedin.com/in/j9bonilla"
+    linkedIn: "https://www.linkedin.com/in/j9bonilla",
   },
   {
     image_url: "/images/references/daniel.png",
     desc: "Bro 🔥",
     name: "Daniel Dekerlegand",
     title: "Senior Developer, Evolve Media",
-    linkedIn: "https://www.linkedin.com/company/evolve-media-ai-inc"
+    linkedIn: "https://www.linkedin.com/company/evolve-media-ai-inc",
   },
 ];
 

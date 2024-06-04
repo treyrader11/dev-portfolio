@@ -15,6 +15,8 @@ export default function MouseoverModal({
   data,
   className,
   containerClassName,
+  style,
+  is
 }) {
   const [modal, setModal] = useState({ isModalActive: false, index: 0 });
   const { isModalActive, index } = modal;
@@ -61,26 +63,26 @@ export default function MouseoverModal({
     });
   }, []);
 
-  const moveItems = (x, y) => {
-    const elements = [
-      xMoveContainer,
-      yMoveContainer,
-      xMoveCursor,
-      yMoveCursor,
-      xMoveCursorLabel,
-      yMoveCursorLabel,
-    ];
+  // const moveItems = (x, y) => {
+  //   const elements = [
+  //     xMoveContainer,
+  //     yMoveContainer,
+  //     xMoveCursor,
+  //     yMoveCursor,
+  //     xMoveCursorLabel,
+  //     yMoveCursorLabel,
+  //   ];
 
-    elements.forEach((element, index) => {
-      if (element?.current) {
-        if (index % 2 === 0) {
-          element.current(x);
-        } else {
-          element.current(y);
-        }
-      }
-    });
-  };
+  //   elements.forEach((element, index) => {
+  //     if (element?.current) {
+  //       if (index % 2 === 0) {
+  //         element.current(x);
+  //       } else {
+  //         element.current(y);
+  //       }
+  //     }
+  //   });
+  // };
 
   const manageModal = (isModalActive, index, x, y) => {
     moveItems(x, y);
@@ -88,13 +90,9 @@ export default function MouseoverModal({
   };
 
   return (
-    <section
-      onMouseMove={(e) => moveItems(e.clientX, e.clientY)}
-      className={cn("pb-[100px]", containerClassName)}
-    >
-      {children}
-      {/* Modal */}
+    <>
       <motion.div
+        // style={style}
         ref={modalContainer}
         variants={scaleAnimation}
         initial="initial"
@@ -194,6 +192,6 @@ export default function MouseoverModal({
       >
         View
       </motion.div>
-    </section>
+    </>
   );
 }

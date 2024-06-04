@@ -1,12 +1,15 @@
 "use client";
 
-import BlurredIn from "@/components/BlurredIn";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import Image from "next/image";
 import Tags from "./Tags";
 import Video from "@/components/Video";
-import { motion } from "framer-motion";
+import Modal from "../Modal";
+import MouseoverModal from "@/components/MouseoverModal";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { useIsMobile } from "@/hooks/useWindowDimensions";
 
 export default function PortfolioItem({
   index,
@@ -15,29 +18,33 @@ export default function PortfolioItem({
   // manageModal,
   projectId,
   project_image,
+  project_video,
   tech_image,
   tags,
+  color,
   mousePosition,
 }) {
+  const [isModalActive, setIsModalActive] = useState(false);
+
   const { x, y } = mousePosition;
+  const router = useRouter();
+
+  const isMobile = useIsMobile();
+
   return (
     <Link
       style={{ clipPath: "polygon(0 0, 0 100%, 100% 100%, 100% 0)" }}
       href={`/project/${projectId}`}
-      // onMouseEnter={(e) => {
-      //   manageModal(true, index, e.clientX, e.clientY);
-      // }}
-      // onMouseLeave={(e) => {
-      //   manageModal(false, index, e.clientX, e.clientY);
-      // }}
+      onMouseEnter={() => setIsModalActive(true)}
+      onMouseLeave={() => setIsModalActive(false)}
       className={cn(
         "w-full",
         "border",
         "border-t-neutral-400",
         "transition-all",
         "duration-500",
-        "group",
-        "hover:opacity-50"
+        "group"
+        // "hover:opacity-50"
       )}
     >
       <div className={"relative"}>
@@ -64,7 +71,7 @@ export default function PortfolioItem({
           >
             {title}
           </h2>
-          <div></div>
+
           <div
             className={cn(
               "transition-all",
@@ -84,31 +91,28 @@ export default function PortfolioItem({
               sizes={{}}
             />
           </div>
-          {/* <Tags data={tags} className={cn("")} /> */}
         </div>
         <Tags
           data={tags}
           className={cn("absolute bottom-2 left-16 flex-nowrap max-w-none")}
         />
       </div>
-      <motion.div
-        className={cn(
-          "h-[30vw]",
-          "w-[25vw]",
-          "fixed",
-          "top-0",
-          "rounded-[1.5vw]",
-          "overflow-hidden"
-        )}
-        style={{ x, y }}
+
+      <Modal
+        showWhileHovering
+        style={isMobile ? { x: 180, y: 655 } : { x, y }}
+        isActive={isModalActive}
+        imageUrl={project_image}
+        // onClick={() => router.push(`/project/${video_key}`)}
+        // className={cn({ " right-3": isMobile })}
       >
-        <Image
-          className="object-cover w-full"
-          src={`/images/${project_image}`}
-          alt="image"
-          fill
-        />
-      </motion.div>
+        <div
+          className={cn("size-full flex items-center justify-center")}
+          style={{ backgroundColor: color }}
+        >
+          <Video src={`/videos/${project_video}`} muted loop autoPlay />
+        </div>
+      </Modal>
     </Link>
   );
 }
