@@ -1,8 +1,9 @@
 import {
   Purple_Purse as FontPP,
   Cedarville_Cursive as FontCursive,
-  Monsieur_La_Doulaise as FontMono,
+  // Monsieur_La_Doulaise as FontMono,
   Inter as FontInter,
+  Syne_Mono as FontMono,
 } from "next/font/google";
 
 export const fontPP = FontPP({
@@ -23,11 +24,11 @@ export const fontInter = FontInter({
   variable: "--font-cursive",
 });
 
-// export const fontMono = FontMono({
-//   weight: ["400"],
-//   subsets: ["latin"],
-//   variable: "--font-mono",
-// });
+export const fontMono = FontMono({
+  weight: ["400"],
+  subsets: ["latin"],
+  variable: "--font-mono",
+});
 
 // const fontMeueMontreal = {
 //   src: "../public/fonts/NeueMontreal_Medium.otf",
