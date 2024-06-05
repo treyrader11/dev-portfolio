@@ -68,6 +68,7 @@ export default function Project({
         transition={{ duration: 0.6, animationDirection: "normal" }}
         onAnimationComplete={() => setIsAnimating(false)}
         style={{
+          // scrollSnapType: "y mandatory",
           transition: "transform 0.6s",
           backgroundImage: `url(/shots/${project_image})`,
           backgroundPosition: "center",

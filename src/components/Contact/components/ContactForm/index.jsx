@@ -125,7 +125,7 @@ export default function ContactForm() {
             <Socials rounded />
           </div>
 
-          <div className={cn("flex gap-2 flex-col")}>
+          <div className={cn("flex gap-2 flex-col ")}>
             <div
               className={cn(
                 "hover:translate-x-2",
@@ -142,8 +142,13 @@ export default function ContactForm() {
               <GridGlobe />
             </div>
 
-            <form action="" className={cn("flex flex-col gap-[1.2rem]")}>
-              <div className="flex gap-4">
+            <form
+              action=""
+              className={cn(
+                "flex z-[999] relative bg-transparent flex-col gap-[1.2rem]"
+              )}
+            >
+              <div className="flex gap-4 bg-transparent">
                 <Input type="text" placeholder="Your name" />
                 <Input type="email" placeholder="Email address" />
               </div>
