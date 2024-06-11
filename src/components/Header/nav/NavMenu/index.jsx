@@ -61,8 +61,6 @@ export default function NavMenu({
           }
         })}
         <div
-          // onMouseEnter={() => setSelectedIndicator(href)}
-          // onMouseLeave={() => setSelectedIndicator(pathname)}
           className={cn(
             "group",
             "flex-col",

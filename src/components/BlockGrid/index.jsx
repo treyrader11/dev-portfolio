@@ -1,6 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
+import { useCallback } from "react";
 import { useEffect, useRef, useState } from "react";
 
 export default function BlockGrid({ className }) {
@@ -18,11 +19,7 @@ export default function BlockGrid({ className }) {
     setNumRows(rows);
   }, []);
 
-  useEffect(() => {
-    createBlocks();
-  }, [numCols, numRows]);
-
-  const createBlocks = () => {
+  const createBlocks = useCallback(() => {
     const blockContainer = blockContainerRef.current;
     if (blockContainer) {
       blockContainer.innerHTML = "";
@@ -35,44 +32,51 @@ export default function BlockGrid({ className }) {
         blockContainer.appendChild(block);
       }
     }
-  };
+  }, [numCols, numRows, highlightRandomNeighbors]);
 
-  const highlightRandomNeighbors = (event) => {
-    const block = event.target;
-    const index = parseInt(block.dataset.index);
-    const neighbors = [
-      index - 1,
-      index + 1,
-      index - numCols,
-      index + numCols,
-      index - numCols - 1,
-      index - numCols + 1,
-      index + numCols - 1,
-      index + numCols + 1,
-    ].filter(
-      (i) =>
-        i >= 0 &&
-        i < numCols * numRows &&
-        Math.abs((i % numCols) - (index % numCols)) <= 1
-    );
+  const highlightRandomNeighbors = useCallback(
+    (event) => {
+      const block = event.target;
+      const index = parseInt(block.dataset.index);
+      const neighbors = [
+        index - 1,
+        index + 1,
+        index - numCols,
+        index + numCols,
+        index - numCols - 1,
+        index - numCols + 1,
+        index + numCols - 1,
+        index + numCols + 1,
+      ].filter(
+        (i) =>
+          i >= 0 &&
+          i < numCols * numRows &&
+          Math.abs((i % numCols) - (index % numCols)) <= 1
+      );
 
-    block.classList.add("highlight");
-    setTimeout(() => {
-      block.classList.remove("highlight");
-    }, 500);
+      block.classList.add("highlight");
+      setTimeout(() => {
+        block.classList.remove("highlight");
+      }, 500);
 
-    shuffleArray(neighbors)
-      .slice(0, 1)
-      .forEach((nIndex) => {
-        const neighbor = blockContainerRef.current.children[nIndex];
-        if (neighbor) {
-          neighbor.classList.add("highlight");
-          setTimeout(() => {
-            neighbor.classList.remove("highlight");
-          }, 500);
-        }
-      });
-  };
+      shuffleArray(neighbors)
+        .slice(0, 1)
+        .forEach((nIndex) => {
+          const neighbor = blockContainerRef.current.children[nIndex];
+          if (neighbor) {
+            neighbor.classList.add("highlight");
+            setTimeout(() => {
+              neighbor.classList.remove("highlight");
+            }, 500);
+          }
+        });
+    },
+    [numCols, numRows]
+  );
+
+  useEffect(() => {
+    createBlocks();
+  }, [numCols, numRows, createBlocks, highlightRandomNeighbors]);
 
   const shuffleArray = (array) => {
     for (let i = array.length - 1; i > 0; i--) {

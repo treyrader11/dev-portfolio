@@ -156,7 +156,7 @@ export default function Portfolio({ repositories }) {
     } else {
       setIsInView(false);
     }
-  }, scrollYProgress.prev);
+  }, [scrollYProgress.prev]);
 
   useMotionValueEvent(scrollY, "change", (latest) => {
     setIsInView(latest > 200);
