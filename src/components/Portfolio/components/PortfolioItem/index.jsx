@@ -50,16 +50,18 @@ export default function PortfolioItem({
     //     // "hover:opacity-50"
     //   )}
     // >
-    <div
-      style={{ clipPath: "polygon(0 0, 0 100%, 100% 100%, 100% 0)" }}
+    <li
+      style={{ clipPath: "polygon(0 0, 0 100%, 100% 100%, 100% 0)" }} // clips modal
       onMouseEnter={() => setIsModalActive(true)}
       onMouseLeave={() => setIsModalActive(false)}
       className={cn(
         "w-full",
-        "border",
-        "border-t-neutral-400",
-        "transition-all",
-        "duration-500",
+        "border-b",
+        "py-2",
+        // "divide-neutral-400",
+        // "divide-y",
+        // "transition-all",
+        // "duration-500",
         "group"
         // "hover:opacity-50"
       )}
@@ -133,6 +135,6 @@ export default function PortfolioItem({
           </div>
         </Modal>
       </Link>
-    </div>
+    </li>
   );
 }

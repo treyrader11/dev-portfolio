@@ -8,6 +8,9 @@ import { usePathname } from "next/navigation";
 import { useState } from "react";
 import LinkDecorator from "@/components/LinkDecorator";
 import { JumpingIcon } from "@/components/Hero";
+import { userData } from "@/lib/data";
+
+const { resumeUrl } = userData;
 
 export default function NavMenu({
   handleNavMenu,
@@ -28,7 +31,7 @@ export default function NavMenu({
         className
       )}
     >
-      <div className="hidden sm:flex">
+      <div className="hidden sm:flex md">
         {routes.map(({ label, href }) => {
           if (label !== "Home") {
             return (
@@ -45,7 +48,7 @@ export default function NavMenu({
                   "p-[15px]"
                 )}
               >
-                <Magnetic key={href}>
+                <Magnetic>
                   <Link href={href}>
                     {label}
                     <LinkDecorator isActive={selectedIndicator == href} />
@@ -57,6 +60,26 @@ export default function NavMenu({
             return;
           }
         })}
+        <div
+          // onMouseEnter={() => setSelectedIndicator(href)}
+          // onMouseLeave={() => setSelectedIndicator(pathname)}
+          className={cn(
+            "group",
+            "flex-col",
+            "relative",
+            "z-[1]",
+            "p-[15px]",
+            "hidden",
+            "sm:flex"
+          )}
+        >
+          <Magnetic>
+            <a href={resumeUrl} targer="_blank">
+              Resume
+              <LinkDecorator isActive={selectedIndicator == "resume"} />
+            </a>
+          </Magnetic>
+        </div>
       </div>
       <Magnetic>
         <div
