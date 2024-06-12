@@ -3,8 +3,6 @@
 import { cn } from "@/lib/utils";
 import Input from "@/components/Input";
 import Rounded from "@/components/Rounded";
-import Magnetic from "@/components/Magnetic";
-import { userData } from "@/lib/data";
 import { VscSend } from "react-icons/vsc";
 import { useRef, forwardRef, useState } from "react";
 import { FaRegEnvelope } from "react-icons/fa";
@@ -56,6 +54,7 @@ export default function ContactForm({ className }) {
     const data = await res.json();
 
     if (data.error) {
+      console.log('data.error', data.error)
       setErrorMessage("Hey, you are already subscribed!");
       setSuccessMessage(undefined);
       return;
@@ -246,8 +245,8 @@ const Submit = forwardRef(({ isActive, input }, ref) => {
 
         "flex",
         "justify-center",
-
         "items-center",
+
         "w-full",
         "mx-auto",
         "py-6"
@@ -257,10 +256,8 @@ const Submit = forwardRef(({ isActive, input }, ref) => {
     >
       <span
         className={cn(
-          // "default",
           "relative",
           "z-[4]",
-
           //my styles
           "flex",
           "items-center",
@@ -274,7 +271,7 @@ const Submit = forwardRef(({ isActive, input }, ref) => {
       <span
         className={cn(
           // success determines animation/transform
-          "success", 
+          "success",
           "text-emerald-500",
           "z-0",
           "absolute",
@@ -286,13 +283,11 @@ const Submit = forwardRef(({ isActive, input }, ref) => {
           "items-center",
           // "[transform:translateX(-3px)_translateZ(0)]",
           "opacity-0",
-          // "text-xl",
           { "opacity-100 [transform:translateX(-3px)_translateZ(0)]": isActive }
         )}
       >
         <svg
           // This is the check mark
-          // style={{ strokeDasharray: "14px", strokeDashoffset: "14px" }}
           strokeLinecap="round"
           strokeLinejoin="round"
           strokeDasharray={14}
@@ -303,11 +298,6 @@ const Submit = forwardRef(({ isActive, input }, ref) => {
             "w-6",
             "stroke-emerald-500",
             "pointer-events-none"
-            // "absolute",
-            // // "opacity-0",
-            // "inset-x-0",
-            // "mx-auto",
-            // "ml-10",
             // { " opacity-100": isActive }
           )}
           viewBox="0 0 16 16"
@@ -316,32 +306,10 @@ const Submit = forwardRef(({ isActive, input }, ref) => {
         </svg>
         Sent
       </span>
-
-      {/* Not sure what .trails is */}
-      {/* <svg
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeDasharray={14}
-        strokeDashoffset={14}
-        className={cn(
-          "trails",
-          "inline-block",
-          "align-top",
-          "size-4",
-          "mt-1",
-          "mr-2",
-          "fill-none",
-          "stroke-2",
-          "stroke-purple-500",
-          ""
-        )}
-        viewBox="0 0 33 64"
-      >
-        <path d="M26,4 C28,13.3333333 29,22.6666667 29,32 C29,41.3333333 28,50.6666667 26,60"></path>
-        <path d="M6,4 C8,13.3333333 9,22.6666667 9,32 C9,41.3333333 8,50.6666667 6,60"></path>
-      </svg> */}
       <PaperPlane isActive={isActive} />
     </button>
     // </Rounded>
   );
 });
+
+Submit.displayName = "Submit";
