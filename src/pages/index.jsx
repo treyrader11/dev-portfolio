@@ -12,6 +12,7 @@ import { useScroll } from "framer-motion";
 import PositionProvider from "@/components/providers/PositionProvider";
 import References from "@/components/References";
 import BlockGrid from "@/components/BlockGrid";
+import ReferencesGSAP from "@/components/ReferencesGSAP";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -29,6 +30,9 @@ export default function Home() {
       const locomotiveScroll = new LocomotiveScroll();
     })();
   }, []);
+
+
+  
 
   return (
     <main className={cn(inter.className, "overflow-clip")}>
@@ -63,8 +67,9 @@ export default function Home() {
         </PositionProvider>
 
         <div className={cn("relative z-[3] min-h-screen")}>
-          <References />
-          <SlidingImages className="bg-white" />
+          {/* <References /> */}
+          <ReferencesGSAP />
+          {/* <SlidingImages className="bg-white" /> */}
         </div>
       </Inner>
     </main>

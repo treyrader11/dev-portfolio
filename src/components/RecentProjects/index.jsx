@@ -53,19 +53,16 @@ export default function RecentProjects({ className }) {
 
       <Scrollbar positions={projectPositions} />
 
-      {/* divide class not working */}
-      <ul className={cn("divide-red-500", "divide-y-4")}>
-        {recentProjects.map((project, i) => {
-          return (
-            <Project
-              position={projectPositions[i]}
-              key={`p_${i}`}
-              {...project}
-              progress={scrollYProgress}
-            />
-          );
-        })}
-      </ul>
+      {recentProjects.map((project, i) => {
+        return (
+          <Project
+            position={projectPositions[i]}
+            key={`p_${i}`}
+            {...project}
+            progress={scrollYProgress}
+          />
+        );
+      })}
 
       <div className={cn("py-20 sm:py-0")}>
         <Rounded

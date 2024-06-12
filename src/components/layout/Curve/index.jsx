@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import { useRouter } from "next/router";
 import { text, curve, translate } from "./anim";
 import { cn } from "@/lib/utils";
-import { routes } from "@/components/Header/Nav/routes";
+import { routes } from "@/components/Header/nav/routes";
 import { variants } from "@/lib/motion";
 
 export default function Curve({

@@ -176,39 +176,6 @@ export default function Hero({ scrollYProgress, className }) {
   );
 }
 
-const Card = ({ className, children }) => {
-  return (
-    <motion.div
-      initial={{
-        filter: "blur(4px)",
-      }}
-      whileInView={{
-        filter: "blur(0px)",
-      }}
-      transition={{
-        duration: 0.5,
-        ease: "easeInOut",
-        delay: 0.25,
-      }}
-      className={cn(
-        "relative",
-        "size-full",
-        "overflow-hidden",
-        "rounded-2xl",
-        "border",
-        "border-slate-800",
-        "bg-gradient-to-br",
-        "from-slate-950/50",
-        "to-slate-900/80",
-        "p-6",
-        className
-      )}
-    >
-      {children}
-    </motion.div>
-  );
-};
-
 export function JumpingIcon({ className, containerClassName }) {
   return (
     <div
