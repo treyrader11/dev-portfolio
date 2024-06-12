@@ -25,7 +25,7 @@ export default function RecentProjects({ className }) {
         "relative",
         "z-[2]",
         "mx-4",
-        "pb-[124vh]",
+        // "pb-[124vh]",
         "sm:pb-[160vh]",
         "flex",
         "flex-col",
@@ -43,8 +43,8 @@ export default function RecentProjects({ className }) {
           "top-0",
           "md:p-0", //makes menu button look good
           "pt-10",
-          "mt-[100%]", // puts title way at bottom
-          "min-h-screen",
+          // "mt-[100%]", // puts title way at bottom
+          "min-h-[50vh]",
           "font-pp-acma"
         )}
         title="Recent projects."

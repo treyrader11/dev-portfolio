@@ -19,7 +19,6 @@ const inter = Inter({ subsets: ["latin"] });
 export default function Home() {
   const container = useRef();
 
-
   //pass in for section transitions
   const { scrollYProgress } = useScroll({
     target: container,
@@ -33,25 +32,27 @@ export default function Home() {
     })();
   }, []);
 
-
-  
-
   return (
     <main className={cn(inter.className, "overflow-clip")}>
       <Inner ref={container} backgroundColor="#934E00">
         {/* <BlockGrid className="fixed inset-0"  /> */}
         <Hero
           // scrollYProgress={scrollYProgress}
-          className="sticky top-0 min-h-screen bg-dark"
+
+          className={cn(
+            // "sticky",
+            //  "top-0",
+            "min-h-screen bg-dark"
+          )}
         />
 
         <Description
           // scrollYProgress={scrollYProgress}
           className={cn(
-            "sticky",
-            "top-0",
-            "min-h-[170vh]",
-            "pt-[20vh]",
+            // "sticky",
+            // "top-0",
+            // "min-h-[170vh]",
+            // "pt-[20vh]",
             "bg-white"
           )}
         />
@@ -68,11 +69,17 @@ export default function Home() {
           />
         </PositionProvider>
 
-        <div className={cn("relative z-[3] min-h-screen",)}>
+        <div className={cn("relative", "z-[3]",
+        //  "min-h-screen"
+         )}>
           {/* <References /> */}
-          <div className="sticky top-0">
-          <ReferencesGSAP />
-
+          <div
+            className={cn()
+            // "sticky",
+            // "top-0"
+            }
+          >
+            <ReferencesGSAP />
           </div>
           {/* <SlidingImages className="bg-white" /> */}
         </div>
@@ -80,5 +87,3 @@ export default function Home() {
     </main>
   );
 }
-
-

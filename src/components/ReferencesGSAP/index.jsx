@@ -133,11 +133,16 @@ export default function ReferencesGSAP({ className }) {
     return (
       <section
         ref={sliderRef}
-        className={cn("slider", "w-full", "cursor-grab", className)}
+        className={cn("slider", "w-full", "cursor-grab", "bg-white", className)}
       >
         <div
           ref={wrapperRef}
-          className={cn("slider-wrapper", "whitespace-nowrap")}
+          className={cn(
+            "slider-wrapper",
+            "whitespace-nowrap",
+            "sticky",
+            "top-0"
+          )}
         >
           {references.map((ref, i) => {
             return (
@@ -201,13 +206,12 @@ const Card = forwardRef(
       // </div>
       <div
         ref={ref}
-        // onClick={() => setSelected(position)}
         onClick={onClick}
         className={cn(
           "inline-block",
           "w-[90vw]",
           "p-[3vw]",
-          " border",
+          "border",
           "border-4",
           "border-slate-100",
           "bg-dark",
@@ -222,7 +226,9 @@ const Card = forwardRef(
             // "w-full",
             "h-[450px]",
             "lg:h-[500px]",
-            "text-white"
+            "text-white",
+            "mx-auto",
+            "mx-6"
           )}
         >
           <ProfilePicture
@@ -237,20 +243,19 @@ const Card = forwardRef(
           />
           <p
             className={cn(
-              "my-8 text-lg text-center italic font-light lg:text-xl"
+              "my-8",
+              "text-lg",
+              "text-center",
+              "whitespace-pre-wrap",
+              "italic",
+              "font-light",
+              "lg:text-xl"
             )}
           >
             &quot;{desc}&quot;
           </p>
           <div>
-            <h3
-              className={cn(
-                "block",
-                "text-xl",
-                "font-pp-acma",
-                "text-purple-500"
-              )}
-            >
+            <h3 className={cn("text-xl", "font-pp-acma", "text-purple-500")}>
               {name}
             </h3>
             <p className="block text-sm">{title}</p>
