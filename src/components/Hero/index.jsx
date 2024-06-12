@@ -8,6 +8,8 @@ import { slideUp } from "./anim";
 import Image from "next/image";
 import BlurredIn from "../BlurredIn";
 import FlipWords from "../FlipWords";
+import ViewResume from "../ViewResume";
+
 // import BlockGrid from "../BlockGrid";
 
 const phrase =
@@ -22,7 +24,10 @@ export default function Hero({ scrollYProgress, className }) {
   const { x, y } = useMousePosition();
   const size = isHovered ? 400 : 40;
   const hero = useRef(null);
-  const isInView = useInView(hero);
+  const resume = useRef(null);
+
+  const isHeroInView = useInView(hero);
+  const isResumeInView = useInView(resume);
 
   const scale = useTransform(scrollYProgress, [0, 1], [1, 0.8]);
   const rotate = useTransform(scrollYProgress, [0, 1], [0, -5]);
@@ -41,7 +46,7 @@ export default function Hero({ scrollYProgress, className }) {
       )}
     >
       {/* cursor mask */}
-      <motion.div
+      {/* <motion.div
         className={cn(
           "size-full",
           "flex",
@@ -71,7 +76,7 @@ export default function Hero({ scrollYProgress, className }) {
           <span className="text-purple-400"> 7 years</span> and making good shit
           only if the paycheck is equally good.
         </p>
-      </motion.div>
+      </motion.div> */}
 
       <div
         // style={{ position: "absolute", zIndex: "1000" }}
@@ -85,42 +90,60 @@ export default function Hero({ scrollYProgress, className }) {
           "md:leading-[66px]"
         )}
       >
-        <BlurredIn className={cn("w-[1000px] p-10 mt-[20%]")}>
-          {phrase.split(" ").map((word, i) => {
-            const isTargetedWord = targetedWords.includes(word.toLowerCase());
+        <BlurredIn
+          className={cn(
+            "w-[1000px]",
+            "p-10",
+            "mt-[20%]",
+            // "relative",
+            "flex",
+            "flex-col",
+            "items-center"
+          )}
+        >
+          <div>
+            {phrase.split(" ").map((word, i) => {
+              const isTargetedWord = targetedWords.includes(word.toLowerCase());
 
-            return (
-              <motion.span
-                variants={slideUp}
-                initial={{ opacity: 0, y: 10, filter: "blur(8px)" }} //added as experiemnt not working yet
-                custom={i}
-                // animate={!isLoading ? (isInView ? "open" : "closed") : ""}
-                animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                key={i}
-                className={cn("mr-3 inline-flex text-light-400", {
-                  "text-purple-400 font-pp-acma": isTargetedWord,
-                })}
-              >
-                {isTargetedWord
-                  ? word.split("").map((letter, i) => (
-                      <motion.span
-                        key={word + i}
-                        initial={{ opacity: 0, y: 10, filter: "blur(8px)" }}
-                        animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                        transition={{
-                          delay: i * 0.08,
-                          duration: 0.4,
-                        }}
-                        className="inline-block"
-                      >
-                        {letter}
-                      </motion.span>
-                    ))
-                  : word}
-              </motion.span>
-              // <FlipWords words={phrase} />
-            );
-          })}
+              return (
+                <motion.span
+                  variants={slideUp}
+                  initial={{ opacity: 0, y: 10, filter: "blur(8px)" }} //added as experiemnt not working yet
+                  custom={i}
+                  // animate={!isLoading ? (isInView ? "open" : "closed") : ""}
+                  animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                  key={i}
+                  className={cn("mr-3 inline-flex text-light-400", {
+                    "text-purple-400 font-pp-acma": isTargetedWord,
+                  })}
+                >
+                  {isTargetedWord
+                    ? word.split("").map((letter, i) => (
+                        <motion.span
+                          key={word + i}
+                          initial={{ opacity: 0, y: 10, filter: "blur(8px)" }}
+                          animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                          transition={{
+                            delay: i * 0.08,
+                            duration: 0.4,
+                          }}
+                          className="inline-block"
+                        >
+                          {letter}
+                        </motion.span>
+                      ))
+                    : word}
+                </motion.span>
+                // <FlipWords words={phrase} />
+              );
+            })}
+          </div>
+
+          <ViewResume
+            ref={resume}
+            isActive={isResumeInView}
+            className={cn("-mb-5")}
+          />
         </BlurredIn>
 
         <div

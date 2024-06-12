@@ -48,6 +48,9 @@ module.exports = {
         "slide-up": "slide-up 0.5s ease-out",
         dash: "dash 1.5s ease-in-out infinite",
         "rotate-gradient": "1.3s infinite ease-in-out",
+        "back-n-forth": "back-n-forth 0.5s ease-in-out infinite alternate",
+        // "pause": "animation-play-state:paused",
+        // "running": "animation-play-state:running"
       },
       keyframes: {
         "slide-left": {
@@ -90,6 +93,9 @@ module.exports = {
             "stroke-dasharray": "89, 200",
             "stroke-dashoffset": "-124px",
           },
+        },
+        "back-n-forth": {
+          to: { transform: "translateX(-2.5px))" },
         },
       },
     },

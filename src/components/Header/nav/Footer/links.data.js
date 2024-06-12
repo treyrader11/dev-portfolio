@@ -1,4 +1,4 @@
-const { userData } = require("@/lib/data");
+import { userData } from "@/lib/data";
 
 const { socialLinks, resumeUrl } = userData;
 

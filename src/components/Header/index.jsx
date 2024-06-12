@@ -103,13 +103,14 @@ export default function Header() {
             "p-[35px]",
             "justify-between",
             "items-center",
-            "w-full"
+            "w-full",
+            // "relative"
           )}
         >
           <ProfilePicture
             isMagnetic
             src={`/images/portraits/headshot.png`}
-            className="size-[100px]"
+            className="size-20"
           />
 
           <Brand
