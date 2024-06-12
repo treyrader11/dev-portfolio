@@ -49,8 +49,8 @@ module.exports = {
         dash: "dash 1.5s ease-in-out infinite",
         "rotate-gradient": "1.3s infinite ease-in-out",
         "back-n-forth": "back-n-forth 0.5s ease-in-out infinite alternate",
-        // "pause": "animation-play-state:paused",
-        // "running": "animation-play-state:running"
+        "fade-in-3": "fade-in 3s ease-in-out forwards",
+        "fade-bottom": "fade-bottom 3s ease-in-out forwards",
       },
       keyframes: {
         "slide-left": {
@@ -96,6 +96,30 @@ module.exports = {
         },
         "back-n-forth": {
           to: { transform: "translateX(-2.5px))" },
+        },
+        "fade-in-3": {
+          "0%": {
+            opacity: "0%",
+          },
+          "75%": {
+            opacity: "0%",
+          },
+          "100%": {
+            opacity: "100%",
+          },
+        },
+        "fade-bottom": {
+          "0%": {
+            transform: "translateY(-100%)",
+            opacity: "0%",
+          },
+          "30%": {
+            transform: "translateY(0%)",
+            opacity: "100%",
+          },
+          "100%": {
+            opacity: "100%",
+          },
         },
       },
     },

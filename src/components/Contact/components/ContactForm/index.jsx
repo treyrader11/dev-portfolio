@@ -1,193 +1,347 @@
+"use client";
+
 import { cn } from "@/lib/utils";
-import Address from "../../../Address";
 import Input from "@/components/Input";
 import Rounded from "@/components/Rounded";
 import Magnetic from "@/components/Magnetic";
 import { userData } from "@/lib/data";
 import { VscSend } from "react-icons/vsc";
-import { VscCoffee } from "react-icons/vsc";
-import Socials from "@/components/Socials";
-import BlurredIn from "@/components/BlurredIn";
-import GridGlobe from "@/components/GridGlobe";
-import { useScroll, useTransform } from "framer-motion";
-import { useRef } from "react";
-import PageCurve from "@/components/PageCurve";
-import Stars from "@/components/Stars";
+import { useRef, forwardRef, useState } from "react";
+import { FaRegEnvelope } from "react-icons/fa";
+import { FaRegCircleCheck } from "react-icons/fa6";
+import { IoCloseCircleOutline } from "react-icons/io5";
+import gsap from "gsap";
+import PaperPlane from "../PaperPlane";
+import { getPlaneKeyframes } from "../../getPlaneKeyframes";
+import { getTrailsKeyframes } from "../../getTrailsKeyframes";
 
-export default function ContactForm() {
-  const container = useRef(null);
+export default function ContactForm({ className }) {
+  const [input, setInput] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+  const [isActive, setIsActive] = useState(false);
+  // const [isActive, setIsActive] = useState(true);
+  const buttonRef = useRef(null);
+  const { to, fromTo, set } = gsap;
 
-  const { scrollYProgress } = useScroll({
-    target: container,
-    offset: ["start end", "end start"],
-  });
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-  const height = useTransform(scrollYProgress, [0, 0.9], [50, 0]);
+    const email = input;
+    const button = buttonRef.current;
+
+    if (!email || !button) return;
+
+    if (!isActive) {
+      setIsActive(true);
+
+      to(button, {
+        keyframes: getPlaneKeyframes(
+          set,
+          fromTo,
+          button,
+          setIsActive,
+          setInput
+        ),
+      });
+
+      to(button, { keyframes: getTrailsKeyframes(button) });
+    }
+
+    const res = await fetch("/api/addSubscription", {
+      body: JSON.stringify({ email }),
+      headers: { "Content-Type": "application/json" },
+      method: "POST",
+    });
+    const data = await res.json();
+
+    if (data.error) {
+      setErrorMessage("Hey, you are already subscribed!");
+      setSuccessMessage(undefined);
+      return;
+    }
+
+    setSuccessMessage(data.res);
+    setErrorMessage("");
+  };
+
+  const dismissMessages = () => {
+    setSuccessMessage(undefined);
+    setErrorMessage("");
+  };
+
   return (
-    <section className="bg-dark">
-      <BlurredIn
-        once
+    <>
+      <form
+        onSubmit={handleSubmit}
+        action=""
         className={cn(
+          "newsletter-form",
+          "animate-fade-in-3",
+          "flex",
+          "z-[999]",
           "relative",
-          "rounded-md",
-          "shadow-md",
-          "p-4",
-          "md:p-10",
-          "lg:p-20",
-          "max-w-6xl",
-          "mx-auto",
-          "mb-20",
-          "-mt-4"
+          "bg-transparent",
+          "flex-col",
+          "gap-[1.2rem]",
+          className
         )}
       >
-        <Stars className="opacity-60 z-[-1]" backgroundColor="#cd9f79" />
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-          <div className="md:ml-4">
-            <header className="pt-10">
-              <h1
-                className={cn(
-                  "flex",
-                  "items-center",
-                  "text-2xl",
-                  "font-semibold",
-                  "gap-x-2",
-                  "text-gray-50",
-                  "font-pp-acma"
-                )}
-              >
-                Let&apos;s talk. <VscCoffee className="text-28" />
-              </h1>
-              <p className="mt-2 text-base font-light text-gray-200">
-                Please leave a detailed message and I&apos;ll likely get back to
-                you in the morning. Thanks!
-              </p>
-            </header>
-            <div className="inline-flex flex-col my-10">
-              <Magnetic>
-                <div
-                  className={cn(
-                    "flex",
-                    "flex-row",
-                    "items-center",
-                    "space-x-6",
-                    "rounded-md",
-                    "p-4"
-                  )}
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="16"
-                    height="16"
-                    fill="currentColor"
-                    className="text-purple-500 size-4 bi bi-telephone-fill"
-                    viewBox="0 0 16 16"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M1.885.511a1.745 1.745 0 0 1 2.61.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.678.678 0 0 0 .178.643l2.457 2.457a.678.678 0 0 0 .644.178l2.189-.547a1.745 1.745 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.634 18.634 0 0 1-7.01-4.42 18.634 18.634 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877L1.885.511z"
-                    />
-                  </svg>
-                  <p className="text-sm font-light text-gray-50">
-                    {userData.phone}
-                  </p>
-                </div>
-              </Magnetic>
-              <Magnetic>
-                <a
-                  href={`mailto:${userData.email}`}
-                  className={cn(
-                    "flex",
-                    "flex-row",
-                    "items-center",
-                    "space-x-6",
-                    "rounded-md",
-                    "p-4"
-                  )}
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="16"
-                    height="16"
-                    fill="currentColor"
-                    className="text-purple-500 size-4 bi bi-envelope-fill"
-                    viewBox="0 0 16 16"
-                  >
-                    <path d="M.05 3.555A2 2 0 0 1 2 2h12a2 2 0 0 1 1.95 1.555L8 8.414.05 3.555zM0 4.697v7.104l5.803-3.558L0 4.697zM6.761 8.83l-6.57 4.027A2 2 0 0 0 2 14h12a2 2 0 0 0 1.808-1.144l-6.57-4.027L8 9.586l-1.239-.757zm3.436-.586L16 11.801V4.697l-5.803 3.546z" />
-                  </svg>
+        <div className="flex gap-4 bg-transparent">
+          <Input
+            // value={input}
+            // onChange={(e) => setInput(e.target.value)}
+            type="text"
+            placeholder="Your name"
+          />
+          {/* <FaRegEnvelope
+            className={cn(
+              "hidden",
+              "sm:inline",
+              "size-6",
+              "text-[#4B4C52]",
+              "group-focus-within:text-white",
+              "group-hover:text-white",
+              "transition-colors",
+              "duration-300"
+            )}
+          /> */}
 
-                  <p className="text-sm font-light text-gray-50">
-                    {userData.email}
-                  </p>
-                </a>
-              </Magnetic>
-              <Address />
-            </div>
-            <Socials rounded />
-          </div>
+          <Input
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            type="email"
+            placeholder="Email address"
+          />
+        </div>
+        <Input
+          // value={input}
+          // onChange={(e) => setInput(e.target.value)}
+          type="text"
+          placeholder="Subject"
+        />
+        <textarea
+          name=""
+          id=""
+          cols="30"
+          rows="6"
+          placeholder="Message"
+          className={cn(
+            "w-full",
+            "py-4",
+            "px-6",
+            "rounded-[30px]",
+            "outline-none",
+            "border-none",
+            "resize-none",
+            "focus:outline-purple-400",
+            "outline-[1px]",
+            "transition-all",
+            "duration-300",
+            "ease-in-out",
+            "bg-slate-100",
+            "text-black"
+          )}
+        />
 
-          <div className={cn("flex gap-2 flex-col ")}>
+        <Submit ref={buttonRef} input={input} isActive={isActive} />
+        {/* Old button below */}
+        {/* <Rounded backgroundColor="#8550C2">
+        <p className="flex relative z-[10] items-center gap-2">
+          Send <VscSend />
+        </p>
+      </Rounded> */}
+      </form>
+
+      <div className="relative">
+        {(successMessage || errorMessage) && (
+          <div
+            className={cn(
+              "flex",
+              "items-start",
+              "space-x-2",
+              "bg-[#0A0E12]",
+              // "shadow-outline-gray",
+              "shadow-2xl",
+              "text-white",
+              "rounded-[9px]",
+              "py-4",
+              "px-6",
+              "animate-fade-bottom",
+              "absolute"
+            )}
+          >
             <div
               className={cn(
-                "hover:translate-x-2",
-                "transition",
-                "duration-200",
-                "relative",
-                "md:h-full",
-                "min-h-48",
+                "size-[66px]",
+                "bg-[#1B2926]",
                 "flex",
-                "flex-col",
-                "overflow-hidden"
+                "items-center",
+                "justify-center",
+                "rounded-full border",
+                "border-[#273130]",
+                "flex-shrink-0"
               )}
             >
-              <GridGlobe />
+              <FaRegCircleCheck className="size-4 text-[#81A89A]" />
             </div>
-
-            <form
-              action=""
-              className={cn(
-                "flex z-[999] relative bg-transparent flex-col gap-[1.2rem]"
-              )}
-            >
-              <div className="flex gap-4 bg-transparent">
-                <Input type="text" placeholder="Your name" />
-                <Input type="email" placeholder="Email address" />
-              </div>
-              <Input type="text" placeholder="Subject" />
-              <textarea
-                name=""
-                id=""
-                cols="30"
-                rows="6"
-                placeholder="Message"
-                className={cn(
-                  "w-full",
-                  "py-4",
-                  "px-6",
-                  "rounded-[30px]",
-                  "outline-none",
-                  "border-none",
-                  "resize-none",
-                  "focus:outline-purple-400",
-                  "outline-[1px]",
-                  "transition-all",
-                  "duration-300",
-                  "ease-in-out",
-                  "bg-slate-100",
-                  "text-black"
-                )}
-              />
-
-              <Rounded backgroundColor="#8550C2">
-                <p className="flex relative z-[10] items-center gap-2">
-                  Send <VscSend />
+            <div className="text-xs sm:text-sm text-[#4B4C52]">
+              {successMessage ? (
+                <p>
+                  We&apos;ve added{" "}
+                  <span className="text-[#ADB0B1]">
+                    {successMessage.email_address}
+                  </span>{" "}
+                  to our waitlist. We&apos;ll let you know when we launch!
                 </p>
-              </Rounded>
-            </form>
+              ) : (
+                <p>
+                  You are already added to our waitlist. We&apos;ll let you know
+                  when we launch!
+                </p>
+              )}
+            </div>
+            <IoCloseCircleOutline
+              className={cn(
+                "size-5",
+                "cursor-pointer",
+                "flex-shrink-0",
+                "text-[#4A4B55]"
+              )}
+              onClick={dismissMessages}
+            />
           </div>
-        </div>
-      </BlurredIn>
-      <div className={cn("bg-slate-100 h-[20vh]")} />
-      {/* <PageCurve height={height} /> */}
-    </section>
+        )}
+      </div>
+    </>
   );
 }
+
+const Submit = forwardRef(({ isActive, input }, ref) => {
+  return (
+    // <Rounded
+    //   // ref={ref}
+    //   backgroundColor="#8550C2"
+    // >
+    <button
+      style={{ WebkitTapHighlightColor: "transparent" }}
+      ref={ref}
+      className={cn(
+        { active: isActive },
+        "disabled:!bg-[#17141F]",
+        "disabled:grayscale-[65%]",
+        "disabled:opacity-50",
+        "disabled:cursor-not-allowed",
+        "text-sm",
+        "md:text-base",
+        "relative",
+        "py-2",
+        "min-4-[100px]",
+        "text-center",
+        "text-white",
+        "rounded-full",
+        "[transform:translateZ(0)]",
+        "transition-[opacity,filter]",
+        "duration-[0.25s]",
+
+        "flex",
+        "justify-center",
+
+        "items-center",
+        "w-full",
+        "mx-auto",
+        "py-6"
+      )}
+      disabled={!input}
+      type="submit"
+    >
+      <span
+        className={cn(
+          // "default",
+          "relative",
+          "z-[4]",
+
+          //my styles
+          "flex",
+          "items-center",
+          "gap-2",
+          { "opacity-0": isActive }
+        )}
+      >
+        Send <VscSend />
+      </span>
+
+      <span
+        className={cn(
+          // success determines animation/transform
+          "success", 
+          "text-emerald-500",
+          "z-0",
+          "absolute",
+          "inset-x-0",
+          "top-2",
+          "-translate-x-3",
+          "flex",
+          "justify-normal",
+          "items-center",
+          // "[transform:translateX(-3px)_translateZ(0)]",
+          "opacity-0",
+          // "text-xl",
+          { "opacity-100 [transform:translateX(-3px)_translateZ(0)]": isActive }
+        )}
+      >
+        <svg
+          // This is the check mark
+          // style={{ strokeDasharray: "14px", strokeDashoffset: "14px" }}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeDasharray={14}
+          // strokeDashoffset={isActive ? 0 : 14}
+          className={cn(
+            // "trails",
+            "stroke-2",
+            "w-6",
+            "stroke-emerald-500",
+            "pointer-events-none"
+            // "absolute",
+            // // "opacity-0",
+            // "inset-x-0",
+            // "mx-auto",
+            // "ml-10",
+            // { " opacity-100": isActive }
+          )}
+          viewBox="0 0 16 16"
+        >
+          <polyline points="3.75 9 7 12 13 5" />
+        </svg>
+        Sent
+      </span>
+
+      {/* Not sure what .trails is */}
+      {/* <svg
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeDasharray={14}
+        strokeDashoffset={14}
+        className={cn(
+          "trails",
+          "inline-block",
+          "align-top",
+          "size-4",
+          "mt-1",
+          "mr-2",
+          "fill-none",
+          "stroke-2",
+          "stroke-purple-500",
+          ""
+        )}
+        viewBox="0 0 33 64"
+      >
+        <path d="M26,4 C28,13.3333333 29,22.6666667 29,32 C29,41.3333333 28,50.6666667 26,60"></path>
+        <path d="M6,4 C8,13.3333333 9,22.6666667 9,32 C9,41.3333333 8,50.6666667 6,60"></path>
+      </svg> */}
+      <PaperPlane isActive={isActive} />
+    </button>
+    // </Rounded>
+  );
+});
