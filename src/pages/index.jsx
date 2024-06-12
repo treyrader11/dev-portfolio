@@ -19,6 +19,8 @@ const inter = Inter({ subsets: ["latin"] });
 export default function Home() {
   const container = useRef();
 
+
+  //pass in for section transitions
   const { scrollYProgress } = useScroll({
     target: container,
     offset: ["start start", "end end"],
@@ -39,12 +41,12 @@ export default function Home() {
       <Inner ref={container} backgroundColor="#934E00">
         {/* <BlockGrid className="fixed inset-0"  /> */}
         <Hero
-          scrollYProgress={scrollYProgress}
+          // scrollYProgress={scrollYProgress}
           className="sticky top-0 min-h-screen bg-dark"
         />
 
         <Description
-          scrollYProgress={scrollYProgress}
+          // scrollYProgress={scrollYProgress}
           className={cn(
             "sticky",
             "top-0",
@@ -66,9 +68,12 @@ export default function Home() {
           />
         </PositionProvider>
 
-        <div className={cn("relative z-[3] min-h-screen")}>
+        <div className={cn("relative z-[3] min-h-screen",)}>
           {/* <References /> */}
+          <div className="sticky top-0">
           <ReferencesGSAP />
+
+          </div>
           {/* <SlidingImages className="bg-white" /> */}
         </div>
       </Inner>

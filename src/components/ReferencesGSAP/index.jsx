@@ -4,20 +4,12 @@ import { useEffect, useRef, useState, forwardRef } from "react";
 import { cn } from "@/lib/utils";
 import PageTitle from "../PageTitle";
 import { references } from "@/lib/data";
+import ProfilePicture from "../ProfilePicture";
 
 const lerp = (f0, f1, t) => (1 - t) * f0 + t * f1;
 const clamp = (val, min, max) => Math.max(min, Math.min(val, max));
 
-export default function ReferencesGSAP({
-  className,
-  //new
-  // sliderRef,
-  // wrapperRef,
-  // barRef,
-  // itemsRef,
-  // selected,
-  // setSelected,
-}) {
+export default function ReferencesGSAP({ className }) {
   const [selected, setSelected] = useState(0);
 
   const DraggableSlider = () => {
@@ -150,6 +142,7 @@ export default function ReferencesGSAP({
           {references.map((ref, i) => {
             return (
               <Card
+                onClick={() => setSelected(i)}
                 {...ref}
                 ref={(el) => (itemsRef.current[i] = el)}
                 key={i}
@@ -182,21 +175,90 @@ export default function ReferencesGSAP({
   return <DraggableSlider />;
 }
 
-const Card = forwardRef(({ image_url, desc, name, title, className }, ref) => {
-  return (
-    <div
-      ref={ref}
-      className={cn("inline-block", "w-[40vw]", "p-[3vw]", className)}
-    >
-      <figure className={cn("relative", "pb-[50%]", "overflow-hidden")}>
-        <img
-          src={image_url}
-          alt=""
-          className={cn("absolute w-full object-cover")}
-        />
-      </figure>
-    </div>
-  );
-});
+const Card = forwardRef(
+  ({ image_url, desc, name, title, className, onClick }, ref) => {
+    return (
+      // <div
+      //   ref={ref}
+      //   className={cn("inline-block", "w-[40vw]", "p-[3vw]", className)}
+      // >
+      // <figure
+      //   className={cn(
+      //     "relative",
+      //     "pb-[50%]",
+      //     "overflow-hidden",
+      //     "h-[450px]",
+      //     "lg:h-[500px]"
+      //   )}
+      // >
+
+      //   <ProfilePicture
+      //     isBordered
+      //     src={image_url}
+      //     className={cn("size-[100px]", "mx-auto", "mt-16", "border-secondary")}
+      //   />
+      // </figure>
+      // </div>
+      <div
+        ref={ref}
+        // onClick={() => setSelected(position)}
+        onClick={onClick}
+        className={cn(
+          "inline-block",
+          "w-[90vw]",
+          "p-[3vw]",
+          " border",
+          "border-4",
+          "border-slate-100",
+          "bg-dark",
+          className
+        )}
+      >
+        <figure
+          className={cn(
+            "relative",
+            "pb-[50%]",
+            "overflow-hidden",
+            // "w-full",
+            "h-[450px]",
+            "lg:h-[500px]",
+            "text-white"
+          )}
+        >
+          <ProfilePicture
+            isBordered
+            src={image_url}
+            className={cn(
+              "size-[100px]",
+              "mx-auto",
+              "mt-16",
+              "border-secondary"
+            )}
+          />
+          <p
+            className={cn(
+              "my-8 text-lg text-center italic font-light lg:text-xl"
+            )}
+          >
+            &quot;{desc}&quot;
+          </p>
+          <div>
+            <h3
+              className={cn(
+                "block",
+                "text-xl",
+                "font-pp-acma",
+                "text-purple-500"
+              )}
+            >
+              {name}
+            </h3>
+            <p className="block text-sm">{title}</p>
+          </div>
+        </figure>
+      </div>
+    );
+  }
+);
 
 Card.displayName = "Card";

@@ -17,12 +17,12 @@ export default function Description({ scrollYProgress, className }) {
   const isInView = useInView(description);
 
   // for section perspective
-  const scale = useTransform(scrollYProgress, [0, 1], [1, 0.8]);
-  const rotate = useTransform(scrollYProgress, [0, 1], [0, -5]);
+  // const scale = useTransform(scrollYProgress, [0, 1], [1, 0.8]);
+  // const rotate = useTransform(scrollYProgress, [0, 1], [0, -5]);
 
   return (
     <motion.section
-      style={{ scale, rotate }}
+      // style={{ scale, rotate }} // section perspective
       ref={description}
       className={cn("px-[200px] mt-[200px] flex justify-center", className)}
     >

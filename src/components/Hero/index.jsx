@@ -29,13 +29,14 @@ export default function Hero({ scrollYProgress, className }) {
   const isHeroInView = useInView(hero);
   const isResumeInView = useInView(resume);
 
-  const scale = useTransform(scrollYProgress, [0, 1], [1, 0.8]);
-  const rotate = useTransform(scrollYProgress, [0, 1], [0, -5]);
+  //for section transition
+  // const scale = useTransform(scrollYProgress, [0, 1], [1, 0.8]);
+  // const rotate = useTransform(scrollYProgress, [0, 1], [0, -5]);
 
   return (
     <motion.section
       ref={hero}
-      style={{ scale, rotate }}
+      // style={{ scale, rotate }}
       className={cn(
         "h-screen",
         "bg-transparent",
