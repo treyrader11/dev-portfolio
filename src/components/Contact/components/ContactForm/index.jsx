@@ -46,11 +46,12 @@ export default function ContactForm({ className }) {
 
   const onSubmit = async (e) => {
     e.preventDefault();
-    
+
     setState((prev) => ({
       ...prev,
       isLoading: true,
     }));
+
     try {
       if (!isActive) {
         setIsActive(true);
@@ -61,20 +62,21 @@ export default function ContactForm({ className }) {
             fromTo,
             button,
             setIsActive,
-            setInput
+            setState
           ),
         });
 
         to(button, { keyframes: getTrailsKeyframes(button) });
       }
-      const data = await sendContactForm(values);
+      // const data = await sendContactForm(values);
+      await sendContactForm(values);
 
-      if (data.error) {
-        console.log("data.error", data.error);
-        setErrorMessage("Hey, you are already subscribed!");
-        setSuccessMessage(undefined);
-        return;
-      }
+      // if (data.error) {
+      //   console.log("data.error", data.error);
+      //   setErrorMessage("Hey, you are already subscribed!");
+      //   setSuccessMessage(undefined);
+      //   return;
+      // }
       setSuccessMessage("message sent");
       setErrorMessage("");
       setTouched({});
@@ -93,17 +95,16 @@ export default function ContactForm({ className }) {
     }
   };
 
-
-  //news letter example
+  //newsletter example
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // const email = input;
-    const { email, message, subject, name } = state;
+    const email = input;
+    // const { email, message, subject, name } = state;
     const button = buttonRef.current;
 
-    // if (!email || !button) return;
-    if (!email || message || name || !button ) return;
+    if (!email || !button) return;
+    // if (!email || message || name || !button) return;
 
     if (!isActive) {
       setIsActive(true);
@@ -120,23 +121,14 @@ export default function ContactForm({ className }) {
 
       to(button, { keyframes: getTrailsKeyframes(button) });
     }
-
-    // await sendContactForm(values);
-    //   setTouched({});
-    //   setState(initState);
     console.log("email", email);
 
-    // const res = await fetch("/api/addSubscription", {
-    //   body: JSON.stringify({ email }),
-    //   headers: { "Content-Type": "application/json" },
-    //   method: "POST",
-    // });
-
-    const res = await fetch("/api/contact", {
+    const res = await fetch("/api/addSubscription", {
+      body: JSON.stringify({ email }),
+      headers: { "Content-Type": "application/json" },
       method: "POST",
-      body: JSON.stringify(data),
-      headers: { "Content-Type": "application/json", Accept: "application/json" },
-    })
+    });
+
     const data = await res.json();
 
     if (data.error) {
@@ -158,8 +150,8 @@ export default function ContactForm({ className }) {
   return (
     <>
       <form
-        // onSubmit={handleSubmit}
-        onSubmit={onSubmit}
+        onSubmit={handleSubmit}
+        // onSubmit={onSubmit}
         action=""
         className={cn(
           "newsletter-form",
@@ -183,28 +175,16 @@ export default function ContactForm({ className }) {
             onChange={handleChange}
             onBlur={onBlur}
           />
-          {/* <FaRegEnvelope
-            className={cn(
-              "hidden",
-              "sm:inline",
-              "size-6",
-              "text-[#4B4C52]",
-              "group-focus-within:text-white",
-              "group-hover:text-white",
-              "transition-colors",
-              "duration-300"
-            )}
-          /> */}
 
           <Input
             type="email"
             placeholder="Email address"
             name="email"
             // errorBorderColor="red.300"
-            value={values.email}
-            // value={input}
-            onChange={handleChange}
-            // onChange={(e) => setInput(e.target.value)}
+            // value={values.email}
+            value={input}
+            // onChange={handleChange}
+            onChange={(e) => setInput(e.target.value)}
             onBlur={onBlur}
           />
         </div>
@@ -252,7 +232,7 @@ export default function ContactForm({ className }) {
           }
           // onClick={onSubmit}
           ref={buttonRef}
-          // input={input}
+          input={input}
           isActive={isActive}
         />
       </form>
@@ -321,11 +301,6 @@ export default function ContactForm({ className }) {
 const Submit = forwardRef(
   ({ isActive, input, disabled, isLoading, onClick }, ref) => {
     return (
-      // <Rounded
-      //   // ref={ref}
-      //   backgroundColor="#8550C2"
-      // >
-      // <Magnetic>
       <button
         // onClick={onClick}
         style={{ WebkitTapHighlightColor: "transparent" }}
@@ -333,8 +308,8 @@ const Submit = forwardRef(
         className={cn(
           { active: isActive },
           disabled &&
-          cn("disabled:grayscale-[65%]", "disabled:cursor-not-allowed"),
-        
+            cn("disabled:grayscale-[65%]", "disabled:cursor-not-allowed"),
+
           "text-sm",
           "md:text-base",
           "relative",
@@ -356,7 +331,7 @@ const Submit = forwardRef(
           "py-6"
         )}
         // disabled={!input}
-        disabled={disabled}
+        // disabled={disabled}
         type="submit"
       >
         <span
@@ -409,8 +384,6 @@ const Submit = forwardRef(
         </span>
         <PaperPlane isActive={isActive} />
       </button>
-      // </Magnetic>
-      // </Rounded>
     );
   }
 );

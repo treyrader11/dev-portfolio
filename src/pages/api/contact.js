@@ -30,6 +30,7 @@ const handler = async (req, res) => {
       return res.status(400).send({ message: "Bad request" });
     }
 
+    console.log('data', data)
     try {
       await transporter.sendMail({
         ...mailOptions,
