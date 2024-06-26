@@ -111,6 +111,7 @@ export default function Header() {
             isMagnetic
             src={`/images/portraits/headshot.png`}
             className="size-20"
+            isBlob
           />
 
           <Brand

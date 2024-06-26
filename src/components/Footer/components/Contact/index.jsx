@@ -46,6 +46,7 @@ export default function Contact({ style, rotate }) {
             <ProfilePicture
               className="size-[9vw]"
               src={"/images/portraits/profile-coffee.png"}
+              isBlob
             />
             <h2 className="ml-[0.3em] tracking-tighter text-[9vw] md:text-[6vw]">
               Let&apos;s talk

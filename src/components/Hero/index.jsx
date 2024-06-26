@@ -140,11 +140,11 @@ export default function Hero({ scrollYProgress, className }) {
             })}
           </div>
 
-          <ViewResume
+          {/* <ViewResume
             ref={resume}
             isActive={isResumeInView}
             className={cn("-mb-5")}
-          />
+          /> */}
         </BlurredIn>
 
         <div

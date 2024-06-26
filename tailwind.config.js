@@ -43,6 +43,7 @@ module.exports = {
         full: "360deg",
       },
       animation: {
+        blob: "blob 4s ease-in-out infinte",
         "slide-left": "slide-left 1.3s ease-in-out",
         "octocat-wave": "octocat-wave 0.56s",
         "slide-up": "slide-up 0.5s ease-out",
@@ -53,6 +54,17 @@ module.exports = {
         "fade-bottom": "fade-bottom 3s ease-in-out forwards",
       },
       keyframes: {
+        blob: {
+          "0%, 100%": {
+            "border-radius": "60% 40% 30% 70% / 60% 30% 70% 40%",
+          },
+          "50%": {
+            "border-radius": "30% 60% 70% 40% / 50% 60% 30% 60%",
+          },
+          // "100%": {
+          //   "border-radius": "60% 40% 30% 70% / 60% 30% 70% 40%",
+          // },
+        },
         "slide-left": {
           from: { opacity: 0, transform: "translateX(-500px)" },
           to: { opacity: 1, transform: "translateX(0)" },

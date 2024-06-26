@@ -7,6 +7,7 @@ export default function ProfilePicture({
   className,
   isBordered = false,
   isMagnetic = false,
+  isBlob = false,
 }) {
   const containerProps = {
     className: cn(
@@ -28,11 +29,15 @@ export default function ProfilePicture({
     sizes: {},
   };
 
-  const content = isMagnetic ? (
+  const content = isBlob ? (
     <Magnetic>
-      <div {...containerProps}>
-        <Image alt="profile picture of Trey" {...imageProps} />
-      </div>
+      <Image
+        width={50}
+        height={50}
+        src={src}
+        className={cn("blob", "animate-blob", "size-[85px]", "object-cover")}
+        alt="profile picture of Trey"
+      />
     </Magnetic>
   ) : (
     <div {...containerProps}>
