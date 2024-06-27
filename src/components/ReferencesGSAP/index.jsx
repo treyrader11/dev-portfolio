@@ -141,7 +141,6 @@ export default function ReferencesGSAP({ className }) {
           "w-full",
           "cursor-grab",
           "bg-white",
-
           "grid",
           "items-center",
           "grid-cols-1",
@@ -161,11 +160,11 @@ export default function ReferencesGSAP({ className }) {
             title="References."
             className={cn("py-0 font-pp-acma text-[14vw]")}
           />
-          <SelectBtns
+          {/* <SelectBtns
             numTracks={references.length}
             setSelected={setSelected}
             selected={selected}
-          />
+          /> */}
         </div>
         <div
           ref={wrapperRef}

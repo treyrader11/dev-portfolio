@@ -343,6 +343,9 @@ body {
   src: url("../public/fonts/NeueMontreal_Medium.otf");
 }
 
+
+
+/* css way for profile pic blob */
 .blob {
   animation: animate-blob 4s ease-in-out infinite;
 }

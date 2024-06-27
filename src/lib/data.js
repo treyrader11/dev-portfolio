@@ -560,7 +560,7 @@ export const references = [
   },
   {
     image_url: "/images/references/janine.png",
-    desc: "Whether in the office or in the bed, homie is as thorough as it gets 🙄",
+    desc: "Placeholder text 🙄",
     name: "Janine Bonilla",
     title: "Marketing Specialist, Nasty",
     linkedIn: "https://www.linkedin.com/in/j9bonilla",

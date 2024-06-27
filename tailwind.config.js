@@ -54,7 +54,7 @@ module.exports = {
         "fade-bottom": "fade-bottom 3s ease-in-out forwards",
       },
       keyframes: {
-        blob: {
+        "blob": {
           "0%, 100%": {
             "border-radius": "60% 40% 30% 70% / 60% 30% 70% 40%",
           },
