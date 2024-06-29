@@ -17,8 +17,8 @@ export const userData = {
   name: "Trey Rader",
   designation: "Full-Stack Developer",
   avatarUrl: "/avatar.png",
-  email: "developertrey@gmail.com",
-  phone: "504-756-4538",
+  email: "trey@treyrader.dev",
+  phone: "504.756.4538",
   address: "New Orleans, Louisiana.",
   resumeUrl:
     "https://drive.google.com/file/d/1gKLk8XPCJCyjnEgEHS4AcKDPm5TDAjDS/view?usp=sharing",

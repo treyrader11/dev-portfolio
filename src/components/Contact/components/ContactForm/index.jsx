@@ -44,62 +44,64 @@ export default function ContactForm({ className }) {
       },
     }));
 
-  const onSubmit = async (e) => {
-    e.preventDefault();
+  // const onSubmit = async (e) => {
+  //   e.preventDefault();
 
-    setState((prev) => ({
-      ...prev,
-      isLoading: true,
-    }));
+  //   setState((prev) => ({
+  //     ...prev,
+  //     isLoading: true,
+  //   }));
 
-    try {
-      if (!isActive) {
-        setIsActive(true);
+  //   try {
+  //     if (!isActive) {
+  //       setIsActive(true);
 
-        to(button, {
-          keyframes: getPlaneKeyframes(
-            set,
-            fromTo,
-            button,
-            setIsActive,
-            setState
-          ),
-        });
+  //       to(button, {
+  //         keyframes: getPlaneKeyframes(
+  //           set,
+  //           fromTo,
+  //           button,
+  //           setIsActive,
+  //           setState
+  //         ),
+  //       });
 
-        to(button, { keyframes: getTrailsKeyframes(button) });
-      }
-      // const data = await sendContactForm(values);
-      await sendContactForm(values);
+  //       to(button, { keyframes: getTrailsKeyframes(button) });
+  //     }
+  //     // const data = await sendContactForm(values);
+  //     await sendContactForm(values);
 
-      // if (data.error) {
-      //   console.log("data.error", data.error);
-      //   setErrorMessage("Hey, you are already subscribed!");
-      //   setSuccessMessage(undefined);
-      //   return;
-      // }
-      setSuccessMessage("message sent");
-      setErrorMessage("");
-      setTouched({});
-      setState(initState);
+  //     // if (data.error) {
+  //     //   console.log("data.error", data.error);
+  //     //   setErrorMessage("Hey, you are already subscribed!");
+  //     //   setSuccessMessage(undefined);
+  //     //   return;
+  //     // }
+  //     setSuccessMessage("message sent");
+  //     setErrorMessage("");
+  //     setTouched({});
+  //     setState(initState);
 
-      // setSuccessMessage("message sent");
-      // setErrorMessage("");
-    } catch (error) {
-      setState((prev) => ({
-        ...prev,
-        isLoading: false,
-        error: error.message,
-      }));
-      setSuccessMessage("");
-      setErrorMessage("Message didn't send");
-    }
-  };
+  //     // setSuccessMessage("message sent");
+  //     // setErrorMessage("");
+  //   } catch (error) {
+  //     setState((prev) => ({
+  //       ...prev,
+  //       isLoading: false,
+  //       error: error.message,
+  //     }));
+  //     setSuccessMessage("");
+  //     setErrorMessage("Message didn't send");
+  //   }
+  // };
 
   //newsletter example
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     const email = input;
+    const subject = "dummy subject";
+
     // const { email, message, subject, name } = state;
     const button = buttonRef.current;
 
@@ -123,17 +125,21 @@ export default function ContactForm({ className }) {
     }
     console.log("email", email);
 
-    const res = await fetch("/api/addSubscription", {
-      body: JSON.stringify({ email }),
+    const res = await fetch("/api/email", {
+      body: JSON.stringify({ email, subject }),
       headers: { "Content-Type": "application/json" },
       method: "POST",
     });
+    // const res = await fetch("/api/send", {
+    //   headers: { "Content-Type": "application/json" },
+    //   method: "GET",
+    // });
 
     const data = await res.json();
 
     if (data.error) {
       console.log("data.error", data.error);
-      setErrorMessage("Hey, you are already subscribed!");
+      setErrorMessage("Something went wrong!");
       setSuccessMessage(undefined);
       return;
     }

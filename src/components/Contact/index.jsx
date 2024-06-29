@@ -9,13 +9,28 @@ import BlurredIn from "@/components/BlurredIn";
 import GridGlobe from "@/components/GridGlobe";
 import { useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
+import useCopyToClipboard from "@/hooks/useCopyClipboard";
+import { useNotificationsContext } from "@/components/providers/NotificationsProvider";
 import PageCurve from "@/components/PageCurve";
 import Stars from "@/components/Stars";
-import Address from "../Address";
 import ContactForm from "./components/ContactForm";
+import { FaPhone } from "react-icons/fa6";
+import { IoMdMail } from "react-icons/io";
+import { MdPushPin } from "react-icons/md";
+
+const { phone, email, address } = userData;
 
 export default function Contact() {
+  const [copied, copy] = useCopyToClipboard(500);
+  const { addNotification } = useNotificationsContext();
   const container = useRef(null);
+
+  const handleCopy = (text) => {
+    if (text) {
+      copy(text);
+      addNotification({ text: `Copied: ${text}` });
+    }
+  };
 
   const { scrollYProgress } = useScroll({
     target: container,
@@ -23,6 +38,7 @@ export default function Contact() {
   });
 
   const height = useTransform(scrollYProgress, [0, 0.9], [50, 0]);
+
   return (
     <section className="bg-dark">
       <BlurredIn
@@ -65,36 +81,24 @@ export default function Contact() {
             <div className="inline-flex flex-col my-10">
               <Magnetic>
                 <div
+                  onClick={() => handleCopy("5047564538")}
                   className={cn(
                     "flex",
                     "flex-row",
                     "items-center",
                     "space-x-6",
                     "rounded-md",
-                    "p-4"
+                    "p-4",
+                    "cursor-pointer"
                   )}
                 >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="16"
-                    height="16"
-                    fill="currentColor"
-                    className="text-purple-500 size-4 bi bi-telephone-fill"
-                    viewBox="0 0 16 16"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M1.885.511a1.745 1.745 0 0 1 2.61.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.678.678 0 0 0 .178.643l2.457 2.457a.678.678 0 0 0 .644.178l2.189-.547a1.745 1.745 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.634 18.634 0 0 1-7.01-4.42 18.634 18.634 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877L1.885.511z"
-                    />
-                  </svg>
-                  <p className="text-sm font-light text-gray-50">
-                    {userData.phone}
-                  </p>
+                  <FaPhone className="text-purple-500 size-4" />
+                  <p className="text-sm font-light text-gray-50">{phone}</p>
                 </div>
               </Magnetic>
               <Magnetic>
                 <a
-                  href={`mailto:${userData.email}`}
+                  href={`mailto:${email}`}
                   className={cn(
                     "flex",
                     "flex-row",
@@ -104,23 +108,25 @@ export default function Contact() {
                     "p-4"
                   )}
                 >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="16"
-                    height="16"
-                    fill="currentColor"
-                    className="text-purple-500 size-4 bi bi-envelope-fill"
-                    viewBox="0 0 16 16"
-                  >
-                    <path d="M.05 3.555A2 2 0 0 1 2 2h12a2 2 0 0 1 1.95 1.555L8 8.414.05 3.555zM0 4.697v7.104l5.803-3.558L0 4.697zM6.761 8.83l-6.57 4.027A2 2 0 0 0 2 14h12a2 2 0 0 0 1.808-1.144l-6.57-4.027L8 9.586l-1.239-.757zm3.436-.586L16 11.801V4.697l-5.803 3.546z" />
-                  </svg>
-
-                  <p className="text-sm font-light text-gray-50">
-                    {userData.email}
-                  </p>
+                  <IoMdMail className="text-purple-500 size-4" />
+                  <p className="text-sm font-light text-gray-50">{email}</p>
                 </a>
               </Magnetic>
-              <Address />
+              <Magnetic>
+                <div
+                  className={cn(
+                    "flex",
+                    "flex-row",
+                    "items-center",
+                    "space-x-6",
+                    "rounded-md",
+                    "p-4"
+                  )}
+                >
+                  <MdPushPin className="text-purple-500 size-4" />
+                  <p className="text-sm font-light text-gray-50">{address}</p>
+                </div>
+              </Magnetic>
             </div>
             <Socials rounded />
           </div>

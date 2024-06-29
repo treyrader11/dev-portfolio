@@ -37,7 +37,7 @@ export default function CodeEditor({ className, data, fileType }) {
       )}
     >
       <div className="p-3">
-        <code className="whitespace-pre text-[#588A44]"># {fileType}</code>
+        <code className="whitespace-pre text-[#588A44]"><i>#</i> {fileType}</code>
       </div>
       <div
         className={cn(

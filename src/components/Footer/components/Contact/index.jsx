@@ -7,12 +7,15 @@ import { cn } from "@/lib/utils";
 import Confetti from "@/components/Confetti";
 import useCopyToClipboard from "@/hooks/useCopyClipboard";
 import { useNotificationsContext } from "@/components/providers/NotificationsProvider";
+import { userData } from "@/lib/data";
+
+const { email, phone } = userData;
 
 export default function Contact({ style, rotate }) {
   const [copied, copy] = useCopyToClipboard(500);
   const { addNotification } = useNotificationsContext();
 
-  const handleClick = (text) => {
+  const handleCopy = (text) => {
     if (text) {
       copy(text);
       addNotification({ text: `Copied: ${text}` });
@@ -113,13 +116,13 @@ export default function Contact({ style, rotate }) {
         )}
       >
         <Rounded
-          onClick={() => handleClick("developertrey@gmail.com")}
-          text="developertrey@gmail.com"
+          onClick={() => handleCopy("trey@treyrader.dev")}
+          text={email}
           className={cn("w-full md:w-fit py-5 px-10 border-[.3px]")}
         />
         <div className={cn("w-full")}>
           <Rounded
-            onClick={() => handleClick("5047564538")}
+            onClick={() => handleCopy("5047564538")}
             className={cn("md:w-fit py-5 px-10 border-[.3px]")}
           >
             <p
@@ -131,7 +134,7 @@ export default function Contact({ style, rotate }) {
                 "ease-linear"
               )}
             >
-              504.756.4538
+              {phone}
             </p>
           </Rounded>
         </div>
