@@ -14,14 +14,12 @@ import {
 } from "@react-email/components";
 import * as React from "react";
 import { cn } from "../utils";
-// import { fontCursive, fontMono } from "../fonts";
 
 const baseUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
   : "https://treyrader.dev";
 
-// export default function Email({email, subject, name, message}) {
-export default function Email({ name, subject, email }) {
+export default function Email({ email }) {
   console.log("Inside of the email template. email:", email);
   return (
     <Tailwind
@@ -31,20 +29,11 @@ export default function Email({ name, subject, email }) {
             colors: {
               brand: "#007291",
             },
-            // fontFamily: {
-            //   cursive: ["var(--font-cursive)"],
-            // },
           },
         },
       }}
     >
-      <Body
-        // style={{
-        //   fontFamily:
-        //     '-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif',
-        // }}
-        className={cn("bg-gray-100")}
-      >
+      <Body className={cn("bg-gray-100")}>
         <Container className={cn("pt-5", "px-6", "pb-12")}>
           <Img
             src={`${baseUrl}/images/portraits/headshot.png`}
@@ -68,10 +57,6 @@ export default function Email({ name, subject, email }) {
           </Text>
           <Hr className="mt-12" />
           <Text
-            // style={{
-            //   fontFamily:
-            //     '-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif',
-            // }}
             style={{
               fontFamily:
                 '"Pacifico", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif',

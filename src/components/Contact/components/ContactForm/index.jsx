@@ -96,17 +96,69 @@ export default function ContactForm({ className }) {
   // };
 
   //newsletter example
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+
+  //   const email = input;
+  //   const subject = "dummy subject";
+
+  //   // const { email, message, subject, name } = state;
+  //   const button = buttonRef.current;
+
+  //   if (!email || !button) return;
+  //   // if (!email || message || name || !button) return;
+
+  //   if (!isActive) {
+  //     setIsActive(true);
+
+  //     to(button, {
+  //       keyframes: getPlaneKeyframes(
+  //         set,
+  //         fromTo,
+  //         button,
+  //         setIsActive,
+  //         setInput
+  //       ),
+  //     });
+
+  //     to(button, { keyframes: getTrailsKeyframes(button) });
+  //   }
+  //   console.log("email", email);
+
+  //   const res = await fetch("/api/email", {
+  //     body: JSON.stringify({ email, subject }),
+  //     headers: { "Content-Type": "application/json" },
+  //     method: "POST",
+  //   });
+  //   // const res = await fetch("/api/send", {
+  //   //   headers: { "Content-Type": "application/json" },
+  //   //   method: "GET",
+  //   // });
+
+  //   const data = await res.json();
+
+  //   if (data.error) {
+  //     console.log("data.error", data.error);
+  //     setErrorMessage("Something went wrong!");
+  //     setSuccessMessage(undefined);
+  //     return;
+  //   }
+
+  //   setSuccessMessage(data.res);
+  //   setErrorMessage("");
+  // };
+
+  // new chatgpt
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     const email = input;
     const subject = "dummy subject";
 
-    // const { email, message, subject, name } = state;
     const button = buttonRef.current;
 
     if (!email || !button) return;
-    // if (!email || message || name || !button) return;
 
     if (!isActive) {
       setIsActive(true);
@@ -123,29 +175,35 @@ export default function ContactForm({ className }) {
 
       to(button, { keyframes: getTrailsKeyframes(button) });
     }
-    console.log("email", email);
+    console.log("Submitting email:", email);
 
-    const res = await fetch("/api/email", {
-      body: JSON.stringify({ email, subject }),
-      headers: { "Content-Type": "application/json" },
-      method: "POST",
-    });
-    // const res = await fetch("/api/send", {
-    //   headers: { "Content-Type": "application/json" },
-    //   method: "GET",
-    // });
+    try {
+      const res = await fetch("/api/email", {
+        body: JSON.stringify({ email }),
+        headers: { "Content-Type": "application/json" },
+        method: "POST",
+      });
 
-    const data = await res.json();
+      console.log("Response from API:", res);
 
-    if (data.error) {
-      console.log("data.error", data.error);
+      if (!res.ok) {
+        const errorData = await res.json();
+        console.error("Error response from API:", errorData);
+        setErrorMessage("Something went wrong!");
+        setSuccessMessage(undefined);
+        return;
+      }
+
+      const data = await res.json();
+      console.log("Successful response from API:", data);
+
+      setSuccessMessage(data.res);
+      setErrorMessage("");
+    } catch (error) {
+      console.error("Error making API request:", error);
       setErrorMessage("Something went wrong!");
       setSuccessMessage(undefined);
-      return;
     }
-
-    setSuccessMessage(data.res);
-    setErrorMessage("");
   };
 
   const dismissMessages = () => {
