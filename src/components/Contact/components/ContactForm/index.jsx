@@ -95,61 +95,6 @@ export default function ContactForm({ className }) {
   //   }
   // };
 
-  //newsletter example
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-
-  //   const email = input;
-  //   const subject = "dummy subject";
-
-  //   // const { email, message, subject, name } = state;
-  //   const button = buttonRef.current;
-
-  //   if (!email || !button) return;
-  //   // if (!email || message || name || !button) return;
-
-  //   if (!isActive) {
-  //     setIsActive(true);
-
-  //     to(button, {
-  //       keyframes: getPlaneKeyframes(
-  //         set,
-  //         fromTo,
-  //         button,
-  //         setIsActive,
-  //         setInput
-  //       ),
-  //     });
-
-  //     to(button, { keyframes: getTrailsKeyframes(button) });
-  //   }
-  //   console.log("email", email);
-
-  //   const res = await fetch("/api/email", {
-  //     body: JSON.stringify({ email, subject }),
-  //     headers: { "Content-Type": "application/json" },
-  //     method: "POST",
-  //   });
-  //   // const res = await fetch("/api/send", {
-  //   //   headers: { "Content-Type": "application/json" },
-  //   //   method: "GET",
-  //   // });
-
-  //   const data = await res.json();
-
-  //   if (data.error) {
-  //     console.log("data.error", data.error);
-  //     setErrorMessage("Something went wrong!");
-  //     setSuccessMessage(undefined);
-  //     return;
-  //   }
-
-  //   setSuccessMessage(data.res);
-  //   setErrorMessage("");
-  // };
-
-  // new chatgpt
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 

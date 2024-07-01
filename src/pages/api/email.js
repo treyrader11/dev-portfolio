@@ -29,8 +29,8 @@ export default async function handler(req, res) {
 
   try {
     const data = await resend.emails.send({
-      from: email,
-      to: [userData.email],
+      from: `${email}`,
+      to: [`${userData.email}`],
       subject,
       react: (
         <Email name={name} email={email} subject={subject} message={message} />
