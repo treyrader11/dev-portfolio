@@ -54,7 +54,7 @@ export default function ContactForm({ className }) {
     const { name, email, subject, message } = values;
     // const email = input;
 
-    console.log('email in handle submit', email)
+    console.log("email in handle submit", email);
     const button = buttonRef.current;
 
     // if (!validateEmail(email) || name || subject || message || !button) return;
@@ -77,7 +77,6 @@ export default function ContactForm({ className }) {
 
       to(button, { keyframes: getTrailsKeyframes(button) });
     }
-    console.log("Submitting email:", email, "subject:", subject);
 
     try {
       const res = await fetch("/api/email", {
@@ -118,7 +117,7 @@ export default function ContactForm({ className }) {
     <>
       <form
         onSubmit={handleSubmit}
-        action=""
+        // action=""
         className={cn(
           "contact-form",
           "animate-fade-in-3",
@@ -148,9 +147,7 @@ export default function ContactForm({ className }) {
             name="email"
             // errorBorderColor="red.300"
             value={values.email}
-            // value={input}
             onChange={handleChange}
-            // onChange={(e) => setInput(e.target.value)}
             onBlur={onBlur}
           />
         </div>
@@ -298,7 +295,7 @@ const Submit = forwardRef(({ isActive, disabled }, ref) => {
         )}
       >
         <svg
-          // This is the check mark
+          // check mark
           strokeLinecap="round"
           strokeLinejoin="round"
           strokeDasharray={14}

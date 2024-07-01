@@ -1,8 +1,8 @@
+import { userData } from "@/lib/data";
 import Email from "@/lib/emails";
 
-const { userData } = require("@/lib/data");
 const { Resend } = require("resend");
-const WaitlistEmail = require("@/lib/emails/waitlist");
+// import { Resend } from "resend";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -41,7 +41,7 @@ export default async function handler(req, res) {
     }
     console.log("data after submitted", data);
 
-    // res.status(200).json(data);
+    res.status(200).json(data);
   } catch (error) {
     console.error("Error sending email:", error);
     res.status(400).json({ error });
