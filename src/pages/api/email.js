@@ -28,7 +28,17 @@ export default async function handler(req, res) {
   }
 
   try {
-    const data = await resend.emails.send({
+    // const data = await resend.emails.send({
+    //   from: email,
+    //   to: [userData.email],
+    //   subject,
+    //   react: (
+    //     <Email name={name} email={email} subject={subject} message={message} />
+    //   ),
+    // });
+    // console.log("Email sent successfully with this data:", data);
+    // res.status(200).json(data);
+    await resend.emails.send({
       from: email,
       to: [userData.email],
       subject,
@@ -36,8 +46,6 @@ export default async function handler(req, res) {
         <Email name={name} email={email} subject={subject} message={message} />
       ),
     });
-    console.log("Email sent successfully with this data:", data);
-    res.status(200).json(data);
   } catch (err) {
     console.error("Error sending email:", err);
 
