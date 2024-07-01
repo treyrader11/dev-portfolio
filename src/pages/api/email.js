@@ -10,9 +10,6 @@ export default async function handler(req, res) {
   //   return res.status(405).json({ error: "Method not allowed" });
   // }
 
-  // const { Resend } = await import("resend");
-  // const resend = new Resend(process.env.RESEND_API_KEY);
-
   const { name, email, subject, message } = req.body;
   console.log(
     "email:",
@@ -31,11 +28,11 @@ export default async function handler(req, res) {
 
   try {
     const data = await resend.emails.send({
-      // from: email,
+      from: email,
       // from: `${name} <${email}>`,
-      from: "Acme <onboarding@resend.dev>",
-      // to: [userData.email],
-     to: ["developertrey@gmail.com"],
+      // from: "Acme <onboarding@resend.dev>",
+      to: [userData.email],
+      //  to: ["developertrey@gmail.com"],
       subject,
       react: (
         <Email name={name} email={email} subject={subject} message={message} />
