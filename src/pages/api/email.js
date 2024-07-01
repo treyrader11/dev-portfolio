@@ -38,10 +38,11 @@ export default async function handler(req, res) {
     //     <Email name={name} email={email} subject={subject} message={message} />
     //   ),
     // });
-    const { data } = await resend.emails.send({
-      from: email,
+    const data = await resend.emails.send({
+      // from: email,
+      from: userData.email,
       // from: "Acme <onboarding@resend.dev>",
-      to: [userData.email],
+      to: [userData.email, email],
       //  to: ["developertrey@gmail.com"],
       subject,
       react: (
