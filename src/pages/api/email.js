@@ -29,8 +29,8 @@ export default async function handler(req, res) {
 
   try {
     const data = await resend.emails.send({
-      from: `${email}`,
-      to: [`${userData.email}`],
+      from: email,
+      to: [userData.email],
       subject,
       react: (
         <Email name={name} email={email} subject={subject} message={message} />
@@ -43,8 +43,8 @@ export default async function handler(req, res) {
 
     let errorMessage;
     try {
-      errorMessage = err.response ? await err.response.text() : err.message;
-      errorMessage = JSON.parse(errorMessage);
+      const responseText = err.response ? await err.response.text() : null;
+      errorMessage = responseText ? JSON.parse(responseText) : err.message;
     } catch (jsonError) {
       errorMessage = err.message || "Unexpected error occurred";
     }
