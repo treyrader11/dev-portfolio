@@ -172,7 +172,7 @@ body {
     --navigation-height: 4.8rem;
   }
 
-  .newsletter-form {
+  .contact-form {
     --primary: #934E00;
     --primary-dark: #934E00;
     --primary-darkest: #3b0764;
@@ -186,7 +186,7 @@ body {
     --trails: rgb(140, 78, 194, 0.15);
   }
 
-  .newsletter-form button {
+  .contact-form button {
     --text-opacity: 1;
     --success-x: -12px;
     --success-stroke: 14px;
@@ -230,11 +230,11 @@ body {
     --right-body-third-y: 100%;
   }
 
-  .newsletter-form button .plane {
+  .contact-form button .plane {
     transform: translate(var(--x), var(--y)) rotate(var(--rotate)) translateZ(0);
   }
-  .newsletter-form button .plane .left,
-  .newsletter-form button .plane .right {
+  .contact-form button .plane .left,
+  .contact-form button .plane .right {
     opacity: var(--plane-opacity);
     transform: translate(var(--plane-x), var(--plane-y)) translateZ(0);
   }
@@ -269,7 +269,7 @@ body {
         var(--third-y, var(--left-wing-third-y))
     );
   }
-  .newsletter-form button .plane .left:after {
+  .contact-form button .plane .left:after {
     --part-x: 0;
     --z-index: 1;
     --b: var(--left-body-background);
@@ -280,7 +280,7 @@ body {
     --third-x: var(--left-body-third-x);
     --third-y: var(--left-body-third-y);
   }
-  .newsletter-form button .plane .right:before {
+  .contact-form button .plane .right:before {
     --part-x: -0.25%;
     --z-index: 2;
     --b: var(--right-wing-background);
@@ -291,7 +291,7 @@ body {
     --third-x: var(--right-wing-third-x);
     --third-y: var(--right-wing-third-y);
   }
-  .newsletter-form button .plane .right:after {
+  .contact-form button .plane .right:after {
     --part-x: 0;
     --z-index: 1;
     --b: var(--right-body-background);
@@ -302,7 +302,7 @@ body {
     --third-x: var(--right-body-third-x);
     --third-y: var(--right-body-third-y);
   }
-  /* .newsletter-form button .trails {
+  /* .contact-form button .trails {
     display: block;
     width: 33px;
     height: 64px;
@@ -317,10 +317,10 @@ body {
     transform: rotate(68deg) translateZ(0);
   } */
 
-  .newsletter-form button span.success {
+  .contact-form button span.success {
     transform: translateX(var(--success-x)) translateZ(0);
   }
-  .newsletter-form button span.success svg {
+  .contact-form button span.success svg {
     stroke-dashoffset: var(--success-stroke);
   }
 }

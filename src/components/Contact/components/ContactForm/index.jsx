@@ -682,7 +682,7 @@ export default function ContactForm({ className }) {
         // onSubmit={onSubmit}
         action=""
         className={cn(
-          "newsletter-form",
+          "contact-form",
           "animate-fade-in-3",
           "flex",
           "z-[999]",
