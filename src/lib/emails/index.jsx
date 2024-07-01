@@ -22,7 +22,7 @@ const baseUrl = process.env.VERCEL_URL
   : "http://localhost:3000";
 
 export default function Email({ email }) {
-  console.log("Inside of the email template. email:", email);
+  // console.log("Inside of the email template. email:", email);
   return (
     <Tailwind
       config={{

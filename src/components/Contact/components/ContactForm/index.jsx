@@ -13,8 +13,7 @@ import gsap from "gsap";
 import PaperPlane from "../PaperPlane";
 import { getPlaneKeyframes } from "../../getPlaneKeyframes";
 import { getTrailsKeyframes } from "../../getTrailsKeyframes";
-import Magnetic from "@/components/Magnetic";
-import { sendContactForm } from "@/lib/api";
+import SubmitEmail from "../SubmitEmail";
 
 const initValues = { name: "", email: "", subject: "", message: "" };
 
@@ -44,68 +43,16 @@ export default function ContactForm({ className }) {
       },
     }));
 
-  // const onSubmit = async (e) => {
-  //   e.preventDefault();
-
-  //   setState((prev) => ({
-  //     ...prev,
-  //     isLoading: true,
-  //   }));
-
-  //   try {
-  //     if (!isActive) {
-  //       setIsActive(true);
-
-  //       to(button, {
-  //         keyframes: getPlaneKeyframes(
-  //           set,
-  //           fromTo,
-  //           button,
-  //           setIsActive,
-  //           setState
-  //         ),
-  //       });
-
-  //       to(button, { keyframes: getTrailsKeyframes(button) });
-  //     }
-  //     // const data = await sendContactForm(values);
-  //     await sendContactForm(values);
-
-  //     // if (data.error) {
-  //     //   console.log("data.error", data.error);
-  //     //   setErrorMessage("Hey, you are already subscribed!");
-  //     //   setSuccessMessage(undefined);
-  //     //   return;
-  //     // }
-  //     setSuccessMessage("message sent");
-  //     setErrorMessage("");
-  //     setTouched({});
-  //     setState(initState);
-
-  //     // setSuccessMessage("message sent");
-  //     // setErrorMessage("");
-  //   } catch (error) {
-  //     setState((prev) => ({
-  //       ...prev,
-  //       isLoading: false,
-  //       error: error.message,
-  //     }));
-  //     setSuccessMessage("");
-  //     setErrorMessage("Message didn't send");
-  //   }
-  // };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-      // setState((prev) => ({
-      //   ...prev,
-      //   isLoading: true,
-      // }));
+    // setState((prev) => ({
+    //   ...prev,
+    //   isLoading: true,
+    // }));
 
     const { name, email, subject, message } = values;
     // const email = input;
-    
 
     const button = buttonRef.current;
 
@@ -123,7 +70,7 @@ export default function ContactForm({ className }) {
           setIsActive,
           setInput,
           setState,
-          initState,
+          initState
         ),
       });
 
@@ -293,7 +240,7 @@ export default function ContactForm({ className }) {
   );
 }
 
-const Submit = forwardRef(({ isActive, input, disabled, isLoading }, ref) => {
+const Submit = forwardRef(({ isActive, disabled }, ref) => {
   return (
     <button
       style={{ WebkitTapHighlightColor: "transparent" }}
@@ -332,7 +279,7 @@ const Submit = forwardRef(({ isActive, input, disabled, isLoading }, ref) => {
       </span>
       <span
         className={cn(
-          // success determines animation/transform
+          // ".success" determines animation/transform
           "success",
           "text-emerald-500",
           "z-0",
@@ -355,12 +302,10 @@ const Submit = forwardRef(({ isActive, input, disabled, isLoading }, ref) => {
           strokeLinejoin="round"
           strokeDasharray={14}
           className={cn(
-            // "trails",
             "stroke-2",
             "w-6",
             "stroke-emerald-500",
             "pointer-events-none"
-            // { " opacity-100": isActive }
           )}
           viewBox="0 0 16 16"
         >
