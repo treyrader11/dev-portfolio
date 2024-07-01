@@ -1,4 +1,12 @@
-export const getPlaneKeyframes = (set, fromTo, button, setActive, setInput) => {
+export const getPlaneKeyframes = (
+  set,
+  fromTo,
+  button,
+  setActive,
+  setInput,
+  setState,
+  initState
+) => {
   return [
     {
       "--left-wing-first-x": "50%",
@@ -71,7 +79,8 @@ export const getPlaneKeyframes = (set, fromTo, button, setActive, setInput) => {
               duration: 0.3,
               onComplete() {
                 setActive(false);
-                setInput("");
+                // setInput("");
+                setState(initState);
               },
             }
           );

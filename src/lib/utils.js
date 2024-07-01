@@ -77,3 +77,8 @@ export const calcRandomBlockDelay = (rowIndex, totalRows) => {
   const rowDelay = (totalRows - rowIndex - 1) * 0.05;
   return blockDelay + rowDelay;
 };
+
+export const validateEmail = (email) => {
+  const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return re.test(email);
+};

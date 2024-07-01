@@ -19,7 +19,7 @@ import { cn } from "../utils";
 
 const baseUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
-  : "https://localhost:3000";
+  : "http://localhost:3000";
 
 export default function Email({ email }) {
   console.log("Inside of the email template. email:", email);
