@@ -20,7 +20,7 @@ export default async function handler(req, res) {
   try {
     const data = await resend.emails.send({
       from: email,
-      to: ["developertrey@gmail.com", userData.email],
+      to: [userData.email],
       subject: "Hello world",
       react: <Email email={email} />,
     });
