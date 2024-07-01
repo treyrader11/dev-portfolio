@@ -490,7 +490,6 @@ export default function ContactForm({ className }) {
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [isActive, setIsActive] = useState(false);
-  // const [isActive, setIsActive] = useState(true);
   const buttonRef = useRef(null);
   const { to, fromTo, set } = gsap;
 
@@ -673,7 +672,7 @@ export default function ContactForm({ className }) {
 
   const dismissMessages = () => {
     setSuccessMessage(undefined);
-    setErrorMessage("");
+    setErrorMessage(undefined);
   };
 
   return (
@@ -736,11 +735,8 @@ export default function ContactForm({ className }) {
             "py-4",
             "px-6",
             "rounded-[30px]",
-            "outline-none",
-            "border-none",
             "resize-none",
-            "focus:outline-purple-400",
-            "outline-[1px]",
+            "focus:outline-secondary",
             "transition-all",
             "duration-300",
             "ease-in-out",
@@ -759,11 +755,64 @@ export default function ContactForm({ className }) {
           disabled={
             !values.name || !values.email || !values.subject || !values.message
           }
-          // onClick={onSubmit}
           ref={buttonRef}
           input={input}
           isActive={isActive}
         />
+        {/* <button
+          className={cn(
+            "[transform:translateZ(0)]",
+            "transition-[opacity,filter]",
+            "duration-[0.25s]",
+            "flex",
+            "justify-center",
+            "items-center",
+            "w-full",
+            "mx-auto",
+            "py-6"
+          )}
+        >
+          <span
+            className={cn(
+              // success determines animation/transform
+              "success",
+              "text-emerald-500",
+              "z-0",
+              "absolute",
+              "inset-x-0",
+              "top-2",
+              "-translate-x-3",
+              "flex",
+              "justify-normal",
+              "items-center",
+              // "[transform:translateX(-3px)_translateZ(0)]",
+              "opacity-0",
+              {
+                "opacity-100 [transform:translateX(-3px)_translateZ(0)]":
+                  isActive,
+              }
+            )}
+          >
+            <svg
+              // This is the check mark
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeDasharray={14}
+              className={cn(
+                // "trails",
+                "stroke-2",
+                "w-6",
+                "stroke-emerald-500",
+                "pointer-events-none"
+                // { " opacity-100": isActive }
+              )}
+              viewBox="0 0 16 16"
+            >
+              <polyline points="3.75 9 7 12 13 5" />
+            </svg>
+            Sent
+          </span>
+        </button> */}
       </form>
 
       <div className="relative">
@@ -808,92 +857,85 @@ export default function ContactForm({ className }) {
   );
 }
 
-const Submit = forwardRef(
-  ({ isActive, input, disabled, isLoading, onClick }, ref) => {
-    return (
-      <button
-        // onClick={onClick}
-        style={{ WebkitTapHighlightColor: "transparent" }}
-        ref={ref}
+const Submit = forwardRef(({ isActive, input, disabled, isLoading }, ref) => {
+  return (
+    <button
+      style={{ WebkitTapHighlightColor: "transparent" }}
+      ref={ref}
+      className={cn(
+        { active: isActive },
+        disabled &&
+          cn("disabled:grayscale-[65%]", "disabled:cursor-not-allowed"),
+        "text-sm",
+        "md:text-base",
+        "relative",
+        "py-2",
+        "min-4-[100px]",
+        "text-center",
+        "text-white",
+        "[transform:translateZ(0)]",
+        "transition-[opacity,filter]",
+        "duration-[0.25s]",
+        "flex",
+        "justify-center",
+        "items-center",
+        "w-full",
+        "mx-auto",
+        "py-6"
+      )}
+      // disabled={!input}
+      // disabled={disabled}
+      type="submit"
+    >
+      <span
+        className={cn("relative", "z-[4]", "flex", "items-center", "gap-2", {
+          "opacity-0": isActive,
+        })}
+      >
+        Send <VscSend />
+      </span>
+      <span
         className={cn(
-          { active: isActive },
-          disabled &&
-            cn("disabled:grayscale-[65%]", "disabled:cursor-not-allowed"),
-          "text-sm",
-          "md:text-base",
-          "relative",
-          "py-2",
-          "min-4-[100px]",
-          "text-center",
-          "text-white",
-          // "rounded-full",
-          "[transform:translateZ(0)]",
-          "transition-[opacity,filter]",
-          "duration-[0.25s]",
+          // success determines animation/transform
+          "success",
+          "text-emerald-500",
+          "z-0",
+          "absolute",
+          "inset-x-0",
+          "top-2",
+          "-translate-x-3",
           "flex",
           "justify-center",
           "items-center",
-          "w-full",
-          "mx-auto",
-          "py-6"
+          "opacity-0",
+          {
+            "opacity-100 [transform:translateX(-3px)_translateZ(0)]": isActive,
+          }
         )}
-        // disabled={!input}
-        // disabled={disabled}
-        type="submit"
       >
-        <span
-          className={cn("relative", "z-[4]", "flex", "items-center", "gap-2", {
-            "opacity-0": isActive,
-          })}
-        >
-          Send <VscSend />
-        </span>
-
-        <span
+        <svg
+          // This is the check mark
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeDasharray={14}
           className={cn(
-            // success determines animation/transform
-            "success",
-            "text-emerald-500",
-            "z-0",
-            "absolute",
-            "inset-x-0",
-            "top-2",
-            "-translate-x-3",
-            "flex",
-            "justify-normal",
-            "items-center",
-            // "[transform:translateX(-3px)_translateZ(0)]",
-            "opacity-0",
-            {
-              "opacity-100 [transform:translateX(-3px)_translateZ(0)]":
-                isActive,
-            }
+            // "trails",
+            "stroke-2",
+            "w-6",
+            "stroke-emerald-500",
+            "pointer-events-none"
+            // { " opacity-100": isActive }
           )}
+          viewBox="0 0 16 16"
         >
-          <svg
-            // This is the check mark
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeDasharray={14}
-            className={cn(
-              // "trails",
-              "stroke-2",
-              "w-6",
-              "stroke-emerald-500",
-              "pointer-events-none"
-              // { " opacity-100": isActive }
-            )}
-            viewBox="0 0 16 16"
-          >
-            <polyline points="3.75 9 7 12 13 5" />
-          </svg>
-          Sent
-        </span>
-        <PaperPlane isActive={isActive} />
-      </button>
-    );
-  }
-);
+          <polyline points="3.75 9 7 12 13 5" />
+        </svg>
+        Sent
+      </span>
+      <PaperPlane isActive={isActive} />
+    </button>
+  );
+});
 
 Submit.displayName = "Submit";
 
@@ -920,3 +962,48 @@ function ResponseIcon({ isSuccess = false, className }) {
     </div>
   );
 }
+
+// function Checkmark({ isActive, className }) {
+//   return (
+//     <div
+//       className={cn(
+//         // success determines animation/transform
+//         "success",
+//         "text-emerald-500",
+//         "z-0",
+//         "absolute",
+//         "inset-x-0",
+//         "top-2",
+//         "-translate-x-3",
+//         "flex",
+//         "justify-normal",
+//         "items-center",
+//         // "[transform:translateX(-3px)_translateZ(0)]",
+//         "opacity-0",
+//         {
+//           "opacity-100 [transform:translateX(-3px)_translateZ(0)]": isActive,
+//         },
+//         className
+//       )}
+//     >
+//       <svg
+//         // This is the check mark
+//         strokeLinecap="round"
+//         strokeLinejoin="round"
+//         strokeDasharray={14}
+//         className={cn(
+//           // "trails",
+//           "stroke-2",
+//           "w-6",
+//           "stroke-emerald-500",
+//           "pointer-events-none"
+//           // { " opacity-100": isActive }
+//         )}
+//         viewBox="0 0 16 16"
+//       >
+//         <polyline points="3.75 9 7 12 13 5" />
+//       </svg>
+//       Sent
+//     </div>
+//   );
+// }

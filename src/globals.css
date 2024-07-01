@@ -137,10 +137,10 @@ body {
   top: calc(2px / -1);
   left: calc(2px / -1);
 
-  background: linear-gradient(to right, purple 0%, purple 100%),
-    linear-gradient(to top, purple 50%, transparent 50%),
-    linear-gradient(to top, purple 50%, transparent 50%),
-    linear-gradient(to right, purple 0%, purple 100%),
+  background: linear-gradient(to right, #934E00 0%, #934E00 100%),
+    linear-gradient(to top, #934E00 50%, transparent 50%),
+    linear-gradient(to top, #934E00 50%, transparent 50%),
+    linear-gradient(to right, #934E00 0%, #934E00 100%),
     linear-gradient(to left, #934e00 0%, #934e00 100%);
   background-size: 100% 2px, 2px 200%, 2px 200%, 0% 2px, 0% 2px;
   background-position: 50% 100%, 0% 0%, 100% 0%, 100% 0%, 0% 0%;
@@ -173,16 +173,16 @@ body {
   }
 
   .newsletter-form {
-    --primary: #8c4ec2;
-    --primary-dark: #6b21a8;
+    --primary: #934E00;
+    --primary-dark: #934E00;
     --primary-darkest: #3b0764;
     --input-placeholder: #a6accd;
     --input-text: #646b8c;
     --border-default: #e1e6f9;
-    --border-active: #8c4ec2;
+    --border-active: #934E00;
     --background: #fff;
     --button-text: #ffffff;
-    --success: #8c4ec2;
+    --success: #934E00;
     --trails: rgb(140, 78, 194, 0.15);
   }
 

@@ -1,16 +1,10 @@
 import { cn } from "@/lib/utils";
 
-export default function Input({
-  className,
-  //  type,
-  placeholder,
-  ...attributes
-}) {
+export default function Input({ className, placeholder, ...attributes }) {
   return (
     <input
       {...attributes}
       placeholder={placeholder}
-      // type={type}
       className={cn(
         "w-full",
         "py-4",
@@ -19,7 +13,7 @@ export default function Input({
         "border-none",
         "resize-none",
         "bg-dark-400",
-        "focus:outline-purple-400",
+        "focus:outline-secondary",
         "outline-[1px]",
         "transition-all",
         "duration-300",
