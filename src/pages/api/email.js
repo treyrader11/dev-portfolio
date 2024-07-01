@@ -43,9 +43,10 @@ export default async function handler(req, res) {
 
     let errorMessage;
     try {
-      errorMessage = err.response ? JSON.parse(err.response.text) : err.message;
+      errorMessage = err.response ? await err.response.text() : err.message;
+      errorMessage = JSON.parse(errorMessage);
     } catch (jsonError) {
-      errorMessage = "Unexpected error occurred";
+      errorMessage = err.message || "Unexpected error occurred";
     }
 
     res.status(err.response?.status || 500).json({
