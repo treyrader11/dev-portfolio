@@ -54,6 +54,7 @@ export default function ContactForm({ className }) {
     const { name, email, subject, message } = values;
     // const email = input;
 
+    console.log('email in handle submit', email)
     const button = buttonRef.current;
 
     // if (!validateEmail(email) || name || subject || message || !button) return;
