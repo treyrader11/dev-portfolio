@@ -2,7 +2,6 @@
 
 import { cn, validateEmail } from "@/lib/utils";
 import Input from "@/components/Input";
-import Rounded from "@/components/Rounded";
 import { VscSend } from "react-icons/vsc";
 import { useRef, forwardRef, useState } from "react";
 import { FaRegEnvelope } from "react-icons/fa";
@@ -44,126 +43,61 @@ export default function ContactForm({ className }) {
       },
     }));
 
-    const handleSubmit = async (e) => {
-      e.preventDefault();
-  
-      const { name, email, subject, message } = values;
-  
-      console.log("email in handle submit", email);
-      const button = buttonRef.current;
-  
-      if (!email || !button) return;
-  
-      if (!isActive) {
-        setIsActive(true);
-  
-        to(button, {
-          keyframes: getPlaneKeyframes(
-            set,
-            fromTo,
-            button,
-            setIsActive,
-            setInput,
-            setState,
-            initState
-          ),
-        });
-  
-        to(button, { keyframes: getTrailsKeyframes(button) });
-      }
-  
-      try {
-        const res = await axios.post("/api/email", {
-          name,
-          email,
-          subject,
-          message,
-        });
-  
-        console.log("Response from API:", res);
-  
-        if (res.status !== 200) {
-          console.error("Error response from API:", res.data);
-          setErrorMessage(`Something went wrong! Details: "${res.data.error}"`);
-          setSuccessMessage(undefined);
-          return;
-        }
-  
-        console.log("Successful response from API:", res.data);
-  
-        setSuccessMessage("Thank you for getting in touch!");
-        setErrorMessage(undefined);
-      } catch (error) {
-        console.error("Error making API request:", error);
-        setErrorMessage(`Something went wrong! Details: "${error.message}"`);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const { name, email, subject, message } = values;
+
+    console.log("email in handle submit", email);
+    const button = buttonRef.current;
+
+    if (!email || !button) return;
+
+    if (!isActive) {
+      setIsActive(true);
+
+      to(button, {
+        keyframes: getPlaneKeyframes(
+          set,
+          fromTo,
+          button,
+          setIsActive,
+          setInput,
+          setState,
+          initState
+        ),
+      });
+
+      to(button, { keyframes: getTrailsKeyframes(button) });
+    }
+
+    try {
+      const res = await axios.post("/api/email", {
+        name,
+        email,
+        subject,
+        message,
+      });
+
+      console.log("Response from API:", res);
+
+      if (res.status !== 200) {
+        console.error("Error response from API:", res.data);
+        setErrorMessage(`Something went wrong! Details: "${res.data.error}"`);
         setSuccessMessage(undefined);
+        return;
       }
-    };
 
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
+      console.log("Successful response from API:", res.data);
 
-  //   // setState((prev) => ({
-  //   //   ...prev,
-  //   //   isLoading: true,
-  //   // }));
-
-  //   const { name, email, subject, message } = values;
-  //   // const email = input;
-
-  //   console.log("email in handle submit", email);
-  //   const button = buttonRef.current;
-
-  //   // if (!validateEmail(email) || name || subject || message || !button) return;
-  //   if (!email || !button) return;
-
-  //   if (!isActive) {
-  //     setIsActive(true);
-
-  //     to(button, {
-  //       keyframes: getPlaneKeyframes(
-  //         set,
-  //         fromTo,
-  //         button,
-  //         setIsActive,
-  //         setInput,
-  //         setState,
-  //         initState
-  //       ),
-  //     });
-
-  //     to(button, { keyframes: getTrailsKeyframes(button) });
-  //   }
-
-  //   try {
-  //     const res = await fetch("/api/email", {
-  //       body: JSON.stringify({ name, email, subject, message }),
-  //       headers: { "Content-Type": "application/json" },
-  //       method: "POST",
-  //     });
-
-  //     console.log("Response from API:", res);
-
-  //     if (!res.ok) {
-  //       const errorData = await res.json();
-  //       console.error("Error response from API:", errorData);
-  //       setErrorMessage(`Something went wrong! Details: "${errorData.error}"`);
-  //       setSuccessMessage(undefined);
-  //       return;
-  //     }
-
-  //     const data = await res.json();
-  //     console.log("Successful response from API:", data);
-
-  //     // setSuccessMessage(data.res);
-  //     setSuccessMessage("Thank you for getting in touch!");
-  //     setErrorMessage(undefined);
-  //   } catch (error) {
-  //     console.error("Error making API request:", error);
-  //     setErrorMessage(`Something went wrong! Details: "${error}"`);
-  //     setSuccessMessage(undefined);
-  //   }
-  // };
+      setSuccessMessage("Thank you for getting in touch!");
+      setErrorMessage(undefined);
+    } catch (error) {
+      console.error("Error making API request:", error);
+      setErrorMessage(`Something went wrong! Details: "${error.message}"`);
+      setSuccessMessage(undefined);
+    }
+  };
 
   const dismissMessages = () => {
     setSuccessMessage(undefined);
@@ -174,7 +108,6 @@ export default function ContactForm({ className }) {
     <>
       <form
         onSubmit={handleSubmit}
-        // action=""
         className={cn(
           "contact-form",
           "animate-fade-in-3",

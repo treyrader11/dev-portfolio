@@ -11,6 +11,7 @@ export default async function handler(req, res) {
   // }
 
   const { name, email, subject, message } = req.body;
+  // const { name, email, subject, message } = await req.body.json();
   console.log(
     "email:",
     email,
@@ -27,9 +28,18 @@ export default async function handler(req, res) {
   }
 
   try {
-    const data = await resend.emails.send({
+    // const data = await resend.emails.send({
+    //   from: email,
+    //   // from: "Acme <onboarding@resend.dev>",
+    //   to: [userData.email],
+    //   //  to: ["developertrey@gmail.com"],
+    //   subject,
+    //   react: (
+    //     <Email name={name} email={email} subject={subject} message={message} />
+    //   ),
+    // });
+    const { data } = await resend.emails.send({
       from: email,
-      // from: `${name} <${email}>`,
       // from: "Acme <onboarding@resend.dev>",
       to: [userData.email],
       //  to: ["developertrey@gmail.com"],
