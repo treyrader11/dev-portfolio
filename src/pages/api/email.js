@@ -28,16 +28,6 @@ export default async function handler(req, res) {
   }
 
   try {
-    // const data = await resend.emails.send({
-    //   from: email,
-    //   to: [userData.email],
-    //   subject,
-    //   react: (
-    //     <Email name={name} email={email} subject={subject} message={message} />
-    //   ),
-    // });
-    // console.log("Email sent successfully with this data:", data);
-    // res.status(200).json(data);
     const { data, error } = await resend.emails.send({
       from: email,
       to: [userData.email],
@@ -46,22 +36,25 @@ export default async function handler(req, res) {
         <Email name={name} email={email} subject={subject} message={message} />
       ),
     });
+    if (error) {
+      res.status(400).json({ error });
+    }
     console.log("data after submitted", data);
 
-    res.status(200).json(data);
-  } catch (err) {
-    console.error("Error sending email:", err);
+    // res.status(200).json(data);
+  } catch (error) {
+    console.error("Error sending email:", error);
+    res.status(400).json({ error });
+    // let errorMessage;
+    // try {
+    //   const responseText = err.response ? await err.response.text() : null;
+    //   errorMessage = responseText ? JSON.parse(responseText) : err.message;
+    // } catch (jsonError) {
+    //   errorMessage = err.message || "Unexpected error occurred";
+    // }
 
-    let errorMessage;
-    try {
-      const responseText = err.response ? await err.response.text() : null;
-      errorMessage = responseText ? JSON.parse(responseText) : err.message;
-    } catch (jsonError) {
-      errorMessage = err.message || "Unexpected error occurred";
-    }
-
-    res.status(err.response?.status || 500).json({
-      error: errorMessage,
-    });
+    // res.status(err.response?.status || 500).json({
+    //   error: errorMessage,
+    // });
   }
 }
