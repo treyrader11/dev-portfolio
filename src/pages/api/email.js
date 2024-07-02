@@ -39,8 +39,7 @@ export default async function handler(req, res) {
     //   ),
     // });
     const data = await resend.emails.send({
-      // from: email,
-      from: userData.email,
+      from: "Trey <noreply@treyrader.dev>",
       // from: "Acme <onboarding@resend.dev>",
       to: [userData.email, email],
       //  to: ["developertrey@gmail.com"],

@@ -90,7 +90,7 @@ export default function ContactForm({ className }) {
 
       console.log("Successful response from API:", res.data);
 
-      setSuccessMessage("Thank you for getting in touch!");
+      setSuccessMessage("Email successfully sent");
       setErrorMessage(undefined);
     } catch (error) {
       console.error("Error making API request:", error);

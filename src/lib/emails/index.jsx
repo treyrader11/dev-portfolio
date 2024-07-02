@@ -21,7 +21,7 @@ const baseUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
   : "http://localhost:3000";
 
-export default function Email({ email }) {
+export default function Email({ email, name }) {
   // console.log("Inside of the email template. email:", email);
   return (
     <Tailwind
@@ -45,16 +45,14 @@ export default function Email({ email }) {
             className="object-cover rounded-full"
           />
 
-          <Heading className="mt-12 text-2xl font-bold">👋 Hi there!</Heading>
+          <Heading className="mt-12 text-2xl font-bold">👋 Hi {name},</Heading>
           <Section className="my-6">
             <Text className="text-lg">
-              This email is for simply letting you know that I have successfully
-              received your inquiry and will be getting back to you as soon as I
-              am back at my desk.
+              Thank you for your inquiry. I generally get around to responding in the morning. Looking forward.
             </Text>
           </Section>
           <Text className="">
-            Cheers,
+            Best,
             <br />- Trey
           </Text>
           <Hr className="mt-12" />
