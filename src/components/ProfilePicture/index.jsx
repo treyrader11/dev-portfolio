@@ -11,7 +11,6 @@ export default function ProfilePicture({
   src,
   className,
   isBordered = false,
-  isMagnetic = false,
   isBlob = false,
 }) {
   const containerProps = {

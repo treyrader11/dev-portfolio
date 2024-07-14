@@ -10,14 +10,19 @@ import BlurredIn from "../BlurredIn";
 import FlipWords from "../FlipWords";
 import ViewResume from "../ViewResume";
 
-// import BlockGrid from "../BlockGrid";
+// const phrase =
+//   "I'm a selectively skilled web developer focusing on delivering quality & impactful digital experiences.";
 
 const phrase =
-  "I'm a selectively skilled web developer focusing on delivering quality & impactful digital experiences.";
+  "Experienced product engineer focusing on delivering quality & impactful digital experiences.";
 
-const targetedWords = phrase
+// const targetedWords = phrase
+//   .split(" ")
+//   .filter((word) => word.includes("selectively") || word.includes("skilled"));
+
+  const targetedWords = phrase
   .split(" ")
-  .filter((word) => word.includes("selectively") || word.includes("skilled"));
+  .filter((word) => word.includes("product") || word.includes("engineer"));
 
 export default function Hero({ scrollYProgress, className }) {
   const [isHovered, setIsHovered] = useState(false);
@@ -114,8 +119,8 @@ export default function Hero({ scrollYProgress, className }) {
                   // animate={!isLoading ? (isInView ? "open" : "closed") : ""}
                   animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
                   key={i}
-                  className={cn("mr-3 inline-flex text-light-400", {
-                    "text-purple-400 font-pp-acma": isTargetedWord,
+                  className={cn("mr-3 inline-flex  text-light-400", {
+                    "text-purple-400 text-4xl font-pp-acma": isTargetedWord,
                   })}
                 >
                   {isTargetedWord

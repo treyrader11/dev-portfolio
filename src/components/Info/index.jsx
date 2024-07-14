@@ -169,7 +169,7 @@ export default function Info() {
               links={socials}
               className="w-full relative z-[1] "
             />
-            <Portrait className="" style={{ top: lg }} />
+            <Portrait style={{ top: lg }} />
           </div>
         </div>
 

@@ -42,17 +42,6 @@ module.exports = {
       rotate: {
         full: "360deg",
       },
-      animation: {
-        blob: "blob 4s ease-in-out infinte",
-        "slide-left": "slide-left 1.3s ease-in-out",
-        "octocat-wave": "octocat-wave 0.56s",
-        "slide-up": "slide-up 0.5s ease-out",
-        dash: "dash 1.5s ease-in-out infinite",
-        "rotate-gradient": "1.3s infinite ease-in-out",
-        "back-n-forth": "back-n-forth 0.5s ease-in-out infinite alternate",
-        "fade-in-3": "fade-in 3s ease-in-out forwards",
-        "fade-bottom": "fade-bottom 3s ease-in-out forwards",
-      },
       keyframes: {
         "blob": {
           "0%, 100%": {
@@ -133,6 +122,17 @@ module.exports = {
             opacity: "100%",
           },
         },
+      },
+      animation: {
+        blob: "blob 4s ease-in-out infinte",
+        "slide-left": "slide-left 1.3s ease-in-out",
+        "octocat-wave": "octocat-wave 0.56s",
+        "slide-up": "slide-up 0.5s ease-out",
+        dash: "dash 1.5s ease-in-out infinite",
+        "rotate-gradient": "1.3s infinite ease-in-out",
+        "back-n-forth": "back-n-forth 0.5s ease-in-out infinite alternate",
+        "fade-in-3": "fade-in 3s ease-in-out forwards",
+        "fade-bottom": "fade-bottom 3s ease-in-out forwards",
       },
     },
   },
