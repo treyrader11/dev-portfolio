@@ -57,29 +57,19 @@ export default function Home() {
           )}
         />
         <PositionProvider>
-          <RecentProjects
-            className={cn(
-              "sticky",
-              "top-0",
-              "bg-white"
-              // "-mt-[50%]",
-              // "md:pb-[200vh]",
-              // "max-w-[1200px]" // this is where the padding breaks
-            )}
-          />
+          <RecentProjects className={cn("sticky", "top-0", "bg-white")} />
         </PositionProvider>
 
-        <div className={cn("relative", "z-[3]",
-        //  "min-h-screen"
-         )}>
-          {/* <References /> */}
+        <div className={cn("min-h-screen", "relative", "px-20", "")}>
+          <References />
           <div
-            className={cn()
-            // "sticky",
-            // "top-0"
+            className={
+              cn()
+              // "sticky",
+              // "top-0"
             }
           >
-            <ReferencesGSAP />
+            {/* <ReferencesGSAP /> */}
           </div>
           {/* <SlidingImages className="bg-white" /> */}
         </div>

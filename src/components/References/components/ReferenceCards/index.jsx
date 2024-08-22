@@ -2,12 +2,78 @@
 
 import ProfilePicture from "@/components/ProfilePicture";
 import { cn } from "@/lib/utils";
-import { motion } from "framer-motion";
+import React, { useState, useRef, useEffect } from "react";
+import gsap from "gsap";
+import { useGSAP } from "@gsap/react";
+
+gsap.registerPlugin(useGSAP);
 
 export default function ReferenceCards({ references, selected, setSelected }) {
+  const sliderRef = useRef < HTMLDivElement > null;
+  const [isAnimating, setIsAnimating] = useState(false);
+  const [isClient, setIsClient] = useState(false);
+
+  useGSAP(() => {
+    setIsClient(true);
+    if (isClient && sliderRef.current) initializeCards();
+  }, [isClient, sliderRef]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (!isAnimating) handleNext();
+    }, 2500);
+
+    return () => clearInterval(interval);
+  }, [isAnimating]);
+
+  const initializeCards = () => {
+    if (!sliderRef.current) return;
+    const cards = Array.from(sliderRef.current.querySelectorAll(".card"));
+    gsap.to(cards, {
+      y: (i) => 0 + 12 * i + "%", //originally 20
+      z: (i) => 15 * i,
+      duration: 1,
+      ease: "power3.out",
+      stagger: -0.1,
+    });
+  };
+
+  const handleNext = () => {
+    if (isAnimating) return;
+    setIsAnimating(true);
+
+    const slider = sliderRef.current;
+    if (!slider) return;
+    const cards = Array.from(slider.querySelectorAll(".card"));
+    const lastCard = cards.pop();
+
+    if (lastCard) {
+      gsap.to(lastCard, {
+        y: "+=150%",
+        duration: 0.75,
+        ease: "power3.inOut",
+        onStart: () => {
+          setTimeout(() => {
+            slider.prepend(lastCard);
+            initializeCards();
+            setTimeout(() => {
+              setIsAnimating(false);
+            }, 1000);
+          }, 300);
+        },
+      });
+    } else {
+      setIsAnimating(false);
+    }
+  };
+
   return (
     <div
+      style={{ perspective: "175px" }}
+      ref={sliderRef}
+      onClick={handleNext}
       className={cn(
+        // "card",
         "p-4",
         "relative",
         "h-[450px]",
@@ -39,45 +105,41 @@ function Card({
   selected,
   setSelected,
 }) {
-  const scale = position <= selected ? 1 : 1 + 0.015 * (position - selected);
-  const offset = position <= selected ? 0 : 95 + (position - selected) * 3;
   const dark = "#0f0f0f";
   const background = position % 2 ? dark : "white";
-  const color = position % 2 ? "white" : dark;
 
   return (
-    <motion.div
-      initial={false}
-      style={{
-        zIndex: position,
-        transformOrigin: "left bottom",
-        background,
-        color,
-      }}
-      animate={{
-        x: `${offset}%`,
-        scale,
-      }}
-      whileHover={{
-        translateX: position === selected ? 0 : -3,
-      }}
-      transition={{
-        duration: 0.25,
-        ease: "easeOut",
-      }}
-      onClick={() => setSelected(position)}
+    <div
+      // onClick={() => setSelected(position)}
       className={cn(
+     
+        // "absolute",
+        // "top-0",
+        // "left-0",
+        // "w-full",
+        // "min-h-full",
+        // "p-8",
+        // "lg:p-12",
+        // "cursor-pointer",
+        // "flex",
+        // "flex-col",
+        // "justify-between"
+
+        "card",
         "absolute",
-        "top-0",
-        "left-0",
-        "w-full",
-        "min-h-full",
-        "p-8",
-        "lg:p-12",
-        "cursor-pointer",
+        "fixed",
+        // "top-1/2",
+        "top-1/4",
+        "left-1/2",
+        "w-[65%]",
+        "h-[50dvh]",
+        "bg-black",
+        "overflow-hidden",
+        "border",
+        "border-[#303030]",
+        "rounded-lg",
         "flex",
-        "flex-col",
-        "justify-between"
+        "flex-col"
       )}
     >
       <ProfilePicture
@@ -103,6 +165,23 @@ function Card({
         </h3>
         <p className="block text-sm">{title}</p>
       </div>
-    </motion.div>
+      <Overlay />
+    </div>
+  );
+}
+
+function Overlay() {
+  return (
+    <div
+      className={cn(
+        "absolute",
+        "z-2",
+        "top-0",
+        "left-0",
+        "w-full",
+        "h-full",
+        "rounded-lg"
+      )}
+    />
   );
 }

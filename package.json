@@ -10,6 +10,7 @@
     "email": "email dev --dir src/lib/emails"
   },
   "dependencies": {
+    "@gsap/react": "^2.1.1",
     "@mailchimp/mailchimp_marketing": "^3.0.80",
     "@react-email/components": "0.0.19",
     "@react-three/drei": "^9.105.6",
