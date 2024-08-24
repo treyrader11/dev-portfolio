@@ -50,13 +50,14 @@ export default function Project({
 
   return (
     <div
-      style={{ perspective: 1000 }}
+      style={{ perspective: 1000, scrollSnapAlign: "start" }}
       ref={container}
       className={cn(
         "cursor-pointer",
         "sticky",
         "top-0",
         "min-h-screen",
+       
         className
       )}
       onClick={handleFlip}

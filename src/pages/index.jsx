@@ -39,11 +39,7 @@ export default function Home() {
         <Hero
           // scrollYProgress={scrollYProgress}
 
-          className={cn(
-            // "sticky",
-            //  "top-0",
-            "min-h-screen bg-dark"
-          )}
+          className={cn("min-h-screen bg-dark")}
         />
 
         <Description
@@ -57,10 +53,10 @@ export default function Home() {
           )}
         />
         <PositionProvider>
-          <RecentProjects className={cn("sticky", "top-0", "bg-white")} />
+          <RecentProjects className={cn("sticky top-0 bg-white")} />
         </PositionProvider>
 
-        <div className={cn("min-h-screen", "relative", "px-20", "")}>
+        <div className={cn("min-h-screen relative px-20")}>
           <References />
           <div
             className={

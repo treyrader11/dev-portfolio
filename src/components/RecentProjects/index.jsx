@@ -20,6 +20,7 @@ export default function RecentProjects({ className }) {
 
   return (
     <motion.section
+      style={{ scrollSnapType: "y mandatory" }}
       ref={container}
       className={cn(
         "relative",
@@ -30,6 +31,9 @@ export default function RecentProjects({ className }) {
         "flex",
         "flex-col",
         "gap-y-10",
+
+        // "overflow-y-scroll",
+
         className
       )}
     >
@@ -76,7 +80,7 @@ export default function RecentProjects({ className }) {
             "mx-auto",
             "py-6",
             "text-black",
-            "-mt-[10rem]",
+            "mt-[-10rem]",
             "sm:-mt-0"
           )}
         />
