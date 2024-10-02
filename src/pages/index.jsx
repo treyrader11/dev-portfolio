@@ -9,7 +9,7 @@ import SlidingImages from "@/components/SlidingImages";
 import RecentProjects from "@/components/RecentProjects";
 import Hero from "@/components/Hero";
 import PositionProvider from "@/components/providers/PositionProvider";
-import References from "@/components/References";
+// import References from "@/components/References";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -34,7 +34,6 @@ export default function Home() {
 
         <div className={cn("min-h-screen relative px-20")}>
           {/* <References /> */}
-          
           <SlidingImages className="bg-white" />
         </div>
       </Inner>

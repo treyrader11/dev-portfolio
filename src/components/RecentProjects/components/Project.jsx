@@ -55,15 +55,7 @@ export default function Project({
       style={{ perspective: 1000 }}
       ref={container}
       className={cn(
-        // "cursor-pointer",
-        // "sticky",
-        // "top-0",
-        // "min-h-screen",
-    
         "z-10",
-        // "[scroll-snap-align:center]",
-        // "my-[2px]",
-        // // "h-[120px]",
         "w-full",
         "flex",
         "flex-col",
@@ -73,8 +65,6 @@ export default function Project({
         "sticky",
         "top-0",
         "cursor-pointer",
-
-        "snap-start",
         className
       )}
       onClick={handleFlip}
@@ -94,7 +84,7 @@ export default function Project({
           backfaceVisibility: "hidden",
         }}
         className={cn(
-          "snap-parent-y-mandatory",
+          // "snap-parent-y-mandatory",
           "h-screen",
           "fixed", // need to take ele out of page flow for width to work
           "w-[120%]",

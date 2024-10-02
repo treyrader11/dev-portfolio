@@ -1,7 +1,7 @@
-// "use client";
+"use client";
 
 import { useScroll } from "framer-motion";
-import React, { useRef, createRef, forwardRef } from "react";
+import React, { useRef } from "react";
 import Project from "./components/Project";
 import Rounded from "@/components/Rounded";
 import { cn } from "@/lib/utils";
@@ -9,20 +9,10 @@ import { motion } from "framer-motion";
 import PageTitle from "../PageTitle";
 import Scrollbar from "../Scrollbar";
 import { projectPositions, recentProjects } from "./constants";
-import { scrollTo } from "@/lib/utils";
 
 export default function RecentProjects({ className }) {
   const container = useRef(null);
-  const snapRef = useRef(null);
-  // const sectionRefs = useRef(recentProjects.map(() => createRef()));
 
-  // function scrollTo(section) {
-  //   section.current.scrollIntoView({ behavior: "smooth" });
-  // }
-
-  // function scrollToSection(sectionRef) {
-  //   sectionRef.current.scrollIntoView({ behavior: "smooth" });
-  // }
 
   const { scrollYProgress } = useScroll({
     target: container,
