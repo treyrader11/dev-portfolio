@@ -137,10 +137,10 @@ body {
   top: calc(2px / -1);
   left: calc(2px / -1);
 
-  background: linear-gradient(to right, #934E00 0%, #934E00 100%),
-    linear-gradient(to top, #934E00 50%, transparent 50%),
-    linear-gradient(to top, #934E00 50%, transparent 50%),
-    linear-gradient(to right, #934E00 0%, #934E00 100%),
+  background: linear-gradient(to right, #934e00 0%, #934e00 100%),
+    linear-gradient(to top, #934e00 50%, transparent 50%),
+    linear-gradient(to top, #934e00 50%, transparent 50%),
+    linear-gradient(to right, #934e00 0%, #934e00 100%),
     linear-gradient(to left, #934e00 0%, #934e00 100%);
   background-size: 100% 2px, 2px 200%, 2px 200%, 0% 2px, 0% 2px;
   background-position: 50% 100%, 0% 0%, 100% 0%, 100% 0%, 0% 0%;
@@ -173,16 +173,16 @@ body {
   }
 
   .contact-form {
-    --primary: #934E00;
-    --primary-dark: #934E00;
+    --primary: #934e00;
+    --primary-dark: #934e00;
     --primary-darkest: #3b0764;
     --input-placeholder: #a6accd;
     --input-text: #646b8c;
     --border-default: #e1e6f9;
-    --border-active: #934E00;
+    --border-active: #934e00;
     --background: #fff;
     --button-text: #ffffff;
-    --success: #934E00;
+    --success: #934e00;
     --trails: rgb(140, 78, 194, 0.15);
   }
 
@@ -323,6 +323,38 @@ body {
   .contact-form button span.success svg {
     stroke-dashoffset: var(--success-stroke);
   }
+
+  /* Scroll snap */
+
+  .snap-parent-y-mandatory {
+    scroll-snap-type: y mandatory;
+    overflow: scroll; 
+    height: 100vh;
+    width: 100%; 
+    /* -webkit-overflow-scrolling: touch; */
+  }
+
+  .snap-parent-y-proximity {
+    scroll-snap-type: y proximity;
+    overflow: scroll;
+    height: 100vh;
+    width: 100%;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .snap-child-start {
+    opacity: 0.5;
+    z-index: 10;
+    scroll-snap-align: start;
+    flex: none;
+  }
+
+  .snap-child-center {
+    opacity: 0.5;
+    z-index: 10;
+    scroll-snap-align: center;
+    flex: none;
+  }
 }
 
 /* Font below is used for hero */
@@ -342,8 +374,6 @@ body {
   font-family: "Body";
   src: url("../public/fonts/NeueMontreal_Medium.otf");
 }
-
-
 
 /* css way for profile pic blob */
 .blob {

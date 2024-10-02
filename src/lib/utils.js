@@ -1,23 +1,23 @@
 import { clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 
-export function cn(...inputs) {
+export const cn = (...inputs) => {
   return twMerge(clsx(inputs));
-}
+};
 
-export function scrollTo(id) {
+export const scrollTo = (id) => {
   if (id) {
-    const element = document.getElementById(id);
-    console.log("element:", element);
-    if (element) {
-      element.scrollIntoView({
+    const el = document.getElementById(id);
+    console.log("element:", el);
+    if (el) {
+      el.scrollIntoView({
         behavior: "smooth",
         block: "start",
         inline: "nearest",
       });
     }
   }
-}
+};
 
 export const getUnique = (items, value) => {
   return [...new Set(items.map((item) => item[value]))];

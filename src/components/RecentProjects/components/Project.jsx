@@ -1,8 +1,8 @@
-"use client";
+// "use client";
 
 import Image from "next/image";
 import { useMotionValueEvent, motion, useScroll } from "framer-motion";
-import { useRef, useContext, useState } from "react";
+import { useRef, useContext, useState, forwardRef } from "react";
 import { cn } from "@/lib/utils";
 import Rounded from "@/components/Rounded";
 import { PositionContext } from "@/lib/contexts";
@@ -13,8 +13,10 @@ export default function Project({
   video_key,
   position,
   className,
+  // id,
 }) {
   const container = useRef(null); // for position context
+
   const positionContext = useContext(PositionContext);
   const { setActivePosition, setActivePositionProgress } =
     positionContext || {};
@@ -50,14 +52,29 @@ export default function Project({
 
   return (
     <div
-      style={{ perspective: 1000, scrollSnapAlign: "start" }}
+      style={{ perspective: 1000 }}
       ref={container}
       className={cn(
-        "cursor-pointer",
+        // "cursor-pointer",
+        // "sticky",
+        // "top-0",
+        // "min-h-screen",
+    
+        "z-10",
+        // "[scroll-snap-align:center]",
+        // "my-[2px]",
+        // // "h-[120px]",
+        "w-full",
+        "flex",
+        "flex-col",
+        "items-center",
+        "justify-center",
+        "min-h-screen",
         "sticky",
         "top-0",
-        "min-h-screen",
-       
+        "cursor-pointer",
+
+        "snap-start",
         className
       )}
       onClick={handleFlip}
@@ -69,7 +86,6 @@ export default function Project({
         transition={{ duration: 0.6, animationDirection: "normal" }}
         onAnimationComplete={() => setIsAnimating(false)}
         style={{
-          // scrollSnapType: "y mandatory",
           transition: "transform 0.6s",
           backgroundImage: `url(/shots/${project_image})`,
           backgroundPosition: "center",
@@ -78,10 +94,11 @@ export default function Project({
           backfaceVisibility: "hidden",
         }}
         className={cn(
+          "snap-parent-y-mandatory",
           "h-screen",
           "fixed", // need to take ele out of page flow for width to work
           "w-[120%]",
-          "-left-[calc(20%-10%)]" // 10% === 1/2 of 20%
+          "-left-[calc(20%_-_10%)]" // 10% === 1/2 of 20%
         )}
       />
       {/* Back of card */}

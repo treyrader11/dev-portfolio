@@ -1,7 +1,7 @@
-"use client";
+// "use client";
 
 import { useScroll } from "framer-motion";
-import { useRef } from "react";
+import React, { useRef, createRef, forwardRef } from "react";
 import Project from "./components/Project";
 import Rounded from "@/components/Rounded";
 import { cn } from "@/lib/utils";
@@ -9,9 +9,20 @@ import { motion } from "framer-motion";
 import PageTitle from "../PageTitle";
 import Scrollbar from "../Scrollbar";
 import { projectPositions, recentProjects } from "./constants";
+import { scrollTo } from "@/lib/utils";
 
 export default function RecentProjects({ className }) {
   const container = useRef(null);
+  const snapRef = useRef(null);
+  // const sectionRefs = useRef(recentProjects.map(() => createRef()));
+
+  // function scrollTo(section) {
+  //   section.current.scrollIntoView({ behavior: "smooth" });
+  // }
+
+  // function scrollToSection(sectionRef) {
+  //   sectionRef.current.scrollIntoView({ behavior: "smooth" });
+  // }
 
   const { scrollYProgress } = useScroll({
     target: container,
@@ -20,7 +31,6 @@ export default function RecentProjects({ className }) {
 
   return (
     <motion.section
-      style={{ scrollSnapType: "y mandatory" }}
       ref={container}
       className={cn(
         "relative",
@@ -32,8 +42,14 @@ export default function RecentProjects({ className }) {
         "flex-col",
         "gap-y-10",
 
-        // "overflow-y-scroll",
-
+        "snap-y",
+        "snap-mandatory",
+        "scroll-smooth",
+        // "overflow-scroll",
+        // "relative",
+        // "-top-1/2",
+        "sticky",
+        // "snap-parent-y-mandatory",
         className
       )}
     >
@@ -45,10 +61,10 @@ export default function RecentProjects({ className }) {
           "h-0",
           "sticky",
           "top-0",
-          "md:p-0", //makes menu button look good
+
+          // "md:p-0", //makes menu button look good
           "pt-10",
-          // "mt-[100%]", // puts title way at bottom
-          "min-h-[50vh]",
+          "mt-[30%]", // puts title way at bottom
           "font-pp-acma"
         )}
         title="Recent projects."
@@ -57,16 +73,19 @@ export default function RecentProjects({ className }) {
 
       <Scrollbar positions={projectPositions} />
 
+      {/* Snap parent */}
+      {/* <div className={cn("snap-parent-y-mandatory")}> */}
       {recentProjects.map((project, i) => {
         return (
           <Project
             position={projectPositions[i]}
-            key={`p_${i}`}
+            key={i}
             {...project}
             progress={scrollYProgress}
           />
         );
       })}
+      {/* </div> */}
 
       <div className={cn("py-20 sm:py-0")}>
         <Rounded
@@ -88,3 +107,20 @@ export default function RecentProjects({ className }) {
     </motion.section>
   );
 }
+
+function SnapParent({ ...props }, ref) {
+  return (
+    <div
+      ref={ref}
+      {...props}
+      className={cn(
+        "snap-parent-y-mandatory"
+        // "relative"
+      )}
+    >
+      {props.children}
+    </div>
+  );
+}
+
+React.forwardRef(SnapParent);
