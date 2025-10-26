@@ -21,7 +21,7 @@ export const userData = {
   phone: "504.756.4538",
   address: "New Orleans, Louisiana.",
   resumeUrl:
-    "https://drive.google.com/file/d/1gKLk8XPCJCyjnEgEHS4AcKDPm5TDAjDS/view?usp=sharing",
+    "https://drive.google.com/file/d/1LMM6St-8DNl9VFycHdkL7J5qzSnZfNiE/view?usp=sharing",
   socialLinks: {
     instagram: "https://instagram.com",
     twitter: "https://twitter.com",
