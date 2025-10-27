@@ -1,11 +1,10 @@
 "use client";
 
-import { useScroll } from "framer-motion";
-import React, { useRef } from "react";
+import { useScroll, useTransform, motion } from "framer-motion";
+import React, { useRef, useMemo } from "react";
 import Project from "./components/Project";
 import Rounded from "@/components/Rounded";
 import { cn } from "@/lib/utils";
-import { motion } from "framer-motion";
 import PageTitle from "../PageTitle";
 import Scrollbar from "../Scrollbar";
 import { projectPositions, recentProjects } from "./constants";
@@ -13,11 +12,30 @@ import { projectPositions, recentProjects } from "./constants";
 export default function RecentProjects({ className }) {
   const container = useRef(null);
 
-
   const { scrollYProgress } = useScroll({
     target: container,
     offset: ["start start", "end end"],
   });
+
+  // Calculate when to fade based on number of projects
+  const fadeStartPoint = useMemo(() => {
+    const projectCount = recentProjects.length;
+    // Start fading 20% earlier (subtract 0.2)
+    return Math.max(0.65, 1 - 2 / projectCount - 0.2);
+  }, []);
+
+  // Title stays visible until last card, then fades out sooner
+  const titleOpacity = useTransform(
+    scrollYProgress,
+    [0, fadeStartPoint, fadeStartPoint + 0.1, 1],
+    [1, 1, 0, 0]
+  );
+
+  const titleY = useTransform(
+    scrollYProgress,
+    [fadeStartPoint, fadeStartPoint + 0.1],
+    [0, -30]
+  );
 
   return (
     <motion.section
@@ -26,45 +44,43 @@ export default function RecentProjects({ className }) {
         "relative",
         "z-[2]",
         "mx-4",
-        // "pb-[124vh]",
         "sm:pb-[160vh]",
         "flex",
         "flex-col",
         "gap-y-10",
-
         "snap-y",
         "snap-mandatory",
         "scroll-smooth",
-        // "overflow-scroll",
-        // "relative",
-        // "-top-1/2",
         "sticky",
-        // "snap-parent-y-mandatory",
         className
       )}
     >
-      <PageTitle
-        once={false}
-        delay={0.8}
-        backgroundColor="transparent"
-        containerClass={cn(
-          "h-0",
+      <motion.div
+        style={{
+          opacity: titleOpacity,
+          y: titleY,
+        }}
+        className={cn(
           "sticky",
           "top-0",
-
-          // "md:p-0", //makes menu button look good
-          "pt-10",
-          "mt-[30%]", // puts title way at bottom
-          "font-pp-acma"
+          "pt-14",
+          "mt-[30%]",
+          "pointer-events-none",
+          "mx-auto"
         )}
-        title="Recent projects."
-        className={cn("py-0 md:text-[5vw]")}
-      />
+      >
+        <PageTitle
+          once={false}
+          delay={0.8}
+          backgroundColor="transparent"
+          containerClass={cn("h-0", "font-pp-acma")}
+          title="Recent projects."
+          className={cn("py-0 md:text-[5vw]")}
+        />
+      </motion.div>
 
       <Scrollbar positions={projectPositions} />
 
-      {/* Snap parent */}
-      {/* <div className={cn("snap-parent-y-mandatory")}> */}
       {recentProjects.map((project, i) => {
         return (
           <Project
@@ -75,7 +91,6 @@ export default function RecentProjects({ className }) {
           />
         );
       })}
-      {/* </div> */}
 
       <div className={cn("py-20 sm:py-0")}>
         <Rounded
@@ -97,20 +112,3 @@ export default function RecentProjects({ className }) {
     </motion.section>
   );
 }
-
-function SnapParent({ ...props }, ref) {
-  return (
-    <div
-      ref={ref}
-      {...props}
-      className={cn(
-        "snap-parent-y-mandatory"
-        // "relative"
-      )}
-    >
-      {props.children}
-    </div>
-  );
-}
-
-React.forwardRef(SnapParent);
