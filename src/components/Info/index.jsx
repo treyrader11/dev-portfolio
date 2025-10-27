@@ -15,7 +15,6 @@ const socials = [
   { name: "Youtube", href: userData.socialLinks.youtube },
   { name: "GitHub", href: userData.socialLinks.github },
   { name: "LinkedIn", href: userData.socialLinks.linkedin },
-  { name: "Instagram", href: userData.socialLinks.instagram },
 ];
 
 const heading = userData.about.title;
@@ -62,42 +61,36 @@ export default function Info() {
           <ParalaxScrollText text={heading} scrollYProgress={scrollYProgress} />
         </div>
 
-        <div className="px-4 md:w-[800px] mx-auto">
+        <div className="px-4 md:w-[900px] lg:w-[1100px] mx-auto">
+          {/* SOLUTION 2: Grid with items-start alignment */}
           <div
             className={cn(
               "grid",
-              "max-w-6xl",
               "grid-cols-1",
+              "md:grid-cols-[280px_1fr]",
               "pt-20",
-              "mx-auto",
-              "md:grid-cols-3",
-              "gap-20",
-              "w-full"
+              "gap-10",
+              "lg:gap-16",
+              "items-start" // This is key - aligns items to top
             )}
           >
-            {/* Social Buttons */}
-            <div className="inline-flex flex-col ">
+            {/* Sidebar - Contact & Job Opportunities */}
+            <div className="space-y-8">
               <div>
-                <h1
-                  className={cn(
-                    "text-xl",
-                    "font-semibold",
-                    // "font-pp-acma",
-                    "text-gray-700"
-                  )}
-                >
+                <h1 className={cn("text-xl", "font-semibold", "text-gray-700")}>
                   Contact
                 </h1>
-                <p className={cn("mt-4 text-lg text-gray-500")}>
+                <p className={cn("mt-4", "text-lg", "text-gray-500")}>
                   For any sort of help / enquiry, please shoot me an{" "}
                   <Link
-                    // href={`mailto:${userData.email}`}
                     href="/contact"
                     className={cn(
                       "font-bold",
                       "text-gray-800",
                       "border-b-2",
-                      "border-gray-800"
+                      "border-gray-800",
+                      "hover:text-gray-600",
+                      "transition-colors"
                     )}
                   >
                     email
@@ -105,79 +98,68 @@ export default function Info() {
                   and I&apos;ll get back the same day.
                 </p>
               </div>
-              <div className="mt-8">
+
+              <div>
                 <h1 className="text-xl font-semibold text-gray-700">
                   Job Opportunities
                 </h1>
                 <p className="relative mt-4 text-lg text-gray-500">
                   I&apos;m looking for a job currently. If you see me as a good
                   fit, please have a look at my{" "}
-                  <span>
-                    <a
-                      href={userData.resumeUrl}
-                      target="__blank"
-                      className={cn(
-                        "font-bold",
-                        "text-gray-800",
-                        "border-b-2",
-                        "border-gray-800"
-                      )}
-                    >
-                      CV
-                    </a>{" "}
-                  </span>
-                  and I&apos;d love to see what y&lsquo;all do!
+                  <a
+                    href={userData.resumeUrl}
+                    target="__blank"
+                    rel="noopener noreferrer"
+                    className={cn(
+                      "font-bold",
+                      "text-gray-800",
+                      "border-b-2",
+                      "border-gray-800",
+                      "hover:text-gray-600",
+                      "transition-colors"
+                    )}
+                  >
+                    CV
+                  </a>{" "}
+                  and I&apos;d love to see what y&apos;all do!
                 </p>
               </div>
             </div>
 
-            {/* Text area */}
-            <div
-              className={cn(
-                "col-span-1",
-                "mx-[10vw]",
-                // "font-pp-acma",
-                // "font-mono",
-                // "text-slate-400",
-                "text-[3vw]",
-                // "uppercase",
-                "md:col-span-2",
-                "text-extralight"
-              )}
-            >
+            {/* Main Content - Description */}
+            <div className="space-y-4">
               {userData.about.description?.map((desc, i) => (
-                <p key={i} className="mb-4 text-xl">
+                <p key={i} className="text-xl leading-relaxed text-gray-500">
                   {desc}
                 </p>
               ))}
             </div>
           </div>
+
+          {/* Socials & Portrait */}
           <div
             className={cn(
               "pt-20",
               "relative",
               "grid",
-              "grid-cols-2",
-              "mx-8",
-              "gap-5",
-              "md:gap-0",
+              "grid-cols-1",
+              "md:grid-cols-2",
+              "gap-10",
               "mt-[5vh]"
             )}
           >
             <Socials
               md={md}
               links={socials}
-              className="w-full relative z-[1] "
+              className="w-full relative z-[1]"
             />
             <Portrait style={{ top: lg }} />
           </div>
         </div>
 
         <div className="w-full pt-40 sm:pt-20">
-          <TechStack className="w-full " />
+          <TechStack className="w-full" />
         </div>
-
-        {/* <TextSlider text="TeckStack" /> */}
       </motion.div>
 
       <Experience scrollYProgress={scrollYProgress} />

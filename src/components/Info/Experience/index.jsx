@@ -24,7 +24,7 @@ function ExperienceCard({ experience }) {
         background: "rgb(34 31 34)",
         color: "#fff",
       }}
-      contentArrowStyle={{ borderRight: "7px solid  #232631" }}
+      contentArrowStyle={{ borderRight: "7px solid  rgb(34 31 34)" }}
       date={experience.date}
       iconStyle={{ background: experience.iconBg }}
       icon={
@@ -99,7 +99,7 @@ export default function Experience({ className }) {
         title="Work Experience."
       />
 
-      <div className="flex flex-col mt-20">
+      <div className="flex flex-col mt-40">
         <VerticalTimeline>
           {experiences.map((experience, i) => (
             <ExperienceCard key={`experience-${i}`} experience={experience} />

@@ -5,14 +5,14 @@ import { slideUp, opacity } from "./anim";
 import Rounded from "@/components/Rounded";
 import { useRef } from "react";
 import { cn } from "@/lib/utils";
+import { userData } from "@/lib/data";
+
+// const phrase = userData?.description?.phrase || "";
 
 export default function Description({ scrollYProgress, className }) {
   const phrase =
     "Helping brands to stand out in the digital era. Together we will set the new status quo. No nonsense, always on the cutting edge.";
-  // const phrase =
-  //   "One beautiful aspect of coding is that, when comparing it to a vast majority of other professions, learning is endless, whether it be discovering a new technique or a new technology.";
-  // const phrase =
-  // "Determined Software engineer";
+
   const description = useRef(null);
   const isInView = useInView(description);
 
@@ -68,11 +68,7 @@ function AboutButton({ className }) {
   return (
     // <div className={cn("absolute right-0 top-[40%] md:top-[35%]", className)}>
     <div className={cn("absolute right-0 top-[40%] md:top-[35%]", className)}>
-      <Rounded
-        text="About"
-        href="/info"
-        className="size-[180px] bg-dark-400"
-      />
+      <Rounded text="About" href="/info" className="size-[180px] bg-dark-400" />
     </div>
   );
 }

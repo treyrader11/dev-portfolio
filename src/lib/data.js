@@ -1,179 +1,323 @@
+// Company Logos
 import torsh from "/public/images/company/torsh.png";
 import vouzot from "/public/images/company/vouzot.png";
 import pasteui from "/public/images/company/pasteui.png";
+import evolvemediaai from "/public/images/company/evolvemediaai.png";
 
+// Technology Stack Images
 import mern from "/public/images/tech/mern.png";
 import next from "/public/images/tech/next.png";
 import expo from "/public/images/tech/expo.png";
 import vite from "/public/images/tech/vite.png";
 
+// Reference Images
 import jason from "/public/images/references/jason.png";
 import daniel from "/public/images/references/daniel.png";
 import wilson from "/public/images/references/wilson.png";
 import janine from "/public/images/references/janine.png";
 
+// ============================================
+// SECTION 1: USER DATA & PROFILE
+// ============================================
+
 export const userData = {
+  // Basic Info
   githubUsername: "treyrader11",
   name: "Trey Rader",
-  designation: "Full-Stack Developer",
+  designation: "Senior React Native Developer",
   avatarUrl: "/avatar.png",
-  email: "trey@treyrader.dev",
+  email: "developertrey@gmail.com",
   phone: "504.756.4538",
-  address: "New Orleans, Louisiana.",
+  address: "Metairie, Louisiana",
   resumeUrl:
     "https://drive.google.com/file/d/1LMM6St-8DNl9VFycHdkL7J5qzSnZfNiE/view?usp=sharing",
+
+  // Social Links
   socialLinks: {
-    instagram: "https://instagram.com",
-    twitter: "https://twitter.com",
     linkedin: "https://linkedin.com/in/trey-rader",
     github: "https://github.com/treyrader11",
-    facebook: "https://facebook.com/",
     youtube: "https://youtube.com/channel/developertrey",
   },
+
+  // Hero Section
+  hero: {
+    phrase:
+      "Senior developer specializing in React Native and modern web technologies, delivering high-quality mobile and web experiences.",
+  },
+
+  // About Section
   about: {
     title:
-      "I'm a software developer who loves building products and web applications that impact the world",
+      "Senior React Native Developer focused on building performant, scalable mobile applications",
+
     description: [
-      `I began teaching myself to code back in 2016, HTML, CSS, and JS. I did well enough to eventually land my first job with an ed tech startup out of New Orleans, called TORSH. After having at TORSH, however, I hardly did anything tech-related except for develop and deploy a few websites for my musician friends`,
-      `I've worked in React, Angular, Meteor, Svelte, Node.js, Express, KeystoneJS, MongoDB, MySQL, Prisma, Drizzle, Bootstrap, & Tailwind, to name a few. As of lately, most of my experience has been cosummed in honing in my frontend development skillset using Framer Motion & Gsap, often in tandem.`,
+      `With over 8 years of hands-on development experience, I specialize in React Native and the Expo ecosystem, crafting cross-platform mobile applications that deliver exceptional user experiences. Currently leading frontend development at Evolve Media AI, where I architect and build AI-powered media tools using TypeScript, NativeWind, and TanStack Query.`,
+
+      `My expertise spans the entire development lifecycle—from designing reusable component libraries and implementing advanced caching strategies to collaborating with AI engineers and ensuring accessibility across all platforms. I'm passionate about clean code, performance optimization, and staying current with modern development practices.`,
+
+      `Beyond React Native, I have deep experience with Next.js, GraphQL, and full-stack JavaScript development. I've worked with technologies ranging from Meteor and Svelte to Prisma and MongoDB, always adapting to choose the best tools for each project. My background includes building large-scale web platforms, integrating third-party APIs, and leading technical initiatives from concept to deployment.`,
     ],
-    current_project_url: "https://www.vouzot.com",
-    current_project: "Vouzot",
+
+    description_concise: [
+      `I'm a Senior React Native Developer with 8+ years of experience building cross-platform mobile and web applications. Currently at Evolve Media AI, I lead frontend development for AI-powered media tools using the Expo stack, TypeScript, and modern architecture patterns.`,
+
+      `I specialize in performance optimization, component architecture, and creating seamless user experiences. My technical toolkit includes React Native, Next.js, TypeScript, GraphQL, TanStack Query, and various animation libraries like Framer Motion and GSAP. I'm passionate about clean code, accessibility, and staying at the forefront of mobile development.`,
+    ],
+
+    current_project_url: "https://www.evolvemedia.ai",
+    current_project: "Evolve Media AI",
+  },
+
+  // Experience Highlights (Resume Format)
+  experience_highlights: [
+    {
+      role: "React Native Developer",
+      company: "Evolve Media AI",
+      period: "August 2024 - Present",
+      location: "New Orleans, LA",
+      highlights: [
+        "Lead frontend development for AI-driven mobile app using Expo, React Native, and TypeScript",
+        "Architected 25+ reusable UI components with consistent, accessible styling",
+        "Implemented advanced caching with TanStack Query and optimistic updates",
+        "Refactored codebase for full type safety and modern dependency management",
+        "Collaborate with AI engineers to integrate intelligent media tools",
+      ],
+    },
+    {
+      role: "Junior Software Engineer",
+      company: "Torsh, Inc.",
+      period: "April 2017 - August 2019",
+      location: "New Orleans, LA",
+      highlights: [
+        "Developed features for large-scale web platform and internal CMS",
+        "Implemented frontend functionality from design specs with UX collaboration",
+        "Worked in Agile environment with peer reviews and weekly demos",
+        "Introduced automated test coverage improvements",
+        "Authored technical documentation for development continuity",
+      ],
+    },
+  ],
+
+  // Technical Expertise
+  technical_expertise: {
+    mobile: ["React Native", "Expo", "NativeWind", "Reanimated", "Moti"],
+    frontend: [
+      "React",
+      "Next.js",
+      "TypeScript",
+      "Framer Motion",
+      "GSAP",
+      "Tailwind CSS",
+    ],
+    backend: ["Node.js", "Express", "GraphQL", "Prisma", "REST APIs"],
+    databases: ["MongoDB", "MySQL", "PostgreSQL"],
+    tools: ["Git", "VSCode", "Figma", "TanStack Query", "Zustand"],
+  },
+
+  // Professional Summaries
+  professional_summaries: {
+    short:
+      "Senior React Native Developer with 8+ years building performant cross-platform applications using React, Expo, and TypeScript.",
+
+    medium:
+      "Senior React Native Developer specializing in cross-platform mobile applications with 8+ years of experience. Expert in the Expo ecosystem, TypeScript, and modern frontend architecture. Proven track record of delivering AI-powered solutions, optimizing performance, and leading technical initiatives.",
+
+    long: "Senior React Native Developer with 8+ years of hands-on experience crafting cross-platform mobile and web applications. Specialized in React, Expo, and TypeScript with demonstrated success leading frontend architecture, optimizing performance, and delivering AI-powered mobile solutions. Strong collaborator with design and backend teams, committed to high code quality standards and exceptional user experiences. Passionate about building performant, maintainable, and visually refined mobile products.",
   },
 };
 
-export const projectsData = [
+// ============================================
+// SECTION 2: WORK EXPERIENCE & PROJECTS
+// ============================================
+
+// Combined: All Experience (Work + Personal Projects)
+export const experiences = [
   {
-    title: "Musiana",
-    desc: "This is just some placeholder text until i make time to actually create the real deal. If you're seeing this, then it means I love you",
-    color: "#e3e5e7",
-    video_key: "GJyPpc8qaHA",
-    // category: "Web Development",
-    category: "Mern",
-    tech_image: mern.src,
-    tags: ["react", "sass", "mongodb", "jwt", "express", "node"],
-    stack: "MERN",
-    technology_feature: [
-      "Tailwind",
-      "React",
-      "Redux",
-      "Next js 13",
-      "Type Script",
-      "Node js",
-      "Express js",
-      "Firebase",
-      "Graphql",
-      "Stripe",
+    title: "React Native Developer",
+    company_name: "Evolve Media AI",
+    icon: evolvemediaai,
+    iconBg: "#383E56",
+    date: "August 2024 - Present",
+    website_url: "https://www.evolvemedia.ai",
+    points: [
+      "Lead frontend development for AI-driven mobile app using Expo, React Native, and TypeScript",
+      "Architected 25+ reusable UI components with consistent, accessible styling",
+      "Implemented advanced caching with TanStack Query and optimistic updates",
+      "Refactored codebase for full type safety and modern dependency management",
+      "Collaborate with AI engineers to integrate intelligent media tools",
+      "Currently leading development of the company's corporate website",
+      "Enhanced accessibility and UI consistency across all design implementations",
     ],
-    //   icon: React.createElement(FaReact), //see byte grad
-    packages: {
-      frontend: [
-        "@reduxjs/toolkit",
-        "@uiball/loaders",
-        "firebase",
-        "firebase-admin",
-        "nextjs-progressbar",
-        "openai",
-        "react-firebase-hooks",
-        "react-icons",
-        "react-redux",
-        "react-simple-typewriter",
-      ],
-      backend: [
-        "@reduxjs/toolkit",
-        "@uiball/loaders",
-        "firebase",
-        "firebase-admin",
-        "nextjs-progressbar",
-        "openai",
-        "react-firebase-hooks",
-        "react-icons",
-        "react-redux",
-        "react-simple-typewriter",
-      ],
-    },
-    env: {
-      frontend: [
-        "VITE_APP_BACKEND_URL",
-        "VITE_APP_CLOUD_NAME",
-        "VITE_APP_GOOGLE_CLIENT_ID",
-        "VITE_APP_GOOGLE_CLIENT_SECRET",
-        "VITE_APP_FIREBASE_KEY",
-      ],
-      backend: [
-        "CLOUD_API_KEY",
-        "CLOUD_API_SECRET",
-        "CLOUD_NAME",
-        "JWT_LIFETIME",
-        "JWT_SECRET",
-        "MONGO_URI",
-        "MODE",
-        "PORT",
-        "EMAIL_HOST",
-        "EMAIL_USER",
-        "EMAIL_PASS",
-        "GOOGLE_CLIENT_SECRET",
-        "CRYPTR_KEY",
-        "GOOGLE_CLIENT_ID",
-        "FRONTEND_URL",
-      ],
-    },
-    youtube_link: "https://youtu.be/yF1oJ7wzvWY",
-    githhub_link: "https://github.com/treyrader11/musiana-client",
-    download_links: {
-      frontend:
-        "https://github.com/treyrader11/Vouzot/archive/refs/heads/main.zip",
-      backend:
-        "https://github.com/treyrader11/musiana-server/archive/refs/heads/main.zip",
-    },
-    project_image: "c2.png",
-    project_video: "tech-meeting.mp4",
-    image: {
-      isPriority: true,
-      src: "c2.png",
-    },
-    website_url: "https://musiana.vercel.app",
-    isRecent: true,
   },
   {
+    title: "Full-Stack Developer",
+    company_name: "Vouzot",
+    icon: vouzot,
+    iconBg: "#d6d7dc",
+    date: "2024 - In Development",
+    website_url: "https://vouzot-test.vercel.app",
+    points: [
+      "Building full-stack authentication and subscription platform with Next.js 14 App Router",
+      "Implementing Prisma ORM with MongoDB for scalable data management",
+      "Creating responsive UI with Tailwind CSS, Shadcn UI, and Framer Motion animations",
+      "Integrating Stripe payment processing and subscription management system",
+      "Developing with TypeScript, Zod validation, and React Hook Form for type safety",
+      "Managing state with Zustand and implementing TanStack Table for data display",
+      "Architecting secure authentication flows with NextAuth and OAuth providers",
+    ],
+  },
+  {
+    title: "Frontend Developer",
+    company_name: "PasteUI",
+    icon: pasteui,
+    iconBg: "#e3e3e3",
+    date: "2024 - In Development",
+    website_url: "https://www.pasteui.io",
+    points: [
+      "Developing modern component library and design system with Next.js 13",
+      "Creating reusable, accessible UI components with Shadcn UI and Tailwind CSS",
+      "Building comprehensive documentation and component playground",
+      "Implementing responsive layouts with modern CSS techniques and animations",
+      "Focusing on accessibility (a11y) and WCAG compliance across all components",
+      "Utilizing TypeScript for complete type safety and better developer experience",
+      "Establishing design tokens and theming system for consistent styling",
+    ],
+  },
+  {
+    title: "Junior Software Engineer",
+    company_name: "Torsh, Inc.",
+    icon: torsh,
+    iconBg: "#E6DEDD",
+    date: "April 2017 - August 2019",
+    website_url: "https://www.torsh.com",
+    points: [
+      "Developed features for large-scale web platform and internal CMS",
+      "Implemented frontend functionality from design specs with UX collaboration",
+      "Worked in Agile environment with peer reviews and weekly demos",
+      "Performed manual acceptance testing and introduced automated test coverage",
+      "Authored technical documentation for development continuity and onboarding",
+      "Integrated 3rd-party APIs and built CRUD operations",
+    ],
+  },
+];
+
+// Separated: Work Experience Only
+export const workExperience = [
+  {
+    title: "React Native Developer",
+    company_name: "Evolve Media AI",
+    icon: evolvemediaai,
+    iconBg: "#383E56",
+    date: "August 2024 - Present",
+    website_url: "https://www.evolvemediaai.com",
+    points: [
+      "Lead frontend development for AI-driven mobile app using Expo, React Native, and TypeScript",
+      "Architected 25+ reusable UI components with consistent, accessible styling",
+      "Implemented advanced caching with TanStack Query and optimistic updates",
+      "Refactored codebase for full type safety and modern dependency management",
+      "Collaborate with AI engineers to integrate intelligent media tools",
+      "Currently leading development of the company's corporate website",
+      "Enhanced accessibility and UI consistency across all design implementations",
+    ],
+  },
+  {
+    title: "Junior Software Engineer",
+    company_name: "Torsh, Inc.",
+    icon: torsh,
+    iconBg: "#E6DEDD",
+    date: "April 2017 - August 2019",
+    website_url: "https://www.torsh.com",
+    points: [
+      "Developed features for large-scale web platform and internal CMS",
+      "Implemented frontend functionality from design specs with UX collaboration",
+      "Worked in Agile environment with peer reviews and weekly demos",
+      "Performed manual acceptance testing and introduced automated test coverage",
+      "Authored technical documentation for development continuity and onboarding",
+      "Integrated 3rd-party APIs and built CRUD operations",
+    ],
+  },
+];
+
+// Separated: Personal Projects Only
+export const personalProjects = [
+  {
+    title: "Full-Stack Developer",
+    company_name: "Vouzot",
+    icon: vouzot,
+    iconBg: "#d6d7dc",
+    date: "2024 - In Development",
+    website_url: "https://www.vouzot.com",
+    points: [
+      "Building full-stack authentication and subscription platform with Next.js 14 App Router",
+      "Implementing Prisma ORM with MongoDB for scalable data management",
+      "Creating responsive UI with Tailwind CSS, Shadcn UI, and Framer Motion animations",
+      "Integrating Stripe payment processing and subscription management system",
+      "Developing with TypeScript, Zod validation, and React Hook Form for type safety",
+      "Managing state with Zustand and implementing TanStack Table for data display",
+      "Architecting secure authentication flows with NextAuth and OAuth providers",
+    ],
+  },
+  {
+    title: "Frontend Developer",
+    company_name: "PasteUI",
+    icon: pasteui,
+    iconBg: "#e3e3e3",
+    date: "2024 - In Development",
+    website_url: "https://www.pasteui.io",
+    points: [
+      "Developing modern component library and design system with Next.js 13",
+      "Creating reusable, accessible UI components with Shadcn UI and Tailwind CSS",
+      "Building comprehensive documentation and component playground",
+      "Implementing responsive layouts with modern CSS techniques and animations",
+      "Focusing on accessibility (a11y) and WCAG compliance across all components",
+      "Utilizing TypeScript for complete type safety and better developer experience",
+      "Establishing design tokens and theming system for consistent styling",
+    ],
+  },
+];
+
+// ============================================
+// SECTION 3: PROJECTS SHOWCASE DATA
+// ============================================
+
+export const projectsData = [
+  {
     title: "Vouzot",
-    desc: "This is just some placeholder text until i make time to actually create the real deal. If you're seeing this, then it means I love you",
+    desc: "Full-stack authentication and subscription platform built with Next.js 14, featuring AI-powered content management and payment processing.",
     color: "#d6d7dc",
     isPriority: false,
     video_key: "QKGIvW886dc",
-    stack: "Next JS",
+    stack: "Next.js",
     tech_image: next.src,
     tags: ["next", "shadcn", "prisma", "next-auth", "mongodb"],
-    category: "Next js",
+    category: "Next.js",
     technology_feature: [
       "Tailwind CSS",
-      "Next JS 14 (App Router)",
+      "Next.js 14 (App Router)",
       "Zustand",
       "TypeScript",
       "Zod",
       "React Hook Form",
       "Prisma",
-      "Mongodb",
+      "MongoDB",
       "Shadcn UI",
       "Framer Motion",
-      "Gsap",
-      "Tanstack Table",
-      "Stripe JS",
-      "Stroybook",
+      "GSAP",
+      "TanStack Table",
+      "Stripe",
+      "Storybook",
       "Docker",
     ],
     packages: {
       frontend: [
-        "@reduxjs/toolkit",
-        "@uiball/loaders",
-        "firebase",
-        "firebase-admin",
-        "nextjs-progressbar",
-        "openai",
-        "react-firebase-hooks",
-        "react-icons",
-        "react-redux",
-        "react-simple-typewriter",
+        "@tanstack/react-table",
+        "next-auth",
+        "zustand",
+        "framer-motion",
+        "gsap",
+        "zod",
+        "react-hook-form",
+        "@stripe/stripe-js",
       ],
     },
     env: {
@@ -182,16 +326,17 @@ export const projectsData = [
         "DIRECT_URL",
         "GITHUB_CLIENT_ID",
         "GITHUB_CLIENT_SECRET",
-        "GITHUB_AUTH_TOKEN",
         "GOOGLE_CLIENT_ID",
         "GOOGLE_CLIENT_SECRET",
         "AUTH_SECRET",
         "RESEND_API_KEY",
         "NEXT_PUBLIC_APP_URL",
+        "STRIPE_SECRET_KEY",
+        "STRIPE_WEBHOOK_SECRET",
       ],
     },
     youtube_link: "https://youtu.be/AxQ_Eli8gtk",
-    githhub_link: "https://github.com/treyrader11/JSearch-Expo",
+    github_link: "https://github.com/treyrader11/Vouzot",
     download_links: {
       frontend:
         "https://github.com/treyrader11/Vouzot/archive/refs/heads/main.zip",
@@ -202,67 +347,42 @@ export const projectsData = [
       isPriority: true,
       src: "decimal.png",
     },
-    project_Img_Mobile: [
-      "/deliveroo1.jpg",
-      "/roo2.jpg",
-      "/roo3.jpg",
-      "/roo4.jpg",
-      "/roo5.jpg",
-    ],
+    website_url: "https://www.vouzot.com",
+    isRecent: true,
   },
   {
-    title: "Paste UI",
-    desc: "This is just some placeholder text until i make time to actually create the real deal. If you're seeing this, then it means I love you",
+    title: "PasteUI",
+    desc: "Modern component library and design system featuring customizable UI components, built with Next.js and Shadcn UI for rapid application development.",
     color: "#e3e3e3",
     isPriority: true,
     video_key: "zHL1eT87OCw",
-    // category: "UI/UX Design",
-    stack: "Next JS",
-    category: "Next js",
-    tags: ["next", "shadcn", "prisma", "next-auth", "mongodb"],
+    stack: "Next.js",
+    category: "Next.js",
+    tags: ["next", "shadcn", "typescript", "tailwind"],
     tech_image: next.src,
     technology_feature: [
-      "Tailwind",
-      "React",
-      "Redux",
-      "Next js 13",
-      "Type Script",
-      "Node js",
-      "Express js",
-      "Firebase",
-      "Graphql",
-      "Stripe",
+      "Tailwind CSS",
+      "Next.js 13",
+      "TypeScript",
+      "Shadcn UI",
+      "Framer Motion",
+      "React Hook Form",
+      "Zod",
     ],
     packages: {
       frontend: [
-        "@reduxjs/toolkit",
-        "@uiball/loaders",
-        "firebase",
-        "firebase-admin",
-        "nextjs-progressbar",
-        "openai",
-        "react-firebase-hooks",
-        "react-icons",
-        "react-redux",
-        "react-simple-typewriter",
+        "@radix-ui/react-primitives",
+        "class-variance-authority",
+        "clsx",
+        "tailwind-merge",
+        "framer-motion",
       ],
     },
     env: {
-      frontend: [
-        "DATABASE_URL",
-        "DIRECT_URL",
-        "GITHUB_CLIENT_ID",
-        "GITHUB_CLIENT_SECRET",
-        "GITHUB_AUTH_TOKEN",
-        "GOOGLE_CLIENT_ID",
-        "GOOGLE_CLIENT_SECRET",
-        "AUTH_SECRET",
-        "RESEND_API_KEY",
-        "NEXT_PUBLIC_APP_URL",
-      ],
+      frontend: ["NEXT_PUBLIC_APP_URL"],
     },
     youtube_link: "https://youtu.be/yF1oJ7wzvWY",
-    githhub_link: "https://github.com/treyrader11/JSearch-Expo",
+    github_link: "https://github.com/treyrader11/PasteUI",
     download_links: {
       frontend:
         "https://github.com/treyrader11/PasteUI/archive/refs/heads/main.zip",
@@ -277,645 +397,340 @@ export const projectsData = [
     isRecent: true,
   },
   {
-    title: "Leetcode",
-    desc: "This is just some placeholder text until i make time to actually create the real deal. If you're seeing this, then it means I love you",
-    color: "#21242b",
-    isPriority: false,
-    video_key: "iT6ahO0CHtM",
-    // category: "UI/UX Design",
-    stack: "React/Vite",
-    tech_image: vite.src,
-    category: "React",
-    tags: ["react", "shadcn"],
+    title: "Musiana",
+    desc: "Full-stack music streaming platform with real-time collaboration features, built using the MERN stack with Firebase authentication and cloud storage.",
+    color: "#e3e5e7",
+    video_key: "GJyPpc8qaHA",
+    category: "MERN",
+    tech_image: mern.src,
+    tags: ["react", "sass", "mongodb", "jwt", "express", "node"],
+    stack: "MERN",
     technology_feature: [
-      "html",
-      "css",
-      "Tailwind",
       "React",
       "Redux",
-      "Next js 13",
-      "Type Script",
+      "Sass",
+      "TypeScript",
+      "Node.js",
+      "Express",
+      "MongoDB",
       "Firebase",
+      "Cloudinary",
+      "JWT",
     ],
     packages: {
       frontend: [
         "@reduxjs/toolkit",
-        "@uiball/loaders",
         "firebase",
-        "firebase-admin",
-        "nextjs-progressbar",
-        "openai",
-        "react-firebase-hooks",
-        "react-icons",
         "react-redux",
-        "react-simple-typewriter",
+        "react-icons",
+        "sass",
       ],
       backend: [
-        "@reduxjs/toolkit",
-        "@uiball/loaders",
-        "firebase",
-        "firebase-admin",
-        "nextjs-progressbar",
-        "openai",
-        "react-firebase-hooks",
-        "react-icons",
-        "react-redux",
-        "react-simple-typewriter",
+        "express",
+        "mongoose",
+        "jsonwebtoken",
+        "bcrypt",
+        "cloudinary",
+        "dotenv",
       ],
     },
     env: {
       frontend: [
-        "DATABASE_URL",
-        "DIRECT_URL",
-        "GITHUB_CLIENT_ID",
-        "GITHUB_CLIENT_SECRET",
-        "GITHUB_AUTH_TOKEN",
-        "GOOGLE_CLIENT_ID",
-        "GOOGLE_CLIENT_SECRET",
-        "AUTH_SECRET",
-        "RESEND_API_KEY",
-        "NEXT_PUBLIC_APP_URL",
+        "VITE_APP_BACKEND_URL",
+        "VITE_APP_FIREBASE_KEY",
+        "VITE_APP_CLOUD_NAME",
       ],
       backend: [
-        "DATABASE_URL",
-        "DIRECT_URL",
-        "GITHUB_CLIENT_ID",
-        "GITHUB_CLIENT_SECRET",
-        "GITHUB_AUTH_TOKEN",
-        "GOOGLE_CLIENT_ID",
-        "GOOGLE_CLIENT_SECRET",
-        "AUTH_SECRET",
-        "RESEND_API_KEY",
-        "NEXT_PUBLIC_APP_URL",
+        "MONGO_URI",
+        "JWT_SECRET",
+        "JWT_LIFETIME",
+        "CLOUD_NAME",
+        "CLOUD_API_KEY",
+        "CLOUD_API_SECRET",
+        "PORT",
       ],
     },
-    youtube_link: "https://youtu.be/R90bxY4UwPg",
-    githhub_link: "https://github.com/treyrader11/JSearch-Expo",
+    youtube_link: "https://youtu.be/yF1oJ7wzvWY",
+    github_link: "https://github.com/treyrader11/musiana-client",
     download_links: {
       frontend:
-        "https://github.com/treyrader11/JSearch-Expo/archive/refs/heads/main.zip",
+        "https://github.com/treyrader11/musiana-client/archive/refs/heads/main.zip",
       backend:
-        "https://github.com/treyrader11/JSearch-Expo/archive/refs/heads/main.zip",
+        "https://github.com/treyrader11/musiana-server/archive/refs/heads/main.zip",
     },
-    project_image: "google.png",
+    project_image: "c2.png",
     project_video: "tech-meeting.mp4",
     image: {
       isPriority: true,
-      src: "google.png",
+      src: "c2.png",
     },
-    website_url: "",
-    isRecent: false,
-  },
-  {
-    title: "UTube Study",
-    desc: "This is just some placeholder text until i make time to actually create the real deal. If you're seeing this, then it means I love you",
-    color: "#ec4e39",
-    video_key: "dX3WaXJ9ibw",
-    category: "React",
-    tech_image: vite.src,
-    tags: ["react", "vite", "mui"],
-    technology_feature: [
-      "Tailwind",
-      "React",
-      "Redux",
-      "Next js 13",
-      "Type Script",
-      "Node js",
-      "Express js",
-      "Postger sql",
-      "Firebase",
-      "Stripe",
-    ],
-    packages: {
-      frontend: [
-        "@reduxjs/toolkit",
-        "@uiball/loaders",
-        "firebase",
-        "firebase-admin",
-        "nextjs-progressbar",
-        "openai",
-        "react-firebase-hooks",
-        "react-icons",
-        "react-redux",
-        "react-simple-typewriter",
-      ],
-      backend: [
-        "@reduxjs/toolkit",
-        "@uiball/loaders",
-        "firebase",
-        "firebase-admin",
-        "nextjs-progressbar",
-        "openai",
-        "react-firebase-hooks",
-        "react-icons",
-        "react-redux",
-        "react-simple-typewriter",
-      ],
-    },
-    env: {
-      frontend: [
-        "DATABASE_URL",
-        "DIRECT_URL",
-        "GITHUB_CLIENT_ID",
-        "GITHUB_CLIENT_SECRET",
-        "GITHUB_AUTH_TOKEN",
-        "GOOGLE_CLIENT_ID",
-        "GOOGLE_CLIENT_SECRET",
-        "AUTH_SECRET",
-        "RESEND_API_KEY",
-        "NEXT_PUBLIC_APP_URL",
-      ],
-      backend: [
-        "DATABASE_URL",
-        "DIRECT_URL",
-        "GITHUB_CLIENT_ID",
-        "GITHUB_CLIENT_SECRET",
-        "GITHUB_AUTH_TOKEN",
-        "GOOGLE_CLIENT_ID",
-        "GOOGLE_CLIENT_SECRET",
-        "AUTH_SECRET",
-        "RESEND_API_KEY",
-        "NEXT_PUBLIC_APP_URL",
-      ],
-    },
-    youtube_link: "https://youtu.be/v3LJMcWbcDQ",
-    githhub_link: "https://github.com/treyrader11/JSearch-Expo",
-    download_links: {
-      frontend:
-        "https://github.com/treyrader11/JSearch-Expo/archive/refs/heads/main.zip",
-      backend:
-        "https://github.com/treyrader11/JSearch-Expo/archive/refs/heads/main.zip",
-    },
-    project_image: "maven.png",
-    project_video: "code-editor1.mp4",
-    image: {
-      isPriority: true,
-      src: "maven.png",
-    },
-    website_url: "",
-    isRecent: true,
-  },
-  {
-    title: "Logo Maker",
-    desc: "This is just some placeholder text until i make time to actually create the real deal. If you're seeing this, then it means I love you",
-    color: "#e1dad6",
-    video_key: "PyaAp-eANRQ",
-    category: "React Native",
-    tech_image: expo.src,
-    technology_feature: [
-      "html",
-      "css",
-      "Javascript",
-      "Tailwind",
-      "React",
-      "Redux",
-      "Three js",
-      "Framer Motion",
-    ],
-    tags: ["react", "redux"],
-    packages: {
-      frontend: [
-        "@reduxjs/toolkit",
-        "@uiball/loaders",
-        "firebase",
-        "firebase-admin",
-        "nextjs-progressbar",
-        "openai",
-        "react-firebase-hooks",
-        "react-icons",
-        "react-redux",
-        "react-simple-typewriter",
-      ],
-      backend: [
-        "@reduxjs/toolkit",
-        "@uiball/loaders",
-        "firebase",
-        "firebase-admin",
-        "nextjs-progressbar",
-        "openai",
-        "react-firebase-hooks",
-        "react-icons",
-        "react-redux",
-        "react-simple-typewriter",
-      ],
-    },
-    env: {
-      frontend: [
-        "DATABASE_URL",
-        "DIRECT_URL",
-        "GITHUB_CLIENT_ID",
-        "GITHUB_CLIENT_SECRET",
-        "GITHUB_AUTH_TOKEN",
-        "GOOGLE_CLIENT_ID",
-        "GOOGLE_CLIENT_SECRET",
-        "AUTH_SECRET",
-        "RESEND_API_KEY",
-        "NEXT_PUBLIC_APP_URL",
-      ],
-      backend: [
-        "DATABASE_URL",
-        "DIRECT_URL",
-        "GITHUB_CLIENT_ID",
-        "GITHUB_CLIENT_SECRET",
-        "GITHUB_AUTH_TOKEN",
-        "GOOGLE_CLIENT_ID",
-        "GOOGLE_CLIENT_SECRET",
-        "AUTH_SECRET",
-        "RESEND_API_KEY",
-        "NEXT_PUBLIC_APP_URL",
-      ],
-    },
-    youtube_link: "https://youtu.be/6wzf2ho-kzI",
-    githhub_link: "https://github.com/treyrader11/JSearch-Expo",
-    download_links: {
-      frontend:
-        "https://github.com/treyrader11/PasteUI/archive/refs/heads/main.zip",
-      backend:
-        "https://github.com/treyrader11/PasteUI/archive/refs/heads/main.zip",
-    },
-    project_image: "panda.png",
-    project_video: "code-editor2.mp4",
-    image: {
-      isPriority: true,
-      src: "panda.png",
-    },
-    website_url: "",
+    website_url: "https://musiana.vercel.app",
     isRecent: true,
   },
 ];
 
-export const references = [
-  {
-    image_url: "/images/references/jason.png",
-    desc: "If given the opportunity I would hire Trey for any of my coding needs. I know that he will be an excellent addition to any prospective company in the near future.",
-    name: "Jason Humphrey",
-    title: "Senior Developer, Former Mentor",
-    linkedIn: "https://www.linkedin.com/in/meet-jason-humphrey",
-  },
-  {
-    image_url: "/images/references/wilson.png",
-    desc: "Baptiste is a true javascript soldier.",
-    name: "Wilson Savoy",
-    title: "Musician, Pine Leaf Boys",
-  },
-  {
-    image_url: "/images/references/janine.png",
-    desc: "Placeholder text 🙄",
-    name: "Janine Bonilla",
-    title: "Marketing Specialist, Nasty",
-    linkedIn: "https://www.linkedin.com/in/j9bonilla",
-  },
-  {
-    image_url: "/images/references/daniel.png",
-    desc: "Bro 🔥",
-    name: "Daniel Dekerlegand",
-    title: "Senior Developer, Evolve Media",
-    linkedIn: "https://www.linkedin.com/company/evolve-media-ai-inc",
-  },
-];
+// ============================================
+// SECTION 4: SKILLS DATA
+// ============================================
 
-export const experiences = [
+export const skills = [
   {
-    title: "Meteor JS Developer",
-    company_name: "Torsh",
-    icon: torsh,
-    iconBg: "#E6DEDD",
-    date: "April 2017 - August 2018",
-    website_url: "https://www.torsh.co",
-    points: [
-      "Developed features in a large fullstack web application and separate corporate CMS website. Integrated 3rd party APIs into platform. Wrote server side CRUD methods and implementing frontend UI and UX.",
-      "Architected features from design mocks. Communicated with UX designer to clarify feature behavior.",
-      "Coordinated with other developers to complete sprints. Collaborated using version control to organize workflow. Discussed sprint progress during scrum meetings and engaged in peer reviews. Presented work during weekly demos.",
-      "Corresponded with other developers via Slack and Google Hangouts. Collaborated on software development projects in realtime using screenshare software.",
-      "Experienced with manual acceptance testing for large software releases. Automated testing experience. Tracked bugs by opening and resolving sprint cases.",
-      "Drafted, composed, and edited technical documentation to meet purpose and standards.",
-    ],
-  },
-  {
-    title: "Founder/Sr. React JS Developer",
-    company_name: "Vouzot",
-    icon: vouzot,
-    iconBg: "#7900B6",
-    date: "August 2022 - Present",
-    website_url: "https://www.vouzot.com",
-    points: [
-      "Developing and maintaining web applications using React.js and other related technologies.",
-      "Collaborating with cross-functional teams including designers, product managers, and other developers to create high-quality products.",
-      "Implementing responsive design and ensuring cross-browser compatibility.",
-      "Participating in code reviews and providing constructive feedback to other developers.",
-    ],
-  },
-  {
-    title: "Founder/Sr. React JS Developer",
-    company_name: "Paste UI",
-    icon: pasteui,
-    iconBg: "#383E56",
-    date: "Jan 2024 - Present",
-    website_url: "https://www.pasteui.io",
-    points: [
-      "Developing and maintaining web applications using React.js and other related technologies.",
-      "Collaborating with cross-functional teams including designers, product managers, and other developers to create high-quality products.",
-      "Implementing responsive design and ensuring cross-browser compatibility.",
-      "Participating in code reviews and providing constructive feedback to other developers.",
-    ],
-  },
-];
-
-export const skillsData = [
-  {
-    skill_name: "Html 5",
+    skill_name: "HTML 5",
     Image: "/html.png",
     width: 80,
-    hight: 80,
-  },
-  {
-    skill_name: "Css",
-    Image: "/css.png",
-    width: 80,
-    hight: 80,
-  },
-  {
-    skill_name: "JavaScript",
-    Image: "/js.png",
-    width: 65,
-    hight: 65,
-  },
-  {
-    skill_name: "Tailwind CSS",
-    Image: "/tailwind.png",
-    width: 80,
-    hight: 80,
-  },
-  {
-    skill_name: "React",
-    Image: "/react.png",
-    width: 80,
-    hight: 80,
-  },
-  {
-    skill_name: "Redux",
-    Image: "/redux.png",
-    width: 80,
-    hight: 80,
-  },
-  {
-    skill_name: "Tanstack React Query",
-    Image: "/reactquery.png",
-    width: 80,
-    hight: 80,
-  },
-  {
-    skill_name: "TypeScript",
-    Image: "/ts.png",
-    width: 80,
-    hight: 80,
-  },
-  {
-    skill_name: "Next js 13",
-    Image: "/next.png",
-    width: 80,
-    hight: 80,
-  },
-  {
-    skill_name: "Next Auth",
-    Image: "https://next-auth.js.org/img/logo/logo-sm.png",
-    width: 80,
-    hight: 80,
-  },
-  {
-    skill_name: "JSON Web Tocken",
-    Image:
-      "https://seeklogo.com/images/J/json-web-tokens-jwt-io-logo-C003DEC47A-seeklogo.com.png",
-    width: 80,
-    hight: 80,
-  },
-  {
-    skill_name: "Framer Motion",
-    Image: "/framer.png",
-    width: 80,
-    hight: 80,
-  },
-  {
-    skill_name: "Stripe Payment",
-    Image: "/stripe.webp",
-    width: 80,
-    hight: 80,
-  },
-  {
-    skill_name: "Node js",
-    Image: "/node-js.png",
-    width: 80,
-    hight: 80,
-  },
-  {
-    skill_name: "Express js",
-    Image: "/express.png",
-    width: 80,
-    hight: 80,
-  },
-  {
-    skill_name: "Mongo db",
-    Image: "/mongodb.png",
-    width: 40,
-    hight: 40,
-  },
-  {
-    skill_name: "Firebase",
-    Image: "/Firebase.png",
-    width: 55,
-    hight: 55,
-  },
-  {
-    skill_name: "Postger SQL",
-    Image: "/postger.png",
-    width: 70,
-    hight: 70,
-  },
-  {
-    skill_name: "My SQL",
-    Image: "/mysql.png",
-    width: 70,
-    hight: 70,
-  },
-  {
-    skill_name: "Prisma",
-    Image: "/prisma.webp",
-    width: 70,
-    hight: 70,
-  },
-  {
-    skill_name: "Graphql",
-    Image: "/graphql.png",
-    width: 80,
-    hight: 80,
-  },
-  {
-    skill_name: "React Native",
-    Image: "/ReactNative .png",
-    width: 70,
-    hight: 70,
-  },
-  {
-    skill_name: "Docker",
-    Image: "/docker.webp",
-    width: 70,
-    hight: 70,
-  },
-  {
-    skill_name: "Figma",
-    Image: "/figma.png",
-    width: 50,
-    hight: 50,
-  },
-  {
-    skill_name: "Web Socket",
-    Image: "https://avatars.githubusercontent.com/u/10566080?s=200&v=4",
-    width: 70,
-    hight: 70,
-  },
-  {
-    skill_name: "Cloundary",
-    Image: "https://cdn.worldvectorlogo.com/logos/cloudinary-2.svg",
-    width: 70,
-    hight: 70,
-  },
-  {
-    skill_name: "Meteor js",
-    Image: "https://raw.githubusercontent.com/gin-gonic/logo/master/color.png",
-    width: 50,
-    hight: 50,
-  },
-  {
-    skill_name: "Git",
-    Image: "https://git-scm.com/images/logos/downloads/Git-Icon-1788C.png",
-    width: 70,
-    hight: 70,
-  },
-  {
-    skill_name: "Npm",
-    Image: "https://authy.com/wp-content/uploads/npm-logo.png",
-    width: 70,
-    hight: 70,
-  },
-];
-
-export const frontendSkills = [
-  {
-    skill_name: "Html 5",
-    Image: "/html.png",
-    width: 80,
-    hight: 80,
+    height: 80,
   },
   {
     skill_name: "CSS",
     Image: "/css.png",
     width: 80,
-    hight: 80,
+    height: 80,
   },
   {
     skill_name: "JavaScript",
     Image: "/js.png",
     width: 65,
-    hight: 65,
+    height: 65,
   },
   {
-    skill_name: "Tailwind CSS",
-    Image: "/tailwind.png",
+    skill_name: "TypeScript",
+    Image: "/ts.png",
     width: 80,
-    hight: 80,
-  },
-  {
-    skill_name: "Material UI",
-    Image: "/mui.png",
-    width: 80,
-    hight: 80,
+    height: 80,
   },
   {
     skill_name: "React",
     Image: "/react.png",
     width: 80,
-    hight: 80,
+    height: 80,
+  },
+  {
+    skill_name: "React Native",
+    Image: "/ReactNative .png",
+    width: 70,
+    height: 70,
+  },
+  {
+    skill_name: "Next.js",
+    Image: "/next.png",
+    width: 80,
+    height: 80,
   },
   {
     skill_name: "Redux",
     Image: "/redux.png",
     width: 80,
-    hight: 80,
+    height: 80,
   },
   {
-    skill_name: "Tanstack React Query",
+    skill_name: "TanStack Query",
     Image: "/reactquery.png",
     width: 80,
-    hight: 80,
+    height: 80,
   },
   {
-    skill_name: "Zod",
-    Image: "/reactquery.png",
+    skill_name: "Tailwind CSS",
+    Image: "/tailwind.png",
     width: 80,
-    hight: 80,
+    height: 80,
   },
   {
-    skill_name: "Type Script",
-    Image: "/ts.png",
+    skill_name: "Material UI",
+    Image: "/mui.png",
     width: 80,
-    hight: 80,
+    height: 80,
   },
   {
-    skill_name: "Next js",
-    Image: "/next.png",
+    skill_name: "Framer Motion",
+    Image: "/framer.png",
     width: 80,
-    hight: 80,
+    height: 80,
   },
-];
-
-export const backendSkills = [
   {
-    skill_name: "Node js",
+    skill_name: "GSAP",
+    Image: "/gsap.png",
+    width: 80,
+    height: 80,
+  },
+  {
+    skill_name: "Node.js",
     Image: "/node-js.png",
     width: 80,
-    hight: 80,
+    height: 80,
   },
   {
-    skill_name: "Express js",
+    skill_name: "Express",
     Image: "/express.png",
     width: 80,
-    hight: 80,
+    height: 80,
   },
   {
-    skill_name: "Mongo db",
+    skill_name: "MongoDB",
     Image: "/mongodb.png",
     width: 40,
-    hight: 40,
+    height: 40,
   },
   {
-    skill_name: "Fire base",
-    Image: "/Firebase.png",
-    width: 55,
-    hight: 55,
-  },
-  {
-    skill_name: "Postger SQL",
+    skill_name: "PostgreSQL",
     Image: "/postger.png",
     width: 70,
-    hight: 70,
+    height: 70,
   },
   {
-    skill_name: "My SQL",
+    skill_name: "MySQL",
     Image: "/mysql.png",
     width: 70,
-    hight: 70,
+    height: 70,
   },
   {
     skill_name: "Prisma",
     Image: "/prisma.webp",
     width: 70,
-    hight: 70,
+    height: 70,
   },
   {
-    skill_name: "Graphql",
+    skill_name: "GraphQL",
     Image: "/graphql.png",
     width: 80,
-    hight: 80,
+    height: 80,
+  },
+  {
+    skill_name: "Firebase",
+    Image: "/Firebase.png",
+    width: 55,
+    height: 55,
+  },
+  {
+    skill_name: "Docker",
+    Image: "/docker.webp",
+    width: 70,
+    height: 70,
+  },
+  {
+    skill_name: "Figma",
+    Image: "/figma.png",
+    width: 50,
+    height: 50,
+  },
+  {
+    skill_name: "Git",
+    Image: "https://git-scm.com/images/logos/downloads/Git-Icon-1788C.png",
+    width: 70,
+    height: 70,
+  },
+];
+
+export const frontendSkills = [
+  {
+    skill_name: "HTML 5",
+    Image: "/html.png",
+    width: 80,
+    height: 80,
+  },
+  {
+    skill_name: "CSS",
+    Image: "/css.png",
+    width: 80,
+    height: 80,
+  },
+  {
+    skill_name: "JavaScript",
+    Image: "/js.png",
+    width: 65,
+    height: 65,
+  },
+  {
+    skill_name: "TypeScript",
+    Image: "/ts.png",
+    width: 80,
+    height: 80,
+  },
+  {
+    skill_name: "React",
+    Image: "/react.png",
+    width: 80,
+    height: 80,
+  },
+  {
+    skill_name: "Next.js",
+    Image: "/next.png",
+    width: 80,
+    height: 80,
+  },
+  {
+    skill_name: "Redux",
+    Image: "/redux.png",
+    width: 80,
+    height: 80,
+  },
+  {
+    skill_name: "TanStack Query",
+    Image: "/reactquery.png",
+    width: 80,
+    height: 80,
+  },
+  {
+    skill_name: "Tailwind CSS",
+    Image: "/tailwind.png",
+    width: 80,
+    height: 80,
+  },
+  {
+    skill_name: "Material UI",
+    Image: "/mui.png",
+    width: 80,
+    height: 80,
+  },
+];
+
+export const backendSkills = [
+  {
+    skill_name: "Node.js",
+    Image: "/node-js.png",
+    width: 80,
+    height: 80,
+  },
+  {
+    skill_name: "Express",
+    Image: "/express.png",
+    width: 80,
+    height: 80,
+  },
+  {
+    skill_name: "MongoDB",
+    Image: "/mongodb.png",
+    width: 40,
+    height: 40,
+  },
+  {
+    skill_name: "Firebase",
+    Image: "/Firebase.png",
+    width: 55,
+    height: 55,
+  },
+  {
+    skill_name: "PostgreSQL",
+    Image: "/postger.png",
+    width: 70,
+    height: 70,
+  },
+  {
+    skill_name: "MySQL",
+    Image: "/mysql.png",
+    width: 70,
+    height: 70,
+  },
+  {
+    skill_name: "Prisma",
+    Image: "/prisma.webp",
+    width: 70,
+    height: 70,
+  },
+  {
+    skill_name: "GraphQL",
+    Image: "/graphql.png",
+    width: 80,
+    height: 80,
   },
 ];
 
@@ -924,98 +739,72 @@ export const fullstackSkills = [
     skill_name: "React Native",
     Image: "/ReactNative .png",
     width: 70,
-    hight: 70,
+    height: 70,
   },
   {
     skill_name: "Docker",
     Image: "/docker.webp",
     width: 70,
-    hight: 70,
-  },
-  {
-    skill_name: "Nigx",
-    Image:
-      "https://i0.wp.com/thinkground.studio/wp-content/uploads/2019/04/190415_Nginx-Logo.png?fit=423%2C401&ssl=1",
-    width: 60,
-    hight: 60,
+    height: 70,
   },
   {
     skill_name: "Figma",
     Image: "/figma.png",
     width: 50,
-    hight: 50,
-  },
-  {
-    skill_name: "Web Scoket",
-    Image: "https://avatars.githubusercontent.com/u/10566080?s=200&v=4",
-    width: 70,
-    hight: 70,
-  },
-  {
-    skill_name: "Gin gonic",
-    Image: "https://raw.githubusercontent.com/gin-gonic/logo/master/color.png",
-    width: 50,
-    hight: 50,
+    height: 50,
   },
 ];
 
 export const otherSkills = [
   {
-    skill_name: "Next Auth",
+    skill_name: "NextAuth",
     Image: "https://next-auth.js.org/img/logo/logo-sm.png",
     width: 80,
-    hight: 80,
+    height: 80,
   },
   {
-    skill_name: "Json Web Tocken",
+    skill_name: "JWT",
     Image:
       "https://seeklogo.com/images/J/json-web-tokens-jwt-io-logo-C003DEC47A-seeklogo.com.png",
     width: 80,
-    hight: 80,
+    height: 80,
   },
   {
     skill_name: "Framer Motion",
     Image: "/framer.png",
     width: 80,
-    hight: 80,
+    height: 80,
   },
   {
-    skill_name: "Stripe Payment",
+    skill_name: "Stripe",
     Image: "/stripe.webp",
     width: 80,
-    hight: 80,
+    height: 80,
   },
 ];
 
-export const other_skill2 = [
-  {
-    skill_name: "Cloundary",
-    Image: "https://cdn.worldvectorlogo.com/logos/cloudinary-2.svg",
-    width: 70,
-    hight: 70,
-  },
+// ============================================
+// SECTION 5: SEO & METADATA
+// ============================================
 
-  {
-    skill_name: "Git",
-    Image: "https://git-scm.com/images/logos/downloads/Git-Icon-1788C.png",
-    width: 70,
-    hight: 70,
-  },
-  {
-    skill_name: "Npm",
-    Image: "https://authy.com/wp-content/uploads/npm-logo.png",
-    width: 70,
-    hight: 70,
-  },
-];
-export const otherSkills3 = [
-  {
-    skill_name: "Go",
-    Image: "/go.png",
-    width: 60,
-    hight: 60,
-  },
-];
+export const metaDescriptions = {
+  home: "Trey Rader - Senior React Native Developer specializing in cross-platform mobile applications with React, Expo, and TypeScript. Based in New Orleans, LA.",
+  about:
+    "Learn about Trey Rader's 8+ years of experience in React Native development, mobile architecture, and building AI-powered applications.",
+  projects:
+    "Explore mobile and web projects built by Trey Rader using React Native, Next.js, TypeScript, and modern development tools.",
+  contact:
+    "Get in touch with Trey Rader for React Native development, mobile app architecture consulting, or collaboration opportunities.",
+};
+
+export const ctaTexts = {
+  viewResume: "View My Resume",
+  downloadResume: "Download Resume",
+  getInTouch: "Let's Connect",
+  viewProjects: "See My Work",
+  contactMe: "Get In Touch",
+  hireMe: "Available for Work",
+};
 
 export const tagColors = {
   react: "teal",
@@ -1024,9 +813,58 @@ export const tagColors = {
   shadcn: "purple",
   next: "blue",
   express: "orange",
-  mode: "indigo",
-  default: "#000000",
+  node: "green",
+  typescript: "blue",
+  tailwind: "cyan",
   jwt: "pink",
   "next-auth": "violet",
   prisma: "aqua",
+  default: "#000000",
+};
+
+// ============================================
+// SECTION 6: HELPER FUNCTIONS
+// ============================================
+
+function getCompanyIcon(company) {
+  const icons = {
+    "Evolve Media AI": evolvemediaai,
+    "Torsh, Inc.": torsh,
+    Vouzot: vouzot,
+    PasteUI: pasteui,
+  };
+  return icons[company] || torsh;
+}
+
+function getCompanyIconBg(company) {
+  const colors = {
+    "Evolve Media AI": "#383E56",
+    "Torsh, Inc.": "#E6DEDD",
+    Vouzot: "#d6d7dc",
+    PasteUI: "#e3e3e3",
+  };
+  return colors[company] || "#383E56";
+}
+
+function getCompanyWebsite(company) {
+  const websites = {
+    "Evolve Media AI": "https://www.evolvemediaai.com",
+    "Torsh, Inc.": "https://www.torsh.com",
+    Vouzot: "https://www.vouzot.com",
+    PasteUI: "https://www.pasteui.io",
+  };
+  return websites[company] || "#";
+}
+
+// Generate experiences dynamically from userData (optional)
+export const generateExperiences = () => {
+  return userData.experience_highlights.map((exp) => ({
+    title: exp.role,
+    company_name: exp.company,
+    icon: getCompanyIcon(exp.company),
+    iconBg: getCompanyIconBg(exp.company),
+    date: exp.period,
+    website_url: getCompanyWebsite(exp.company),
+    points: exp.highlights,
+  }));
 };
