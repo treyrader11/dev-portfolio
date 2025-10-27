@@ -68,7 +68,6 @@ export default function Nav() {
               "uppercase",
               "text-xs",
               "mb-10"
-              // "font-pp-acma"
             )}
           >
             <p>Trey Rader</p>
@@ -80,11 +79,7 @@ export default function Nav() {
                 data={{ ...routes, index }}
                 isActive={selectedIndicator == routes.href}
                 setSelectedIndicator={setSelectedIndicator}
-                className={cn(
-                  "text-white",
-                  // "font-pp-acma",
-                  "font-light"
-                )}
+                className={cn("text-white", "font-light")}
               />
             );
           })}

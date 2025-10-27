@@ -1,8 +1,8 @@
 // Company Logos
-import torsh from "/public/images/company/torsh.png";
-import vouzot from "/public/images/company/vouzot.png";
-import pasteui from "/public/images/company/pasteui.png";
-import evolvemediaai from "/public/images/company/evolvemediaai.png";
+import torsh from "/public/images/company/logo/torsh.png";
+import vouzot from "/public/images/company/logo/vouzot.png";
+import pasteui from "/public/images/company/logo/pasteui.png";
+import evolvemediaai from "/public/images/company/logo/evolvemediaai.png";
 
 // Technology Stack Images
 import mern from "/public/images/tech/mern.png";
@@ -29,8 +29,9 @@ export const userData = {
   email: "developertrey@gmail.com",
   phone: "504.756.4538",
   address: "Metairie, Louisiana",
-  resumeUrl:
-    "https://drive.google.com/file/d/1LMM6St-8DNl9VFycHdkL7J5qzSnZfNiE/view?usp=sharing",
+  resumeUrl: "/resume.pdf",
+  // resumeUrl:
+  //   "https://drive.google.com/file/d/1LMM6St-8DNl9VFycHdkL7J5qzSnZfNiE/view?usp=sharing",
 
   // Social Links
   socialLinks: {
@@ -341,13 +342,15 @@ export const projectsData = [
       frontend:
         "https://github.com/treyrader11/Vouzot/archive/refs/heads/main.zip",
     },
+    // project_image: "vouzot.png",
     project_image: "decimal.png",
     project_video: "code-editor1.mp4",
     image: {
       isPriority: true,
       src: "decimal.png",
+      // src: "vouzot.png",
     },
-    website_url: "https://www.vouzot.com",
+    website_url: "https://www.vouzot-test.vercel.app",
     isRecent: true,
   },
   {
