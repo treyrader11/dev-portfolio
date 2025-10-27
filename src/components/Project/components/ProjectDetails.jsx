@@ -6,6 +6,7 @@ import Magnetic from "@/components/Magnetic";
 import ProjectLinks from "./ProjectLinks";
 import LinkDecorator from "@/components/LinkDecorator";
 import Block from "@/components/Block";
+import Safari from "./Desktop";
 
 export default function ProjectDetails({ data }) {
   const { title, video_key, desc, technology_feature, env, download_links } =
@@ -27,10 +28,11 @@ export default function ProjectDetails({ data }) {
   return (
     <section className="pb-28 bg-[#F1F1F1] w-full">
       <div className={cn("md:w-[800px]", "px-2.5", "sm:px-4", "md::px-0")}>
-        <ProjectVideo src={video_key} />
+        {/* <ProjectVideo src={video_key} /> */}
+        <Safari videoSrc={video_key} className="pt-10 size-4/5" />
         <Block title="About this project" desc={desc} />
         <Block title="Technology & Features">
-          <ul className="list-disc  font-pp-acma ml-5 mt-2.5 text-secondary">
+          <ul className="list-disc font-pp-acma ml-5 mt-2.5 text-secondary">
             {technology_feature.map((data, index) => (
               <Magnetic key={index}>
                 <li className="w-fit" key={data}>
