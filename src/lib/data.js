@@ -62,7 +62,7 @@ export const userData = {
     description_concise: [
       `I'm a Senior React Native Developer with 8+ years of experience building cross-platform mobile and web applications. Currently at Evolve Media AI, I lead frontend development for AI-powered media tools using the Expo stack, TypeScript, and modern architecture patterns.`,
 
-      `I specialize in performance optimization, component architecture, and creating seamless user experiences. My technical toolkit includes React Native, Next.js, TypeScript, GraphQL, TanStack Query, and various animation libraries like Framer Motion and GSAP. I'm passionate about clean code, accessibility, and staying at the forefront of mobile development.`,
+      `I specialize in performance optimization, component architecture, an d creating seamless user experiences. My technical toolkit includes React Native, Next.js, TypeScript, GraphQL, TanStack Query, and various animation libraries like Framer Motion and GSAP. I'm passionate about clean code, accessibility, and staying at the forefront of mobile development.`,
     ],
 
     current_project_url: "https://www.evolvemedia.ai",
