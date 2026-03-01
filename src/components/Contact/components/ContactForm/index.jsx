@@ -1,10 +1,9 @@
 "use client";
 
-import { cn, validateEmail } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 import Input from "@/components/Input";
 import { VscSend } from "react-icons/vsc";
 import { useRef, forwardRef, useState } from "react";
-import { FaRegEnvelope } from "react-icons/fa";
 import { FaCheck } from "react-icons/fa6";
 import { IoCloseCircleOutline } from "react-icons/io5";
 import { FaExclamation } from "react-icons/fa6";
@@ -12,27 +11,24 @@ import gsap from "gsap";
 import PaperPlane from "../PaperPlane";
 import { getPlaneKeyframes } from "../../getPlaneKeyframes";
 import { getTrailsKeyframes } from "../../getTrailsKeyframes";
-import SubmitEmail from "../SubmitEmail";
+import ReCAPTCHA from "react-google-recaptcha";
 import axios from "axios";
 
-const initValues = { name: "", email: "", subject: "", message: "" };
+const initValues = { name: "", email: "", message: "" };
 
 const initState = { isLoading: false, error: "", values: initValues };
 
 export default function ContactForm({ className }) {
-  const [input, setInput] = useState("");
   const [state, setState] = useState(initState);
-  const [touched, setTouched] = useState({});
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [isActive, setIsActive] = useState(false);
+  const [recaptchaToken, setRecaptchaToken] = useState(null);
   const buttonRef = useRef(null);
+  const recaptchaRef = useRef(null);
   const { to, fromTo, set } = gsap;
 
-  const { values, isLoading, error } = state;
-
-  const onBlur = ({ target }) =>
-    setTouched((prev) => ({ ...prev, [target.name]: true }));
+  const { values, isLoading } = state;
 
   const handleChange = ({ target }) =>
     setState((prev) => ({
@@ -43,15 +39,23 @@ export default function ContactForm({ className }) {
       },
     }));
 
+  const isFormValid =
+    values.name && values.email && values.message && recaptchaToken;
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const { name, email, subject, message } = values;
-
-    console.log("email in handle submit", email);
+    const { name, email, message } = values;
     const button = buttonRef.current;
 
-    if (!email || !button) return;
+    if (!recaptchaToken) {
+      setErrorMessage("Please complete the reCAPTCHA.");
+      return;
+    }
+
+    if (!name || !email || !message || !button) return;
+
+    setState((prev) => ({ ...prev, isLoading: true }));
 
     if (!isActive) {
       setIsActive(true);
@@ -62,7 +66,7 @@ export default function ContactForm({ className }) {
           fromTo,
           button,
           setIsActive,
-          setInput,
+          () => {},
           setState,
           initState
         ),
@@ -72,30 +76,35 @@ export default function ContactForm({ className }) {
     }
 
     try {
-      const res = await axios.post("/api/email", {
+      const res = await axios.post("/api/contact", {
         name,
         email,
-        subject,
         message,
+        recaptchaToken,
       });
 
-      console.log("Response from API:", res);
-
       if (res.status !== 200) {
-        console.error("Error response from API:", res.data);
-        setErrorMessage(`Something went wrong! Details: "${res.data.error}"`);
+        setErrorMessage(
+          res.data?.error || "Something went wrong. Please try again."
+        );
         setSuccessMessage(undefined);
         return;
       }
 
-      console.log("Successful response from API:", res.data);
-
-      setSuccessMessage("Email successfully sent");
+      setSuccessMessage("Message sent! I'll get back to you soon.");
       setErrorMessage(undefined);
+      setState(initState);
+      setRecaptchaToken(null);
+      recaptchaRef.current?.reset();
     } catch (error) {
-      console.error("Error making API request:", error);
-      setErrorMessage(`Something went wrong! Details: "${error.message}"`);
+      const msg =
+        error.response?.data?.error ||
+        error.message ||
+        "Something went wrong. Please try again.";
+      setErrorMessage(msg);
       setSuccessMessage(undefined);
+    } finally {
+      setState((prev) => ({ ...prev, isLoading: false }));
     }
   };
 
@@ -125,31 +134,20 @@ export default function ContactForm({ className }) {
             type="text"
             placeholder="Your name"
             name="name"
-            // errorBorderColor="red.300"
             value={values.name}
             onChange={handleChange}
-            onBlur={onBlur}
+
           />
 
           <Input
             type="email"
             placeholder="Email address"
             name="email"
-            // errorBorderColor="red.300"
             value={values.email}
             onChange={handleChange}
-            onBlur={onBlur}
+
           />
         </div>
-        <Input
-          placeholder="Subject"
-          type="text"
-          name="subject"
-          // errorBorderColor="red.300"
-          value={values.subject}
-          onChange={handleChange}
-          onBlur={onBlur}
-        />
         <textarea
           cols={36}
           rows={6}
@@ -168,20 +166,23 @@ export default function ContactForm({ className }) {
             "bg-slate-100",
             "text-black"
           )}
-          type="text"
-          // errorBorderColor="red.300"
           value={values.message}
           onChange={handleChange}
-          onBlur={onBlur}
         />
+
+        <div className="flex justify-center">
+          <ReCAPTCHA
+            ref={recaptchaRef}
+            sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY}
+            onChange={(token) => setRecaptchaToken(token)}
+            onExpired={() => setRecaptchaToken(null)}
+          />
+        </div>
 
         <Submit
           isLoading={isLoading}
-          disabled={
-            !values.name || !values.email || !values.subject || !values.message
-          }
+          disabled={!isFormValid || isLoading}
           ref={buttonRef}
-          input={input}
           isActive={isActive}
         />
       </form>
@@ -228,7 +229,7 @@ export default function ContactForm({ className }) {
   );
 }
 
-const Submit = forwardRef(({ isActive, disabled }, ref) => {
+const Submit = forwardRef(({ isActive, disabled, isLoading }, ref) => {
   return (
     <button
       style={{ WebkitTapHighlightColor: "transparent" }}
@@ -236,7 +237,11 @@ const Submit = forwardRef(({ isActive, disabled }, ref) => {
       className={cn(
         { active: isActive },
         disabled &&
-          cn("disabled:grayscale-[65%]", "disabled:cursor-not-allowed"),
+          cn(
+            "disabled:grayscale-[65%]",
+            "disabled:cursor-not-allowed",
+            "disabled:opacity-50"
+          ),
         "text-sm",
         "md:text-base",
         "relative",
@@ -254,8 +259,7 @@ const Submit = forwardRef(({ isActive, disabled }, ref) => {
         "mx-auto",
         "py-6"
       )}
-      // disabled={!input}
-      // disabled={disabled}
+      disabled={disabled}
       type="submit"
     >
       <span
@@ -263,11 +267,10 @@ const Submit = forwardRef(({ isActive, disabled }, ref) => {
           "opacity-0": isActive,
         })}
       >
-        Send <VscSend />
+        {isLoading ? "Sending..." : "Send"} {!isLoading && <VscSend />}
       </span>
       <span
         className={cn(
-          // ".success" determines animation/transform
           "success",
           "text-emerald-500",
           "z-0",
@@ -285,7 +288,6 @@ const Submit = forwardRef(({ isActive, disabled }, ref) => {
         )}
       >
         <svg
-          // check mark
           strokeLinecap="round"
           strokeLinejoin="round"
           strokeDasharray={14}

@@ -1,49 +1,120 @@
-import { mailOptions, transporter } from "@/lib/nodemailer";
+import { Resend } from "resend";
 
-const CONTACT_MESSAGE_FIELDS = {
-  name: "Name",
-  email: "Email",
-  subject: "Subject",
-  message: "Message",
-};
+const resend = new Resend(process.env.RESEND_API_KEY);
 
-const generateEmailContent = (data) => {
-  const stringData = Object.entries(data).reduce(
-    (str, [key, val]) =>
-      (str += `${CONTACT_MESSAGE_FIELDS[key]}: \n${val} \n \n`),
-    ""
-  );
-  const htmlData = Object.entries(data).reduce((str, [key, val]) => {
-    return (str += `<h3 class="form-heading" align="left">${CONTACT_MESSAGE_FIELDS[key]}</h3><p class="form-answer" align="left">${val}</p>`);
-  }, "");
+const CONTACT_TO_EMAIL =
+  process.env.CONTACT_FORM_TO_EMAIL || "developertrey@gmail.com";
 
-  return {
-    text: stringData,
-    html: `<!DOCTYPE html><html> <head> <title></title> <meta charset="utf-8"/> <meta name="viewport" content="width=device-width, initial-scale=1"/> <meta http-equiv="X-UA-Compatible" content="IE=edge"/> <style type="text/css"> body, table, td, a{-webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%;}table{border-collapse: collapse !important;}body{height: 100% !important; margin: 0 !important; padding: 0 !important; width: 100% !important;}@media screen and (max-width: 525px){.wrapper{width: 100% !important; max-width: 100% !important;}.responsive-table{width: 100% !important;}.padding{padding: 10px 5% 15px 5% !important;}.section-padding{padding: 0 15px 50px 15px !important;}}.form-container{margin-bottom: 24px; padding: 20px; border: 1px dashed #ccc;}.form-heading{color: #2a2a2a; font-family: "Helvetica Neue", "Helvetica", "Arial", sans-serif; font-weight: 400; text-align: left; line-height: 20px; font-size: 18px; margin: 0 0 8px; padding: 0;}.form-answer{color: #2a2a2a; font-family: "Helvetica Neue", "Helvetica", "Arial", sans-serif; font-weight: 300; text-align: left; line-height: 20px; font-size: 16px; margin: 0 0 24px; padding: 0;}div[style*="margin: 16px 0;"]{margin: 0 !important;}</style> </head> <body style="margin: 0 !important; padding: 0 !important; background: #fff"> <div style=" display: none; font-size: 1px; color: #fefefe; line-height: 1px;  max-height: 0px; max-width: 0px; opacity: 0; overflow: hidden; " ></div><table border="0" cellpadding="0" cellspacing="0" width="100%"> <tr> <td bgcolor="#ffffff" align="center" style="padding: 10px 15px 30px 15px" class="section-padding" > <table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 500px" class="responsive-table" > <tr> <td> <table width="100%" border="0" cellspacing="0" cellpadding="0"> <tr> <td> <table width="100%" border="0" cellspacing="0" cellpadding="0" > <tr> <td style=" padding: 0 0 0 0; font-size: 16px; line-height: 25px; color: #232323; " class="padding message-content" > <h2>New Contact Message</h2> <div class="form-container">${htmlData}</div></td></tr></table> </td></tr></table> </td></tr></table> </td></tr></table> </body></html>`,
-  };
-};
-
-const handler = async (req, res) => {
-  if (req.method === "POST") {
-    const data = req.body;
-    if (!data || !data.name || !data.email || !data.subject || !data.message) {
-      return res.status(400).send({ message: "Bad request" });
-    }
-
-    console.log('data', data)
-    try {
-      await transporter.sendMail({
-        ...mailOptions,
-        ...generateEmailContent(data),
-        subject: data.subject,
-      });
-
-      return res.status(200).json({ success: true });
-    } catch (err) {
-      console.log(err);
-      return res.status(400).json({ message: err.message });
-    }
+export default async function handler(req, res) {
+  if (req.method !== "POST") {
+    return res.status(405).json({ error: "Method not allowed" });
   }
-  return res.status(400).json({ message: "Bad request" });
-};
-export default handler;
+
+  const { name, email, message, recaptchaToken } = req.body;
+
+  // Validate inputs
+  if (
+    !name ||
+    !email ||
+    !message ||
+    !recaptchaToken ||
+    typeof name !== "string" ||
+    typeof email !== "string" ||
+    typeof message !== "string" ||
+    typeof recaptchaToken !== "string"
+  ) {
+    return res
+      .status(400)
+      .json({ error: "All fields are required, including reCAPTCHA." });
+  }
+
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) {
+    return res
+      .status(400)
+      .json({ error: "Please provide a valid email address." });
+  }
+
+  // Verify reCAPTCHA server-side
+  try {
+    const recaptchaRes = await fetch(
+      "https://www.google.com/recaptcha/api/siteverify",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: `secret=${encodeURIComponent(
+          process.env.RECAPTCHA_SECRET_KEY
+        )}&response=${encodeURIComponent(recaptchaToken)}`,
+      }
+    );
+    const recaptchaData = await recaptchaRes.json();
+
+    if (!recaptchaData.success) {
+      return res
+        .status(400)
+        .json({ error: "reCAPTCHA verification failed. Please try again." });
+    }
+  } catch (err) {
+    console.error("reCAPTCHA verification error:", err);
+    return res
+      .status(500)
+      .json({ error: "Failed to verify reCAPTCHA. Please try again later." });
+  }
+
+  // Send email via Resend
+  try {
+    await resend.emails.send({
+      from: "Contact Form <contact@treyrader.dev>",
+      to: CONTACT_TO_EMAIL,
+      subject: `New Contact Form Submission from ${name}`,
+      replyTo: email,
+      html: `
+        <!DOCTYPE html>
+        <html>
+          <head>
+            <meta charset="utf-8" />
+            <meta name="viewport" content="width=device-width, initial-scale=1" />
+          </head>
+          <body style="margin:0;padding:0;background:#f9fafb;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;">
+            <table width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;margin:40px auto;background:#ffffff;border-radius:8px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.1);">
+              <tr>
+                <td style="padding:32px 40px 24px;">
+                  <h2 style="margin:0 0 24px;font-size:20px;color:#1a1a1a;">New Contact Form Submission</h2>
+                  <table width="100%" cellpadding="0" cellspacing="0">
+                    <tr>
+                      <td style="padding:12px 0;border-bottom:1px solid #eee;">
+                        <strong style="color:#555;font-size:13px;text-transform:uppercase;letter-spacing:0.5px;">Name</strong>
+                        <p style="margin:4px 0 0;font-size:15px;color:#1a1a1a;">${name}</p>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td style="padding:12px 0;border-bottom:1px solid #eee;">
+                        <strong style="color:#555;font-size:13px;text-transform:uppercase;letter-spacing:0.5px;">Email</strong>
+                        <p style="margin:4px 0 0;font-size:15px;color:#1a1a1a;"><a href="mailto:${email}" style="color:#2563eb;text-decoration:none;">${email}</a></p>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td style="padding:12px 0;">
+                        <strong style="color:#555;font-size:13px;text-transform:uppercase;letter-spacing:0.5px;">Message</strong>
+                        <p style="margin:4px 0 0;font-size:15px;color:#1a1a1a;line-height:1.6;white-space:pre-wrap;">${message}</p>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            </table>
+          </body>
+        </html>
+      `,
+    });
+
+    return res
+      .status(200)
+      .json({ success: true, message: "Email sent successfully" });
+  } catch (err) {
+    console.error("Resend email error:", err);
+    return res
+      .status(500)
+      .json({ error: "Failed to send email. Please try again later." });
+  }
+}
