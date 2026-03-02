@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { Resend } from "resend";
+import Email from "@/lib/emails";
 import type {
   ContactRequestBody,
   ContactResponse,
@@ -116,6 +117,18 @@ export default async function handler(
         </html>
       `,
     });
+
+    // Send auto-reply confirmation to the user (fire-and-forget)
+    resend.emails
+      .send({
+        from: "Trey Rader <noreply@treyrader.dev>",
+        to: email,
+        subject: "Thanks for reaching out!",
+        react: <Email name={name} />,
+      })
+      .catch((err) => {
+        console.error("Auto-reply email error:", err);
+      });
 
     return res
       .status(200)

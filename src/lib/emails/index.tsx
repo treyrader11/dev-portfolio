@@ -1,5 +1,3 @@
-"use client";
-
 import {
   Body,
   Container,
@@ -8,76 +6,100 @@ import {
   Hr,
   Html,
   Img,
-  Link,
   Preview,
   Section,
   Text,
   Tailwind,
 } from "@react-email/components";
 import * as React from "react";
-import { cn } from "../utils";
 
 const baseUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
   : "http://localhost:3000";
 
 interface EmailProps {
-  email: string;
   name: string;
 }
 
-export default function Email({ email, name }: EmailProps): React.ReactElement {
-  // console.log("Inside of the email template. email:", email);
+export default function Email({ name }: EmailProps): React.ReactElement {
   return (
-    <Tailwind
-      config={{
-        theme: {
-          extend: {
-            colors: {
-              brand: "#007291",
+    <Html>
+      <Head />
+      <Preview>Thanks for reaching out — I received your message!</Preview>
+      <Tailwind
+        config={{
+          theme: {
+            extend: {
+              colors: {
+                brand: "#007291",
+              },
             },
           },
-        },
-      }}
-    >
-      <Body className={cn("bg-gray-100")}>
-        <Container className={cn("pt-5", "px-6", "pb-12")}>
-          <Img
-            src={`${baseUrl}/images/portraits/headshot.png`}
-            width={60}
-            height={60}
-            alt="Trey Rader"
-            className="object-cover rounded-full"
-          />
+        }}
+      >
+        <Body className="bg-gray-100 font-sans">
+          <Container className="mx-auto max-w-[520px] py-10 px-5">
+            <Section className="bg-white rounded-xl overflow-hidden shadow-sm">
+              {/* Header with headshot */}
+              <Section className="bg-gray-900 px-10 pt-8 pb-6 text-center">
+                <Img
+                  src={`${baseUrl}/images/portraits/headshot.png`}
+                  width={80}
+                  height={80}
+                  alt="Trey Rader"
+                  className="rounded-full mx-auto object-cover"
+                  style={{
+                    border: "3px solid rgba(255,255,255,0.2)",
+                  }}
+                />
+                <Text className="text-white text-lg font-semibold mt-4 mb-0">
+                  Trey Rader
+                </Text>
+                <Text className="text-gray-400 text-sm mt-1 mb-0">
+                  Software Developer
+                </Text>
+              </Section>
 
-          <Heading className="mt-12 text-2xl font-bold">👋 Hi {name},</Heading>
-          <Section className="my-6">
-            <Text className="text-lg">
-              Thank you for your inquiry. I generally get around to responding in the morning. Looking forward.
-            </Text>
-          </Section>
-          <Text className="">
-            Best,
-            <br />- Trey
-          </Text>
-          <Hr className="mt-12" />
-          <Text
-            style={{
-              fontFamily:
-                '"Pacifico", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif',
-            }}
-            className="my-2 text-sm text-gray-400"
-          >
-            Trey Rader
-          </Text>
-          <Text className="my-2 ml-2 text-sm text-gray-400">
-            📍 805 Smith Drive New Orleans, LA, 70005
-          </Text>
-          <Text className="my-2 ml-2 text-sm text-gray-400">
-            📞 504.756.4538
-          </Text>
-        </Container>
-      </Body>
-    </Tailwind>
+              {/* Body */}
+              <Section className="px-10 py-8">
+                <Heading className="text-xl font-bold text-gray-900 mt-0 mb-4">
+                  Hi {name},
+                </Heading>
+                <Text className="text-base text-gray-700 leading-relaxed mt-0">
+                  Thank you for reaching out! I wanted to let you know that I
+                  received your message and will review it shortly.
+                </Text>
+                <Text className="text-base text-gray-700 leading-relaxed">
+                  I typically respond within 24 hours. In the meantime, feel
+                  free to check out my portfolio at{" "}
+                  <a
+                    href="https://treyrader.dev"
+                    className="text-brand underline"
+                  >
+                    treyrader.dev
+                  </a>
+                  .
+                </Text>
+                <Text className="text-base text-gray-700 mt-6 mb-0">
+                  Best,
+                  <br />
+                  Trey
+                </Text>
+              </Section>
+
+              {/* Footer */}
+              <Hr className="border-gray-200 mx-10 my-0" />
+              <Section className="px-10 py-5">
+                <Text className="text-xs text-gray-400 text-center m-0 leading-relaxed">
+                  This is an automated confirmation — please do not reply to
+                  this email. If you need to follow up, use the contact form on
+                  my website.
+                </Text>
+              </Section>
+            </Section>
+          </Container>
+        </Body>
+      </Tailwind>
+    </Html>
   );
 }
