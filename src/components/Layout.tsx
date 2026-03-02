@@ -17,7 +17,7 @@ function MainLayout({ children, route }: LayoutProps) {
   const { isNavOpen } = useNav();
 
   return (
-    <AnimatePresence mode="wait">
+    <AnimatePresence mode="wait" onExitComplete={() => window.scrollTo(0, 0)}>
       <main
         key={route}
         className={cn(

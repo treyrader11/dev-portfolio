@@ -139,7 +139,7 @@ export default function PortfolioItem({
         />
       </div>
 
-      <Link href={`/project/${projectId}`}>
+      <Link href={`/project/${projectId}`} scroll={false}>
         <Modal
           ref={modalRef}
           style={isMobile ? { x: 180, y: 655 } : { x, y }}

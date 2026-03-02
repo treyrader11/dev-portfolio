@@ -20,6 +20,7 @@ export default function ModalItem({
   return (
     <Link
       href={href}
+      scroll={false}
       onMouseEnter={(e) => {
         manageModal(true, index, e.clientX, e.clientY);
       }}

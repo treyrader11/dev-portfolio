@@ -89,6 +89,7 @@ export default function Info() {
                   For any sort of help / enquiry, please shoot me an{" "}
                   <Link
                     href="/contact"
+                    scroll={false}
                     className={cn(
                       "font-bold",
                       "text-gray-800",

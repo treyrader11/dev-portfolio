@@ -2,6 +2,8 @@
 
 import "@/globals.css";
 
+import { useEffect } from "react";
+import { useRouter } from "next/router";
 import type { AppProps } from "next/app";
 import { AnimatePresence } from "framer-motion";
 import Layout from "@/components/Layout";
@@ -10,6 +12,16 @@ import { NotificationsProvider } from "@/components/providers/NotificationsProvi
 import Preloader from "@/components/Preloader";
 
 export default function App({ Component, pageProps, router }: AppProps): React.ReactElement {
+  const nextRouter = useRouter();
+
+  // Disable Next.js automatic scroll restoration so it doesn't
+  // jump to top before the exit animation finishes
+  useEffect(() => {
+    if ("scrollRestoration" in window.history) {
+      window.history.scrollRestoration = "manual";
+    }
+  }, []);
+
   return (
     <NotificationsProvider>
       <AnimatePresence mode="wait">

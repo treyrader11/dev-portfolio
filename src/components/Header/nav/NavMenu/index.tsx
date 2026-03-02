@@ -54,7 +54,7 @@ export default function NavMenu({
                 )}
               >
                 <Magnetic>
-                  <Link href={href}>
+                  <Link href={href} scroll={false}>
                     {label}
                     <LinkDecorator isActive={selectedIndicator == href} />
                   </Link>

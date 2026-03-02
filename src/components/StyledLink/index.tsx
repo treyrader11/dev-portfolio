@@ -20,6 +20,7 @@ export default function StyledLink({
   return (
     <Link
       href={href || "#"}
+      scroll={false}
       target={target}
       className={cn(
         "m-0",

@@ -9,7 +9,7 @@ interface Props {
 
 export default function Brand({ className }: Props) {
   return (
-    <Link href="/" className={cn("group flex", className)}>
+    <Link href="/" scroll={false} className={cn("group flex", className)}>
       <p
         className={cn(
           "m-0",

@@ -73,6 +73,7 @@ function SeeAll({ className }: SeeAllProps) {
     <Magnetic>
       <Link
         href={"/portfolio"}
+        scroll={false}
         className={cn(
           "flex",
           "items-center",

@@ -25,6 +25,7 @@ export default function Navlink({
   return (
     <Link
       href={href}
+      scroll={false}
       className={cn("relative flex items-center", className)}
       onMouseEnter={() => {
         setSelectedIndicator(href);
