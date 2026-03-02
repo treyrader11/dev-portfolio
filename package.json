@@ -39,12 +39,16 @@
   "devDependencies": {
     "@types/node": "20.19.35",
     "@types/react": "18.3.28",
+    "@types/react-dom": "18",
     "@types/react-google-recaptcha": "^2.1.9",
+    "@types/react-lottie": "^1.2.10",
+    "@types/react-vertical-timeline-component": "^3.3.6",
     "autoprefixer": "^10.4.16",
     "eslint": "^8.56.0",
     "eslint-config-next": "14.2.35",
     "postcss": "^8.4.38",
-    "tailwindcss": "^3.4.3"
+    "tailwindcss": "^3.4.3",
+    "typescript": "^5.9.3"
   },
   "trustedDependencies": [
     "@swc/core",
