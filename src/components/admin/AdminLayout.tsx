@@ -11,6 +11,8 @@ const navItems = [
   { label: "Projects", href: "/admin/projects" },
   { label: "Skills", href: "/admin/skills" },
   { label: "References", href: "/admin/references" },
+  { label: "Jira", href: "/admin/jira" },
+  { label: "Invoices", href: "/admin/invoices" },
   { label: "Settings", href: "/admin/settings" },
 ];
 

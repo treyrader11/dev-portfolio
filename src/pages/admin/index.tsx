@@ -32,9 +32,19 @@ const sections = [
     description: "Edit testimonials and references",
   },
   {
+    title: "Jira Tickets",
+    href: "/admin/jira",
+    description: "View Jira tickets and track time",
+  },
+  {
+    title: "Invoices",
+    href: "/admin/invoices",
+    description: "Generate and manage invoices from tracked time",
+  },
+  {
     title: "Settings",
     href: "/admin/settings",
-    description: "SEO meta descriptions, CTA text, tag colors",
+    description: "SEO meta descriptions, CTA text, tag colors, Jira config",
   },
 ];
 
@@ -45,6 +55,8 @@ interface Props {
     skills: number;
     references: number;
     configs: number;
+    timeEntries: number;
+    invoices: number;
   };
 }
 
@@ -52,11 +64,13 @@ export default function AdminDashboard({ counts }: Props) {
   return (
     <AdminLayout title="Dashboard">
       {/* Stats */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-8">
         <StatCard label="Experiences" count={counts.experiences} />
         <StatCard label="Projects" count={counts.projects} />
         <StatCard label="Skills" count={counts.skills} />
         <StatCard label="References" count={counts.references} />
+        <StatCard label="Time Entries" count={counts.timeEntries} />
+        <StatCard label="Invoices" count={counts.invoices} />
       </div>
 
       {/* Section cards */}
@@ -124,18 +138,20 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     return { redirect: { destination: "/admin/signin", permanent: false } };
   }
 
-  const [experiences, projects, skills, references, configs] =
+  const [experiences, projects, skills, references, configs, timeEntries, invoices] =
     await Promise.all([
       prisma.experience.count(),
       prisma.project.count(),
       prisma.skill.count(),
       prisma.reference.count(),
       prisma.siteConfig.count(),
+      prisma.timeEntry.count(),
+      prisma.invoice.count(),
     ]);
 
   return {
     props: {
-      counts: { experiences, projects, skills, references, configs },
+      counts: { experiences, projects, skills, references, configs, timeEntries, invoices },
     },
   };
 };

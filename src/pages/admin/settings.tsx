@@ -11,20 +11,30 @@ import {
 import type { GetServerSideProps } from "next";
 import type { MetaDescriptions, CtaTexts, TagColors } from "@/types/data";
 
+interface JiraCredentials {
+  domain: string;
+  email: string;
+  apiToken: string;
+}
+
 interface Props {
   metaDescriptions: MetaDescriptions;
   ctaTexts: CtaTexts;
   tagColors: TagColors;
+  jiraCredentials: JiraCredentials;
 }
 
 export default function AdminSettings({
   metaDescriptions: initialMeta,
   ctaTexts: initialCta,
   tagColors: initialTags,
+  jiraCredentials: initialJira,
 }: Props) {
   const [meta, setMeta] = useState(initialMeta);
   const [cta, setCta] = useState(initialCta);
   const [tagColors, setTagColors] = useState(initialTags);
+  const [jira, setJira] = useState(initialJira);
+  const [jiraTestResult, setJiraTestResult] = useState("");
   const [saving, setSaving] = useState("");
   const [message, setMessage] = useState("");
 
@@ -159,6 +169,109 @@ export default function AdminSettings({
           </button>
         </div>
 
+        {/* Jira Integration */}
+        <div className="bg-white rounded-lg border border-gray-200 p-6">
+          <h2 className="text-lg font-semibold text-gray-900 mb-1">
+            Jira Integration
+          </h2>
+          <p className="text-sm text-gray-500 mb-4">
+            Connect to Jira Cloud to fetch tickets and track time.{" "}
+            <a
+              href="https://id.atlassian.com/manage-profile/security/api-tokens"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-600 hover:underline"
+            >
+              Generate an API token here
+            </a>
+          </p>
+          <div className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Jira Domain
+              </label>
+              <div className="flex items-center gap-1">
+                <input
+                  value={jira.domain}
+                  onChange={(e) =>
+                    setJira({ ...jira, domain: e.target.value })
+                  }
+                  placeholder="yourcompany"
+                  className="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm"
+                />
+                <span className="text-sm text-gray-500">.atlassian.net</span>
+              </div>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Email
+              </label>
+              <input
+                value={jira.email}
+                onChange={(e) =>
+                  setJira({ ...jira, email: e.target.value })
+                }
+                type="email"
+                placeholder="you@example.com"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                API Token
+              </label>
+              <input
+                value={jira.apiToken}
+                onChange={(e) =>
+                  setJira({ ...jira, apiToken: e.target.value })
+                }
+                type="password"
+                placeholder="Your Jira API token"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
+              />
+            </div>
+          </div>
+          <div className="flex items-center gap-3 mt-4">
+            <button
+              onClick={() => saveConfig("jiraCredentials", jira)}
+              disabled={saving === "jiraCredentials"}
+              className="px-4 py-2 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-800 disabled:opacity-50"
+            >
+              {saving === "jiraCredentials" ? "Saving..." : "Save Jira Settings"}
+            </button>
+            <button
+              onClick={async () => {
+                setJiraTestResult("Testing...");
+                await saveConfig("jiraCredentials", jira);
+                try {
+                  const res = await fetch(
+                    "/api/admin/jira/issues?maxResults=1"
+                  );
+                  if (res.ok) {
+                    setJiraTestResult("Connection successful!");
+                  } else {
+                    const data = await res.json();
+                    setJiraTestResult(`Failed: ${data.error || res.statusText}`);
+                  }
+                } catch {
+                  setJiraTestResult("Connection failed.");
+                }
+              }}
+              disabled={!jira.domain || !jira.email || !jira.apiToken}
+              className="px-4 py-2 border border-gray-300 text-sm font-medium rounded-lg hover:bg-gray-50 disabled:opacity-50"
+            >
+              Test Connection
+            </button>
+            {jiraTestResult && (
+              <span
+                className={`text-sm ${jiraTestResult.includes("successful") ? "text-green-600" : jiraTestResult === "Testing..." ? "text-gray-500" : "text-red-600"}`}
+              >
+                {jiraTestResult}
+              </span>
+            )}
+          </div>
+        </div>
+
         {message && (
           <p
             className={`text-sm ${message.includes("saved") ? "text-green-600" : "text-red-600"}`}
@@ -181,10 +294,11 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     return { redirect: { destination: "/admin/signin", permanent: false } };
   }
 
-  const [metaConfig, ctaConfig, tagConfig] = await Promise.all([
+  const [metaConfig, ctaConfig, tagConfig, jiraConfig] = await Promise.all([
     prisma.siteConfig.findUnique({ where: { key: "metaDescriptions" } }),
     prisma.siteConfig.findUnique({ where: { key: "ctaTexts" } }),
     prisma.siteConfig.findUnique({ where: { key: "tagColors" } }),
+    prisma.siteConfig.findUnique({ where: { key: "jiraCredentials" } }),
   ]);
 
   return {
@@ -198,6 +312,9 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       tagColors: tagConfig
         ? (tagConfig.value as unknown as TagColors)
         : fallbackTagColors,
+      jiraCredentials: jiraConfig
+        ? (jiraConfig.value as unknown as JiraCredentials)
+        : { domain: "", email: "", apiToken: "" },
     },
   };
 };
