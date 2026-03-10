@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import AdminLayout from "@/components/admin/AdminLayout";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/pages/api/auth/[...nextauth]";
@@ -15,6 +15,15 @@ interface Props {
   jiraError: string | null;
 }
 
+interface JiraTransition {
+  id: string;
+  name: string;
+  to: {
+    name: string;
+    statusCategory: { key: string; colorName: string };
+  };
+}
+
 const statusColors: Record<string, string> = {
   "blue-gray": "bg-gray-100 text-gray-700",
   blue: "bg-blue-100 text-blue-700",
@@ -22,13 +31,64 @@ const statusColors: Record<string, string> = {
   green: "bg-green-100 text-green-700",
 };
 
+type FilterKey = "in_progress" | "open" | "cancelled" | "in_review" | "rejected" | "done";
+
+const STATUS_FILTERS: { key: FilterKey; label: string; jql: string }[] = [
+  {
+    key: "in_progress",
+    label: "In Progress",
+    jql: "assignee = currentUser() AND status = 'In Progress' ORDER BY updated DESC",
+  },
+  {
+    key: "open",
+    label: "All Open",
+    jql: "assignee = currentUser() AND statusCategory != Done ORDER BY updated DESC",
+  },
+  {
+    key: "in_review",
+    label: "In Review",
+    jql: "assignee = currentUser() AND status = 'In Review' ORDER BY updated DESC",
+  },
+  {
+    key: "cancelled",
+    label: "Cancelled",
+    jql: "assignee = currentUser() AND status = 'Cancelled' ORDER BY updated DESC",
+  },
+  {
+    key: "rejected",
+    label: "Rejected",
+    jql: "assignee = currentUser() AND status = 'Rejected' ORDER BY updated DESC",
+  },
+  {
+    key: "done",
+    label: "Done",
+    jql: "assignee = currentUser() AND status = 'Done' ORDER BY updated DESC",
+  },
+];
+
 export default function AdminJira({ configured, issues: initialIssues, jiraError }: Props) {
   const [issues, setIssues] = useState(initialIssues);
   const [jql, setJql] = useState("");
   const [loading, setLoading] = useState(false);
+  const [activeFilter, setActiveFilter] = useState<FilterKey>("in_progress");
   const [timerNotes, setTimerNotes] = useState("");
+  const [transitionMenuKey, setTransitionMenuKey] = useState<string | null>(null);
+  const [transitions, setTransitions] = useState<JiraTransition[]>([]);
+  const [transitionLoading, setTransitionLoading] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
   const { activeEntry, elapsedSeconds, isRunning, startTimer, stopTimer, formatTime } =
     useTimer();
+
+  // Close transition menu on outside click
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+        setTransitionMenuKey(null);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   async function searchIssues(customJql?: string) {
     setLoading(true);
@@ -46,6 +106,54 @@ export default function AdminJira({ configured, issues: initialIssues, jiraError
       // ignore
     }
     setLoading(false);
+  }
+
+  function handleFilterClick(filter: typeof STATUS_FILTERS[number]) {
+    setActiveFilter(filter.key);
+    searchIssues(filter.jql);
+  }
+
+  async function openTransitionMenu(issueKey: string) {
+    if (transitionMenuKey === issueKey) {
+      setTransitionMenuKey(null);
+      return;
+    }
+    setTransitionMenuKey(issueKey);
+    setTransitionLoading(true);
+    try {
+      const res = await fetch(`/api/admin/jira/issue/${issueKey}/transitions`);
+      if (res.ok) {
+        const data = await res.json();
+        setTransitions(data.transitions || []);
+      }
+    } catch {
+      setTransitions([]);
+    }
+    setTransitionLoading(false);
+  }
+
+  async function doTransition(issueKey: string, transitionId: string) {
+    setTransitionLoading(true);
+    try {
+      const res = await fetch(`/api/admin/jira/issue/${issueKey}/transitions`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ transitionId }),
+      });
+      if (res.ok) {
+        setTransitionMenuKey(null);
+        // Refresh the current filter to reflect the status change
+        const currentFilter = STATUS_FILTERS.find((f) => f.key === activeFilter);
+        if (currentFilter) {
+          await searchIssues(currentFilter.jql);
+        } else {
+          await searchIssues();
+        }
+      }
+    } catch {
+      // ignore
+    }
+    setTransitionLoading(false);
   }
 
   if (!configured) {
@@ -106,12 +214,20 @@ export default function AdminJira({ configured, issues: initialIssues, jiraError
           <input
             value={jql}
             onChange={(e) => setJql(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && searchIssues()}
-            placeholder="JQL query (e.g., project = PROJ AND status = 'In Progress')"
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                setActiveFilter(null as unknown as FilterKey);
+                searchIssues();
+              }
+            }}
+            placeholder="JQL query (e.g., project = EM AND status = 'In Progress')"
             className="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm"
           />
           <button
-            onClick={() => searchIssues()}
+            onClick={() => {
+              setActiveFilter(null as unknown as FilterKey);
+              searchIssues();
+            }}
             disabled={loading}
             className="px-4 py-2 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-800 disabled:opacity-50"
           >
@@ -119,28 +235,21 @@ export default function AdminJira({ configured, issues: initialIssues, jiraError
           </button>
         </div>
 
-        {/* Quick filters */}
-        <div className="flex gap-2">
-          <button
-            onClick={() => searchIssues("assignee = currentUser() ORDER BY updated DESC")}
-            className="px-3 py-1.5 text-xs border border-gray-300 rounded-full hover:bg-gray-50"
-          >
-            Assigned to me
-          </button>
-          <button
-            onClick={() =>
-              searchIssues("assignee = currentUser() AND status = 'In Progress' ORDER BY updated DESC")
-            }
-            className="px-3 py-1.5 text-xs border border-gray-300 rounded-full hover:bg-gray-50"
-          >
-            In Progress
-          </button>
-          <button
-            onClick={() => searchIssues("assignee = currentUser() ORDER BY created DESC")}
-            className="px-3 py-1.5 text-xs border border-gray-300 rounded-full hover:bg-gray-50"
-          >
-            Recently Created
-          </button>
+        {/* Status Filter Buttons */}
+        <div className="flex flex-wrap gap-2">
+          {STATUS_FILTERS.map((filter) => (
+            <button
+              key={filter.key}
+              onClick={() => handleFilterClick(filter)}
+              className={`px-3 py-1.5 text-xs font-medium border rounded-full transition-colors ${
+                activeFilter === filter.key
+                  ? "bg-gray-900 text-white border-gray-900"
+                  : "border-gray-300 text-gray-700 hover:bg-gray-50"
+              }`}
+            >
+              {filter.label}
+            </button>
+          ))}
         </div>
 
         {/* Error */}
@@ -168,7 +277,7 @@ export default function AdminJira({ configured, issues: initialIssues, jiraError
                   Project
                 </th>
                 <th className="text-right px-4 py-3 text-xs font-medium text-gray-500 uppercase">
-                  Action
+                  Actions
                 </th>
               </tr>
             </thead>
@@ -187,12 +296,50 @@ export default function AdminJira({ configured, issues: initialIssues, jiraError
                     <td className="px-4 py-3 text-sm text-gray-900">
                       {issue.fields?.summary || "—"}
                     </td>
-                    <td className="px-4 py-3">
-                      <span
-                        className={`inline-block px-2 py-0.5 text-xs font-medium rounded-full ${badgeClass}`}
+                    <td className="px-4 py-3 relative">
+                      <button
+                        onClick={() => openTransitionMenu(issue.key)}
+                        className={`inline-flex items-center gap-1 px-2 py-0.5 text-xs font-medium rounded-full cursor-pointer hover:ring-2 hover:ring-offset-1 hover:ring-gray-300 transition ${badgeClass}`}
+                        title="Change status"
                       >
                         {issue.fields?.status?.name || "Unknown"}
-                      </span>
+                        <svg className="w-3 h-3 opacity-60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                        </svg>
+                      </button>
+                      {transitionMenuKey === issue.key && (
+                        <div
+                          ref={menuRef}
+                          className="absolute left-4 top-full mt-1 z-20 bg-white border border-gray-200 rounded-lg shadow-lg min-w-[180px]"
+                        >
+                          {transitionLoading ? (
+                            <div className="px-4 py-3 text-xs text-gray-500">Loading...</div>
+                          ) : transitions.length === 0 ? (
+                            <div className="px-4 py-3 text-xs text-gray-500">No transitions available</div>
+                          ) : (
+                            <div className="py-1">
+                              <div className="px-3 py-1.5 text-[10px] font-semibold text-gray-400 uppercase tracking-wider">
+                                Move to
+                              </div>
+                              {transitions.map((t) => {
+                                const tColor = statusColors[t.to.statusCategory.colorName] || "bg-gray-100 text-gray-700";
+                                return (
+                                  <button
+                                    key={t.id}
+                                    onClick={() => doTransition(issue.key, t.id)}
+                                    className="w-full text-left px-3 py-2 text-sm hover:bg-gray-50 flex items-center gap-2"
+                                  >
+                                    <span className={`inline-block px-1.5 py-0.5 text-[10px] font-medium rounded ${tColor}`}>
+                                      {t.to.name}
+                                    </span>
+                                    <span className="text-gray-500 text-xs">{t.name}</span>
+                                  </button>
+                                );
+                              })}
+                            </div>
+                          )}
+                        </div>
+                      )}
                     </td>
                     <td className="px-4 py-3 text-sm text-gray-500">
                       {issue.fields?.project?.name || "—"}
@@ -227,7 +374,7 @@ export default function AdminJira({ configured, issues: initialIssues, jiraError
                     colSpan={5}
                     className="px-4 py-8 text-center text-sm text-gray-500"
                   >
-                    No issues found. Try a different search query.
+                    No issues found. Try a different filter or search query.
                   </td>
                 </tr>
               )}
@@ -251,9 +398,11 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   }
 
   try {
+    // Default: show In Progress tickets
+    const defaultJql = "assignee = currentUser() AND status = 'In Progress' ORDER BY updated DESC";
     const fields = "summary,status,project,priority,assignee,updated,created";
     const response = await jiraFetch(
-      `/rest/api/3/search/jql?jql=${encodeURIComponent("assignee = currentUser() ORDER BY updated DESC")}&maxResults=50&fields=${fields}`,
+      `/rest/api/3/search/jql?jql=${encodeURIComponent(defaultJql)}&maxResults=50&fields=${fields}`,
       credentials
     );
 

@@ -13,16 +13,25 @@ export async function getJiraCredentials(): Promise<JiraCredentials | null> {
 
 export async function jiraFetch(
   path: string,
-  credentials: JiraCredentials
+  credentials: JiraCredentials,
+  options?: { method?: string; body?: string }
 ): Promise<Response> {
   const auth = Buffer.from(
     `${credentials.email}:${credentials.apiToken}`
   ).toString("base64");
 
+  const headers: Record<string, string> = {
+    Authorization: `Basic ${auth}`,
+    Accept: "application/json",
+  };
+
+  if (options?.body) {
+    headers["Content-Type"] = "application/json";
+  }
+
   return fetch(`https://${credentials.domain}.atlassian.net${path}`, {
-    headers: {
-      Authorization: `Basic ${auth}`,
-      Accept: "application/json",
-    },
+    method: options?.method || "GET",
+    headers,
+    body: options?.body,
   });
 }
