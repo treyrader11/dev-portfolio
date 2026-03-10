@@ -3,7 +3,13 @@ import GoogleProvider from "next-auth/providers/google";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { prisma } from "@/lib/prisma";
 
-const ADMIN_EMAIL = process.env.ADMIN_EMAIL || "developertrey@gmail.com";
+const ADMIN_EMAILS = (process.env.ADMIN_EMAIL || "developertrey@gmail.com")
+  .split(",")
+  .map((e) => e.trim().toLowerCase());
+
+function isAdmin(email: string | null | undefined): boolean {
+  return !!email && ADMIN_EMAILS.includes(email.toLowerCase());
+}
 
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma) as NextAuthOptions["adapter"],
@@ -16,12 +22,12 @@ export const authOptions: NextAuthOptions = {
   ],
   callbacks: {
     async signIn({ user }) {
-      return user.email === ADMIN_EMAIL;
+      return isAdmin(user.email);
     },
     async jwt({ token, user }) {
       if (user) {
         token.id = user.id;
-        token.isAdmin = user.email === ADMIN_EMAIL;
+        token.isAdmin = isAdmin(user.email);
       }
       return token;
     },
