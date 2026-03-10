@@ -22,8 +22,9 @@ export default async function handler(
     "assignee = currentUser() ORDER BY updated DESC";
   const maxResults = req.query.maxResults || "50";
 
+  const fields = "summary,status,project,priority,assignee,updated,created";
   const response = await jiraFetch(
-    `/rest/api/3/search/jql?jql=${encodeURIComponent(jql)}&maxResults=${maxResults}`,
+    `/rest/api/3/search/jql?jql=${encodeURIComponent(jql)}&maxResults=${maxResults}&fields=${fields}`,
     credentials
   );
 

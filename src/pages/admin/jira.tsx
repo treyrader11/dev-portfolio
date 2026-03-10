@@ -174,7 +174,7 @@ export default function AdminJira({ configured, issues: initialIssues, jiraError
             </thead>
             <tbody>
               {issues.map((issue) => {
-                const colorName = issue.fields.status.statusCategory.colorName;
+                const colorName = issue.fields?.status?.statusCategory?.colorName || "";
                 const badgeClass = statusColors[colorName] || "bg-gray-100 text-gray-700";
                 const isTimerOnThis =
                   isRunning && activeEntry?.ticketKey === issue.key;
@@ -185,17 +185,17 @@ export default function AdminJira({ configured, issues: initialIssues, jiraError
                       {issue.key}
                     </td>
                     <td className="px-4 py-3 text-sm text-gray-900">
-                      {issue.fields.summary}
+                      {issue.fields?.summary || "—"}
                     </td>
                     <td className="px-4 py-3">
                       <span
                         className={`inline-block px-2 py-0.5 text-xs font-medium rounded-full ${badgeClass}`}
                       >
-                        {issue.fields.status.name}
+                        {issue.fields?.status?.name || "Unknown"}
                       </span>
                     </td>
                     <td className="px-4 py-3 text-sm text-gray-500">
-                      {issue.fields.project.name}
+                      {issue.fields?.project?.name || "—"}
                     </td>
                     <td className="px-4 py-3 text-right">
                       {isTimerOnThis ? (
@@ -207,9 +207,9 @@ export default function AdminJira({ configured, issues: initialIssues, jiraError
                           onClick={() =>
                             startTimer(
                               issue.key,
-                              issue.fields.summary,
-                              issue.fields.project.key,
-                              issue.fields.project.name
+                              issue.fields?.summary || issue.key,
+                              issue.fields?.project?.key,
+                              issue.fields?.project?.name
                             )
                           }
                           className="px-3 py-1 text-xs bg-green-600 text-white rounded-lg hover:bg-green-700"
@@ -251,8 +251,9 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   }
 
   try {
+    const fields = "summary,status,project,priority,assignee,updated,created";
     const response = await jiraFetch(
-      `/rest/api/3/search/jql?jql=${encodeURIComponent("assignee = currentUser() ORDER BY updated DESC")}&maxResults=50`,
+      `/rest/api/3/search/jql?jql=${encodeURIComponent("assignee = currentUser() ORDER BY updated DESC")}&maxResults=50&fields=${fields}`,
       credentials
     );
 
