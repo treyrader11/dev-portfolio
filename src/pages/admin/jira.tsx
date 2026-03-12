@@ -1,11 +1,11 @@
-import { useState, useEffect, useRef } from "react";
+import { useState } from "react";
 import AdminLayout from "@/components/admin/AdminLayout";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/pages/api/auth/[...nextauth]";
-import { prisma } from "@/lib/prisma";
 import { getJiraCredentials, jiraFetch } from "@/lib/jira";
 import { useTimer } from "@/hooks/useTimer";
 import Link from "next/link";
+import * as Popover from "@radix-ui/react-popover";
 import type { GetServerSideProps } from "next";
 import type { JiraIssue } from "@/types/jira";
 
@@ -72,23 +72,11 @@ export default function AdminJira({ configured, issues: initialIssues, jiraError
   const [loading, setLoading] = useState(false);
   const [activeFilter, setActiveFilter] = useState<FilterKey>("in_progress");
   const [timerNotes, setTimerNotes] = useState("");
-  const [transitionMenuKey, setTransitionMenuKey] = useState<string | null>(null);
+  const [openPopoverKey, setOpenPopoverKey] = useState<string | null>(null);
   const [transitions, setTransitions] = useState<JiraTransition[]>([]);
   const [transitionLoading, setTransitionLoading] = useState(false);
-  const menuRef = useRef<HTMLDivElement>(null);
   const { activeEntry, elapsedSeconds, isRunning, startTimer, stopTimer, formatTime } =
     useTimer();
-
-  // Close transition menu on outside click
-  useEffect(() => {
-    function handleClickOutside(e: MouseEvent) {
-      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
-        setTransitionMenuKey(null);
-      }
-    }
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
 
   async function searchIssues(customJql?: string) {
     setLoading(true);
@@ -108,17 +96,17 @@ export default function AdminJira({ configured, issues: initialIssues, jiraError
     setLoading(false);
   }
 
-  function handleFilterClick(filter: typeof STATUS_FILTERS[number]) {
+  function handleFilterClick(filter: (typeof STATUS_FILTERS)[number]) {
     setActiveFilter(filter.key);
     searchIssues(filter.jql);
   }
 
-  async function openTransitionMenu(issueKey: string) {
-    if (transitionMenuKey === issueKey) {
-      setTransitionMenuKey(null);
+  async function handlePopoverOpen(issueKey: string, isOpen: boolean) {
+    if (!isOpen) {
+      setOpenPopoverKey(null);
       return;
     }
-    setTransitionMenuKey(issueKey);
+    setOpenPopoverKey(issueKey);
     setTransitionLoading(true);
     try {
       const res = await fetch(`/api/admin/jira/issue/${issueKey}/transitions`);
@@ -141,8 +129,7 @@ export default function AdminJira({ configured, issues: initialIssues, jiraError
         body: JSON.stringify({ transitionId }),
       });
       if (res.ok) {
-        setTransitionMenuKey(null);
-        // Refresh the current filter to reflect the status change
+        setOpenPopoverKey(null);
         const currentFilter = STATUS_FILTERS.find((f) => f.key === activeFilter);
         if (currentFilter) {
           await searchIssues(currentFilter.jql);
@@ -178,8 +165,8 @@ export default function AdminJira({ configured, issues: initialIssues, jiraError
       <div className="space-y-6">
         {/* Active Timer Bar */}
         {isRunning && activeEntry && (
-          <div className="bg-green-50 border border-green-200 rounded-lg p-4 flex items-center gap-4">
-            <div className="flex-1">
+          <div className="bg-green-50 border border-green-200 rounded-lg p-4 flex flex-wrap items-center gap-4">
+            <div className="flex-1 min-w-[200px]">
               <div className="flex items-center gap-2">
                 <span className="inline-block w-2 h-2 bg-green-500 rounded-full animate-pulse" />
                 <span className="font-mono text-lg font-bold text-green-800">
@@ -260,8 +247,8 @@ export default function AdminJira({ configured, issues: initialIssues, jiraError
         )}
 
         {/* Issues Table */}
-        <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
-          <table className="w-full">
+        <div className="bg-white rounded-lg border border-gray-200 overflow-x-auto">
+          <table className="w-full min-w-[640px]">
             <thead>
               <tr className="bg-gray-50 border-b border-gray-200">
                 <th className="text-left px-4 py-3 text-xs font-medium text-gray-500 uppercase">
@@ -290,61 +277,69 @@ export default function AdminJira({ configured, issues: initialIssues, jiraError
 
                 return (
                   <tr key={issue.id} className="border-b border-gray-100 hover:bg-gray-50">
-                    <td className="px-4 py-3 text-sm font-medium text-blue-600">
+                    <td className="px-4 py-3 text-sm font-medium text-blue-600 whitespace-nowrap">
                       {issue.key}
                     </td>
                     <td className="px-4 py-3 text-sm text-gray-900">
                       {issue.fields?.summary || "—"}
                     </td>
-                    <td className="px-4 py-3 relative">
-                      <button
-                        onClick={() => openTransitionMenu(issue.key)}
-                        className={`inline-flex items-center gap-1 px-2 py-0.5 text-xs font-medium rounded-full cursor-pointer hover:ring-2 hover:ring-offset-1 hover:ring-gray-300 transition ${badgeClass}`}
-                        title="Change status"
+                    <td className="px-4 py-3 whitespace-nowrap">
+                      <Popover.Root
+                        open={openPopoverKey === issue.key}
+                        onOpenChange={(isOpen) => handlePopoverOpen(issue.key, isOpen)}
                       >
-                        {issue.fields?.status?.name || "Unknown"}
-                        <svg className="w-3 h-3 opacity-60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                        </svg>
-                      </button>
-                      {transitionMenuKey === issue.key && (
-                        <div
-                          ref={menuRef}
-                          className="absolute left-4 top-full mt-1 z-20 bg-white border border-gray-200 rounded-lg shadow-lg min-w-[180px]"
-                        >
-                          {transitionLoading ? (
-                            <div className="px-4 py-3 text-xs text-gray-500">Loading...</div>
-                          ) : transitions.length === 0 ? (
-                            <div className="px-4 py-3 text-xs text-gray-500">No transitions available</div>
-                          ) : (
-                            <div className="py-1">
-                              <div className="px-3 py-1.5 text-[10px] font-semibold text-gray-400 uppercase tracking-wider">
-                                Move to
+                        <Popover.Trigger asChild>
+                          <button
+                            className={`inline-flex items-center gap-1 px-2 py-0.5 text-xs font-medium rounded-full cursor-pointer hover:ring-2 hover:ring-offset-1 hover:ring-gray-300 transition ${badgeClass}`}
+                            title="Change status"
+                          >
+                            {issue.fields?.status?.name || "Unknown"}
+                            <svg className="w-3 h-3 opacity-60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                            </svg>
+                          </button>
+                        </Popover.Trigger>
+                        <Popover.Portal>
+                          <Popover.Content
+                            side="bottom"
+                            align="start"
+                            sideOffset={4}
+                            className="z-50 bg-white border border-gray-200 rounded-lg shadow-lg min-w-[180px] animate-slide-up"
+                          >
+                            {transitionLoading ? (
+                              <div className="px-4 py-3 text-xs text-gray-500">Loading...</div>
+                            ) : transitions.length === 0 ? (
+                              <div className="px-4 py-3 text-xs text-gray-500">No transitions available</div>
+                            ) : (
+                              <div className="py-1">
+                                <div className="px-3 py-1.5 text-[10px] font-semibold text-gray-400 uppercase tracking-wider">
+                                  Move to
+                                </div>
+                                {transitions.map((t) => {
+                                  const tColor = statusColors[t.to.statusCategory.colorName] || "bg-gray-100 text-gray-700";
+                                  return (
+                                    <button
+                                      key={t.id}
+                                      onClick={() => doTransition(issue.key, t.id)}
+                                      className="w-full text-left px-3 py-2 text-sm hover:bg-gray-50 flex items-center gap-2"
+                                    >
+                                      <span className={`inline-block px-1.5 py-0.5 text-[10px] font-medium rounded ${tColor}`}>
+                                        {t.to.name}
+                                      </span>
+                                      <span className="text-gray-500 text-xs">{t.name}</span>
+                                    </button>
+                                  );
+                                })}
                               </div>
-                              {transitions.map((t) => {
-                                const tColor = statusColors[t.to.statusCategory.colorName] || "bg-gray-100 text-gray-700";
-                                return (
-                                  <button
-                                    key={t.id}
-                                    onClick={() => doTransition(issue.key, t.id)}
-                                    className="w-full text-left px-3 py-2 text-sm hover:bg-gray-50 flex items-center gap-2"
-                                  >
-                                    <span className={`inline-block px-1.5 py-0.5 text-[10px] font-medium rounded ${tColor}`}>
-                                      {t.to.name}
-                                    </span>
-                                    <span className="text-gray-500 text-xs">{t.name}</span>
-                                  </button>
-                                );
-                              })}
-                            </div>
-                          )}
-                        </div>
-                      )}
+                            )}
+                          </Popover.Content>
+                        </Popover.Portal>
+                      </Popover.Root>
                     </td>
-                    <td className="px-4 py-3 text-sm text-gray-500">
+                    <td className="px-4 py-3 text-sm text-gray-500 whitespace-nowrap">
                       {issue.fields?.project?.name || "—"}
                     </td>
-                    <td className="px-4 py-3 text-right">
+                    <td className="px-4 py-3 text-right whitespace-nowrap">
                       {isTimerOnThis ? (
                         <span className="text-xs text-green-600 font-medium">
                           Tracking...
