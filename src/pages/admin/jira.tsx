@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import AdminLayout from "@/components/admin/AdminLayout";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/pages/api/auth/[...nextauth]";
@@ -8,6 +8,12 @@ import Link from "next/link";
 import * as Popover from "@radix-ui/react-popover";
 import type { GetServerSideProps } from "next";
 import type { JiraIssue } from "@/types/jira";
+
+interface JiraProject {
+  id: string;
+  key: string;
+  name: string;
+}
 
 interface Props {
   configured: boolean;
@@ -75,8 +81,67 @@ export default function AdminJira({ configured, issues: initialIssues, jiraError
   const [openPopoverKey, setOpenPopoverKey] = useState<string | null>(null);
   const [transitions, setTransitions] = useState<JiraTransition[]>([]);
   const [transitionLoading, setTransitionLoading] = useState(false);
+  const [showCreateForm, setShowCreateForm] = useState(false);
+  const [projects, setProjects] = useState<JiraProject[]>([]);
+  const [createForm, setCreateForm] = useState({
+    projectKey: "",
+    summary: "",
+    description: "",
+    issueType: "Task",
+  });
+  const [createLoading, setCreateLoading] = useState(false);
+  const [createError, setCreateError] = useState("");
   const { activeEntry, elapsedSeconds, isRunning, startTimer, stopTimer, formatTime } =
     useTimer();
+
+  const fetchProjects = useCallback(async () => {
+    try {
+      const res = await fetch("/api/admin/jira/projects");
+      if (res.ok) {
+        const data = await res.json();
+        setProjects(data);
+        if (data.length > 0 && !createForm.projectKey) {
+          setCreateForm((prev) => ({ ...prev, projectKey: data[0].key }));
+        }
+      }
+    } catch {
+      // ignore
+    }
+  }, [createForm.projectKey]);
+
+  useEffect(() => {
+    if (showCreateForm && projects.length === 0) {
+      fetchProjects();
+    }
+  }, [showCreateForm, projects.length, fetchProjects]);
+
+  async function handleCreateTicket(e: React.FormEvent) {
+    e.preventDefault();
+    if (!createForm.projectKey || !createForm.summary) return;
+
+    setCreateLoading(true);
+    setCreateError("");
+    try {
+      const res = await fetch("/api/admin/jira/issues", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(createForm),
+      });
+      if (res.ok) {
+        setShowCreateForm(false);
+        setCreateForm({ projectKey: projects[0]?.key || "", summary: "", description: "", issueType: "Task" });
+        // Refresh the "All Open" filter to show the new ticket
+        setActiveFilter("open");
+        await searchIssues("assignee = currentUser() AND statusCategory != Done ORDER BY updated DESC");
+      } else {
+        const data = await res.json();
+        setCreateError(data.error || "Failed to create ticket");
+      }
+    } catch {
+      setCreateError("Failed to create ticket");
+    }
+    setCreateLoading(false);
+  }
 
   async function searchIssues(customJql?: string) {
     setLoading(true);
@@ -196,7 +261,7 @@ export default function AdminJira({ configured, issues: initialIssues, jiraError
           </div>
         )}
 
-        {/* Search Bar */}
+        {/* Search Bar + Create Button */}
         <div className="flex gap-2">
           <input
             value={jql}
@@ -220,7 +285,107 @@ export default function AdminJira({ configured, issues: initialIssues, jiraError
           >
             {loading ? "Loading..." : "Search"}
           </button>
+          <button
+            onClick={() => setShowCreateForm(true)}
+            className="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 whitespace-nowrap"
+          >
+            + Create Ticket
+          </button>
         </div>
+
+        {/* Create Ticket Modal */}
+        {showCreateForm && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+            <div className="bg-white rounded-lg shadow-xl w-full max-w-lg mx-4">
+              <div className="flex items-center justify-between p-6 border-b border-gray-200">
+                <h2 className="text-lg font-semibold text-gray-900">Create Jira Ticket</h2>
+                <button
+                  onClick={() => setShowCreateForm(false)}
+                  className="text-gray-400 hover:text-gray-600"
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+              <form onSubmit={handleCreateTicket} className="p-6 space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Project</label>
+                  <select
+                    value={createForm.projectKey}
+                    onChange={(e) => setCreateForm({ ...createForm, projectKey: e.target.value })}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
+                    required
+                  >
+                    {projects.length === 0 && <option value="">Loading projects...</option>}
+                    {projects.map((p) => (
+                      <option key={p.key} value={p.key}>
+                        {p.name} ({p.key})
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Issue Type</label>
+                  <select
+                    value={createForm.issueType}
+                    onChange={(e) => setCreateForm({ ...createForm, issueType: e.target.value })}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
+                  >
+                    <option value="Task">Task</option>
+                    <option value="Bug">Bug</option>
+                    <option value="Story">Story</option>
+                    <option value="Epic">Epic</option>
+                    <option value="Subtask">Subtask</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Summary</label>
+                  <input
+                    value={createForm.summary}
+                    onChange={(e) => setCreateForm({ ...createForm, summary: e.target.value })}
+                    placeholder="Brief description of the issue"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Description <span className="text-gray-400 font-normal">(optional)</span>
+                  </label>
+                  <textarea
+                    value={createForm.description}
+                    onChange={(e) => setCreateForm({ ...createForm, description: e.target.value })}
+                    placeholder="Detailed description..."
+                    rows={4}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm resize-none"
+                  />
+                </div>
+                {createError && (
+                  <div className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg p-3">
+                    {createError}
+                  </div>
+                )}
+                <div className="flex justify-end gap-3 pt-2">
+                  <button
+                    type="button"
+                    onClick={() => setShowCreateForm(false)}
+                    className="px-4 py-2 text-sm font-medium text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={createLoading || !createForm.summary || !createForm.projectKey}
+                    className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 disabled:opacity-50"
+                  >
+                    {createLoading ? "Creating..." : "Create Ticket"}
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
 
         {/* Status Filter Buttons */}
         <div className="flex flex-wrap gap-2">
