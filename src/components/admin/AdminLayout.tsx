@@ -3,17 +3,30 @@ import { useRouter } from "next/router";
 import { signOut, useSession } from "next-auth/react";
 import { cn } from "@/lib/utils";
 import { useState, useEffect, type ReactNode } from "react";
+import {
+  RiDashboardLine,
+  RiUserLine,
+  RiBriefcaseLine,
+  RiFolderLine,
+  RiFlashlightLine,
+  RiStarLine,
+  RiFileTextLine,
+  RiSettings3Line,
+  RiExternalLinkLine,
+  RiLogoutBoxLine,
+} from "react-icons/ri";
+import { SiJira } from "react-icons/si";
 
 const navItems = [
-  { label: "Dashboard", href: "/admin" },
-  { label: "Profile", href: "/admin/profile" },
-  { label: "Experiences", href: "/admin/experiences" },
-  { label: "Projects", href: "/admin/projects" },
-  { label: "Skills", href: "/admin/skills" },
-  { label: "References", href: "/admin/references" },
-  { label: "Jira", href: "/admin/jira" },
-  { label: "Invoices", href: "/admin/invoices" },
-  { label: "Settings", href: "/admin/settings" },
+  { label: "Dashboard", href: "/admin", icon: RiDashboardLine },
+  { label: "Profile", href: "/admin/profile", icon: RiUserLine },
+  { label: "Experiences", href: "/admin/experiences", icon: RiBriefcaseLine },
+  { label: "Projects", href: "/admin/projects", icon: RiFolderLine },
+  { label: "Skills", href: "/admin/skills", icon: RiFlashlightLine },
+  { label: "References", href: "/admin/references", icon: RiStarLine },
+  { label: "Jira", href: "/admin/jira", icon: "jira" as const },
+  { label: "Invoices", href: "/admin/invoices", icon: RiFileTextLine },
+  { label: "Settings", href: "/admin/settings", icon: RiSettings3Line },
 ];
 
 interface Props {
@@ -42,6 +55,16 @@ export default function AdminLayout({ children, title }: Props) {
         <p className="text-xs text-gray-400 mt-1">Portfolio CMS</p>
       </div>
 
+      {/* SVG gradient definition for Jira icon */}
+      <svg width="0" height="0" className="absolute">
+        <defs>
+          <linearGradient id="jira-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#2684FF" />
+            <stop offset="100%" stopColor="#3860F2" />
+          </linearGradient>
+        </defs>
+      </svg>
+
       <nav className="flex-1 py-4">
         {navItems.map((item) => {
           const isActive = router.pathname === item.href;
@@ -50,12 +73,17 @@ export default function AdminLayout({ children, title }: Props) {
               key={item.href}
               href={item.href}
               className={cn(
-                "flex items-center px-6 py-2.5 text-sm transition-colors",
+                "flex items-center gap-3 px-6 py-2.5 text-sm transition-colors",
                 isActive
                   ? "bg-gray-800 text-white font-medium"
                   : "text-gray-400 hover:text-white hover:bg-gray-800/50"
               )}
             >
+              {item.icon === "jira" ? (
+                <SiJira className="w-4 h-4 flex-shrink-0" style={{ fill: "url(#jira-gradient)" }} />
+              ) : (
+                <item.icon className="w-4 h-4 flex-shrink-0" />
+              )}
               {item.label}
             </Link>
           );
@@ -82,8 +110,9 @@ export default function AdminLayout({ children, title }: Props) {
         </div>
         <button
           onClick={() => signOut({ callbackUrl: "/" })}
-          className="w-full text-left text-sm text-gray-400 hover:text-white transition-colors"
+          className="w-full flex items-center gap-3 text-left text-sm text-gray-400 hover:text-white transition-colors"
         >
+          <RiLogoutBoxLine className="w-4 h-4 flex-shrink-0" />
           Sign out
         </button>
       </div>
@@ -91,8 +120,9 @@ export default function AdminLayout({ children, title }: Props) {
       <div className="p-4 border-t border-gray-800">
         <Link
           href="/"
-          className="text-sm text-gray-400 hover:text-white transition-colors"
+          className="flex items-center gap-3 text-sm text-gray-400 hover:text-white transition-colors"
         >
+          <RiExternalLinkLine className="w-4 h-4 flex-shrink-0" />
           View site
         </Link>
       </div>
