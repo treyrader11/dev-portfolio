@@ -16,6 +16,7 @@ import {
   RiSettings3Line,
   RiExternalLinkLine,
   RiLogoutBoxLine,
+  RiSuitcaseLine,
 } from "react-icons/ri";
 import { SiJira } from "react-icons/si";
 
@@ -28,6 +29,7 @@ const navItems = [
   { label: "References", href: "/admin/references", icon: RiStarLine },
   { label: "Jira", href: "/admin/jira", icon: "jira" as const },
   { label: "Invoices", href: "/admin/invoices", icon: RiFileTextLine },
+  { label: "Jobs", href: "/admin/jobs", icon: RiSuitcaseLine },
   { label: "Settings", href: "/admin/settings", icon: RiSettings3Line },
 ];
 
