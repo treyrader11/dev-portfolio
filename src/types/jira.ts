@@ -25,6 +25,17 @@ export interface JiraIssue {
       iconUrl: string;
     };
     assignee?: {
+      accountId: string;
+      displayName: string;
+      avatarUrls: Record<string, string>;
+    };
+    reporter?: {
+      accountId: string;
+      displayName: string;
+      avatarUrls: Record<string, string>;
+    };
+    creator?: {
+      accountId: string;
       displayName: string;
       avatarUrls: Record<string, string>;
     };

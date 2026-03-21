@@ -15,6 +15,15 @@ interface JiraProject {
   name: string;
 }
 
+interface JiraMember {
+  accountId: string;
+  displayName: string;
+  emailAddress: string | null;
+  avatarUrl: string | null;
+}
+
+type MemberFilterType = "assignee" | "reporter" | "creator";
+
 interface Props {
   configured: boolean;
   issues: JiraIssue[];
@@ -91,8 +100,49 @@ export default function AdminJira({ configured, issues: initialIssues, jiraError
   });
   const [createLoading, setCreateLoading] = useState(false);
   const [createError, setCreateError] = useState("");
+  const [members, setMembers] = useState<JiraMember[]>([]);
+  const [memberFilterType, setMemberFilterType] = useState<MemberFilterType>("assignee");
+  const [selectedMember, setSelectedMember] = useState<string>("");
   const { activeEntry, elapsedSeconds, isRunning, startTimer, stopTimer, formatTime } =
     useTimer();
+
+  // Fetch org members on mount
+  useEffect(() => {
+    async function fetchMembers() {
+      try {
+        const res = await fetch("/api/admin/jira/users");
+        if (res.ok) {
+          const data = await res.json();
+          setMembers(data);
+        }
+      } catch {
+        // ignore
+      }
+    }
+    if (configured) fetchMembers();
+  }, [configured]);
+
+  function handleMemberFilter(accountId: string, filterType: MemberFilterType) {
+    setSelectedMember(accountId);
+    setMemberFilterType(filterType);
+    if (!accountId) {
+      // Reset to active status filter
+      const currentFilter = STATUS_FILTERS.find((f) => f.key === activeFilter);
+      if (currentFilter) {
+        searchIssues(currentFilter.jql);
+      }
+      return;
+    }
+    const jqlField = filterType === "assignee" ? "assignee" : filterType === "reporter" ? "reporter" : "creator";
+    const statusFilter = STATUS_FILTERS.find((f) => f.key === activeFilter);
+    const statusClause = statusFilter
+      ? statusFilter.jql.replace(/assignee = currentUser\(\) AND /, "").replace(/ ORDER BY.*/, "")
+      : "";
+    const jql = statusClause
+      ? `${jqlField} = "${accountId}" AND ${statusClause} ORDER BY updated DESC`
+      : `${jqlField} = "${accountId}" ORDER BY updated DESC`;
+    searchIssues(jql);
+  }
 
   const fetchProjects = useCallback(async () => {
     try {
@@ -163,7 +213,14 @@ export default function AdminJira({ configured, issues: initialIssues, jiraError
 
   function handleFilterClick(filter: (typeof STATUS_FILTERS)[number]) {
     setActiveFilter(filter.key);
-    searchIssues(filter.jql);
+    if (selectedMember) {
+      // Combine member filter with status filter
+      const jqlField = memberFilterType === "assignee" ? "assignee" : memberFilterType === "reporter" ? "reporter" : "creator";
+      const statusClause = filter.jql.replace(/assignee = currentUser\(\) AND /, "").replace(/ ORDER BY.*/, "");
+      searchIssues(`${jqlField} = "${selectedMember}" AND ${statusClause} ORDER BY updated DESC`);
+    } else {
+      searchIssues(filter.jql);
+    }
   }
 
   async function handlePopoverOpen(issueKey: string, isOpen: boolean) {
@@ -404,6 +461,52 @@ export default function AdminJira({ configured, issues: initialIssues, jiraError
           ))}
         </div>
 
+        {/* Member Filter */}
+        {members.length > 0 && (
+          <div className="flex flex-wrap items-center gap-3">
+            <span className="text-xs font-medium text-gray-500 uppercase tracking-wider">Filter by</span>
+            <select
+              value={memberFilterType}
+              onChange={(e) => {
+                const type = e.target.value as MemberFilterType;
+                setMemberFilterType(type);
+                if (selectedMember) {
+                  handleMemberFilter(selectedMember, type);
+                }
+              }}
+              className="px-2 py-1.5 text-xs border border-gray-300 rounded-lg bg-white"
+            >
+              <option value="assignee">Assigned To</option>
+              <option value="reporter">Reported By</option>
+              <option value="creator">Created By</option>
+            </select>
+            <select
+              value={selectedMember}
+              onChange={(e) => handleMemberFilter(e.target.value, memberFilterType)}
+              className="px-2 py-1.5 text-xs border border-gray-300 rounded-lg bg-white min-w-[180px]"
+            >
+              <option value="">All Members</option>
+              {members.map((m) => (
+                <option key={m.accountId} value={m.accountId}>
+                  {m.displayName}
+                </option>
+              ))}
+            </select>
+            {selectedMember && (
+              <button
+                onClick={() => {
+                  setSelectedMember("");
+                  const currentFilter = STATUS_FILTERS.find((f) => f.key === activeFilter);
+                  if (currentFilter) searchIssues(currentFilter.jql);
+                }}
+                className="px-2 py-1 text-xs text-gray-500 hover:text-gray-700 border border-gray-200 rounded-full hover:bg-gray-50"
+              >
+                Clear
+              </button>
+            )}
+          </div>
+        )}
+
         {/* Error */}
         {jiraError && (
           <div className="bg-red-50 border border-red-200 rounded-lg p-4 text-sm text-red-700">
@@ -424,6 +527,12 @@ export default function AdminJira({ configured, issues: initialIssues, jiraError
                 </th>
                 <th className="text-left px-4 py-3 text-xs font-medium text-gray-500 uppercase">
                   Status
+                </th>
+                <th className="text-left px-4 py-3 text-xs font-medium text-gray-500 uppercase">
+                  Assignee
+                </th>
+                <th className="text-left px-4 py-3 text-xs font-medium text-gray-500 uppercase">
+                  Reporter
                 </th>
                 <th className="text-left px-4 py-3 text-xs font-medium text-gray-500 uppercase">
                   Project
@@ -501,6 +610,46 @@ export default function AdminJira({ configured, issues: initialIssues, jiraError
                         </Popover.Portal>
                       </Popover.Root>
                     </td>
+                    <td className="px-4 py-3 whitespace-nowrap">
+                      {issue.fields?.assignee ? (
+                        <div className="flex items-center gap-2">
+                          {issue.fields.assignee.avatarUrls?.["24x24"] ? (
+                            <img
+                              src={issue.fields.assignee.avatarUrls["24x24"]}
+                              alt=""
+                              className="w-5 h-5 rounded-full"
+                            />
+                          ) : (
+                            <span className="w-5 h-5 rounded-full bg-gray-300 flex items-center justify-center text-[10px] font-medium text-white">
+                              {issue.fields.assignee.displayName?.[0]}
+                            </span>
+                          )}
+                          <span className="text-sm text-gray-700">{issue.fields.assignee.displayName}</span>
+                        </div>
+                      ) : (
+                        <span className="text-sm text-gray-400">Unassigned</span>
+                      )}
+                    </td>
+                    <td className="px-4 py-3 whitespace-nowrap">
+                      {issue.fields?.reporter ? (
+                        <div className="flex items-center gap-2">
+                          {issue.fields.reporter.avatarUrls?.["24x24"] ? (
+                            <img
+                              src={issue.fields.reporter.avatarUrls["24x24"]}
+                              alt=""
+                              className="w-5 h-5 rounded-full"
+                            />
+                          ) : (
+                            <span className="w-5 h-5 rounded-full bg-gray-300 flex items-center justify-center text-[10px] font-medium text-white">
+                              {issue.fields.reporter.displayName?.[0]}
+                            </span>
+                          )}
+                          <span className="text-sm text-gray-700">{issue.fields.reporter.displayName}</span>
+                        </div>
+                      ) : (
+                        <span className="text-sm text-gray-400">—</span>
+                      )}
+                    </td>
                     <td className="px-4 py-3 text-sm text-gray-500 whitespace-nowrap">
                       {issue.fields?.project?.name || "—"}
                     </td>
@@ -531,7 +680,7 @@ export default function AdminJira({ configured, issues: initialIssues, jiraError
               {issues.length === 0 && (
                 <tr>
                   <td
-                    colSpan={5}
+                    colSpan={7}
                     className="px-4 py-8 text-center text-sm text-gray-500"
                   >
                     No issues found. Try a different filter or search query.
@@ -560,7 +709,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   try {
     // Default: show In Progress tickets
     const defaultJql = "assignee = currentUser() AND status = 'In Progress' ORDER BY updated DESC";
-    const fields = "summary,status,project,priority,assignee,updated,created";
+    const fields = "summary,status,project,priority,assignee,reporter,creator,updated,created";
     const response = await jiraFetch(
       `/rest/api/3/search/jql?jql=${encodeURIComponent(defaultJql)}&maxResults=50&fields=${fields}`,
       credentials
