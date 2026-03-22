@@ -11,6 +11,7 @@ import Notifications from "@/components/Notifications";
 import { NotificationsProvider } from "@/components/providers/NotificationsProvider";
 import Preloader from "@/components/Preloader";
 import AdminFAB from "@/components/AdminFAB";
+import NextNProgress from "nextjs-progressbar";
 
 export default function App({
   Component,
@@ -29,6 +30,7 @@ export default function App({
 
   return (
     <SessionProvider session={session}>
+      <NextNProgress color="#A25600" height={3} options={{ showSpinner: false }} />
       <NotificationsProvider>
         {isAdminRoute ? (
           <Component {...pageProps} router={router} />
