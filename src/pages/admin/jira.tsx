@@ -6,6 +6,7 @@ import { getJiraCredentials, jiraFetch } from "@/lib/jira";
 import { useTimer } from "@/hooks/useTimer";
 import Link from "next/link";
 import * as Popover from "@radix-ui/react-popover";
+import { RiMore2Fill, RiTimeLine, RiDeleteBinLine } from "react-icons/ri";
 import type { GetServerSideProps } from "next";
 import type { JiraIssue } from "@/types/jira";
 
@@ -104,6 +105,8 @@ export default function AdminJira({ configured, issues: initialIssues, jiraError
   const [memberFilterType, setMemberFilterType] = useState<MemberFilterType>("assignee");
   const [selectedMember, setSelectedMember] = useState<string>("");
   const [memberDropdownOpen, setMemberDropdownOpen] = useState(false);
+  const [openActionsKey, setOpenActionsKey] = useState<string | null>(null);
+  const [deleteLoading, setDeleteLoading] = useState<string | null>(null);
   const { activeEntry, elapsedSeconds, isRunning, startTimer, stopTimer, formatTime } =
     useTimer();
 
@@ -264,6 +267,24 @@ export default function AdminJira({ configured, issues: initialIssues, jiraError
       // ignore
     }
     setTransitionLoading(false);
+  }
+
+  async function handleDeleteIssue(issueKey: string) {
+    if (!confirm(`Are you sure you want to delete ${issueKey}? This cannot be undone.`)) return;
+    setDeleteLoading(issueKey);
+    try {
+      const res = await fetch(`/api/admin/jira/issue/${issueKey}`, { method: "DELETE" });
+      if (res.ok || res.status === 204) {
+        setIssues((prev) => prev.filter((i) => i.key !== issueKey));
+      } else {
+        const data = await res.json();
+        alert(data.error || "Failed to delete issue");
+      }
+    } catch {
+      alert("Failed to delete issue");
+    }
+    setDeleteLoading(null);
+    setOpenActionsKey(null);
   }
 
   if (!configured) {
@@ -491,7 +512,6 @@ export default function AdminJira({ configured, issues: initialIssues, jiraError
                         if (!m) return <span>All Members</span>;
                         return (
                           <>
-                            <span className="flex-1 text-left text-gray-900">{m.displayName}</span>
                             {m.avatarUrl ? (
                               <img src={m.avatarUrl} alt="" className="w-5 h-5 rounded-full" />
                             ) : (
@@ -499,6 +519,7 @@ export default function AdminJira({ configured, issues: initialIssues, jiraError
                                 {m.displayName?.[0]}
                               </span>
                             )}
+                            <span className="flex-1 text-left text-gray-900">{m.displayName}</span>
                           </>
                         );
                       })()}
@@ -534,9 +555,8 @@ export default function AdminJira({ configured, issues: initialIssues, jiraError
                         handleMemberFilter(m.accountId, memberFilterType);
                         setMemberDropdownOpen(false);
                       }}
-                      className={`w-full text-left px-3 py-2 text-xs hover:bg-gray-50 flex items-center justify-between gap-2 ${selectedMember === m.accountId ? "bg-gray-50 font-medium" : ""}`}
+                      className={`w-full text-left px-3 py-2 text-xs hover:bg-gray-50 flex items-center gap-2 ${selectedMember === m.accountId ? "bg-gray-50 font-medium" : ""}`}
                     >
-                      <span className="text-gray-900">{m.displayName}</span>
                       {m.avatarUrl ? (
                         <img src={m.avatarUrl} alt="" className="w-5 h-5 rounded-full flex-shrink-0" />
                       ) : (
@@ -544,6 +564,7 @@ export default function AdminJira({ configured, issues: initialIssues, jiraError
                           {m.displayName?.[0]}
                         </span>
                       )}
+                      <span className="text-gray-900">{m.displayName}</span>
                     </button>
                   ))}
                 </Popover.Content>
@@ -716,19 +737,50 @@ export default function AdminJira({ configured, issues: initialIssues, jiraError
                           Tracking...
                         </span>
                       ) : (
-                        <button
-                          onClick={() =>
-                            startTimer(
-                              issue.key,
-                              issue.fields?.summary || issue.key,
-                              issue.fields?.project?.key,
-                              issue.fields?.project?.name
-                            )
-                          }
-                          className="px-3 py-1 text-xs bg-green-600 text-white rounded-lg hover:bg-green-700"
+                        <Popover.Root
+                          open={openActionsKey === issue.key}
+                          onOpenChange={(isOpen) => setOpenActionsKey(isOpen ? issue.key : null)}
                         >
-                          Start Timer
-                        </button>
+                          <Popover.Trigger asChild>
+                            <button className="p-1.5 rounded-lg hover:bg-gray-100 transition">
+                              <RiMore2Fill className="w-4 h-4 text-gray-500" />
+                            </button>
+                          </Popover.Trigger>
+                          <Popover.Portal>
+                            <Popover.Content
+                              side="bottom"
+                              align="end"
+                              sideOffset={4}
+                              className="z-50 bg-white border border-gray-200 rounded-lg shadow-lg min-w-[160px] py-1"
+                            >
+                              {issue.fields?.status?.name === "In Progress" && (
+                                <button
+                                  onClick={() => {
+                                    startTimer(
+                                      issue.key,
+                                      issue.fields?.summary || issue.key,
+                                      issue.fields?.project?.key,
+                                      issue.fields?.project?.name
+                                    );
+                                    setOpenActionsKey(null);
+                                  }}
+                                  className="w-full text-left px-3 py-2 text-xs hover:bg-green-50 flex items-center gap-2 text-green-700"
+                                >
+                                  <RiTimeLine className="w-4 h-4" />
+                                  Start Timer
+                                </button>
+                              )}
+                              <button
+                                onClick={() => handleDeleteIssue(issue.key)}
+                                disabled={deleteLoading === issue.key}
+                                className="w-full text-left px-3 py-2 text-xs hover:bg-red-50 flex items-center gap-2 text-red-600 disabled:opacity-50"
+                              >
+                                <RiDeleteBinLine className="w-4 h-4" />
+                                {deleteLoading === issue.key ? "Deleting..." : "Delete"}
+                              </button>
+                            </Popover.Content>
+                          </Popover.Portal>
+                        </Popover.Root>
                       )}
                     </td>
                   </tr>

@@ -6,10 +6,6 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  if (req.method !== "GET") {
-    return res.status(405).json({ error: "Method not allowed" });
-  }
-
   if (!(await requireAdmin(req, res))) return;
 
   const credentials = await getJiraCredentials();
@@ -18,13 +14,27 @@ export default async function handler(
   }
 
   const key = req.query.key as string;
-  const response = await jiraFetch(`/rest/api/3/issue/${key}`, credentials);
 
-  if (!response.ok) {
-    const error = await response.text();
-    return res.status(response.status).json({ error });
+  if (req.method === "GET") {
+    const response = await jiraFetch(`/rest/api/3/issue/${key}`, credentials);
+    if (!response.ok) {
+      const error = await response.text();
+      return res.status(response.status).json({ error });
+    }
+    const data = await response.json();
+    return res.json(data);
   }
 
-  const data = await response.json();
-  return res.json(data);
+  if (req.method === "DELETE") {
+    const response = await jiraFetch(`/rest/api/3/issue/${key}`, credentials, {
+      method: "DELETE",
+    });
+    if (!response.ok) {
+      const error = await response.text();
+      return res.status(response.status).json({ error });
+    }
+    return res.status(204).end();
+  }
+
+  return res.status(405).json({ error: "Method not allowed" });
 }
