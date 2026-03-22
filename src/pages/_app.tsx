@@ -41,9 +41,9 @@ export default function App({
               <Component {...pageProps} router={router} />
               <Notifications />
             </Layout>
-            <AdminFAB />
           </>
         )}
+        {!isAdminRoute && <AdminFAB />}
       </NotificationsProvider>
     </SessionProvider>
   );
