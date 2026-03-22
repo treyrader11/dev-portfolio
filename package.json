@@ -10,6 +10,9 @@
     "email": "email dev --dir src/lib/emails"
   },
   "dependencies": {
+    "@ai-sdk/anthropic": "^3.0.63",
+    "@ai-sdk/google": "^3.0.52",
+    "@ai-sdk/openai": "^3.0.47",
     "@auth/prisma-adapter": "^2.11.1",
     "@gsap/react": "^2.1.1",
     "@mailchimp/mailchimp_marketing": "^3.0.80",
@@ -20,6 +23,7 @@
     "@react-three/drei": "^9.105.6",
     "@react-three/fiber": "^8.16.6",
     "@studio-freight/lenis": "^1.0.34",
+    "ai": "^6.0.134",
     "axios": "^1.6.8",
     "clsx": "^2.1.0",
     "framer-motion": "^10.16.16",
@@ -29,6 +33,7 @@
     "maath": "^0.10.7",
     "next": "14.2.35",
     "next-auth": "4",
+    "pdf-parse": "1.1.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-email": "2.1.4",
