@@ -99,12 +99,12 @@ function AdminCurve() {
   );
 }
 
-interface Props {
+interface AdminLayoutProps {
   children: ReactNode;
   title?: string;
 }
 
-export default function AdminLayout({ children, title }: Props) {
+export default function AdminLayout({ children, title }: AdminLayoutProps) {
   const router = useRouter();
   const { data: session } = useSession();
   const [sidebarOpen, setSidebarOpen] = useState(false);

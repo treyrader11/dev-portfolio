@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { requireAdmin } from "@/lib/admin-auth";
+import { requireAdmin } from "@/features/admin/lib/admin-auth";
 import { getJiraCredentials, jiraFetch } from "@/lib/jira";
 
 export default async function handler(

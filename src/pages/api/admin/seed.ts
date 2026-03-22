@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "@/lib/prisma";
-import { requireAdmin } from "@/lib/admin-auth";
+import { requireAdmin } from "@/features/admin/lib/admin-auth";
 import {
   userData,
   experiences,
