@@ -10,6 +10,7 @@ import Layout from "@/components/Layout";
 import Notifications from "@/components/Notifications";
 import { NotificationsProvider } from "@/components/providers/NotificationsProvider";
 import Preloader from "@/components/Preloader";
+import AdminFAB from "@/components/AdminFAB";
 
 export default function App({
   Component,
@@ -40,6 +41,7 @@ export default function App({
               <Component {...pageProps} router={router} />
               <Notifications />
             </Layout>
+            <AdminFAB />
           </>
         )}
       </NotificationsProvider>

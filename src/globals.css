@@ -375,6 +375,49 @@ body {
   src: url("../public/fonts/NeueMontreal_Medium.otf");
 }
 
+/* Admin FAB sheen animation */
+.admin-fab {
+  position: relative;
+  overflow: hidden;
+}
+
+.admin-fab-sheen {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+.admin-fab-sheen::after {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    135deg,
+    transparent 40%,
+    rgba(255, 255, 255, 0.15) 50%,
+    transparent 60%
+  );
+  transform: translateX(-100%) translateY(100%);
+  animation: admin-sheen 2s ease-in-out infinite;
+}
+
+@keyframes admin-sheen {
+  0% {
+    transform: translateX(-100%) translateY(100%);
+  }
+  30% {
+    transform: translateX(100%) translateY(-100%);
+  }
+  100% {
+    transform: translateX(100%) translateY(-100%);
+  }
+}
+
 /* css way for profile pic blob */
 .blob {
   animation: animate-blob 4s ease-in-out infinite;
