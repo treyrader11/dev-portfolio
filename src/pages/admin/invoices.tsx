@@ -27,6 +27,8 @@ interface Invoice {
   invoiceNumber: string;
   date: string;
   dueDate: string | null;
+  periodStart: string | null;
+  periodEnd: string | null;
   status: string;
   clientName: string;
   clientEmail: string | null;
@@ -35,7 +37,10 @@ interface Invoice {
   taxRate: number;
   taxAmount: number;
   total: number;
+  hourlyRate: number | null;
+  totalHours: number | null;
   notes: string | null;
+  workSummary: string[];
   lineItems: Array<{
     id: string;
     description: string;
@@ -44,6 +49,8 @@ interface Invoice {
     rate: number;
     amount: number;
     ticketKey: string | null;
+    date: string | null;
+    dayOfWeek: string | null;
   }>;
   _count: { timeEntries: number };
 }
@@ -219,12 +226,13 @@ export default function AdminInvoices({
       const res = await fetch("/api/admin/invoices/parse-pdf", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ pdfBase64: base64, provider: aiProvider }),
+        body: JSON.stringify({ pdfBase64: base64, provider: aiProvider, autoSave: true }),
       });
 
       if (res.ok) {
-        const data = await res.json();
-        applyParsedInvoice(data.invoice);
+        // Refresh invoice list since it was auto-saved
+        const listRes = await fetch("/api/admin/invoices");
+        if (listRes.ok) setInvoices(await listRes.json());
       } else {
         const err = await res.json();
         setUploadError(err.error || "Failed to parse PDF");
@@ -1030,7 +1038,13 @@ export default function AdminInvoices({
                   Date
                 </th>
                 <th className="text-left px-4 py-3 text-xs font-medium text-gray-500 uppercase">
+                  Period
+                </th>
+                <th className="text-left px-4 py-3 text-xs font-medium text-gray-500 uppercase">
                   Client
+                </th>
+                <th className="text-left px-4 py-3 text-xs font-medium text-gray-500 uppercase">
+                  Hours
                 </th>
                 <th className="text-left px-4 py-3 text-xs font-medium text-gray-500 uppercase">
                   Status
@@ -1052,8 +1066,31 @@ export default function AdminInvoices({
                   <td className="px-4 py-3 text-sm text-gray-500">
                     {new Date(inv.date).toLocaleDateString()}
                   </td>
+                  <td className="px-4 py-3 text-sm text-gray-500 whitespace-nowrap">
+                    {inv.periodStart && inv.periodEnd ? (
+                      <>
+                        {new Date(inv.periodStart).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
+                        {" – "}
+                        {new Date(inv.periodEnd).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
+                      </>
+                    ) : (
+                      "—"
+                    )}
+                  </td>
                   <td className="px-4 py-3 text-sm text-gray-900">
                     {inv.clientName}
+                  </td>
+                  <td className="px-4 py-3 text-sm text-gray-500 whitespace-nowrap">
+                    {inv.totalHours ? (
+                      <span>
+                        {inv.totalHours} hrs
+                        {inv.hourlyRate ? (
+                          <span className="text-gray-400"> @ ${inv.hourlyRate}/hr</span>
+                        ) : null}
+                      </span>
+                    ) : (
+                      "—"
+                    )}
                   </td>
                   <td className="px-4 py-3">
                     <select
@@ -1095,7 +1132,7 @@ export default function AdminInvoices({
               {invoices.length === 0 && (
                 <tr>
                   <td
-                    colSpan={6}
+                    colSpan={8}
                     className="px-4 py-8 text-center text-sm text-gray-500"
                   >
                     No invoices yet. Create your first invoice above.

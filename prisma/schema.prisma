@@ -163,6 +163,8 @@ model Invoice {
   invoiceNumber String            @unique
   date          DateTime          @default(now())
   dueDate       DateTime?
+  periodStart   DateTime?
+  periodEnd     DateTime?
   status        String            @default("draft")
   clientName    String
   clientEmail   String?
@@ -170,11 +172,15 @@ model Invoice {
   fromName      String
   fromEmail     String?
   fromAddress   String?           @db.Text
+  fromPhone     String?
   subtotal      Float             @default(0)
   taxRate       Float             @default(0)
   taxAmount     Float             @default(0)
   total         Float             @default(0)
+  hourlyRate    Float?
+  totalHours    Float?
   notes         String?           @db.Text
+  workSummary   String[]
   lineItems     InvoiceLineItem[]
   timeEntries   TimeEntry[]
   createdAt     DateTime          @default(now())
@@ -182,16 +188,18 @@ model Invoice {
 }
 
 model InvoiceLineItem {
-  id          String  @id @default(cuid())
+  id          String    @id @default(cuid())
   invoiceId   String
-  invoice     Invoice @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+  invoice     Invoice   @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
   description String
-  type        String  @default("hourly")
-  quantity    Float   @default(0)
-  rate        Float   @default(0)
-  amount      Float   @default(0)
+  type        String    @default("hourly")
+  quantity    Float     @default(0)
+  rate        Float     @default(0)
+  amount      Float     @default(0)
   ticketKey   String?
-  sortOrder   Int     @default(0)
+  date        DateTime?
+  dayOfWeek   String?
+  sortOrder   Int       @default(0)
 
   @@index([invoiceId])
 }
