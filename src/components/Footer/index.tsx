@@ -1,11 +1,13 @@
 "use client";
 
 import { useRef } from "react";
-import { useScroll, motion, useTransform } from "framer-motion";
+import { useScroll, motion, useTransform, useSpring } from "framer-motion";
 import { cn, getLocalTime } from "@/lib/utils";
 import Brand from "@/components/Brand";
 import Socials from "./components/Socials";
 import Contact from "./components/Contact";
+
+const springConfig = { stiffness: 100, damping: 30, restDelta: 0.001 };
 
 export default function Footer() {
   const container = useRef<HTMLDivElement>(null);
@@ -13,12 +15,19 @@ export default function Footer() {
     target: container,
     offset: ["start end", "end end"],
   });
-  const x = useTransform(scrollYProgress, [0, 1], [0, 100]);
-  const y = useTransform(scrollYProgress, [0, 1], [-500, 0]);
-  const rotate = useTransform(scrollYProgress, [0, 1], [120, 90]);
+
+  const rawY = useTransform(scrollYProgress, [0, 1], [-500, 0]);
+  const rawX = useTransform(scrollYProgress, [0, 1], [0, 100]);
+  const rawRotate = useTransform(scrollYProgress, [0, 1], [120, 90]);
+
+  // Spring-smoothed values for buttery animation
+  const y = useSpring(rawY, springConfig);
+  const x = useSpring(rawX, springConfig);
+  const rotate = useSpring(rawRotate, springConfig);
+
   return (
     <motion.div
-      style={{ y }}
+      style={{ y, willChange: "transform" }}
       ref={container}
       className={cn(
         "text-white",

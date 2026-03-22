@@ -65,7 +65,7 @@ export default function Contact({ style, rotate }: Props) {
             code
           </h2>
           <motion.div
-            style={style}
+            style={{ ...style, willChange: "transform" }}
             className={cn()}
           >
             <Rounded
@@ -88,7 +88,7 @@ export default function Contact({ style, rotate }: Props) {
           </motion.div>
         </div>
         <motion.svg
-          style={{ rotate, scale: 2 }}
+          style={{ rotate, scale: 2, willChange: "transform" }}
           width="8"
           height="8"
           viewBox="0 0 9 9"
