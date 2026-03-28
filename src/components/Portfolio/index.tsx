@@ -35,8 +35,8 @@ interface Props {
 
 export default function Portfolio({ repositories }: Props) {
   const [latestRepos, setLatestRepos] = useState(repositories);
-  const [projects, setProjects] = useState<ProjectData[]>(projectsData);
-  const [filteredProjects, setFilteredProjects] = useState<ProjectData[]>(projects);
+  const [activeCategory, setActiveCategory] = useState("All");
+  const [searchText, setSearchText] = useState("");
 
   const [focused, setFocused] = useState(false);
   const [selected, setSelected] = useState(0);
@@ -47,6 +47,19 @@ export default function Portfolio({ repositories }: Props) {
     "All",
     ...getUnique(projectsData, "category"),
   ]);
+
+  // Derive filtered projects from both category and search
+  const filteredProjects = projectsData.filter((proj) => {
+    const matchesCategory =
+      activeCategory === "All" || proj.category === activeCategory;
+    const matchesSearch =
+      searchText.trim() === "" ||
+      proj.tags.some((tag) =>
+        tag.toLowerCase().includes(searchText.toLowerCase())
+      ) ||
+      proj.title.toLowerCase().includes(searchText.toLowerCase());
+    return matchesCategory && matchesSearch;
+  });
 
   const { scrollY } = useScroll();
 
@@ -62,54 +75,21 @@ export default function Portfolio({ repositories }: Props) {
     100
   );
 
-  const selectedCategory = (index: number) => setSelected(index);
-
   const filterProjects = (category: string, index: number) => {
-    if (category === "All") {
-      gsap.to(container.current, {
-        duration: 0.5,
-        opacity: 0,
-        y: 20,
-        ease: "power4.out",
-        onComplete: () => {
-          gsap.fromTo(
-            container.current,
-            {
-              y: 20,
-              opacity: 0,
-              scale: 0,
-            },
-            {
-              duration: 0.5,
-              y: 20,
-              opacity: 1,
-              scale: 1,
-              ease: "power4.out",
-            }
-          );
-          setProjects(projectsData);
-        },
-      });
-      selectedCategory(index);
-      return;
-    }
-
-    const filtered = projectsData.filter((proj) => proj.category === category);
-
-    selectedCategory(index);
+    setSelected(index);
     gsap.to(container.current, {
-      duration: 0.5,
+      duration: 0.4,
       opacity: 0,
-      y: 25,
+      y: 15,
       ease: "power4.out",
       onComplete: () => {
+        setActiveCategory(category);
         gsap.to(container.current, {
-          duration: 0.5,
-          y: 20,
+          duration: 0.4,
+          y: 0,
           opacity: 1,
           ease: "power4.out",
         });
-        setProjects(filtered);
       },
     });
   };
@@ -118,7 +98,7 @@ export default function Portfolio({ repositories }: Props) {
     if (inputRef.current) {
       inputRef.current.value = "";
     }
-    setFilteredProjects(projectsData);
+    setSearchText("");
   };
 
   const openSearch = () => {
@@ -132,11 +112,7 @@ export default function Portfolio({ repositories }: Props) {
   };
 
   const filterProjectsBySearch = (text: string) => {
-    const filtered = projects.filter((proj) =>
-      proj.tags.some((tag) => tag.toLowerCase().includes(text.toLowerCase()))
-    );
-
-    setFilteredProjects(filtered);
+    setSearchText(text);
   };
 
   const spring = {
