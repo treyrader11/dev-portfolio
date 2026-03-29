@@ -14,6 +14,10 @@ export const routes: Route[] = [
     href: "/info",
   },
   {
+    label: "Pricing",
+    href: "/pricing",
+  },
+  {
     label: "Contact",
     href: "/contact",
   },

@@ -19,6 +19,7 @@ import {
   RiCustomerServiceLine,
   RiMapPinLine,
   RiTerminalBoxLine,
+  RiArrowRightLine,
 } from "react-icons/ri";
 
 interface SocialItem {
@@ -291,6 +292,32 @@ export default function Info() {
                 </p>
               </div>
             </div>
+          </div>
+
+          {/* Pricing CTA */}
+          <div className="mt-10 pt-8 border-t border-gray-100">
+            <Link
+              href="/pricing"
+              scroll={false}
+              className={cn(
+                "inline-flex",
+                "items-center",
+                "gap-2",
+                "bg-dark",
+                "text-white",
+                "px-6",
+                "py-3",
+                "rounded-lg",
+                "text-sm",
+                "font-semibold",
+                "hover:bg-dark/90",
+                "transition-colors",
+                "duration-300"
+              )}
+            >
+              View Full Pricing & Packages
+              <RiArrowRightLine />
+            </Link>
           </div>
 
           {/* Tech Stack & Location */}
