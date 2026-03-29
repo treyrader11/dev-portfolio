@@ -18,7 +18,7 @@ const Inner = forwardRef<HTMLDivElement, Props>(
     return (
       <div
         ref={ref}
-        className={cn("relative z-[2]", className)}
+        className={cn("relative z-[2] overflow-x-hidden", className)}
         style={{ backgroundColor, zIndex: 2 }}
       >
         <motion.div

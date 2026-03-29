@@ -88,11 +88,11 @@ export default function Info() {
         "min-h-screen",
         "text-gray-500",
         "mx-auto",
-        "overflow-x-hidden"
+        "overflow-hidden"
       )}
     >
       <motion.div className={cn("pt-[10vh]")}>
-        <div className="mx-[10vw]">
+        <div className="mx-[10vw] max-w-full">
           <motion.h1
             className={cn(
               "m-0",
@@ -110,7 +110,7 @@ export default function Info() {
           <ParalaxScrollText text={heading} scrollYProgress={scrollYProgress} />
         </div>
 
-        <div className="px-4 md:w-[900px] lg:w-[1100px] mx-auto">
+        <div className="px-4 max-w-full md:w-[900px] lg:w-[1100px] mx-auto">
           <div
             className={cn(
               "grid",
@@ -214,7 +214,7 @@ export default function Info() {
       </motion.div>
 
       {/* Work With Me Section */}
-      <div className="px-4 md:w-[900px] lg:w-[1100px] mx-auto pt-20">
+      <div className="px-4 max-w-full md:w-[900px] lg:w-[1100px] mx-auto pt-20">
         <div
           className={cn(
             "rounded-2xl",
