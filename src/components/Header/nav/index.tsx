@@ -11,7 +11,11 @@ import { routes } from "./routes";
 import GithubCornerBadge from "@/components/GithubCornerBadge";
 import { cn } from "@/lib/utils";
 
-export default function Nav() {
+interface NavProps {
+  onClose: () => void;
+}
+
+export default function Nav({ onClose }: NavProps) {
   const pathname = usePathname();
   const [selectedIndicator, setSelectedIndicator] = useState(pathname);
 
@@ -79,6 +83,7 @@ export default function Nav() {
                 data={route}
                 isActive={selectedIndicator == route.href}
                 setSelectedIndicator={setSelectedIndicator}
+                onClose={onClose}
                 className={cn("text-white", "font-light")}
               />
             );

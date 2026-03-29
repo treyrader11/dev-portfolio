@@ -11,6 +11,7 @@ interface Props {
   data: Route;
   isActive: boolean;
   setSelectedIndicator: (href: string) => void;
+  onClose: () => void;
   className?: string;
 }
 
@@ -18,6 +19,7 @@ export default function Navlink({
   data,
   isActive,
   setSelectedIndicator,
+  onClose,
   className,
 }: Props) {
   const { label, href } = data;
@@ -27,6 +29,7 @@ export default function Navlink({
       href={href}
       scroll={false}
       className={cn("relative flex items-center", className)}
+      onClick={onClose}
       onMouseEnter={() => {
         setSelectedIndicator(href);
       }}

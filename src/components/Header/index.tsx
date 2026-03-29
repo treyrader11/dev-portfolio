@@ -123,7 +123,9 @@ export default function Header() {
           />
         </div>
       </motion.header>
-      <AnimatePresence mode="wait">{isNavOpen && <Nav />}</AnimatePresence>
+      <AnimatePresence mode="wait">
+        {isNavOpen && <Nav onClose={() => setIsNavOpen(false)} />}
+      </AnimatePresence>
       <BurgerMenu
         isOpen={isNavOpen}
         handleNavMenu={handleNavMenu}
