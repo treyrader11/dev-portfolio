@@ -50,12 +50,14 @@ export default function Hero({ className }: Props) {
           "items-center",
           "text-light-400",
           "text-3xl",
-          "md:text-[40px]",
-          "md:leading-[44px]",
-          "lg:text-[52px]",
-          "lg:leading-[56px]",
-          "xl:text-[64px]",
-          "xl:leading-[66px]"
+          "md:text-[32px]",
+          "md:leading-[38px]",
+          "lg:text-[44px]",
+          "lg:leading-[50px]",
+          "xl:text-[56px]",
+          "xl:leading-[60px]",
+          "2xl:text-[64px]",
+          "2xl:leading-[66px]"
         )}
       >
         <BlurredIn
@@ -80,7 +82,7 @@ export default function Hero({ className }: Props) {
                   animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
                   key={i}
                   className={cn("mr-3 inline-flex  text-light-400", {
-                    "text-purple-400 text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-pp-acma":
+                    "text-purple-400 text-5xl md:text-5xl lg:text-6xl xl:text-7xl 2xl:text-8xl font-pp-acma":
                       isTargetedWord,
                   })}
                 >
