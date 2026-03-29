@@ -10,6 +10,7 @@ import TechStack from "./TechStack";
 import Socials from "./Socials";
 import { Portrait } from "./Portrait";
 import ParalaxScrollText from "./ParalaxScrollText";
+import Rounded from "@/components/Rounded";
 import {
   RiCodeSSlashLine,
   RiLayoutLine,
@@ -296,28 +297,37 @@ export default function Info() {
 
           {/* Pricing CTA */}
           <div className="mt-10 pt-8 border-t border-gray-100">
-            <Link
+            <Rounded
               href="/pricing"
-              scroll={false}
+              backgroundColor="#934E00"
               className={cn(
-                "inline-flex",
-                "items-center",
-                "gap-2",
-                "bg-dark",
-                "text-white",
-                "px-6",
-                "py-3",
-                "rounded-lg",
-                "text-sm",
-                "font-semibold",
-                "hover:bg-dark/90",
-                "transition-colors",
-                "duration-300"
+                "w-fit",
+                "py-4",
+                "px-10",
+                "border-gray-300",
+                "border-[.3px]",
+                "text-gray-800"
               )}
             >
-              View Full Pricing & Packages
-              <RiArrowRightLine />
-            </Link>
+              <span
+                className={cn(
+                  "relative",
+                  "z-[1]",
+                  "transition-colors",
+                  "duration-[400]",
+                  "ease-linear",
+                  "inline-flex",
+                  "items-center",
+                  "gap-2",
+                  "text-sm",
+                  "font-semibold",
+                  "group-hover:text-white"
+                )}
+              >
+                View Full Pricing & Packages
+                <RiArrowRightLine />
+              </span>
+            </Rounded>
           </div>
 
           {/* Tech Stack & Location */}
