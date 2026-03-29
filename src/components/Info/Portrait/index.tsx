@@ -15,8 +15,9 @@ export function Portrait({ className, style }: Props) {
       containerClassName={cn(
         "rounded-none",
         "bg-transparent",
-        "w-[25vh]",
-        "md:w-[50vh]",
+        "w-full",
+        "max-w-[25vh]",
+        "md:max-w-full",
         "h-[60vh]",
         "mr-4",
         className
