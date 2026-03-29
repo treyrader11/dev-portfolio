@@ -3,6 +3,7 @@
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 import Link from "next/link";
+import Rounded from "@/components/Rounded";
 import {
   RiCheckLine,
   RiStarFill,
@@ -333,27 +334,37 @@ export default function Pricing() {
                 ))}
               </ul>
 
-              <Link
-                href="/contact"
-                scroll={false}
-                className={cn(
-                  "mt-8",
-                  "block",
-                  "text-center",
-                  "py-3",
-                  "px-6",
-                  "rounded-lg",
-                  "text-sm",
-                  "font-semibold",
-                  "transition-all",
-                  "duration-300",
-                  tier.recommended
-                    ? "bg-secondary text-white hover:bg-secondary/90"
-                    : "bg-gray-100 text-gray-800 hover:bg-gray-200"
-                )}
-              >
-                Get Started
-              </Link>
+              <div className="mt-8">
+                <Rounded
+                  href="/contact"
+                  backgroundColor={tier.recommended ? "#A25600" : "#292929"}
+                  className={cn(
+                    "w-full",
+                    "py-3.5",
+                    "px-6",
+                    "border-[.3px]",
+                    tier.recommended
+                      ? "bg-secondary border-secondary/50 text-white"
+                      : "border-gray-300 text-gray-800"
+                  )}
+                >
+                  <span
+                    className={cn(
+                      "relative",
+                      "z-[1]",
+                      "text-sm",
+                      "font-semibold",
+                      "transition-colors",
+                      "duration-[400]",
+                      "ease-linear",
+                      "group-hover:text-white",
+                      "whitespace-nowrap"
+                    )}
+                  >
+                    Get Started
+                  </span>
+                </Rounded>
+              </div>
             </motion.div>
           ))}
         </div>
