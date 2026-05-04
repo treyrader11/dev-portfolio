@@ -12,7 +12,7 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 const CONTACT_TO_EMAIL =
   process.env.CONTACT_FORM_TO_EMAIL || "trey@treyrader.dev";
 const CONTACT_FROM_EMAIL =
-  process.env.RESEND_CONTACT_FROM_EMAIL || "Contact Form <contact@treyrader.dev>";
+  process.env.RESEND_CONTACT_FROM_EMAIL || "Dev Portfolio <contact@treyrader.dev>";
 const AUTOREPLY_FROM_EMAIL =
   process.env.RESEND_AUTOREPLY_FROM_EMAIL || "Trey Rader <noreply@treyrader.dev>";
 
@@ -80,7 +80,7 @@ export default async function handler(
     await resend.emails.send({
       from: CONTACT_FROM_EMAIL,
       to: CONTACT_TO_EMAIL,
-      subject: `New Contact Form Submission from ${name}`,
+      subject: `Dev Portfolio Inquiry from ${name}`,
       reply_to: email,
       html: `
         <!DOCTYPE html>
@@ -92,8 +92,13 @@ export default async function handler(
           <body style="margin:0;padding:0;background:#f9fafb;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;">
             <table width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;margin:40px auto;background:#ffffff;border-radius:8px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.1);">
               <tr>
+                <td style="background:#934E00;padding:20px 40px;">
+                  <p style="margin:0;color:#ffffff;font-size:13px;font-weight:600;letter-spacing:1px;text-transform:uppercase;">Dev Portfolio</p>
+                </td>
+              </tr>
+              <tr>
                 <td style="padding:32px 40px 24px;">
-                  <h2 style="margin:0 0 24px;font-size:20px;color:#1a1a1a;">New Contact Form Submission</h2>
+                  <h2 style="margin:0 0 24px;font-size:20px;color:#1a1a1a;">New Inquiry from ${name}</h2>
                   <table width="100%" cellpadding="0" cellspacing="0">
                     <tr>
                       <td style="padding:12px 0;border-bottom:1px solid #eee;">
