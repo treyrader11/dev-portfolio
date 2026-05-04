@@ -190,7 +190,7 @@ const Search = forwardRef<HTMLInputElement, Props>(function Search(
     onClick,
     isFocused,
     placeholder = "Search by stack...",
-    collapsedWidth = 56,
+    collapsedWidth = 48,
     expandedWidth = 320,
     expandedOffset = 50,
     gooeyBlur = 5,
