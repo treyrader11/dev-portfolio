@@ -155,7 +155,7 @@ const transition = {
 };
 
 const iconBubbleVariants = {
-  collapsed: { scale: 0, opacity: 0 },
+  collapsed: { scale: 1, opacity: 1 },
   expanded: { scale: 1, opacity: 1 },
 };
 
@@ -200,7 +200,6 @@ const Search = forwardRef<HTMLInputElement, Props>(function Search(
   const reactId = useId();
   const safeId = reactId.replace(/:/g, "");
   const filterId = `gooey-search-filter-${safeId}`;
-  const iconLayoutId = `gooey-search-icon-${safeId}`;
   const inputLayoutId = `gooey-search-input-${safeId}`;
 
   const inputRef = useRef<HTMLInputElement>(null);
@@ -263,30 +262,32 @@ const Search = forwardRef<HTMLInputElement, Props>(function Search(
           animate={isFocused ? "expanded" : "collapsed"}
           transition={transition}
         >
-          <button
-            type="button"
-            onClick={onClick}
-            aria-label={isFocused ? "Close search" : "Open search"}
+          <div
+            onClick={!isFocused ? onClick : undefined}
+            role={!isFocused ? "button" : undefined}
+            tabIndex={!isFocused ? 0 : -1}
+            onKeyDown={(e) => {
+              if (!isFocused && (e.key === "Enter" || e.key === " ")) {
+                e.preventDefault();
+                onClick();
+              }
+            }}
+            aria-label={!isFocused ? "Open search" : undefined}
             className={cn(
-              "flex h-12 w-full cursor-pointer items-center gap-2 rounded-full px-4",
+              "flex h-12 w-full items-center gap-2 rounded-full px-4",
               "bg-white text-dark shadow-sm ring-1 ring-white/10",
               "outline-none transition-[color,box-shadow]",
+              !isFocused && "cursor-pointer",
               "focus-visible:ring-2 focus-visible:ring-white/60 focus-visible:ring-offset-2 focus-visible:ring-offset-dark",
             )}
           >
-            {!isFocused ? (
-              <motion.span
-                layoutId={iconLayoutId}
-                className="flex items-center justify-center"
-              >
-                <FiSearch className="text-2xl shrink-0" />
-              </motion.span>
-            ) : null}
+            {/* Spacer to reserve room for the detached icon bubble */}
+            <span className="w-12 shrink-0" aria-hidden />
 
             <motion.input
               layoutId={inputLayoutId}
               ref={inputRef}
-              type="search"
+              type="text"
               enterKeyHint="search"
               autoComplete="off"
               value={searchText}
@@ -294,7 +295,7 @@ const Search = forwardRef<HTMLInputElement, Props>(function Search(
               disabled={!isFocused}
               placeholder={placeholder}
               className={cn(
-                "h-full min-w-0 flex-1 bg-transparent text-base font-extralight outline-none",
+                "search-pill-input h-full min-w-0 flex-1 bg-transparent text-base font-extralight outline-none",
                 "text-dark",
                 isFocused
                   ? "placeholder:text-dark/50"
@@ -302,44 +303,43 @@ const Search = forwardRef<HTMLInputElement, Props>(function Search(
               )}
             />
 
-            {isFocused && searchText ? (
-              <motion.span
+            {isFocused ? (
+              <motion.button
+                type="button"
                 initial={{ opacity: 0, scale: 0.5 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.5 }}
                 transition={{ duration: 0.2 }}
                 onClick={(e) => {
                   e.stopPropagation();
-                  handleClear();
+                  if (searchText) {
+                    handleClear();
+                  } else {
+                    onClick();
+                  }
                 }}
-                role="button"
-                aria-label="Clear search"
+                aria-label={searchText ? "Clear search" : "Close search"}
                 className={cn(
-                  "ml-auto flex shrink-0 cursor-pointer items-center justify-center",
-                  "text-dark/60 hover:text-dark transition-colors duration-200 text-2xl",
+                  "ml-auto flex size-9 shrink-0 cursor-pointer items-center justify-center rounded-full",
+                  "text-secondary hover:bg-secondary/10 transition-colors duration-200 text-xl",
                 )}
               >
                 <MdClear />
-              </motion.span>
+              </motion.button>
             ) : null}
-          </button>
+          </div>
         </motion.div>
 
-        {/* Detached gooey bubble that morphs into the pill */}
+        {/* Detached gooey bubble that holds the icon while expanded */}
         <motion.div
-          className="absolute top-1/2 left-0 flex size-12 -translate-y-1/2 items-center justify-center pointer-events-none"
+          className="absolute inset-y-0 left-0 flex w-12 items-center justify-center pointer-events-none"
           variants={iconBubbleVariants}
           initial="collapsed"
           animate={isFocused ? "expanded" : "collapsed"}
           transition={transition}
         >
           <div className="flex size-12 items-center justify-center rounded-full bg-white text-dark shadow-sm ring-1 ring-white/10">
-            <motion.span
-              layoutId={iconLayoutId}
-              className="flex items-center justify-center"
-            >
-              <FiSearch className="text-2xl shrink-0" />
-            </motion.span>
+            <FiSearch className="text-2xl shrink-0" />
           </div>
         </motion.div>
       </div>
