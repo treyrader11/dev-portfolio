@@ -11,6 +11,10 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 
 const CONTACT_TO_EMAIL =
   process.env.CONTACT_FORM_TO_EMAIL || "trey@treyrader.dev";
+const CONTACT_FROM_EMAIL =
+  process.env.RESEND_CONTACT_FROM_EMAIL || "Contact Form <contact@treyrader.dev>";
+const AUTOREPLY_FROM_EMAIL =
+  process.env.RESEND_AUTOREPLY_FROM_EMAIL || "Trey Rader <noreply@treyrader.dev>";
 
 export default async function handler(
   req: NextApiRequest,
@@ -74,7 +78,7 @@ export default async function handler(
   // Send email via Resend
   try {
     await resend.emails.send({
-      from: "Contact Form <contact@treyrader.dev>",
+      from: CONTACT_FROM_EMAIL,
       to: CONTACT_TO_EMAIL,
       subject: `New Contact Form Submission from ${name}`,
       reply_to: email,
@@ -121,7 +125,7 @@ export default async function handler(
     // Send auto-reply confirmation to the user (fire-and-forget)
     resend.emails
       .send({
-        from: "Trey Rader <noreply@treyrader.dev>",
+        from: AUTOREPLY_FROM_EMAIL,
         to: email,
         subject: "Thanks for reaching out!",
         react: <Email name={name} />,

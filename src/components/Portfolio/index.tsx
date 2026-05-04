@@ -55,7 +55,7 @@ export default function Portfolio({ repositories }: Props) {
     const matchesSearch =
       searchText.trim() === "" ||
       proj.tags.some((tag) =>
-        tag.toLowerCase().includes(searchText.toLowerCase())
+        tag.toLowerCase().includes(searchText.toLowerCase()),
       ) ||
       proj.title.toLowerCase().includes(searchText.toLowerCase());
     return matchesCategory && matchesSearch;
@@ -72,7 +72,7 @@ export default function Portfolio({ repositories }: Props) {
   const isElementInView = useIsInView(
     container?.current,
     modalRef?.current,
-    100
+    100,
   );
 
   const filterProjects = (category: string, index: number) => {
@@ -140,7 +140,10 @@ export default function Portfolio({ repositories }: Props) {
   });
 
   useEffect(() => {
-    if ((scrollYProgress as unknown as { prev: number }).prev > 20 && (scrollYProgress as unknown as { prev: number }).prev < 300) {
+    if (
+      (scrollYProgress as unknown as { prev: number }).prev > 20 &&
+      (scrollYProgress as unknown as { prev: number }).prev < 300
+    ) {
       setIsInView(true);
     } else {
       setIsInView(false);
@@ -170,7 +173,7 @@ export default function Portfolio({ repositories }: Props) {
             "items-center",
             "gap-[2rem]",
             "w-full",
-            "pl-5"
+            "pl-5",
           )}
         >
           <Search
@@ -198,7 +201,7 @@ export default function Portfolio({ repositories }: Props) {
           "flex-col",
           "items-center",
           "justify-center",
-          "mb-[100px]"
+          "mb-[100px]",
         )}
       >
         {filteredProjects.map((proj, i) => {
@@ -237,7 +240,7 @@ export default function Portfolio({ repositories }: Props) {
             "md:grid-cols-2",
             "lg:grid-cols-3",
             "lg:-mt-10",
-            "gap-y-20"
+            "gap-y-20",
           )}
         >
           <div className="relative flex flex-col justify-center gap-y-6">
