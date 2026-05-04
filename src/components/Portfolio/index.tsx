@@ -219,15 +219,6 @@ export default function Portfolio({ repositories }: Props) {
           );
         })}
 
-        {/* <div className="flex flex-col justify-center gap-y-6">
-          <PageTitle
-            backgroundColor="transparent"
-            title="Misc repos."
-            className="text-left whitespace-nowrap"
-            containerClass={cn("p-0 m-0")}
-          />
-          <p>A few smaller projects fetched from github</p>
-        </div> */}
         <div
           className={cn(
             "pt-52",
@@ -258,9 +249,6 @@ export default function Portfolio({ repositories }: Props) {
             latestRepos.map((repo) => <LatestRepo {...repo} key={repo.name} />)}
         </div>
       </div>
-
-      {/* <MouseoverModal data={projectsData} /> */}
-      {/* <Modal ref={modalContainer}></Modal> */}
     </section>
   );
 }
