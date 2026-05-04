@@ -30,7 +30,7 @@ interface Props {
   color: string;
   mousePosition: MousePosition;
   isInView: boolean;
-  modalRef: RefObject<HTMLDivElement>;
+  modalRef: RefObject<HTMLDivElement | null>;
   manageModal?: (isActive: boolean, index: number, x: number, y: number) => void;
 }
 

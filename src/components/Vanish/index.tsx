@@ -25,7 +25,7 @@ export function Vanish({ phrases, className, delay = 0, once = false }: Props) {
       scale: 1,
       transition: {
         delay: delay || countRef.current * STAGGER,
-        type: "spring",
+        type: "spring" as const,
         damping: 12,
         stiffness: 200,
       },

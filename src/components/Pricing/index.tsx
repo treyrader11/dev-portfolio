@@ -22,7 +22,7 @@ const fadeUp = {
   initial: { opacity: 0, y: 30 },
   whileInView: { opacity: 1, y: 0 },
   viewport: { once: true },
-  transition: { duration: 0.6, ease: [0.76, 0, 0.24, 1] },
+  transition: { duration: 0.6, ease: [0.76, 0, 0.24, 1] as const },
 };
 
 function staggerDelay(i: number) {

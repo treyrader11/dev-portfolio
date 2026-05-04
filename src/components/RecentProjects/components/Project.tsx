@@ -82,7 +82,7 @@ export default function Project({
       <motion.div
         initial={false}
         animate={{ rotateY: isFlipped ? 180 : 360 }}
-        transition={{ duration: 0.6, animationDirection: "normal" }}
+        transition={{ duration: 0.6 }}
         onAnimationComplete={() => setIsAnimating(false)}
         style={{
           transition: "transform 0.6s",
@@ -104,7 +104,7 @@ export default function Project({
       <motion.div
         initial={false}
         animate={{ rotateY: isFlipped ? 360 : 180 }}
-        transition={{ duration: 0.6, animationDirection: "normal" }}
+        transition={{ duration: 0.6 }}
         onAnimationComplete={() => setIsAnimating(false)}
         style={{
           transition: "transform 0.6s",

@@ -1,25 +1,11 @@
 import { calcRandomBlockDelay } from "@/lib/utils";
 import type { Variants } from "framer-motion";
 
-interface CollapseVariantResult {
-  initial: { scaleY: number };
-  exit: { scaleY: number };
-  transition: {
-    duration: number;
-    delay: number;
-    ease: number[];
-  };
-}
-
-export const collapse: {
-  animate: { scaleY: number };
-  enter: (i: number) => CollapseVariantResult;
-  exit: (i: number) => CollapseVariantResult;
-} = {
+export const collapse = {
   animate: {
     scaleY: 0,
   },
-  enter: (i: number): CollapseVariantResult => ({
+  enter: (i: number) => ({
     initial: {
       scaleY: 1,
     },
@@ -30,7 +16,7 @@ export const collapse: {
       ease: [0.22, 1, 0.36, 1],
     },
   }),
-  exit: (i: number): CollapseVariantResult => ({
+  exit: (i: number) => ({
     initial: {
       scaleY: 0,
     },
@@ -41,7 +27,7 @@ export const collapse: {
       ease: [0.22, 1, 0.36, 1],
     },
   }),
-};
+} as unknown as Variants;
 
 interface ScaleResult {
   initial: { scaleY: number };

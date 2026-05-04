@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 import { Color, Scene, Fog, PerspectiveCamera, Vector3 } from "three";
 import ThreeGlobe from "three-globe";
-import { useThree, Canvas, extend, type Object3DNode } from "@react-three/fiber";
+import { useThree, Canvas, extend, type ThreeElement } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
 import countries from "@/lib/globe.json";
 import { genRandomNumbers, hexToRgb } from "@/lib/utils";
@@ -13,7 +13,7 @@ extend({ ThreeGlobe });
 
 declare module "@react-three/fiber" {
   interface ThreeElements {
-    threeGlobe: Object3DNode<ThreeGlobe, typeof ThreeGlobe>;
+    threeGlobe: ThreeElement<typeof ThreeGlobe>;
   }
 }
 

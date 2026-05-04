@@ -9,7 +9,7 @@ export const textVariant: Variants = {
     opacity: 1,
     y: 0,
     transition: {
-      type: "tween",
+      type: "tween" as const,
       ease: "easeIn",
     },
   },

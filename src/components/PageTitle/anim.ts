@@ -1,8 +1,8 @@
-import type { Variants } from "framer-motion";
+import type { Variants, Transition } from "framer-motion";
 
 export const slideIn = (
   direction: string,
-  type: string,
+  type: Transition["type"],
   delay: number,
   duration: number
 ): Variants => ({
