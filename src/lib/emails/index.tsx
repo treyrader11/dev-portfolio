@@ -13,9 +13,15 @@ import {
 } from "@react-email/components";
 import * as React from "react";
 
-const baseUrl = process.env.VERCEL_URL
-  ? `https://${process.env.VERCEL_URL}`
-  : "http://localhost:3000";
+// Use the public site URL so email images load from a stable, publicly
+// accessible domain. Vercel preview URLs can be gated by deployment
+// protection (causing broken images), and localhost is unreachable to
+// inbox recipients.
+const baseUrl =
+  process.env.NEXT_PUBLIC_SITE_URL ||
+  (process.env.VERCEL_ENV === "production" && process.env.VERCEL_PROJECT_PRODUCTION_URL
+    ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+    : "https://treyrader.dev");
 
 interface EmailProps {
   name: string;
