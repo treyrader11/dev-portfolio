@@ -3,13 +3,19 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 import { Color, Scene, Fog, PerspectiveCamera, Vector3 } from "three";
 import ThreeGlobe from "three-globe";
-import { useThree, Canvas, extend } from "@react-three/fiber";
+import { useThree, Canvas, extend, type Object3DNode } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
 import countries from "@/lib/globe.json";
 import { genRandomNumbers, hexToRgb } from "@/lib/utils";
 import type { GlobeConfig, GlobeArc } from "@/types/animation";
 
 extend({ ThreeGlobe });
+
+declare module "@react-three/fiber" {
+  interface ThreeElements {
+    threeGlobe: Object3DNode<ThreeGlobe, typeof ThreeGlobe>;
+  }
+}
 
 const RING_PROPAGATION_SPEED = 3;
 const aspect = 1.2;
