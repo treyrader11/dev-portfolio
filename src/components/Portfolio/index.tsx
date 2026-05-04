@@ -2,7 +2,7 @@
 
 import { projectsData } from "@/lib/data";
 import { cn, getUnique } from "@/lib/utils";
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState } from "react";
 import gsap from "gsap";
 import PortfolioItem from "./components/PortfolioItem";
 import {
@@ -138,17 +138,6 @@ export default function Portfolio({ repositories }: Props) {
     target: container,
     offset: ["start end", "end end"],
   });
-
-  useEffect(() => {
-    if (
-      (scrollYProgress as unknown as { prev: number }).prev > 20 &&
-      (scrollYProgress as unknown as { prev: number }).prev < 300
-    ) {
-      setIsInView(true);
-    } else {
-      setIsInView(false);
-    }
-  }, [(scrollYProgress as unknown as { prev: number }).prev]);
 
   useMotionValueEvent(scrollY, "change", (latest) => {
     setIsInView(latest > 200);
