@@ -42,7 +42,7 @@ export default async function handler(
 
     // Get "from" info from userData config
     let fromName = "Trey Rader";
-    let fromEmail = "developertrey@gmail.com";
+    let fromEmail = "trey@treyrader.dev";
     let fromAddress: string | null = null;
     try {
       const userData = await prisma.siteConfig.findUnique({

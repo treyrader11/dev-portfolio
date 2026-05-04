@@ -10,7 +10,7 @@ import type {
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 const CONTACT_TO_EMAIL =
-  process.env.CONTACT_FORM_TO_EMAIL || "developertrey@gmail.com";
+  process.env.CONTACT_FORM_TO_EMAIL || "trey@treyrader.dev";
 
 export default async function handler(
   req: NextApiRequest,

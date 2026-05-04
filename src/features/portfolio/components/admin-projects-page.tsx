@@ -67,11 +67,15 @@ export function AdminProjectsPage({ projects: initial }: Props) {
       tags: item.tags,
       category: item.category,
       technologyFeature: item.technologyFeature,
-      packages: (item.packages as typeof emptyProject.packages) ?? emptyProject.packages,
+      packages:
+        (item.packages as typeof emptyProject.packages) ??
+        emptyProject.packages,
       env: (item.env as typeof emptyProject.env) ?? emptyProject.env,
       youtubeLink: item.youtubeLink,
       githubLink: item.githubLink,
-      downloadLinks: (item.downloadLinks as typeof emptyProject.downloadLinks) ?? emptyProject.downloadLinks,
+      downloadLinks:
+        (item.downloadLinks as typeof emptyProject.downloadLinks) ??
+        emptyProject.downloadLinks,
       projectImage: item.projectImage,
       projectVideo: item.projectVideo,
       image: (item.image as typeof emptyProject.image) ?? emptyProject.image,
@@ -108,18 +112,66 @@ export function AdminProjectsPage({ projects: initial }: Props) {
               {creating ? "New Project" : "Edit Project"}
             </h3>
             <div className="grid grid-cols-2 gap-4">
-              <Input label="Title" value={form.title} onChange={(v) => setForm({ ...form, title: v })} />
-              <Input label="Category" value={form.category} onChange={(v) => setForm({ ...form, category: v })} />
-              <Input label="Stack" value={form.stack} onChange={(v) => setForm({ ...form, stack: v })} />
-              <Input label="Color" value={form.color} onChange={(v) => setForm({ ...form, color: v })} />
-              <Input label="Video Key" value={form.videoKey} onChange={(v) => setForm({ ...form, videoKey: v })} />
-              <Input label="Tech Image" value={form.techImage} onChange={(v) => setForm({ ...form, techImage: v })} />
-              <Input label="YouTube Link" value={form.youtubeLink} onChange={(v) => setForm({ ...form, youtubeLink: v })} />
-              <Input label="GitHub Link" value={form.githubLink} onChange={(v) => setForm({ ...form, githubLink: v })} />
-              <Input label="Website URL" value={form.websiteUrl} onChange={(v) => setForm({ ...form, websiteUrl: v })} />
-              <Input label="Project Image" value={form.projectImage} onChange={(v) => setForm({ ...form, projectImage: v })} />
-              <Input label="Project Video" value={form.projectVideo} onChange={(v) => setForm({ ...form, projectVideo: v })} />
-              <Input label="Sort Order" value={String(form.sortOrder)} onChange={(v) => setForm({ ...form, sortOrder: Number(v) })} />
+              <Input
+                label="Title"
+                value={form.title}
+                onChange={(v) => setForm({ ...form, title: v })}
+              />
+              <Input
+                label="Category"
+                value={form.category}
+                onChange={(v) => setForm({ ...form, category: v })}
+              />
+              <Input
+                label="Stack"
+                value={form.stack}
+                onChange={(v) => setForm({ ...form, stack: v })}
+              />
+              <Input
+                label="Color"
+                value={form.color}
+                onChange={(v) => setForm({ ...form, color: v })}
+              />
+              <Input
+                label="Video Key"
+                value={form.videoKey}
+                onChange={(v) => setForm({ ...form, videoKey: v })}
+              />
+              <Input
+                label="Tech Image"
+                value={form.techImage}
+                onChange={(v) => setForm({ ...form, techImage: v })}
+              />
+              <Input
+                label="YouTube Link"
+                value={form.youtubeLink}
+                onChange={(v) => setForm({ ...form, youtubeLink: v })}
+              />
+              <Input
+                label="GitHub Link"
+                value={form.githubLink}
+                onChange={(v) => setForm({ ...form, githubLink: v })}
+              />
+              <Input
+                label="Website URL"
+                value={form.websiteUrl}
+                onChange={(v) => setForm({ ...form, websiteUrl: v })}
+              />
+              <Input
+                label="Project Image"
+                value={form.projectImage}
+                onChange={(v) => setForm({ ...form, projectImage: v })}
+              />
+              <Input
+                label="Project Video"
+                value={form.projectVideo}
+                onChange={(v) => setForm({ ...form, projectVideo: v })}
+              />
+              <Input
+                label="Sort Order"
+                value={String(form.sortOrder)}
+                onChange={(v) => setForm({ ...form, sortOrder: Number(v) })}
+              />
             </div>
             <div className="mt-4">
               <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -127,7 +179,9 @@ export function AdminProjectsPage({ projects: initial }: Props) {
               </label>
               <textarea
                 value={form.description}
-                onChange={(e) => setForm({ ...form, description: e.target.value })}
+                onChange={(e) =>
+                  setForm({ ...form, description: e.target.value })
+                }
                 rows={4}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
               />
@@ -149,7 +203,9 @@ export function AdminProjectsPage({ projects: initial }: Props) {
                 <input
                   type="checkbox"
                   checked={form.isPriority}
-                  onChange={(e) => setForm({ ...form, isPriority: e.target.checked })}
+                  onChange={(e) =>
+                    setForm({ ...form, isPriority: e.target.checked })
+                  }
                 />
                 Priority
               </label>
@@ -157,7 +213,9 @@ export function AdminProjectsPage({ projects: initial }: Props) {
                 <input
                   type="checkbox"
                   checked={form.isRecent}
-                  onChange={(e) => setForm({ ...form, isRecent: e.target.checked })}
+                  onChange={(e) =>
+                    setForm({ ...form, isRecent: e.target.checked })
+                  }
                 />
                 Recent
               </label>
@@ -171,7 +229,10 @@ export function AdminProjectsPage({ projects: initial }: Props) {
                 {saving ? "Saving..." : creating ? "Create" : "Update"}
               </button>
               <button
-                onClick={() => { setCreating(false); setEditing(null); }}
+                onClick={() => {
+                  setCreating(false);
+                  setEditing(null);
+                }}
                 className="px-4 py-2 text-gray-600 text-sm"
               >
                 Cancel
@@ -252,7 +313,9 @@ function Input({
 }) {
   return (
     <div>
-      <label className="block text-sm font-medium text-gray-700 mb-1">{label}</label>
+      <label className="block text-sm font-medium text-gray-700 mb-1">
+        {label}
+      </label>
       <input
         value={value}
         onChange={(e) => onChange(e.target.value)}
@@ -273,7 +336,9 @@ function ArrayField({
 }) {
   return (
     <div>
-      <label className="block text-sm font-medium text-gray-700 mb-1">{label}</label>
+      <label className="block text-sm font-medium text-gray-700 mb-1">
+        {label}
+      </label>
       {value.map((item, i) => (
         <div key={i} className="flex gap-2 mb-1">
           <input
@@ -293,7 +358,10 @@ function ArrayField({
           </button>
         </div>
       ))}
-      <button onClick={() => onChange([...value, ""])} className="text-sm text-blue-600">
+      <button
+        onClick={() => onChange([...value, ""])}
+        className="text-sm text-blue-600"
+      >
         + Add
       </button>
     </div>
