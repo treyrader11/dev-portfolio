@@ -39,7 +39,7 @@ export default function PageTitle({
     className
   );
 
-  const Content = () => (
+  const content = (
     <Vanish
       once={once}
       className={commonVanishClasses}
@@ -54,11 +54,11 @@ export default function PageTitle({
       style={{ backgroundColor }}
       className={commonContainerClasses}
     >
-      <Content />
+      {content}
     </BlurredIn>
   ) : (
     <div style={{ backgroundColor }} className={commonContainerClasses}>
-      <Content />
+      {content}
     </div>
   );
 }
