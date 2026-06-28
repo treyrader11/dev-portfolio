@@ -49,6 +49,7 @@ export interface UserData {
   phone: string;
   address: string;
   resumeUrl: string;
+  resumeDocxUrl: string;
   socialLinks: SocialLinks;
   hero: HeroData;
   about: AboutData;

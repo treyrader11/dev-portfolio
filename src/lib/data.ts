@@ -41,7 +41,8 @@ export const userData: UserData = {
   email: "trey@treyrader.dev",
   phone: "504.756.4538",
   address: "Metairie, Louisiana",
-  resumeUrl: "/resume.pdf",
+  resumeUrl: "/Trey_Rader_Resume.pdf",
+  resumeDocxUrl: "/Trey_Rader_Resume.docx",
   // resumeUrl:
   //   "https://drive.google.com/file/d/1LMM6St-8DNl9VFycHdkL7J5qzSnZfNiE/view?usp=sharing",
 
