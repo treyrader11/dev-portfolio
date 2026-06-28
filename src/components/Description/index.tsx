@@ -1,10 +1,18 @@
 "use client";
 
-import { useInView, motion, type MotionValue } from "framer-motion";
+import {
+  useInView,
+  useScroll,
+  useTransform,
+  useSpring,
+  motion,
+  type MotionValue,
+} from "framer-motion";
 import { slideUp, opacity } from "./anim";
 import Rounded from "@/components/Rounded";
 import { useRef } from "react";
 import { cn } from "@/lib/utils";
+import { useIsMobile } from "@/hooks/useWindowDimensions";
 
 // ============================================
 // BRIEF ARTFUL DESCRIPTIONS FOR SENIOR ROLES
@@ -248,13 +256,30 @@ interface AboutButtonProps {
 }
 
 function AboutButton({ className }: AboutButtonProps) {
+  const ref = useRef<HTMLDivElement>(null);
+  const isMobile = useIsMobile();
+
+  // Mobile-only parallax. On desktop Locomotive Scroll drives the parallax via
+  // the data-scroll-speed wrapper, so we keep y at 0 there to avoid doubling it.
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start end", "end start"],
+  });
+  const yRaw = useTransform(scrollYProgress, [0, 1], [60, -60]);
+  const y = useSpring(yRaw, { stiffness: 100, damping: 20, mass: 0.3 });
+
   return (
-    <div className={cn("absolute right-0 top-[40%] md:top-[35%]", className)}>
-      <Rounded
-        text="Learn more"
-        href="/info"
-        className="size-[180px] text-nowrap bg-dark-400"
-      />
+    <div
+      ref={ref}
+      className={cn("absolute right-0 top-[60%] md:top-[35%]", className)}
+    >
+      <motion.div style={{ y: isMobile ? y : 0 }}>
+        <Rounded
+          text="Learn more"
+          href="/info"
+          className="size-[180px] text-nowrap bg-dark-400"
+        />
+      </motion.div>
     </div>
   );
 }
