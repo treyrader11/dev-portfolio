@@ -266,8 +266,9 @@ export default function Portfolio({ repositories }: Props) {
               "gap-y-20",
             )}
           >
-            <div className="relative flex flex-col justify-center gap-y-6">
+            <div className="relative flex flex-col justify-center gap-y-6 md:col-span-2 lg:col-span-3">
               <PageTitle
+                once
                 backgroundColor="transparent"
                 title="Misc repos."
                 className="text-left whitespace-nowrap"
