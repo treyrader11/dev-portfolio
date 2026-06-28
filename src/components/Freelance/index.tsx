@@ -29,14 +29,15 @@ export default function Freelance({ className }: Props) {
       ref={container}
       className={cn(
         "relative",
-        "z-[2]",
+        "z-[3]",
         "flex",
         "flex-col",
         "items-center",
         "gap-y-16",
         "px-6",
-        "py-40",
+        "py-24",
         "md:px-20",
+        "sm:-mt-[130vh]",
         className
       )}
     >
