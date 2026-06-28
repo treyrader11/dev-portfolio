@@ -1,0 +1,106 @@
+"use client";
+
+import { useRef } from "react";
+import { useInView, motion } from "framer-motion";
+import { cn } from "@/lib/utils";
+import PageTitle from "@/components/PageTitle";
+import Rounded from "@/components/Rounded";
+import { slideUp, opacity } from "@/components/Description/anim";
+
+interface Props {
+  className?: string;
+}
+
+const phrase =
+  "Independent contracting for clients and teams. From greenfield builds to scaling existing products.";
+
+const offerings = [
+  "Full-stack web and React Native apps built from scratch or taken over mid-flight.",
+  "Embedding with product teams to ship features, untangle legacy code, and raise the bar.",
+  "Architecture, performance audits, and CI so what we ship stays fast and maintainable.",
+];
+
+export default function Freelance({ className }: Props) {
+  const container = useRef<HTMLElement>(null);
+  const isInView = useInView(container, { once: true, margin: "-100px" });
+
+  return (
+    <motion.section
+      ref={container}
+      className={cn(
+        "relative",
+        "z-[2]",
+        "flex",
+        "flex-col",
+        "items-center",
+        "gap-y-16",
+        "px-6",
+        "py-40",
+        "md:px-20",
+        className
+      )}
+    >
+      <PageTitle
+        once={false}
+        delay={0.8}
+        backgroundColor="transparent"
+        containerClass={cn("h-0", "font-pp-acma")}
+        title="Freelance & pricing."
+        className={cn("py-0 md:text-[5vw]")}
+      />
+
+      <div
+        className={cn(
+          "flex",
+          "flex-col",
+          "gap-[50px]",
+          "max-w-[1400px]",
+          "w-full",
+          "md:flex-row"
+        )}
+      >
+        <p className="m-0 flex-1 text-3xl leading-[1.3] md:text-4xl">
+          {phrase.split(" ").map((word, index) => (
+            <span key={index} className="relative inline-flex overflow-hidden">
+              <motion.span
+                variants={slideUp}
+                custom={index}
+                animate={isInView ? "open" : "closed"}
+                className="mr-[3px]"
+              >
+                {word}
+              </motion.span>
+            </span>
+          ))}
+        </p>
+
+        <motion.ul
+          variants={opacity}
+          animate={isInView ? "open" : "closed"}
+          className="m-0 flex flex-1 list-none flex-col gap-5 text-lg"
+        >
+          {offerings.map((item, index) => (
+            <li key={index} className="flex gap-3">
+              <span className="text-secondary">—</span>
+              <span>{item}</span>
+            </li>
+          ))}
+        </motion.ul>
+      </div>
+
+      <Rounded
+        backgroundColor="#934e00"
+        text="Learn more"
+        href="/pricing"
+        className={cn(
+          "border-secondary",
+          "rounded-full",
+          "w-fit",
+          "mx-auto",
+          "py-6",
+          "text-black"
+        )}
+      />
+    </motion.section>
+  );
+}

@@ -9,6 +9,7 @@ import { cn } from "@/lib/utils";
 import Description from "@/components/Description";
 import SlidingImages from "@/components/SlidingImages";
 import RecentProjects from "@/components/RecentProjects";
+import Freelance from "@/components/Freelance";
 import Hero from "@/components/Hero";
 import PositionProvider from "@/components/providers/PositionProvider";
 // import References from "@/components/References";
@@ -47,6 +48,8 @@ const Home: NextPage = () => {
         <PositionProvider>
           <RecentProjects className={cn("bg-white")} />
         </PositionProvider>
+
+        <Freelance className={cn("bg-white")} />
 
         <div className={cn("min-h-screen relative px-20")}>
           {/* <References /> */}
