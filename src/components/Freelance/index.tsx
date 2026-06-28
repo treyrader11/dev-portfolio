@@ -45,7 +45,7 @@ export default function Freelance({ className }: Props) {
         once={false}
         delay={0.8}
         backgroundColor="transparent"
-        containerClass={cn("h-0", "font-pp-acma")}
+        containerClass={cn("sm:h-0", "font-pp-acma")}
         title="Freelance & pricing."
         className={cn("py-0 md:text-[5vw]")}
       />
