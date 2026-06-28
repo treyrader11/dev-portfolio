@@ -240,13 +240,29 @@ export default function Portfolio({ repositories }: Props) {
           );
         })}
 
-        {isSearching &&
-          filteredProjects.length === 0 &&
-          filteredRepos.length === 0 && (
-            <p className={cn("py-40", "px-6", "text-center", "text-white/70")}>
-              No projects or repos match &ldquo;{searchText}&rdquo;.
+        {filteredProjects.length === 0 && filteredRepos.length === 0 && (
+          <div
+            className={cn(
+              "flex",
+              "flex-col",
+              "items-center",
+              "justify-center",
+              "gap-3",
+              "py-40",
+              "px-6",
+              "text-center",
+            )}
+          >
+            <p className="text-3xl font-semibold text-dark">Nothing found</p>
+            <p className="text-dark/60">
+              {isSearching ? (
+                <>No projects or repos match &ldquo;{searchText}&rdquo;.</>
+              ) : (
+                <>No projects match the selected filter.</>
+              )}
             </p>
-          )}
+          </div>
+        )}
 
         {filteredRepos.length > 0 && (
           <div
