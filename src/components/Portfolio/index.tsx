@@ -2,7 +2,7 @@
 
 import { projectsData } from "@/lib/data";
 import { cn, getUnique } from "@/lib/utils";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import PortfolioItem from "./components/PortfolioItem";
 import {
@@ -61,11 +61,36 @@ export default function Portfolio({ repositories }: Props) {
     return matchesCategory && matchesSearch;
   });
 
+  // GitHub repos are filtered by their title (name) using the same search term.
+  const filteredRepos = latestRepos.filter((repo) => {
+    if (searchText.trim() === "") return true;
+    return repo.name.toLowerCase().includes(searchText.toLowerCase());
+  });
+
+  const isSearching = searchText.trim() !== "";
+
   const { scrollY } = useScroll();
 
   const inputRef = useRef<HTMLInputElement>(null);
   const container = useRef<HTMLDivElement>(null);
   const modalRef = useRef<HTMLDivElement>(null);
+  const reposRef = useRef<HTMLDivElement>(null);
+
+  // When a search matches only GitHub repos (no main projects), the matches
+  // live at the very bottom of the page. Scroll them into view so the results
+  // aren't stranded off-screen. Guarded + debounced so it never fires while the
+  // top projects list still has visible matches or mid-keystroke.
+  useEffect(() => {
+    if (!isSearching) return;
+    if (filteredProjects.length > 0) return;
+    if (filteredRepos.length === 0) return;
+
+    const id = window.setTimeout(() => {
+      reposRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 250);
+
+    return () => window.clearTimeout(id);
+  }, [isSearching, filteredProjects.length, filteredRepos.length]);
 
   // useIsInView(container.current, modalRef.current);
 
@@ -215,35 +240,48 @@ export default function Portfolio({ repositories }: Props) {
           );
         })}
 
-        <div
-          className={cn(
-            "pt-52",
-            "grid",
-            "max-w-6xl",
-            "grid-cols-1",
-            "gap-8",
-            "px-10",
-            "mx-auto",
-            "md:grid-cols-2",
-            "lg:grid-cols-3",
-            "lg:-mt-10",
-            "gap-y-20",
+        {isSearching &&
+          filteredProjects.length === 0 &&
+          filteredRepos.length === 0 && (
+            <p className={cn("py-40", "px-6", "text-center", "text-white/70")}>
+              No projects or repos match &ldquo;{searchText}&rdquo;.
+            </p>
           )}
-        >
-          <div className="relative flex flex-col justify-center gap-y-6">
-            <PageTitle
-              backgroundColor="transparent"
-              title="Misc repos."
-              className="text-left whitespace-nowrap"
-              containerClass={cn("p-0 m-0")}
-            />
-            <p>A few smaller projects fetched from github</p>
-          </div>
 
-          {/* Single github Repo */}
-          {latestRepos &&
-            latestRepos.map((repo) => <LatestRepo {...repo} key={repo.name} />)}
-        </div>
+        {filteredRepos.length > 0 && (
+          <div
+            ref={reposRef}
+            className={cn(
+              "pt-52",
+              "scroll-mt-28",
+              "grid",
+              "max-w-6xl",
+              "grid-cols-1",
+              "gap-8",
+              "px-10",
+              "mx-auto",
+              "md:grid-cols-2",
+              "lg:grid-cols-3",
+              "lg:-mt-10",
+              "gap-y-20",
+            )}
+          >
+            <div className="relative flex flex-col justify-center gap-y-6">
+              <PageTitle
+                backgroundColor="transparent"
+                title="Misc repos."
+                className="text-left whitespace-nowrap"
+                containerClass={cn("p-0 m-0")}
+              />
+              <p>A few smaller projects fetched from github</p>
+            </div>
+
+            {/* Single github Repo */}
+            {filteredRepos.map((repo) => (
+              <LatestRepo {...repo} key={repo.name} />
+            ))}
+          </div>
+        )}
       </div>
     </section>
   );
