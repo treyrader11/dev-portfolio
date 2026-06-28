@@ -40,7 +40,7 @@ export default function Contact() {
   const height = useTransform(scrollYProgress, [0, 0.9], [50, 0]);
 
   return (
-    <section className="bg-dark">
+    <section ref={container} className="bg-dark">
       <BlurredIn
         once
         className={cn(
