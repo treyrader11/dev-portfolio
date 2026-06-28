@@ -96,7 +96,7 @@ export default function RecentProjects({ className }: Props) {
         );
       })}
 
-      <div className={cn("py-20 sm:py-0")}>
+      <div className={cn("relative", "z-20", "py-20 sm:py-0")}>
         <Rounded
           backgroundColor="#934e00"
           text="See all projects"
