@@ -145,7 +145,7 @@ export default function Portfolio({ repositories }: Props) {
 
   return (
     <section onMouseMove={mouseMove} className="pb-[100px]">
-      <div className={cn("py-12 mx-0 bg-dark")}>
+      <div className={cn("pt-12 pb-8 mx-0 bg-dark")}>
         <p className="px-6 text-white">
           The following projects showcase my skills and experience through
           real-world examples of my work. Each project is briefly described with
@@ -153,32 +153,39 @@ export default function Portfolio({ repositories }: Props) {
           ability to solve complex problems, work with different technologies,
           and manage projects effectively.
         </p>
-        <div
-          className={cn(
-            "mt-8",
-            "pt-3",
-            "flex",
-            "relative",
-            "items-center",
-            "gap-[2rem]",
-            "w-full",
-            "pl-5",
-          )}
-        >
-          <Search
-            ref={inputRef}
-            onChange={filterProjectsBySearch}
-            clearInput={clearInput}
-            onClick={() => openSearch()}
-            isFocused={focused}
-          />
+      </div>
 
-          <ProjectCategories
-            selected={selected}
-            filterProjects={filterProjects}
-            categories={categories}
-          />
-        </div>
+      <div
+        className={cn(
+          "sticky",
+          "top-0",
+          "z-40",
+          "bg-dark",
+          "flex",
+          "items-center",
+          "gap-[2rem]",
+          "w-full",
+          "pl-5",
+          "py-3",
+          "border-b",
+          "border-white/10",
+          "shadow-lg",
+          "shadow-black/20",
+        )}
+      >
+        <Search
+          ref={inputRef}
+          onChange={filterProjectsBySearch}
+          clearInput={clearInput}
+          onClick={() => openSearch()}
+          isFocused={focused}
+        />
+
+        <ProjectCategories
+          selected={selected}
+          filterProjects={filterProjects}
+          categories={categories}
+        />
       </div>
 
       <div
