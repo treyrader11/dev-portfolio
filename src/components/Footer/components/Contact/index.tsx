@@ -7,10 +7,12 @@ import { cn } from "@/lib/utils";
 import Confetti from "@/components/Confetti";
 import useCopyToClipboard from "@/hooks/useCopyClipboard";
 import { useNotificationsContext } from "@/components/providers/NotificationsProvider";
+import { useIsMobile } from "@/hooks/useWindowDimensions";
 import { userData } from "@/lib/data";
 import type { CSSProperties } from "react";
 
 const { email, phone } = userData;
+const phoneDigits = phone.replace(/\D/g, "");
 
 interface Props {
   style?: CSSProperties | { x: MotionValue<number> };
@@ -20,11 +22,21 @@ interface Props {
 export default function Contact({ style, rotate }: Props) {
   const [copied, copy] = useCopyToClipboard(500);
   const { addNotification } = useNotificationsContext();
+  const isMobile = useIsMobile();
 
   const handleCopy = (text: string) => {
     if (text) {
       copy(text);
       addNotification({ text: `Copied: ${text}` });
+    }
+  };
+
+  // On mobile, dial the number; otherwise keep the copy-to-clipboard behavior.
+  const handlePhone = () => {
+    if (isMobile) {
+      window.location.href = `tel:+1${phoneDigits}`;
+    } else {
+      handleCopy(phoneDigits);
     }
   };
 
@@ -120,7 +132,7 @@ export default function Contact({ style, rotate }: Props) {
         />
         <div className={cn("w-full")}>
           <Rounded
-            onClick={() => handleCopy("5047564538")}
+            onClick={handlePhone}
             className={cn("md:w-fit py-5 px-10 border-[.3px]")}
           >
             <p
