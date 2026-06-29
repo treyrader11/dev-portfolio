@@ -1,7 +1,8 @@
 // Company Logos
 import torsh from "/public/images/company/logo/torsh.png";
 import vouzot from "/public/images/company/logo/vouzot.png";
-import pasteui from "/public/images/company/logo/pasteui.png";
+import rouxui from "/public/images/company/logo/rouxui.png";
+import mardimix from "/public/icons/mardimix-icon.png";
 import evolvemediaai from "/public/images/company/logo/evolvemediaai.png";
 
 // Technology Stack Images
@@ -181,20 +182,35 @@ export const experiences: Experience[] = [
     ],
   },
   {
-    title: "Frontend Developer",
-    company_name: "PasteUI",
-    icon: pasteui,
+    title: "Founder & Full-Stack Developer",
+    company_name: "Roux UI",
+    icon: rouxui,
     iconBg: "#e3e3e3",
-    date: "2024 - In Development",
-    website_url: "https://www.pasteui.io",
+    date: "2022 - Present",
+    website_url: "https://rouxui.com",
     points: [
-      "Developing modern component library and design system with Next.js 13",
-      "Creating reusable, accessible UI components with Shadcn UI and Tailwind CSS",
-      "Building comprehensive documentation and component playground",
-      "Implementing responsive layouts with modern CSS techniques and animations",
-      "Focusing on accessibility (a11y) and WCAG compliance across all components",
-      "Utilizing TypeScript for complete type safety and better developer experience",
-      "Establishing design tokens and theming system for consistent styling",
+      "Built and launched Roux UI LLC, a Louisiana-born full-stack SaaS platform combining a production-ready animated React component library, interactive coding courses, and a developer community",
+      "Developed 50+ animated UI components with Framer Motion, Tailwind CSS, and TypeScript",
+      "Built an interactive coding academy with multi-language courses and Monaco Editor-powered coding challenges",
+      "Architected scalable backend services with Node.js, Express, GraphQL, and Prisma",
+      "Implemented video streaming, content management, and authentication systems",
+      "Built on Next.js App Router, TypeScript, PostgreSQL, and Prisma with dark mode and WCAG 2.1 accessibility",
+    ],
+  },
+  {
+    title: "Founder & Full-Stack Developer",
+    company_name: "MardiMix",
+    icon: mardimix,
+    iconBg: "#ffffff",
+    date: "2024 - Present",
+    website_url: "https://mardimix.com",
+    points: [
+      "Built a Louisiana-flavored all-in-one entertainment and utility platform, available as both a web app and a native iOS app on the App Store",
+      "Developed 15+ fully playable games (chess, checkers, UNO, Texas Hold'em, 3D arcade fighting, typing races) with real-time multiplayer over WebSockets",
+      "Created free browser-based tools including a file/video converter, background remover, and SVG tools",
+      "Built an AI-powered news platform with a block-based editor and a divination module with natal chart generation and AI interpretations",
+      "Shipped the iOS app to the App Store: https://apps.apple.com/us/app/mardimix/id6767273986",
+      "Built with Next.js, TypeScript, WebSockets, and AI integrations",
     ],
   },
   {
@@ -272,20 +288,35 @@ export const personalProjects: Experience[] = [
     ],
   },
   {
-    title: "Frontend Developer",
-    company_name: "PasteUI",
-    icon: pasteui,
+    title: "Founder & Full-Stack Developer",
+    company_name: "Roux UI",
+    icon: rouxui,
     iconBg: "#e3e3e3",
-    date: "2024 - In Development",
-    website_url: "https://www.pasteui.io",
+    date: "2022 - Present",
+    website_url: "https://rouxui.com",
     points: [
-      "Developing modern component library and design system with Next.js 13",
-      "Creating reusable, accessible UI components with Shadcn UI and Tailwind CSS",
-      "Building comprehensive documentation and component playground",
-      "Implementing responsive layouts with modern CSS techniques and animations",
-      "Focusing on accessibility (a11y) and WCAG compliance across all components",
-      "Utilizing TypeScript for complete type safety and better developer experience",
-      "Establishing design tokens and theming system for consistent styling",
+      "Built and launched Roux UI LLC, a Louisiana-born full-stack SaaS platform combining a production-ready animated React component library, interactive coding courses, and a developer community",
+      "Developed 50+ animated UI components with Framer Motion, Tailwind CSS, and TypeScript",
+      "Built an interactive coding academy with multi-language courses and Monaco Editor-powered coding challenges",
+      "Architected scalable backend services with Node.js, Express, GraphQL, and Prisma",
+      "Implemented video streaming, content management, and authentication systems",
+      "Built on Next.js App Router, TypeScript, PostgreSQL, and Prisma with dark mode and WCAG 2.1 accessibility",
+    ],
+  },
+  {
+    title: "Founder & Full-Stack Developer",
+    company_name: "MardiMix",
+    icon: mardimix,
+    iconBg: "#ffffff",
+    date: "2024 - Present",
+    website_url: "https://mardimix.com",
+    points: [
+      "Built a Louisiana-flavored all-in-one entertainment and utility platform, available as both a web app and a native iOS app on the App Store",
+      "Developed 15+ fully playable games (chess, checkers, UNO, Texas Hold'em, 3D arcade fighting, typing races) with real-time multiplayer over WebSockets",
+      "Created free browser-based tools including a file/video converter, background remover, and SVG tools",
+      "Built an AI-powered news platform with a block-based editor and a divination module with natal chart generation and AI interpretations",
+      "Shipped the iOS app to the App Store: https://apps.apple.com/us/app/mardimix/id6767273986",
+      "Built with Next.js, TypeScript, WebSockets, and AI integrations",
     ],
   },
 ];
@@ -367,23 +398,24 @@ export const projectsData: ProjectData[] = [
     isRecent: true,
   },
   {
-    title: "PasteUI",
-    desc: "Modern component library and design system featuring customizable UI components, built with Next.js and Shadcn UI for rapid application development.",
+    title: "Roux UI",
+    desc: "A Louisiana-born full-stack SaaS platform combining a production-ready animated React component library (50+ components), an interactive coding academy with Monaco Editor-powered challenges, and a developer community. Built with Next.js App Router, TypeScript, PostgreSQL, and Prisma.",
     color: "#e3e3e3",
     isPriority: true,
     video_key: "zHL1eT87OCw",
     stack: "Next.js",
     category: "Next.js",
-    tags: ["next", "shadcn", "typescript", "tailwind"],
+    tags: ["next", "typescript", "tailwind", "prisma", "postgresql"],
     tech_image: next.src,
     technology_feature: [
-      "Tailwind CSS",
-      "Next.js 13",
+      "Next.js (App Router)",
       "TypeScript",
-      "Shadcn UI",
+      "Tailwind CSS",
       "Framer Motion",
-      "React Hook Form",
-      "Zod",
+      "Prisma",
+      "PostgreSQL",
+      "Monaco Editor",
+      "GraphQL",
     ],
     packages: {
       frontend: [
@@ -398,10 +430,10 @@ export const projectsData: ProjectData[] = [
       frontend: ["NEXT_PUBLIC_APP_URL"],
     },
     youtube_link: "https://youtu.be/yF1oJ7wzvWY",
-    github_link: "https://github.com/treyrader11/PasteUI",
+    github_link: "https://github.com/treyrader11/rouxui",
     download_links: {
       frontend:
-        "https://github.com/treyrader11/PasteUI/archive/refs/heads/main.zip",
+        "https://github.com/treyrader11/rouxui/archive/refs/heads/main.zip",
     },
     project_image: "funny.png",
     project_video: "code-editor2.mp4",
@@ -409,7 +441,7 @@ export const projectsData: ProjectData[] = [
       isPriority: true,
       src: "funny.png",
     },
-    website_url: "https://www.pasteui.io",
+    website_url: "https://rouxui.com",
     isRecent: true,
   },
   {
@@ -846,21 +878,24 @@ const companyIcons: Record<string, StaticImageData> = {
   "Evolve Media AI": evolvemediaai,
   "Torsh, Inc.": torsh,
   Vouzot: vouzot,
-  PasteUI: pasteui,
+  "Roux UI": rouxui,
+  MardiMix: mardimix,
 };
 
 const companyIconBgs: Record<string, string> = {
   "Evolve Media AI": "#383E56",
   "Torsh, Inc.": "#E6DEDD",
   Vouzot: "#d6d7dc",
-  PasteUI: "#e3e3e3",
+  "Roux UI": "#e3e3e3",
+  MardiMix: "#ffffff",
 };
 
 const companyWebsites: Record<string, string> = {
   "Evolve Media AI": "https://www.evolvemediaai.com",
   "Torsh, Inc.": "https://www.torsh.com",
   Vouzot: "https://www.vouzot.com",
-  PasteUI: "https://www.pasteui.io",
+  "Roux UI": "https://rouxui.com",
+  MardiMix: "https://mardimix.com",
 };
 
 function getCompanyIcon(company: string): StaticImageData {
