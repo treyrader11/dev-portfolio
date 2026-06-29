@@ -31,7 +31,7 @@ export default function Nav({ onClose }: NavProps) {
         "fixed",
         "inset-x-0",
         "text-white",
-        "z-[4]",
+        "z-[100]",
         "md:left-[calc(100vw-414px)]"
       )}
     >

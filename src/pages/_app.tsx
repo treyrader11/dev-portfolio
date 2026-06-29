@@ -7,6 +7,7 @@ import type { AppProps } from "next/app";
 import { AnimatePresence } from "framer-motion";
 import { SessionProvider } from "next-auth/react";
 import Layout from "@/components/Layout";
+import { NavProvider } from "@/components/providers/NavProvider";
 import Notifications from "@/components/Notifications";
 import { NotificationsProvider } from "@/components/providers/NotificationsProvider";
 import Preloader from "@/components/Preloader";
@@ -36,7 +37,7 @@ export default function App({
         {isAdminRoute ? (
           <Component {...pageProps} router={router} />
         ) : (
-          <>
+          <NavProvider>
             <AnimatePresence mode="wait">
               <Preloader />
             </AnimatePresence>
@@ -44,10 +45,10 @@ export default function App({
               <Component {...pageProps} router={router} />
               <Notifications />
             </Layout>
-          </>
+            <AdminFAB />
+            <ResumeCornerBadge />
+          </NavProvider>
         )}
-        {!isAdminRoute && <AdminFAB />}
-        {!isAdminRoute && <ResumeCornerBadge />}
       </NotificationsProvider>
     </SessionProvider>
   );

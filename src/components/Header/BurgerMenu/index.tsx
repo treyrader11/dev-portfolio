@@ -19,7 +19,7 @@ const BurgerMenu = forwardRef<HTMLDivElement, Props>(
           "transform",
           "scale-0",
           "right-0",
-          "z-[4]",
+          "z-[101]",
           "after:top-[-5px]",
           "before:top-[5px]",
           "top-8"

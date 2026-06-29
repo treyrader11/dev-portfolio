@@ -18,7 +18,8 @@ export default function ResumeCornerBadge() {
 
   const shouldHide = HIDDEN_ROUTES.some((r) => router.pathname.startsWith(r));
 
-  // Mobile screens only, and never on admin pages.
+  // Mobile screens only, and never on admin pages. When the slideout menu opens
+  // it sits at z-[100] and visually covers this badge (z-[99]).
   if (shouldHide || !mounted || !isMobile) return null;
 
   return (

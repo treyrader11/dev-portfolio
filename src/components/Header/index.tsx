@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState, useCallback } from "react";
+import { useRef, useCallback } from "react";
 import { AnimatePresence } from "framer-motion";
 import gsap from "gsap";
 import ScrollTrigger from "gsap/dist/ScrollTrigger";
@@ -19,8 +19,7 @@ import { slideDown, blur } from "./motion";
 import { motion } from "framer-motion";
 
 export default function Header() {
-  // const { isNavOpen, setIsNavOpen } = useNav();
-  const [isNavOpen, setIsNavOpen] = useState(false);
+  const { isNavOpen, setIsNavOpen } = useNav();
 
   const header = useRef<HTMLElement>(null);
   const button = useRef<HTMLDivElement>(null);

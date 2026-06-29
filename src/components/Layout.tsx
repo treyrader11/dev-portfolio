@@ -3,7 +3,7 @@
 import { AnimatePresence } from "framer-motion";
 import Footer from "./Footer";
 import Header from "./Header";
-import { NavProvider, useNav } from "./providers/NavProvider";
+import { useNav } from "./providers/NavProvider";
 import { cn } from "@/lib/utils";
 import { fontPP, fontCursive, fontMono } from "@/lib/fonts";
 import type { ReactNode } from "react";
@@ -37,9 +37,5 @@ function MainLayout({ children, route }: LayoutProps) {
 }
 
 export default function Layout({ children, route }: LayoutProps) {
-  return (
-    <NavProvider>
-      <MainLayout route={route}>{children}</MainLayout>
-    </NavProvider>
-  );
+  return <MainLayout route={route}>{children}</MainLayout>;
 }
