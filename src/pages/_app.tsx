@@ -11,6 +11,7 @@ import Notifications from "@/components/Notifications";
 import { NotificationsProvider } from "@/components/providers/NotificationsProvider";
 import Preloader from "@/components/Preloader";
 import AdminFAB from "@/components/AdminFAB";
+import ResumeFAB from "@/components/ResumeFAB";
 import NextNProgress from "nextjs-progressbar";
 
 export default function App({
@@ -46,6 +47,7 @@ export default function App({
           </>
         )}
         {!isAdminRoute && <AdminFAB />}
+        {!isAdminRoute && <ResumeFAB />}
       </NotificationsProvider>
     </SessionProvider>
   );
