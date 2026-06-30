@@ -1,7 +1,7 @@
 "use client";
 
 import { useScroll, useTransform, motion } from "framer-motion";
-import React, { useRef, useMemo } from "react";
+import React, { useRef } from "react";
 import Project from "./components/Project";
 import Rounded from "@/components/Rounded";
 import { cn } from "@/lib/utils";
@@ -15,31 +15,29 @@ interface Props {
 
 export default function RecentProjects({ className }: Props) {
   const container = useRef<HTMLElement>(null);
+  const lastProjectRef = useRef<HTMLDivElement>(null);
 
   const { scrollYProgress } = useScroll({
     target: container,
     offset: ["start start", "end end"],
   });
 
-  // Calculate when to fade based on number of projects
-  const fadeStartPoint = useMemo(() => {
-    const projectCount = recentProjects.length;
-    // Start fading 20% earlier (subtract 0.2)
-    return Math.max(0.65, 1 - 2 / projectCount - 0.2);
-  }, []);
+  // Track the last project relative to the viewport: progress reaches 1 when its
+  // top edge meets the top of the screen — i.e. when it touches the sticky title.
+  // Element-based, so it stays accurate across every screen size.
+  const { scrollYProgress: lastProjectProgress } = useScroll({
+    target: lastProjectRef,
+    offset: ["start end", "start start"],
+  });
 
-  // Title stays visible until last card, then fades out sooner
+  // Title stays visible until the last card reaches it, then fades out.
   const titleOpacity = useTransform(
-    scrollYProgress,
-    [0, fadeStartPoint, fadeStartPoint + 0.1, 1],
-    [1, 1, 0, 0]
+    lastProjectProgress,
+    [0.7, 0.92],
+    [1, 0]
   );
 
-  const titleY = useTransform(
-    scrollYProgress,
-    [fadeStartPoint, fadeStartPoint + 0.1],
-    [0, -30]
-  );
+  const titleY = useTransform(lastProjectProgress, [0.7, 0.92], [0, -30]);
 
   return (
     <motion.section
@@ -87,13 +85,19 @@ export default function RecentProjects({ className }: Props) {
       <Scrollbar positions={projectPositions} />
 
       {recentProjects.map((project, i) => {
+        const isLast = i === recentProjects.length - 1;
         return (
-          <Project
-            position={projectPositions[i]}
-            key={i}
-            {...project}
-            progress={scrollYProgress}
-          />
+          <React.Fragment key={i}>
+            {/* Sentinel marks the top of the last project for the title fade */}
+            {isLast && (
+              <div ref={lastProjectRef} aria-hidden className="h-0 -mb-10" />
+            )}
+            <Project
+              position={projectPositions[i]}
+              {...project}
+              progress={scrollYProgress}
+            />
+          </React.Fragment>
         );
       })}
 
