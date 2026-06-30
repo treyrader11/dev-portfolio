@@ -11,6 +11,7 @@ import { useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
 import useCopyToClipboard from "@/hooks/useCopyClipboard";
 import { useNotificationsContext } from "@/components/providers/NotificationsProvider";
+import { useIsMobile } from "@/hooks/useWindowDimensions";
 import PageCurve from "@/components/PageCurve";
 import Stars from "@/components/Stars";
 import ContactForm from "./components/ContactForm";
@@ -19,16 +20,27 @@ import { IoMdMail } from "react-icons/io";
 import { MdPushPin } from "react-icons/md";
 
 const { phone, email, address } = userData;
+const phoneDigits = phone.replace(/\D/g, "");
 
 export default function Contact() {
   const [copied, copy] = useCopyToClipboard(500);
   const { addNotification } = useNotificationsContext();
   const container = useRef<HTMLElement>(null);
+  const isMobile = useIsMobile();
 
   const handleCopy = (text: string) => {
     if (text) {
       copy(text);
       addNotification({ text: `Copied: ${text}` });
+    }
+  };
+
+  // On mobile, dial the number; otherwise keep the copy-to-clipboard behavior.
+  const handlePhone = () => {
+    if (isMobile) {
+      window.location.href = `tel:+1${phoneDigits}`;
+    } else {
+      handleCopy(phoneDigits);
     }
   };
 
@@ -81,7 +93,7 @@ export default function Contact() {
             <div className="inline-flex flex-col my-10">
               <Magnetic>
                 <div
-                  onClick={() => handleCopy("5047564538")}
+                  onClick={handlePhone}
                   className={cn(
                     "flex",
                     "flex-row",
