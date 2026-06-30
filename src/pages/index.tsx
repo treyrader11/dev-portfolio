@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useEffect } from "react";
-import type { NextPage } from "next";
+import type { NextPage, GetStaticProps } from "next";
 import { usePathname } from "next/navigation";
 import { Inter } from "next/font/google";
 import Inner from "@/components/layout/Inner";
@@ -12,6 +12,8 @@ import RecentProjects from "@/components/RecentProjects";
 import Freelance from "@/components/Freelance";
 import Hero from "@/components/Hero";
 import PositionProvider from "@/components/providers/PositionProvider";
+import { getRecentProjects } from "@/features/portfolio/lib/projects";
+import type { ProjectData } from "@/types/data";
 // import References from "@/components/References";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -24,7 +26,11 @@ interface LocomotiveScrollInstance {
   ): void;
 }
 
-const Home: NextPage = () => {
+interface HomeProps {
+  recentProjects: ProjectData[];
+}
+
+const Home: NextPage<HomeProps> = ({ recentProjects }) => {
   const container = useRef<HTMLDivElement>(null);
   const locomotiveScrollRef = useRef<LocomotiveScrollInstance | null>(null);
   const pathname = usePathname();
@@ -50,7 +56,7 @@ const Home: NextPage = () => {
         <Hero className={cn("min-h-screen bg-dark")} />
         <Description className={cn("bg-white")} />
         <PositionProvider>
-          <RecentProjects className={cn("bg-white")} />
+          <RecentProjects className={cn("bg-white")} projects={recentProjects} />
         </PositionProvider>
 
         <Freelance className={cn("bg-white")} />
@@ -65,3 +71,13 @@ const Home: NextPage = () => {
 };
 
 export default Home;
+
+// Static generation + ISR: the home page ships as static HTML (SEO-friendly,
+// no client-side data fetching) and revalidates so admin edits surface quickly.
+export const getStaticProps: GetStaticProps<HomeProps> = async () => {
+  const recentProjects = await getRecentProjects();
+  return {
+    props: { recentProjects },
+    revalidate: 60,
+  };
+};

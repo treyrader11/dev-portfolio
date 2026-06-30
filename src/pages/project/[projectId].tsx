@@ -1,10 +1,12 @@
-import type { NextPage, GetServerSideProps } from "next";
+import type { NextPage, GetStaticPaths, GetStaticProps } from "next";
 import { cn } from "@/lib/utils";
 import ProjectDetails from "@/components/Project/components/ProjectDetails";
-import { projectsData } from "@/lib/data";
+import {
+  getProjectByVideoKey,
+  getProjectVideoKeys,
+} from "@/features/portfolio/lib/projects";
 import Inner from "@/components/layout/Inner";
 import PageTitle from "@/components/PageTitle";
-import GoBack from "@/components/GoBack";
 import type { ProjectData } from "@/types/data";
 
 interface ProjectPageProps {
@@ -30,7 +32,6 @@ const ProjectPage: NextPage<ProjectPageProps> = ({ project }) => {
         )}
         containerClass={cn("h-48 z-50")}
       />
-      {/* <GoBack /> */}
       {project && <ProjectDetails data={project} />}
     </Inner>
   );
@@ -43,14 +44,29 @@ interface ProjectPageParams {
   [key: string]: string;
 }
 
-export const getServerSideProps: GetServerSideProps<ProjectPageProps, ProjectPageParams> = async ({ params }) => {
-  const projectId = params?.projectId;
+export const getStaticPaths: GetStaticPaths<ProjectPageParams> = async () => {
+  const videoKeys = await getProjectVideoKeys();
+  return {
+    paths: videoKeys.map((projectId) => ({ params: { projectId } })),
+    // New projects added via the admin CMS are rendered on first request and
+    // then cached — no rebuild needed, and the HTML stays static for SEO.
+    fallback: "blocking",
+  };
+};
 
-  const project = projectsData.filter(
-    ({ video_key }) => video_key === projectId
-  );
+export const getStaticProps: GetStaticProps<
+  ProjectPageProps,
+  ProjectPageParams
+> = async ({ params }) => {
+  const projectId = params?.projectId;
+  const project = projectId ? await getProjectByVideoKey(projectId) : null;
+
+  if (!project) {
+    return { notFound: true, revalidate: 60 };
+  }
 
   return {
-    props: { project },
+    props: { project: [project] },
+    revalidate: 60,
   };
 };

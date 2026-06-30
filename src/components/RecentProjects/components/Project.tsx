@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useMotionValueEvent, motion, useScroll, type MotionValue } from "framer-motion";
 import { useRef, useContext, useState } from "react";
-import { cn } from "@/lib/utils";
+import { cn, resolveImageSrc } from "@/lib/utils";
 import Rounded from "@/components/Rounded";
 import { PositionContext } from "@/lib/contexts";
 import blank_shot from "/public/shots/blank-shot.png";
@@ -86,7 +86,7 @@ export default function Project({
         onAnimationComplete={() => setIsAnimating(false)}
         style={{
           transition: "transform 0.6s",
-          backgroundImage: `url(/shots/${project_image})`,
+          backgroundImage: `url(${resolveImageSrc(project_image)})`,
           backgroundPosition: "center",
           backgroundSize: "contain",
           backgroundRepeat: "no-repeat",
@@ -160,7 +160,7 @@ export function Shot({ src, width = 350, height = 350, marginRight = 30 }: ShotP
         <motion.div className="relative size-full">
           <Image
             fill
-            src={`/shots/${src}`}
+            src={resolveImageSrc(src)}
             alt="image"
             className="object-fit lg:object-contain"
             sizes="(max-width: 900) 50vw"

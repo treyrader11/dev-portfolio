@@ -1,21 +1,27 @@
 "use client";
 
 import { useScroll, useTransform, motion } from "framer-motion";
-import React, { useRef } from "react";
+import React, { useRef, useMemo } from "react";
 import Project from "./components/Project";
 import Rounded from "@/components/Rounded";
-import { cn } from "@/lib/utils";
+import { cn, createScrollPositions } from "@/lib/utils";
 import PageTitle from "../PageTitle";
 import Scrollbar from "../Scrollbar";
-import { projectPositions, recentProjects } from "./constants";
+import type { ProjectData } from "@/types/data";
 
 interface Props {
   className?: string;
+  projects: ProjectData[];
 }
 
-export default function RecentProjects({ className }: Props) {
+export default function RecentProjects({ className, projects }: Props) {
   const container = useRef<HTMLElement>(null);
   const lastProjectRef = useRef<HTMLDivElement>(null);
+
+  const projectPositions = useMemo(
+    () => createScrollPositions(projects),
+    [projects],
+  );
 
   const { scrollYProgress } = useScroll({
     target: container,
@@ -84,8 +90,8 @@ export default function RecentProjects({ className }: Props) {
 
       <Scrollbar positions={projectPositions} />
 
-      {recentProjects.map((project, i) => {
-        const isLast = i === recentProjects.length - 1;
+      {projects.map((project, i) => {
+        const isLast = i === projects.length - 1;
         return (
           <React.Fragment key={i}>
             {/* Sentinel marks the top of the last project for the title fade */}

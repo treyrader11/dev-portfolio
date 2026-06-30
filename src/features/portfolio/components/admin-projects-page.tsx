@@ -1,6 +1,7 @@
 import { useState } from "react";
 import AdminLayout from "@/features/admin/components/admin-layout";
 import { type ProjectItem, emptyProject } from "../types";
+import { CloudinaryUploadField } from "./cloudinary-upload-field";
 
 interface Props {
   projects: ProjectItem[];
@@ -137,10 +138,11 @@ export function AdminProjectsPage({ projects: initial }: Props) {
                 value={form.videoKey}
                 onChange={(v) => setForm({ ...form, videoKey: v })}
               />
-              <Input
+              <CloudinaryUploadField
                 label="Tech Image"
                 value={form.techImage}
                 onChange={(v) => setForm({ ...form, techImage: v })}
+                folder="portfolio/tech"
               />
               <Input
                 label="YouTube Link"
@@ -157,10 +159,17 @@ export function AdminProjectsPage({ projects: initial }: Props) {
                 value={form.websiteUrl}
                 onChange={(v) => setForm({ ...form, websiteUrl: v })}
               />
-              <Input
+              <CloudinaryUploadField
                 label="Project Image"
                 value={form.projectImage}
-                onChange={(v) => setForm({ ...form, projectImage: v })}
+                onChange={(v) =>
+                  setForm({
+                    ...form,
+                    projectImage: v,
+                    // Keep the main product shot (image.src) in sync with the upload.
+                    image: { ...form.image, src: v },
+                  })
+                }
               />
               <Input
                 label="Project Video"

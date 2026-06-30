@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "@/lib/prisma";
 import { requireAdmin } from "@/features/admin/lib/admin-auth";
+import { revalidateProjects } from "@/features/portfolio/lib/revalidate-projects";
 
 export default async function handler(
   req: NextApiRequest,
@@ -33,11 +34,13 @@ export default async function handler(
         websiteUrl, isRecent, sortOrder,
       },
     });
+    await revalidateProjects(res, item.videoKey);
     return res.json(item);
   }
 
   if (req.method === "DELETE") {
-    await prisma.project.delete({ where: { id } });
+    const item = await prisma.project.delete({ where: { id } });
+    await revalidateProjects(res, item.videoKey);
     return res.json({ success: true });
   }
 

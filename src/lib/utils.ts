@@ -27,6 +27,15 @@ export const getUnique = <T, K extends keyof T>(
   return [...new Set(items.map((item) => item[value]))];
 };
 
+// Project image sources may be a full URL (Cloudinary uploads), an absolute
+// /public path, or a bare filename from the legacy static data. Pass the first
+// two through untouched; prefix bare filenames with the local asset folder.
+export const resolveImageSrc = (src: string, base = "/shots"): string => {
+  if (!src) return src;
+  if (/^https?:\/\//.test(src) || src.startsWith("/")) return src;
+  return `${base}/${src}`;
+};
+
 export const createScrollPositions = (
   positions: { title: string }[]
 ): ScrollPosition[] => {

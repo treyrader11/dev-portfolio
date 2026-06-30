@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "@/lib/prisma";
 import { requireAdmin } from "@/features/admin/lib/admin-auth";
+import { revalidateProjects } from "@/features/portfolio/lib/revalidate-projects";
 
 export default async function handler(
   req: NextApiRequest,
@@ -32,6 +33,7 @@ export default async function handler(
         isRecent: isRecent ?? false, sortOrder: sortOrder ?? 0,
       },
     });
+    await revalidateProjects(res, item.videoKey);
     return res.status(201).json(item);
   }
 

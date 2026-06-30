@@ -1,6 +1,5 @@
 "use client";
 
-import { projectsData } from "@/lib/data";
 import { cn, getUnique } from "@/lib/utils";
 import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
@@ -32,9 +31,10 @@ interface Repository {
 
 interface Props {
   repositories: Repository[];
+  projects: ProjectData[];
 }
 
-export default function Portfolio({ repositories }: Props) {
+export default function Portfolio({ repositories, projects }: Props) {
   const [latestRepos, setLatestRepos] = useState(repositories);
   const [activeCategory, setActiveCategory] = useState("All");
   const [searchText, setSearchText] = useState("");
@@ -44,13 +44,10 @@ export default function Portfolio({ repositories }: Props) {
 
   const [isInView, setIsInView] = useState(false);
 
-  const [categories] = useState([
-    "All",
-    ...getUnique(projectsData, "category"),
-  ]);
+  const [categories] = useState(["All", ...getUnique(projects, "category")]);
 
   // Derive filtered projects from both category and search
-  const filteredProjects = projectsData.filter((proj) => {
+  const filteredProjects = projects.filter((proj) => {
     const matchesCategory =
       activeCategory === "All" || proj.category === activeCategory;
     const matchesSearch =
