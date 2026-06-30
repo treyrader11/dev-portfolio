@@ -37,7 +37,8 @@ export default function Freelance({ className }: Props) {
         "items-center",
         "gap-y-16",
         "px-6",
-        "py-24",
+        "py-12",
+        "sm:py-24",
         "md:px-20",
         "sm:-mt-[130vh]",
         className

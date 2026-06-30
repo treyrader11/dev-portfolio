@@ -51,7 +51,7 @@ const Home: NextPage = () => {
 
         <Freelance className={cn("bg-white")} />
 
-        <div className={cn("min-h-screen relative px-20")}>
+        <div className={cn("relative px-6 sm:min-h-screen sm:px-20")}>
           {/* <References /> */}
           <SlidingImages className="bg-white" />
         </div>

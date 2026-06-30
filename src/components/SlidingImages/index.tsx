@@ -33,7 +33,8 @@ export default function SlidingImages({ className }: Props) {
         "relative",
         "bg-white",
         "z-[1]",
-        "py-20",
+        "py-10",
+        "sm:py-20",
         // "mt-20",
         className
       )}
