@@ -18,7 +18,10 @@ const inter = Inter({ subsets: ["latin"] });
 
 interface LocomotiveScrollInstance {
   destroy(): void;
-  scrollTo(target: number | string | HTMLElement, options?: Record<string, unknown>): void;
+  scrollTo(
+    target: number | string | HTMLElement,
+    options?: Record<string, unknown>,
+  ): void;
 }
 
 const Home: NextPage = () => {
@@ -29,7 +32,8 @@ const Home: NextPage = () => {
   useEffect(() => {
     (async () => {
       const LocomotiveScroll = (await import("locomotive-scroll")).default;
-      locomotiveScrollRef.current = new LocomotiveScroll() as LocomotiveScrollInstance;
+      locomotiveScrollRef.current =
+        new LocomotiveScroll() as LocomotiveScrollInstance;
     })();
 
     return () => {

@@ -40,7 +40,6 @@ export default function Freelance({ className }: Props) {
         "py-12",
         "sm:py-24",
         "md:px-20",
-        "sm:-mt-[130vh]",
         className
       )}
     >

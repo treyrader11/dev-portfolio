@@ -271,7 +271,7 @@ function AboutButton({ className }: AboutButtonProps) {
   return (
     <div
       ref={ref}
-      className={cn("absolute right-0 top-[60%] md:top-[35%]", className)}
+      className={cn("absolute right-0 top-[60%] sm:top-[40%] md:top-[35%]", className)}
     >
       <motion.div style={{ y: isMobile ? y : 0 }}>
         <Rounded
