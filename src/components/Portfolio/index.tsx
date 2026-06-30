@@ -19,6 +19,7 @@ import Video from "../Video";
 import MouseoverModal from "../MouseoverModal";
 import Modal from "./components/Modal";
 import { useIsInView } from "@/hooks/useIsInView";
+import { useIsMobile } from "@/hooks/useWindowDimensions";
 import LatestRepo from "./components/LatestRepo";
 import PageTitle from "../PageTitle";
 import type { ProjectData } from "@/types/data";
@@ -168,6 +169,23 @@ export default function Portfolio({ repositories }: Props) {
     setIsInView(latest > 200);
   });
 
+  // Detect when the search header is stuck to the top of the viewport so we can
+  // slide the search clear of the fixed resume corner badge (mobile only).
+  const isMobile = useIsMobile();
+  const [stuck, setStuck] = useState(false);
+  const stickySentinelRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const el = stickySentinelRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => setStuck(!entry.isIntersecting),
+      { threshold: 0 },
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <section onMouseMove={mouseMove} className="pb-[100px]">
       <div className={cn("pt-12 pb-8 mx-0 bg-dark")}>
@@ -180,6 +198,9 @@ export default function Portfolio({ repositories }: Props) {
         </p>
       </div>
 
+      {/* Sentinel: when it scrolls out of view the bar below is stuck to top */}
+      <div ref={stickySentinelRef} aria-hidden className="h-px w-full" />
+
       <div
         className={cn(
           "sticky",
@@ -190,12 +211,16 @@ export default function Portfolio({ repositories }: Props) {
           "items-center",
           "gap-[2rem]",
           "w-full",
-          "pl-5",
           "py-3",
           "border-b",
           "border-white/10",
           "shadow-lg",
           "shadow-black/20",
+          "transition-[padding]",
+          "duration-300",
+          "ease-out",
+          // Slide the search right of the resume corner badge once stuck (mobile only)
+          stuck && isMobile ? "pl-24" : "pl-5",
         )}
       >
         <Search
