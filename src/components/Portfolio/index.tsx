@@ -220,7 +220,7 @@ export default function Portfolio({ repositories }: Props) {
           "duration-300",
           "ease-out",
           // Slide the search right of the resume corner badge once stuck (mobile only)
-          stuck && isMobile ? "pl-24" : "pl-5",
+          stuck && isMobile ? "pl-20" : "pl-5",
         )}
       >
         <Search
