@@ -46,7 +46,7 @@ export default function RecentProjects({ className }: Props) {
         "relative",
         "z-[2]",
         "mx-4",
-        "pb-[100vh]",
+        "pb-[40vh]",
         "sm:pb-[160vh]",
         "flex",
         "flex-col",
