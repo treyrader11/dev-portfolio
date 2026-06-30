@@ -30,9 +30,11 @@ export default function RecentProjects({ className, projects }: Props) {
 
   // Track the last project relative to the viewport: progress reaches 1 when its
   // top edge meets the top of the screen — i.e. when it touches the sticky title.
-  // Element-based, so it stays accurate across every screen size.
+  // Element-based, so it stays accurate across every screen size. Falls back to
+  // the section ref when there are no projects so the target is always hydrated.
+  const hasProjects = projects.length > 0;
   const { scrollYProgress: lastProjectProgress } = useScroll({
-    target: lastProjectRef,
+    target: hasProjects ? lastProjectRef : container,
     offset: ["start end", "start start"],
   });
 
