@@ -21,12 +21,14 @@ const offerings = [
 ];
 
 export default function Freelance({ className }: Props) {
-  const container = useRef<HTMLElement>(null);
-  const isInView = useInView(container, { once: true, margin: "-100px" });
+  // Trigger off the text block (not the section) so the reveal fires when the
+  // copy actually scrolls into view — the section itself is pulled up
+  // -mt-[130vh] on desktop, which would otherwise trigger it far too early.
+  const contentRef = useRef<HTMLDivElement>(null);
+  const isInView = useInView(contentRef);
 
   return (
     <motion.section
-      ref={container}
       className={cn(
         "relative",
         "z-[3]",
@@ -51,6 +53,7 @@ export default function Freelance({ className }: Props) {
       />
 
       <div
+        ref={contentRef}
         className={cn(
           "flex",
           "flex-col",

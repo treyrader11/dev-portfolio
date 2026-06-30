@@ -77,7 +77,7 @@ export default function RecentProjects({ className }: Props) {
           delay={0.8}
           backgroundColor="transparent"
           containerClass={cn("h-0", "font-pp-acma")}
-          title="Recent projects."
+          title="Latest Work."
           className={cn("py-0 md:text-[5vw]")}
         />
       </motion.div>
