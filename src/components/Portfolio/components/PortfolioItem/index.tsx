@@ -139,24 +139,48 @@ export default function PortfolioItem({
         />
       </div>
 
-      <Link href={`/project/${projectId}`} scroll={false}>
-        <Modal
-          ref={modalRef}
-          style={isMobile ? { x: 180, y: 655 } : { x, y }}
-          // style={isMobile ? { x: 180, y: 550 } : { x, y }}
-          isActive={isModalActive}
-          imageUrl={project_image}
-          // className={cn(isInView ? "scale-100 flex" : "hidden scale-0")}
-        >
-          <div
-            className={cn("size-full flex items-center justify-center")}
-            style={{ backgroundColor: color }}
+      {/*
+        ──────────────────────────────────────────────────────────────────────
+        TEMPORARILY DISABLED — hover cursor-follow video modal. NEEDS FINE-TUNING.
+        ──────────────────────────────────────────────────────────────────────
+        What this is:
+          On hover over a project row, `isModalActive` flips true (via the <li>
+          onMouseEnter/onMouseLeave above) and this <Modal> (the GSAP cursor-
+          follower in ../Modal) renders a floating panel that tracks the cursor
+          (x/y come from the parent Portfolio's mousePosition springs) and plays
+          the project's looping video. The wrapping <Link> is also what made the
+          row navigate to /project/[projectId].
+
+        Why it's commented out (do NOT delete — restore after tuning):
+          - Positioning is off: the hard-coded mobile offsets ({ x: 180, y: 655 })
+            and the clip-path on the <li> need rework so the panel sits correctly
+            across breakpoints and doesn't get clipped.
+          - The follow/spring feel and active-state timing need polish.
+          - `imageUrl`/`isInView` wiring here is half-finished (see commented
+            className that was meant to scale/hide based on in-view state).
+
+        Side effect of disabling: project rows are no longer clickable, since the
+        only navigation was attached to this <Link>. Re-add a row-level link (or
+        re-enable this block) when restoring. To bring it back, just uncomment.
+
+        <Link href={`/project/${projectId}`} scroll={false}>
+          <Modal
+            ref={modalRef}
+            style={isMobile ? { x: 180, y: 655 } : { x, y }}
+            isActive={isModalActive}
+            imageUrl={project_image}
+            // className={cn(isInView ? "scale-100 flex" : "hidden scale-0")}
           >
-            <span className="text-white">{title}</span>
-            <Video src={`/videos/${project_video}`} muted loop autoPlay />
-          </div>
-        </Modal>
-      </Link>
+            <div
+              className={cn("size-full flex items-center justify-center")}
+              style={{ backgroundColor: color }}
+            >
+              <span className="text-white">{title}</span>
+              <Video src={`/videos/${project_video}`} muted loop autoPlay />
+            </div>
+          </Modal>
+        </Link>
+      */}
     </li>
   );
 }
