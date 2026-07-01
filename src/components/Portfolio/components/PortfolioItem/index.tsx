@@ -3,6 +3,7 @@
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import Image from "next/image";
+import { RiArrowRightUpLine } from "react-icons/ri";
 import Tags from "./Tags";
 import Video from "@/components/Video";
 import Modal from "../Modal";
@@ -88,7 +89,11 @@ export default function PortfolioItem({
         // "hover:opacity-50"
       )}
     >
-      <div className={"relative"}>
+      <Link
+        href={`/project/${projectId}`}
+        aria-label={`View ${title} project`}
+        className={cn("relative", "block")}
+      >
         <div
           className={cn(
             "md:flex",
@@ -137,7 +142,52 @@ export default function PortfolioItem({
           data={tags}
           className={cn("absolute bottom-2 left-16 flex-nowrap max-w-none")}
         />
-      </div>
+
+        {/* Hover affordance: a "View project" pill that fades in and rises,
+            hinting the row links to the project's details page. */}
+        <span
+          aria-hidden
+          className={cn(
+            "pointer-events-none",
+            "absolute",
+            "left-1/2",
+            "top-1/2",
+            "z-10",
+            "-translate-x-1/2",
+            "-translate-y-1/2"
+          )}
+        >
+          <span
+            className={cn(
+              "flex",
+              "items-center",
+              "gap-2",
+              "rounded-full",
+              "border",
+              "border-slate-700/25",
+              "bg-white/70",
+              "px-5",
+              "py-2.5",
+              "font-pp-acma",
+              "text-sm",
+              "font-medium",
+              "text-slate-700",
+              "shadow-lg",
+              "backdrop-blur-sm",
+              "translate-y-8",
+              "opacity-0",
+              "transition-all",
+              "duration-500",
+              "ease-out",
+              "group-hover:translate-y-0",
+              "group-hover:opacity-100"
+            )}
+          >
+            View project
+            <RiArrowRightUpLine className="size-4" />
+          </span>
+        </span>
+      </Link>
 
       {/*
         ──────────────────────────────────────────────────────────────────────

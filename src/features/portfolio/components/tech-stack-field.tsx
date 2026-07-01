@@ -39,6 +39,7 @@ export function TechStackField({
   const [newName, setNewName] = useState("");
   const [newImage, setNewImage] = useState("");
   const [saving, setSaving] = useState(false);
+  const [search, setSearch] = useState("");
 
   useEffect(() => {
     fetch("/api/admin/skills")
@@ -49,10 +50,15 @@ export function TechStackField({
 
   const selected = skills.find((s) => s.imageUrl === value);
 
+  const filteredSkills = skills.filter((s) =>
+    s.skillName.toLowerCase().includes(search.trim().toLowerCase()),
+  );
+
   function pick(skill: Skill) {
     onChange(skill.imageUrl);
     onSelectName?.(skill.skillName);
     setOpen(false);
+    setSearch("");
   }
 
   async function addNew() {
@@ -115,15 +121,26 @@ export function TechStackField({
             <Popover.Content
               sideOffset={6}
               align="start"
-              className="z-[110] max-h-72 w-72 overflow-auto rounded-xl border border-dark-600 bg-dark-500 p-2 shadow-xl"
+              className="z-[110] flex max-h-80 w-72 flex-col overflow-hidden rounded-xl border border-dark-600 bg-dark-500 p-2 shadow-xl"
             >
-              {skills.length === 0 && (
-                <p className="px-2 py-3 text-xs text-light-400">
-                  No tech stacks yet — add one below.
-                </p>
-              )}
-              <div className="grid grid-cols-1">
-                {skills.map((skill) => (
+              {/* Search box — filter existing tech stacks (category-dropdown UX). */}
+              <input
+                autoFocus
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder="Search tech stacks..."
+                className="mb-2 w-full rounded-lg border border-dark-600 bg-dark-400 px-3 py-2 text-sm text-white outline-none placeholder:text-light-400"
+              />
+
+              <div className="grid grid-cols-1 overflow-y-auto">
+                {filteredSkills.length === 0 && (
+                  <p className="px-2 py-3 text-xs text-light-400">
+                    {skills.length === 0
+                      ? "No tech stacks yet — add one below."
+                      : "No matches."}
+                  </p>
+                )}
+                {filteredSkills.map((skill) => (
                   <button
                     key={skill.id}
                     type="button"

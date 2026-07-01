@@ -1,9 +1,11 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
 import { motion } from "framer-motion";
 import AdminLayout from "@/features/admin/components/admin-layout";
 import { IconUploadField } from "@/features/admin/components/icon-upload-field";
 import { TechStackField } from "./tech-stack-field";
+import { TagInputField, type Suggestion } from "./tag-input-field";
+import { CategoryMultiField } from "./category-multi-field";
 import { type ProjectItem, emptyProject } from "../types";
 
 interface Props {
@@ -25,11 +27,9 @@ export function ProjectDetailPage({ project }: Props) {
           videoKey: project.videoKey,
           stack: project.stack,
           techImage: project.techImage,
-          tags: project.tags.length ? project.tags : [""],
+          tags: project.tags.filter(Boolean),
           category: project.category,
-          technologyFeature: project.technologyFeature.length
-            ? project.technologyFeature
-            : [""],
+          technologyFeature: project.technologyFeature.filter(Boolean),
           packages:
             (project.packages as typeof emptyProject.packages) ??
             emptyProject.packages,
@@ -49,9 +49,23 @@ export function ProjectDetailPage({ project }: Props) {
           isRecent: project.isRecent,
           sortOrder: project.sortOrder,
         }
-      : emptyProject,
+      : { ...emptyProject, tags: [] as string[], technologyFeature: [] as string[] },
   );
   const [saving, setSaving] = useState(false);
+
+  // Existing tag + technology-feature values, used to suggest as the user types
+  // (like roux-ui's tag/category pickers).
+  const [tagOptions, setTagOptions] = useState<Suggestion[]>([]);
+  const [featureOptions, setFeatureOptions] = useState<Suggestion[]>([]);
+  useEffect(() => {
+    fetch("/api/admin/projects/meta")
+      .then((r) => (r.ok ? r.json() : { tags: [], features: [] }))
+      .then((data: { tags: Suggestion[]; features: Suggestion[] }) => {
+        setTagOptions(data.tags ?? []);
+        setFeatureOptions(data.features ?? []);
+      })
+      .catch(() => {});
+  }, []);
 
   // Dirty-tracking: any change reveals the fixed save bar. The initial snapshot
   // is captured once, on the first render.
@@ -186,14 +200,18 @@ export function ProjectDetailPage({ project }: Props) {
             />
           </div>
 
-          <ArrayField
+          <TagInputField
             label="Tags"
+            inline
             value={form.tags}
+            suggestions={tagOptions}
             onChange={(v) => setForm({ ...form, tags: v })}
           />
-          <ArrayField
+          <CategoryMultiField
             label="Technology Features"
+            inline
             value={form.technologyFeature}
+            options={featureOptions}
             onChange={(v) => setForm({ ...form, technologyFeature: v })}
           />
 
@@ -285,49 +303,3 @@ function Input({
   );
 }
 
-function ArrayField({
-  label,
-  value,
-  onChange,
-}: {
-  label: string;
-  value: string[];
-  onChange: (v: string[]) => void;
-}) {
-  return (
-    <div className="flex items-start gap-4">
-      <label className="w-40 shrink-0 pt-2 text-sm font-medium text-white">
-        {label}
-      </label>
-      <div className="min-w-0 flex-1">
-        {value.map((item, i) => (
-        <div key={i} className="flex gap-2 mb-1">
-          <input
-            value={item}
-            onChange={(e) => {
-              const next = [...value];
-              next[i] = e.target.value;
-              onChange(next);
-            }}
-            className="flex-1 px-3 py-1.5 border border-dark-600 rounded-lg text-sm"
-          />
-          <button
-            type="button"
-            onClick={() => onChange(value.filter((_, j) => j !== i))}
-            className="text-error text-sm px-1 hover:text-error-600"
-          >
-            x
-          </button>
-          </div>
-        ))}
-        <button
-          type="button"
-          onClick={() => onChange([...value, ""])}
-          className="text-sm text-blue-400 hover:text-blue-300"
-        >
-          + Add
-        </button>
-      </div>
-    </div>
-  );
-}
