@@ -238,27 +238,26 @@ export default function AdminLayout({ children, title }: AdminLayoutProps) {
 
             {/* Footer — pinned to the bottom, never scrolls over the nav */}
             <div className="shrink-0 border-t border-white/10">
-              <div className="p-4">
-                <div className="flex items-center gap-3 mb-3">
-                  {session?.user?.image && (
-                    <img
-                      src={session.user.image}
-                      alt=""
-                      className="size-8 rounded-full"
-                    />
-                  )}
-                  <div className="min-w-0">
-                    <p className="text-sm font-medium truncate">
-                      {session?.user?.name}
-                    </p>
-                    <p className="text-xs text-light-100 truncate">
-                      {session?.user?.email}
-                    </p>
-                  </div>
+              <div className="p-4 flex items-center gap-3">
+                {session?.user?.image && (
+                  <img
+                    src={session.user.image}
+                    alt=""
+                    className="size-8 rounded-full flex-shrink-0"
+                  />
+                )}
+                <div className="min-w-0 flex-1">
+                  <p className="text-sm font-medium truncate">
+                    {session?.user?.name}
+                  </p>
+                  <p className="text-xs text-light-100 truncate">
+                    {session?.user?.email}
+                  </p>
                 </div>
                 <button
                   onClick={() => signOut({ callbackUrl: "/" })}
-                  className="w-full flex items-center gap-3 text-left text-sm text-light-100 hover:text-white transition-colors"
+                  className="flex flex-shrink-0 items-center gap-1.5 text-sm text-light-100 hover:text-white transition-colors"
+                  aria-label="Sign out"
                 >
                   <RiLogoutBoxLine className="w-4 h-4 flex-shrink-0" />
                   Sign out
