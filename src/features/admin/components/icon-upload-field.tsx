@@ -3,7 +3,11 @@
 import { useCallback, useEffect, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import Cropper, { type Area } from "react-easy-crop";
-import { RiUploadCloud2Line, RiImageLine } from "react-icons/ri";
+import {
+  RiUploadCloud2Line,
+  RiImageLine,
+  RiPencilLine,
+} from "react-icons/ri";
 import { cn } from "@/lib/utils";
 import { getCroppedBlob } from "../lib/crop-image";
 import {
@@ -20,8 +24,9 @@ interface Props {
   folder?: string;
 }
 
-// Icon picker: drag-and-drop OR click to browse, crop the image to a square,
-// then upload the cropped result to Cloudinary. A URL field remains as a manual
+// Icon picker: shows the current icon with a pencil button. The pencil opens a
+// wide modal where you drag-and-drop or browse for a file, then crop it to a
+// square before it uploads to Cloudinary. A URL field remains as a manual
 // fallback (paste an existing URL or /public path).
 export function IconUploadField({
   label,
@@ -30,6 +35,7 @@ export function IconUploadField({
   previewBg = "#ffffff",
   folder,
 }: Props) {
+  const [open, setOpen] = useState(false);
   const [rawSrc, setRawSrc] = useState<string | null>(null);
   const [crop, setCrop] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
@@ -47,12 +53,13 @@ export function IconUploadField({
     setZoom(1);
   }, []);
 
-  const { getRootProps, getInputProps, isDragActive, open } = useDropzone({
-    onDrop,
-    accept: { "image/*": [] },
-    multiple: false,
-    noClick: true, // we trigger the file dialog from our own button
-  });
+  const { getRootProps, getInputProps, isDragActive, open: openFileDialog } =
+    useDropzone({
+      onDrop,
+      accept: { "image/*": [] },
+      multiple: false,
+      noClick: true, // we trigger the file dialog from our own button
+    });
 
   // Revoke the object URL when we're done with it to avoid leaks.
   useEffect(() => {
@@ -60,6 +67,12 @@ export function IconUploadField({
       if (rawSrc) URL.revokeObjectURL(rawSrc);
     };
   }, [rawSrc]);
+
+  function closeModal() {
+    setRawSrc(null);
+    setError(null);
+    setOpen(false);
+  }
 
   async function confirmCrop() {
     if (!rawSrc || !pixels) return;
@@ -69,7 +82,7 @@ export function IconUploadField({
       const blob = await getCroppedBlob(rawSrc, pixels);
       const url = await uploadCroppedImage(blob, folder);
       onChange(url);
-      setRawSrc(null);
+      closeModal();
     } catch (e) {
       setError(e instanceof Error ? e.message : "Something went wrong");
     } finally {
@@ -83,6 +96,7 @@ export function IconUploadField({
         {label}
       </label>
 
+      {/* Current icon + pencil to edit/replace. */}
       <div className="flex items-center gap-3">
         {value ? (
           // eslint-disable-next-line @next/next/no-img-element
@@ -98,38 +112,16 @@ export function IconUploadField({
           </div>
         )}
 
-        {/* Dropzone — drop a file anywhere in here, or click Browse. */}
-        <div
-          {...getRootProps()}
-          className={cn(
-            "flex flex-1 cursor-pointer flex-col items-center justify-center rounded-lg border border-dashed px-4 py-3 text-center transition-colors",
-            isDragActive
-              ? "border-secondary bg-secondary/10"
-              : "border-dark-600 hover:border-secondary/60",
-          )}
-          onClick={() => open()}
+        <button
+          type="button"
+          onClick={() => setOpen(true)}
+          aria-label="Edit icon"
+          className="inline-flex items-center gap-1.5 rounded-lg border border-dark-600 px-3 py-2 text-sm text-white transition-colors hover:border-secondary/60"
         >
-          <input {...getInputProps()} />
-          <RiUploadCloud2Line className="mb-1 size-5 text-light-400" />
-          <p className="text-xs text-light-400">
-            {isDragActive ? (
-              "Drop the image here"
-            ) : (
-              <>
-                Drag &amp; drop, or{" "}
-                <span className="text-secondary underline">browse</span>
-              </>
-            )}
-          </p>
-        </div>
+          <RiPencilLine className="size-4" />
+          {value ? "Change" : "Add icon"}
+        </button>
       </div>
-
-      {!cloudinaryConfigured && (
-        <p className="mt-1 text-xs text-amber-500">
-          Set Cloudinary env vars to enable uploads. You can still paste a URL
-          below.
-        </p>
-      )}
 
       <input
         value={value}
@@ -138,58 +130,114 @@ export function IconUploadField({
         className="mt-2 w-full px-3 py-2 border border-dark-600 rounded-lg text-sm"
       />
 
-      {/* Crop modal — square crop, zoom, confirm before uploading. */}
-      {rawSrc && (
+      {/* Wide modal: dropzone first, then crop once an image is chosen. */}
+      {open && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/70 p-4">
-          <div className="w-full max-w-md rounded-xl border border-dark-600 bg-dark-500 p-4">
-            <h3 className="mb-3 text-sm font-medium text-white">Crop icon</h3>
-
-            <div className="relative h-64 w-full overflow-hidden rounded-lg bg-dark-700">
-              <Cropper
-                image={rawSrc}
-                crop={crop}
-                zoom={zoom}
-                aspect={1}
-                showGrid={false}
-                onCropChange={setCrop}
-                onZoomChange={setZoom}
-                onCropComplete={(_, areaPixels) => setPixels(areaPixels)}
-              />
-            </div>
-
-            <div className="mt-3 flex items-center gap-2">
-              <span className="text-xs text-light-400">Zoom</span>
-              <input
-                type="range"
-                min={1}
-                max={3}
-                step={0.01}
-                value={zoom}
-                onChange={(e) => setZoom(Number(e.target.value))}
-                className="flex-1 accent-secondary"
-              />
-            </div>
-
-            {error && <p className="mt-2 text-xs text-red-400">{error}</p>}
-
-            <div className="mt-4 flex justify-end gap-2">
+          <div className="flex max-h-[90vh] w-full max-w-3xl flex-col overflow-hidden rounded-xl border border-dark-600 bg-dark-500">
+            <div className="flex items-center justify-between border-b border-dark-600 px-5 py-4">
+              <h3 className="text-sm font-medium text-white">
+                {rawSrc ? "Crop icon" : "Upload icon"}
+              </h3>
               <button
                 type="button"
-                onClick={() => setRawSrc(null)}
-                disabled={uploading}
-                className="px-3 py-2 text-sm text-light-400 hover:text-white disabled:opacity-50"
+                onClick={closeModal}
+                className="text-light-400 hover:text-white"
               >
-                Cancel
-              </button>
-              <button
-                type="button"
-                onClick={confirmCrop}
-                disabled={uploading || !pixels}
-                className="rounded-lg bg-secondary px-4 py-2 text-sm font-medium text-white hover:bg-secondary/80 disabled:opacity-50"
-              >
-                {uploading ? "Uploading..." : "Confirm"}
+                Close
               </button>
             </div>
+
+            <div className="min-h-0 flex-1 overflow-auto p-5">
+              {!cloudinaryConfigured && (
+                <p className="mb-3 text-xs text-amber-500">
+                  Set Cloudinary env vars to enable uploads. You can still paste
+                  a URL in the field behind this dialog.
+                </p>
+              )}
+
+              {!rawSrc ? (
+                // Dropzone — big, wide, responsive drop target + browse button.
+                <div
+                  {...getRootProps()}
+                  className={cn(
+                    "flex min-h-[45vh] w-full cursor-pointer flex-col items-center justify-center gap-3 rounded-xl border-2 border-dashed px-6 text-center transition-colors",
+                    isDragActive
+                      ? "border-secondary bg-secondary/10"
+                      : "border-dark-600 hover:border-secondary/60",
+                  )}
+                  onClick={() => openFileDialog()}
+                >
+                  <input {...getInputProps()} />
+                  <RiUploadCloud2Line className="size-10 text-light-400" />
+                  <p className="text-sm text-light-400">
+                    {isDragActive
+                      ? "Drop the image here"
+                      : "Drag & drop an image here"}
+                  </p>
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      openFileDialog();
+                    }}
+                    className="rounded-lg bg-secondary px-4 py-2 text-sm font-medium text-white hover:bg-secondary/80"
+                  >
+                    Browse files
+                  </button>
+                </div>
+              ) : (
+                <div>
+                  <div className="relative h-[50vh] min-h-[320px] w-full overflow-hidden rounded-xl bg-dark-700">
+                    <Cropper
+                      image={rawSrc}
+                      crop={crop}
+                      zoom={zoom}
+                      aspect={1}
+                      showGrid={false}
+                      onCropChange={setCrop}
+                      onZoomChange={setZoom}
+                      onCropComplete={(_, areaPixels) => setPixels(areaPixels)}
+                    />
+                  </div>
+                  <div className="mt-3 flex items-center gap-2">
+                    <span className="text-xs text-light-400">Zoom</span>
+                    <input
+                      type="range"
+                      min={1}
+                      max={3}
+                      step={0.01}
+                      value={zoom}
+                      onChange={(e) => setZoom(Number(e.target.value))}
+                      className="flex-1 accent-secondary"
+                    />
+                  </div>
+                  {error && (
+                    <p className="mt-2 text-xs text-error">{error}</p>
+                  )}
+                </div>
+              )}
+            </div>
+
+            {rawSrc && (
+              <div className="flex justify-end gap-2 border-t border-dark-600 px-5 py-4">
+                <button
+                  type="button"
+                  onClick={() => setRawSrc(null)}
+                  disabled={uploading}
+                  className="px-3 py-2 text-sm text-light-400 hover:text-white disabled:opacity-50"
+                >
+                  Back
+                </button>
+                <button
+                  type="button"
+                  onClick={confirmCrop}
+                  disabled={uploading || !pixels}
+                  className="rounded-lg bg-success px-4 py-2 text-sm font-medium text-white hover:bg-success-600 disabled:opacity-50"
+                >
+                  {uploading ? "Uploading..." : "Confirm"}
+                </button>
+              </div>
+            )}
           </div>
         </div>
       )}

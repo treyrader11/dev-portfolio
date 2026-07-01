@@ -106,7 +106,7 @@ export function AdminExperiencesPage({ experiences: initial }: Props) {
                     <span className="text-xs text-light-400">Delete?</span>
                     <button
                       onClick={() => handleDelete(item.id)}
-                      className="text-xs font-medium text-red-400 hover:text-red-300"
+                      className="text-xs font-medium text-error hover:text-error-600"
                     >
                       Yes
                     </button>
@@ -121,7 +121,7 @@ export function AdminExperiencesPage({ experiences: initial }: Props) {
                   <button
                     aria-label="Delete experience"
                     onClick={() => setConfirmId(item.id)}
-                    className="text-red-400 transition-colors hover:text-red-300"
+                    className="text-error transition-colors hover:text-error-600"
                   >
                     <RiDeleteBinLine className="size-5" />
                   </button>

@@ -1,11 +1,12 @@
 import { useRef, useState } from "react";
 import { useRouter } from "next/router";
-import { Reorder, useDragControls } from "framer-motion";
+import { AnimatePresence, motion, Reorder, useDragControls } from "framer-motion";
 import { RiDraggable, RiCloseLine, RiAddLine } from "react-icons/ri";
 import AdminLayout from "@/features/admin/components/admin-layout";
 import { IconUploadField } from "@/features/admin/components/icon-upload-field";
 import { ColorSwatchPicker } from "@/features/admin/components/color-swatch-picker";
 import { MonthYearRangePicker } from "@/features/admin/components/month-year-range-picker";
+import { cn } from "@/lib/utils";
 import { type ExperienceItem, emptyExperience } from "../types";
 
 interface Props {
@@ -53,6 +54,7 @@ export function ExperienceDetailPage({ experience }: Props) {
   });
 
   const [saving, setSaving] = useState(false);
+  const [focusedTaskId, setFocusedTaskId] = useState<string | null>(null);
 
   function addTask() {
     setTasks((t) => [...t, { id: `t${idCounter.current++}`, value: "" }]);
@@ -134,21 +136,39 @@ export function ExperienceDetailPage({ experience }: Props) {
             onChange={(v) => setForm({ ...form, iconBg: v })}
           />
 
-          {/* Tasks — drag the handle to reorder. */}
-          <div>
-            <label className="block text-sm font-medium text-white mb-2">
+          {/* Tasks — drag the handle to reorder. When a task is focused it
+              lifts into a card and the rest of the page blurs behind it. The
+              section is elevated above the backdrop so the tasks stay sharp. */}
+          <div className={cn("relative", focusedTaskId && "z-50")}>
+            <AnimatePresence>
+              {focusedTaskId && (
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="fixed inset-0 bg-black/40 backdrop-blur-sm"
+                />
+              )}
+            </AnimatePresence>
+
+            <label className="relative block text-sm font-medium text-white mb-2">
               Tasks
             </label>
             <Reorder.Group
               axis="y"
               values={tasks}
               onReorder={setTasks}
-              className="space-y-2"
+              className="relative space-y-2"
             >
               {tasks.map((task) => (
                 <TaskRow
                   key={task.id}
                   task={task}
+                  focused={focusedTaskId === task.id}
+                  onFocus={() => setFocusedTaskId(task.id)}
+                  onBlur={() =>
+                    setFocusedTaskId((cur) => (cur === task.id ? null : cur))
+                  }
                   onChange={updateTask}
                   onRemove={removeTask}
                 />
@@ -157,7 +177,7 @@ export function ExperienceDetailPage({ experience }: Props) {
             <button
               type="button"
               onClick={addTask}
-              className="mt-2 inline-flex items-center gap-1 text-sm text-blue-400 hover:text-blue-300"
+              className="relative mt-2 inline-flex items-center gap-1 text-sm text-blue-400 hover:text-blue-300"
             >
               <RiAddLine className="size-4" /> Add task
             </button>
@@ -167,7 +187,7 @@ export function ExperienceDetailPage({ experience }: Props) {
             <button
               onClick={handleSave}
               disabled={saving}
-              className="px-4 py-2 bg-secondary text-white text-sm font-medium rounded-lg hover:bg-secondary/80 disabled:opacity-50"
+              className="px-4 py-2 bg-success text-white text-sm font-medium rounded-lg hover:bg-success-600 disabled:opacity-50"
             >
               {saving ? "Saving..." : isNew ? "Create" : "Save"}
             </button>
@@ -186,10 +206,16 @@ export function ExperienceDetailPage({ experience }: Props) {
 
 function TaskRow({
   task,
+  focused,
+  onFocus,
+  onBlur,
   onChange,
   onRemove,
 }: {
   task: Task;
+  focused: boolean;
+  onFocus: () => void;
+  onBlur: () => void;
   onChange: (id: string, value: string) => void;
   onRemove: (id: string) => void;
 }) {
@@ -199,30 +225,44 @@ function TaskRow({
       value={task}
       dragListener={false}
       dragControls={controls}
-      className="flex items-center gap-2 rounded-lg border border-dark-600 bg-dark-500 p-2"
+      className="relative"
     >
-      <button
-        type="button"
-        aria-label="Drag to reorder"
-        onPointerDown={(e) => controls.start(e)}
-        className="cursor-grab touch-none text-light-400 hover:text-white active:cursor-grabbing"
+      {/* No static border — on focus the row animates into a raised card. */}
+      <motion.div
+        animate={{ scale: focused ? 1.03 : 1 }}
+        transition={{ type: "spring", stiffness: 300, damping: 26 }}
+        className={cn(
+          "flex items-center gap-2 rounded-lg p-2 transition-colors",
+          focused
+            ? "bg-dark-600 shadow-2xl ring-1 ring-secondary/50"
+            : "bg-transparent hover:bg-dark-500",
+        )}
       >
-        <RiDraggable className="size-5" />
-      </button>
-      <input
-        value={task.value}
-        onChange={(e) => onChange(task.id, e.target.value)}
-        placeholder="Describe a task or achievement"
-        className="flex-1 bg-transparent px-1 py-1 text-sm text-white outline-none placeholder:text-light-400"
-      />
-      <button
-        type="button"
-        aria-label="Remove task"
-        onClick={() => onRemove(task.id)}
-        className="text-red-400 hover:text-red-300"
-      >
-        <RiCloseLine className="size-5" />
-      </button>
+        <button
+          type="button"
+          aria-label="Drag to reorder"
+          onPointerDown={(e) => controls.start(e)}
+          className="cursor-grab touch-none text-light-400 hover:text-white active:cursor-grabbing"
+        >
+          <RiDraggable className="size-5" />
+        </button>
+        <input
+          value={task.value}
+          onFocus={onFocus}
+          onBlur={onBlur}
+          onChange={(e) => onChange(task.id, e.target.value)}
+          placeholder="Describe a task or achievement"
+          className="flex-1 bg-transparent px-1 py-1 text-sm text-white outline-none placeholder:text-light-400"
+        />
+        <button
+          type="button"
+          aria-label="Remove task"
+          onClick={() => onRemove(task.id)}
+          className="text-error hover:text-error-600"
+        >
+          <RiCloseLine className="size-5" />
+        </button>
+      </motion.div>
     </Reorder.Item>
   );
 }

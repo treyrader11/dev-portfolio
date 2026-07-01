@@ -21,6 +21,16 @@ const config: Config = {
         secondary: {
           DEFAULT: "#934E00",
         },
+        // Bootstrap-modeled status colors. DEFAULT is the base, 600 the darker
+        // hover shade — use as bg-success hover:bg-success-600 etc.
+        success: {
+          DEFAULT: "#198754",
+          600: "#157347",
+        },
+        error: {
+          DEFAULT: "#dc3545",
+          600: "#bb2d3b",
+        },
         dark: {
           DEFAULT: "#0f0f0f",
           400: "#1C1C1C",
