@@ -151,24 +151,28 @@ export default function AdminLayout({ children, title }: AdminLayoutProps) {
         </defs>
       </svg>
 
-      {/* Open button (hamburger) — same bar markup as the public BurgerMenu.
-          Hidden while the drawer is open so the drawer overlaps it.
+      {/* Toggle — identical markup to the public BurgerMenu (circle + bars that
+          fold into an X). Stays on top of the drawer so it also closes it.
           Mobile: top-right; desktop: top-left. */}
-      {!sidebarOpen && (
-        <button
-          onClick={() => setSidebarOpen(true)}
-          aria-label="Open menu"
-          className="fixed top-4 right-4 md:right-auto md:left-4 z-30 flex size-10 md:size-16 items-center justify-center rounded-full border border-white/20 bg-dark-400 transition-colors duration-300 outline-none hover:bg-dark-600"
-        >
-          <div
-            className={cn(
-              "relative w-full",
-              "after:block after:h-px after:w-2/5 after:m-auto after:bg-white after:relative after:-top-[5px]",
-              "before:block before:h-px before:w-2/5 before:m-auto before:bg-white before:relative before:top-[5px]"
-            )}
-          />
-        </button>
-      )}
+      <button
+        onClick={() => setSidebarOpen(!sidebarOpen)}
+        aria-label={sidebarOpen ? "Close menu" : "Open menu"}
+        className={cn(
+          "fixed top-5 right-5 z-50 flex size-16 items-center justify-center rounded-full border border-white/20 outline-none transition-colors duration-300",
+          sidebarOpen ? "bg-neutral-800" : "bg-dark"
+        )}
+      >
+        <div
+          className={cn(
+            "relative w-full",
+            "after:block after:h-px after:w-2/5 after:m-auto after:bg-white after:relative after:transition-transform after:duration-300",
+            "before:block before:h-px before:w-2/5 before:m-auto before:bg-white before:relative before:transition-transform before:duration-300",
+            sidebarOpen
+              ? "after:rotate-45 after:-top-[1px] before:-rotate-45 before:top-0"
+              : "after:-top-[5px] before:top-[5px]"
+          )}
+        />
+      </button>
 
       {/* Sidebar with Curve - slides from left */}
       <AnimatePresence mode="wait">
@@ -178,25 +182,9 @@ export default function AdminLayout({ children, title }: AdminLayoutProps) {
             initial="initial"
             animate="enter"
             exit="exit"
-            className="fixed inset-y-0 left-0 z-40 flex h-screen w-full md:w-72 flex-col bg-dark-500 text-white"
+            className="fixed inset-y-0 left-0 right-0 md:right-[calc(100vw-320px)] z-40 flex h-screen flex-col bg-dark-500 text-white"
           >
             <AdminCurve />
-
-            {/* Close (X) button — inside the drawer so the drawer overlaps the
-                open toggle; sits above the drawer content, top-right. */}
-            <button
-              onClick={() => setSidebarOpen(false)}
-              aria-label="Close menu"
-              className="absolute top-4 right-4 z-10 flex size-10 items-center justify-center rounded-full border border-white/20 bg-dark-600 outline-none"
-            >
-              <div
-                className={cn(
-                  "relative w-full",
-                  "after:block after:h-px after:w-2/5 after:m-auto after:bg-white after:relative after:rotate-45 after:-top-[1px]",
-                  "before:block before:h-px before:w-2/5 before:m-auto before:bg-white before:relative before:-rotate-45 before:top-0"
-                )}
-              />
-            </button>
 
             {/* Fixed-height column: header/footer pinned, nav scrolls between */}
             <div className="flex h-full flex-col">
@@ -216,7 +204,7 @@ export default function AdminLayout({ children, title }: AdminLayoutProps) {
               {/* Nav links with stagger animation.
                   Mobile: big, bold, centered items with no icons, vertically
                   centered in the drawer. Desktop (md+): compact icon rows. */}
-              <nav className="flex-1 overflow-y-auto">
+              <nav className="min-h-0 flex-1 overflow-y-auto">
                 <div className="flex min-h-full flex-col justify-center gap-6 py-8 md:block md:min-h-0 md:gap-0 md:py-4">
                   {navItems.map((item, i) => {
                   const isActive = router.pathname === item.href;
