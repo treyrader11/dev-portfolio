@@ -54,7 +54,7 @@ export default function ViewSiteFab({ className }: Props) {
         justifyContent: "center",
         zIndex: 30,
         bottom: 28,
-        right: 28,
+        left: 28,
         width: 52,
         height: 52,
         borderRadius: 14,
@@ -85,8 +85,8 @@ export default function ViewSiteFab({ className }: Props) {
       <span
         style={{
           position: "absolute",
-          right: "100%",
-          marginRight: 12,
+          left: "100%",
+          marginLeft: 12,
           whiteSpace: "nowrap",
           borderRadius: 8,
           padding: "6px 12px",
@@ -97,7 +97,7 @@ export default function ViewSiteFab({ className }: Props) {
           backdropFilter: "blur(8px)",
           color: "#c084fc",
           opacity: hovered ? 1 : 0,
-          transform: hovered ? "translateX(0)" : "translateX(8px)",
+          transform: hovered ? "translateX(0)" : "translateX(-8px)",
           transition: "all 200ms ease-out",
           pointerEvents: "none",
         }}
