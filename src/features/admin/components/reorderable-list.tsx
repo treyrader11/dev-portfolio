@@ -250,8 +250,8 @@ function ReorderableRow({
         transition={{ type: "spring", stiffness: 300, damping: 20 }}
         className={cn(
           CARD_FRAME,
-          "select-none cursor-grab touch-pan-y",
-          clickable && "hover:border-secondary/60",
+          "select-none touch-pan-y",
+          clickable ? "cursor-pointer hover:border-secondary/60" : "cursor-grab",
           isDragging && "relative z-50 cursor-grabbing",
           itemClassName,
         )}
