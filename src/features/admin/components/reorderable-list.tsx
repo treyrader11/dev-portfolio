@@ -3,7 +3,7 @@
 import { Reorder, useDragControls } from "framer-motion";
 import { RiDraggable } from "react-icons/ri";
 import { cn } from "@/lib/utils";
-import type { ReactNode } from "react";
+import { useState, type ReactNode } from "react";
 
 interface ReorderableListProps<T> {
   /** Ordered items. Reordering replaces this array (same object references). */
@@ -71,15 +71,41 @@ function ReorderableRow<T>({
   itemClassName,
 }: RowProps<T>) {
   const controls = useDragControls();
+  const [isDragging, setIsDragging] = useState(false);
 
   return (
     <Reorder.Item
       value={item}
       dragListener={false}
       dragControls={controls}
-      onDragEnd={onDragEnd}
+      onDragStart={() => setIsDragging(true)}
+      onDragEnd={() => {
+        setIsDragging(false);
+        onDragEnd?.();
+      }}
+      // Jira-style tilt + lift while dragging. Driven by state via `animate`
+      // (not `whileDrag`) so the values reliably reset on drop — with Reorder's
+      // layout animation, whileDrag can otherwise leave the card stuck tilted.
+      // Reorder keeps the item in the flow, so the list never collapses/jumps.
+      animate={
+        isDragging
+          ? {
+              rotate: 3,
+              scale: 1.02,
+              boxShadow: "0px 16px 40px rgba(0,0,0,0.5)",
+              zIndex: 50,
+            }
+          : {
+              rotate: 0,
+              scale: 1,
+              boxShadow: "0px 0px 0px rgba(0,0,0,0)",
+              zIndex: 1,
+            }
+      }
+      transition={{ type: "spring", stiffness: 300, damping: 20 }}
       className={cn(
         "flex items-start gap-3 rounded-lg border border-dark-600 bg-dark-400 p-4",
+        isDragging && "cursor-grabbing",
         itemClassName,
       )}
     >
@@ -88,11 +114,11 @@ function ReorderableRow<T>({
         aria-label="Drag to reorder"
         onPointerDown={(e) => controls.start(e)}
         className={cn(
-          "shrink-0 -ml-1 mt-0.5 cursor-grab touch-none text-light-400",
-          "transition-colors hover:text-white active:cursor-grabbing",
+          "shrink-0 -ml-1 mt-0.5 touch-none text-light-400 transition-colors hover:text-white",
+          isDragging ? "cursor-grabbing" : "cursor-grab",
         )}
       >
-        <RiDraggable className="size-5 w-5" />
+        <RiDraggable className="size-5" />
       </button>
       <div className="min-w-0 flex-1">{children}</div>
     </Reorder.Item>

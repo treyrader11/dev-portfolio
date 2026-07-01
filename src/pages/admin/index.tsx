@@ -4,6 +4,7 @@ import { authOptions } from "@/pages/api/auth/[...nextauth]";
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import type { GetServerSideProps } from "next";
+import { cn } from "@/lib/utils";
 
 const sections = [
   {
@@ -63,7 +64,16 @@ interface Props {
 
 export default function AdminDashboard({ counts }: Props) {
   return (
-    <AdminLayout title="Dashboard">
+    <AdminLayout
+      title="Dashboard"
+      className={cn(
+        "flex",
+        // "flex-col",
+        "justify-center",
+        // "items-center",
+        "w-full",
+      )}
+    >
       {/* Stats */}
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-8">
         <StatCard label="Experiences" count={counts.experiences} />

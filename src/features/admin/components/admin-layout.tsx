@@ -104,9 +104,14 @@ function AdminCurve() {
 interface AdminLayoutProps {
   children: ReactNode;
   title?: string;
+  className?: string;
 }
 
-export default function AdminLayout({ children, title }: AdminLayoutProps) {
+export default function AdminLayout({
+  children,
+  title,
+  className,
+}: AdminLayoutProps) {
   const router = useRouter();
   const { data: session } = useSession();
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -122,20 +127,28 @@ export default function AdminLayout({ children, title }: AdminLayoutProps) {
     if (item.icon === "jira") {
       return (
         <SiJira
-          className="w-4 h-4 flex-shrink-0"
+          className="size-4 flex-shrink-0"
           style={{ fill: "url(#jira-gradient)" }}
         />
       );
     }
     const Icon = item.icon;
-    return <Icon className="w-4 h-4 flex-shrink-0" />;
+    return <Icon className="size-4 flex-shrink-0" />;
   }
 
   return (
     // Permanently-dark admin to match the public site. [color-scheme:dark] makes
     // native form controls (inputs/selects/date pickers) render dark, and
     // text-white is the safe default on the dark surface.
-    <div className="min-h-screen bg-dark text-white [color-scheme:dark] mx-auto">
+    <div
+      className={cn(
+        "min-h-screen",
+        "bg-dark",
+        "text-white",
+        "[color-scheme:dark]",
+        className,
+      )}
+    >
       {/* SVG gradient definition for Jira icon */}
       <svg width="0" height="0" className="absolute">
         <defs>
@@ -159,14 +172,29 @@ export default function AdminLayout({ children, title }: AdminLayoutProps) {
         onClick={() => setSidebarOpen(!sidebarOpen)}
         aria-label={sidebarOpen ? "Close menu" : "Open menu"}
         className={cn(
-          "fixed top-5 right-5 z-50 flex size-16 items-center justify-center rounded-full border border-white/20 outline-none transition-colors duration-300",
+          "fixed",
+          "top-5",
+          "right-5",
+          "z-50",
+          "flex",
+          "size-16",
+          "items-center",
+          "justify-center",
+          "rounded-full",
+          "border",
+          "border-white/20",
+          "outline-none",
+          "transition-colors",
+          "duration-300",
           sidebarOpen ? "bg-neutral-800" : "bg-dark",
         )}
       >
         <div
           className={cn(
-            "relative w-full",
-            "after:block after:h-px after:w-2/5 after:m-auto after:bg-white after:relative after:transition-transform after:duration-300",
+            "relative",
+            "w-full",
+            "after:block",
+            "after:h-px after:w-2/5 after:m-auto after:bg-white after:relative after:transition-transform after:duration-300",
             "before:block before:h-px before:w-2/5 before:m-auto before:bg-white before:relative before:transition-transform before:duration-300",
             sidebarOpen
               ? "after:rotate-45 after:-top-[1px] before:-rotate-45 before:top-0"
@@ -262,7 +290,7 @@ export default function AdminLayout({ children, title }: AdminLayoutProps) {
                   className="flex flex-shrink-0 items-center gap-1.5 text-sm text-light-100 hover:text-white transition-colors"
                   aria-label="Sign out"
                 >
-                  <RiLogoutBoxLine className="w-4 h-4 flex-shrink-0" />
+                  <RiLogoutBoxLine className="size-4 flex-shrink-0" />
                   Sign out
                 </button>
               </div>
@@ -272,7 +300,7 @@ export default function AdminLayout({ children, title }: AdminLayoutProps) {
                   href="/"
                   className="flex items-center gap-3 text-sm text-light-100 hover:text-white transition-colors"
                 >
-                  <RiExternalLinkLine className="w-4 h-4 flex-shrink-0" />
+                  <RiExternalLinkLine className="size-4 flex-shrink-0" />
                   View site
                 </Link>
               </div>
