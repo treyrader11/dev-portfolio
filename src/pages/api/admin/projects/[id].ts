@@ -34,7 +34,7 @@ export default async function handler(
         websiteUrl, isRecent, sortOrder,
       },
     });
-    await revalidateProjects(res, item.videoKey);
+    await revalidateProjects(res, item);
     return res.json(item);
   }
 
@@ -46,13 +46,13 @@ export default async function handler(
     if (typeof isRecent === "boolean") data.isRecent = isRecent;
 
     const item = await prisma.project.update({ where: { id }, data });
-    await revalidateProjects(res, item.videoKey);
+    await revalidateProjects(res, item);
     return res.json(item);
   }
 
   if (req.method === "DELETE") {
     const item = await prisma.project.delete({ where: { id } });
-    await revalidateProjects(res, item.videoKey);
+    await revalidateProjects(res, item);
     return res.json({ success: true });
   }
 

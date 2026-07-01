@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import { slugify } from "@/lib/utils";
 import type {
   ProjectData,
   ProjectImage,
@@ -78,6 +79,29 @@ export async function getProjectByVideoKey(
   try {
     const item = await prisma.project.findFirst({ where: { videoKey } });
     return item ? mapProjectToData(item) : null;
+  } catch {
+    return null;
+  }
+}
+
+// Readable URL slug for the public project page, e.g. "Vouzot" -> "vouzot".
+// Mirrors the admin route convention (/admin/projects/<slug>).
+export async function getProjectSlugs(): Promise<string[]> {
+  try {
+    const items = await prisma.project.findMany({ select: { title: true } });
+    return items.map((i) => slugify(i.title)).filter(Boolean);
+  } catch {
+    return [];
+  }
+}
+
+export async function getProjectBySlug(
+  slug: string,
+): Promise<ProjectData | null> {
+  try {
+    const items = await prisma.project.findMany();
+    const match = items.find((p) => slugify(p.title) === slug);
+    return match ? mapProjectToData(match) : null;
   } catch {
     return null;
   }

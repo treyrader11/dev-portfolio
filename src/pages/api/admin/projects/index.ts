@@ -33,7 +33,7 @@ export default async function handler(
         isRecent: isRecent ?? false, sortOrder: sortOrder ?? 0,
       },
     });
-    await revalidateProjects(res, item.videoKey);
+    await revalidateProjects(res, item);
     return res.status(201).json(item);
   }
 

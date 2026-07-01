@@ -3,13 +3,14 @@
 import Image from "next/image";
 import { useMotionValueEvent, motion, useScroll, type MotionValue } from "framer-motion";
 import { useRef, useContext, useState } from "react";
-import { cn, resolveImageSrc } from "@/lib/utils";
+import { cn, resolveImageSrc, slugify } from "@/lib/utils";
 import Rounded from "@/components/Rounded";
 import { PositionContext } from "@/lib/contexts";
 import blank_shot from "/public/shots/blank-shot.png";
 import type { ScrollPosition } from "@/types/components";
 
 interface Props {
+  title: string;
   project_image: string;
   video_key: string;
   position: ScrollPosition;
@@ -18,8 +19,8 @@ interface Props {
 }
 
 export default function Project({
+  title,
   project_image,
-  video_key,
   position,
   className,
   // id,
@@ -132,7 +133,7 @@ export default function Project({
           text="View"
           backgroundColor="purple"
           className={cn("bg-purple-400", "p-4", "absolute")}
-          href={`/project/${video_key}`}
+          href={`/portfolio/${slugify(title)}`}
         />
       </motion.div>
     </div>

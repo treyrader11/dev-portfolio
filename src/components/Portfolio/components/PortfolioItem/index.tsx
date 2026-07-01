@@ -1,6 +1,6 @@
 "use client";
 
-import { cn } from "@/lib/utils";
+import { cn, slugify } from "@/lib/utils";
 import Link from "next/link";
 import Image from "next/image";
 import { RiArrowRightUpLine } from "react-icons/ri";
@@ -90,7 +90,7 @@ export default function PortfolioItem({
       )}
     >
       <Link
-        href={`/project/${projectId}`}
+        href={`/portfolio/${slugify(title)}`}
         aria-label={`View ${title} project`}
         className={cn("relative", "block")}
       >
