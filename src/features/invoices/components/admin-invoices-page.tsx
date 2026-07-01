@@ -70,9 +70,9 @@ export interface AdminInvoicesPageProps {
 }
 
 const statusBadge: Record<string, string> = {
-  draft: "bg-gray-100 text-gray-700",
-  sent: "bg-blue-100 text-blue-700",
-  paid: "bg-green-100 text-green-700",
+  draft: "bg-dark-600 text-white",
+  sent: "bg-blue-900/40 text-blue-400",
+  paid: "bg-green-900/40 text-green-400",
 };
 
 const emptyLineItem: LineItem = {
@@ -537,7 +537,7 @@ export function AdminInvoicesPage({
       <div className="space-y-6">
         {/* Header */}
         <div className="flex justify-between items-center">
-          <p className="text-sm text-gray-500">
+          <p className="text-sm text-light-400">
             {invoices.length} invoice{invoices.length !== 1 ? "s" : ""}
           </p>
           <div className="flex items-center gap-2">
@@ -552,7 +552,7 @@ export function AdminInvoicesPage({
             <button
               onClick={() => fileInputRef.current?.click()}
               disabled={uploading}
-              className="px-4 py-2 border border-gray-300 text-sm font-medium rounded-lg hover:bg-gray-50 disabled:opacity-50 flex items-center gap-2"
+              className="px-4 py-2 border border-dark-600 text-sm font-medium rounded-lg hover:bg-dark-600 disabled:opacity-50 flex items-center gap-2"
             >
               {uploading ? (
                 <RiLoader4Line className="w-4 h-4 animate-spin" />
@@ -564,7 +564,7 @@ export function AdminInvoicesPage({
             {/* Create Invoice */}
             <button
               onClick={() => setShowForm(!showForm)}
-              className="px-4 py-2 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-800"
+              className="px-4 py-2 bg-dark-600 text-white text-sm font-medium rounded-lg hover:bg-dark-600"
             >
               {showForm ? "Cancel" : "Create Invoice"}
             </button>
@@ -573,9 +573,9 @@ export function AdminInvoicesPage({
 
         {/* Upload Error */}
         {uploadError && (
-          <div className="bg-red-50 border border-red-200 rounded-lg p-3 text-sm text-red-700 flex items-center justify-between">
+          <div className="bg-red-950/40 border border-red-800 rounded-lg p-3 text-sm text-red-400 flex items-center justify-between">
             <span>{uploadError}</span>
-            <button onClick={() => setUploadError("")} className="text-red-400 hover:text-red-600">
+            <button onClick={() => setUploadError("")} className="text-red-400 hover:text-red-400">
               <RiCloseLine className="w-4 h-4" />
             </button>
           </div>
@@ -583,15 +583,15 @@ export function AdminInvoicesPage({
 
         {/* Create Invoice Form */}
         {showForm && (
-          <div className="bg-white rounded-lg border border-gray-200 p-6 space-y-6">
+          <div className="bg-dark-400 rounded-lg border border-dark-600 p-6 space-y-6">
             <div className="flex items-center justify-between">
-              <h2 className="text-lg font-semibold text-gray-900">
+              <h2 className="text-lg font-semibold text-white">
                 New Invoice
               </h2>
               {/* AI Edit Button */}
               <button
                 onClick={() => setShowAIEdit(true)}
-                className="px-3 py-1.5 text-xs font-medium border border-purple-300 text-purple-600 rounded-lg hover:bg-purple-50 flex items-center gap-1.5"
+                className="px-3 py-1.5 text-xs font-medium border border-purple-800 text-purple-400 rounded-lg hover:bg-purple-950/40 flex items-center gap-1.5"
               >
                 <RiSparklingLine className="w-3.5 h-3.5" />
                 Edit with AI
@@ -601,46 +601,46 @@ export function AdminInvoicesPage({
             {/* Client Info */}
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-white mb-1">
                   Client Name *
                 </label>
                 <input
                   value={clientName}
                   onChange={(e) => setClientName(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
+                  className="w-full px-3 py-2 border border-dark-600 rounded-lg text-sm"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-white mb-1">
                   Client Email
                 </label>
                 <input
                   value={clientEmail}
                   onChange={(e) => setClientEmail(e.target.value)}
                   type="email"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
+                  className="w-full px-3 py-2 border border-dark-600 rounded-lg text-sm"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-white mb-1">
                   Client Address
                 </label>
                 <textarea
                   value={clientAddress}
                   onChange={(e) => setClientAddress(e.target.value)}
                   rows={2}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
+                  className="w-full px-3 py-2 border border-dark-600 rounded-lg text-sm"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-white mb-1">
                   Due Date
                 </label>
                 <input
                   value={dueDate}
                   onChange={(e) => setDueDate(e.target.value)}
                   type="date"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
+                  className="w-full px-3 py-2 border border-dark-600 rounded-lg text-sm"
                 />
               </div>
             </div>
@@ -648,14 +648,14 @@ export function AdminInvoicesPage({
             {/* Line Items */}
             <div>
               <div className="flex items-center justify-between mb-3">
-                <h3 className="text-sm font-semibold text-gray-900">
+                <h3 className="text-sm font-semibold text-white">
                   Line Items
                 </h3>
                 <div className="flex gap-2">
                   {uninvoicedEntries.length > 0 && (
                     <button
                       onClick={importTimeEntries}
-                      className="text-xs px-3 py-1 border border-blue-300 text-blue-600 rounded-lg hover:bg-blue-50"
+                      className="text-xs px-3 py-1 border border-blue-800 text-blue-400 rounded-lg hover:bg-blue-950/40"
                     >
                       Import from Time Entries ({uninvoicedEntries.length}{" "}
                       tickets)
@@ -665,30 +665,30 @@ export function AdminInvoicesPage({
                     onClick={() =>
                       setLineItems([...lineItems, { ...emptyLineItem }])
                     }
-                    className="text-xs px-3 py-1 border border-gray-300 rounded-lg hover:bg-gray-50"
+                    className="text-xs px-3 py-1 border border-dark-600 rounded-lg hover:bg-dark-600"
                   >
                     + Add Line Item
                   </button>
                 </div>
               </div>
 
-              <div className="border border-gray-200 rounded-lg overflow-hidden">
+              <div className="border border-dark-600 rounded-lg overflow-hidden">
                 <table className="w-full">
                   <thead>
-                    <tr className="bg-gray-50 border-b border-gray-200">
-                      <th className="text-left px-3 py-2 text-xs font-medium text-gray-500">
+                    <tr className="bg-dark-400 border-b border-dark-600">
+                      <th className="text-left px-3 py-2 text-xs font-medium text-light-400">
                         Description
                       </th>
-                      <th className="text-left px-3 py-2 text-xs font-medium text-gray-500 w-24">
+                      <th className="text-left px-3 py-2 text-xs font-medium text-light-400 w-24">
                         Type
                       </th>
-                      <th className="text-right px-3 py-2 text-xs font-medium text-gray-500 w-24">
+                      <th className="text-right px-3 py-2 text-xs font-medium text-light-400 w-24">
                         Qty/Hrs
                       </th>
-                      <th className="text-right px-3 py-2 text-xs font-medium text-gray-500 w-24">
+                      <th className="text-right px-3 py-2 text-xs font-medium text-light-400 w-24">
                         Rate ($)
                       </th>
-                      <th className="text-right px-3 py-2 text-xs font-medium text-gray-500 w-24">
+                      <th className="text-right px-3 py-2 text-xs font-medium text-light-400 w-24">
                         Amount
                       </th>
                       <th className="w-10" />
@@ -696,7 +696,7 @@ export function AdminInvoicesPage({
                   </thead>
                   <tbody>
                     {lineItems.map((item, i) => (
-                      <tr key={i} className="border-b border-gray-100">
+                      <tr key={i} className="border-b border-dark-600">
                         <td className="px-3 py-2">
                           <input
                             value={item.description}
@@ -704,7 +704,7 @@ export function AdminInvoicesPage({
                               updateLineItem(i, "description", e.target.value)
                             }
                             placeholder="Description"
-                            className="w-full px-2 py-1 border border-gray-200 rounded text-sm"
+                            className="w-full px-2 py-1 border border-dark-600 rounded text-sm"
                           />
                         </td>
                         <td className="px-3 py-2">
@@ -713,7 +713,7 @@ export function AdminInvoicesPage({
                             onChange={(e) =>
                               updateLineItem(i, "type", e.target.value)
                             }
-                            className="w-full px-2 py-1 border border-gray-200 rounded text-sm"
+                            className="w-full px-2 py-1 border border-dark-600 rounded text-sm"
                           >
                             <option value="hourly">Hourly</option>
                             <option value="fixed">Fixed</option>
@@ -731,7 +731,7 @@ export function AdminInvoicesPage({
                             }
                             type="number"
                             step="0.25"
-                            className="w-full px-2 py-1 border border-gray-200 rounded text-sm text-right"
+                            className="w-full px-2 py-1 border border-dark-600 rounded text-sm text-right"
                           />
                         </td>
                         <td className="px-3 py-2">
@@ -746,7 +746,7 @@ export function AdminInvoicesPage({
                             }
                             type="number"
                             step="0.01"
-                            className="w-full px-2 py-1 border border-gray-200 rounded text-sm text-right"
+                            className="w-full px-2 py-1 border border-dark-600 rounded text-sm text-right"
                           />
                         </td>
                         <td className="px-3 py-2 text-right text-sm font-medium">
@@ -757,7 +757,7 @@ export function AdminInvoicesPage({
                             onClick={() =>
                               setLineItems(lineItems.filter((_, j) => j !== i))
                             }
-                            className="text-red-400 hover:text-red-600 text-sm"
+                            className="text-red-400 hover:text-red-400 text-sm"
                           >
                             X
                           </button>
@@ -773,11 +773,11 @@ export function AdminInvoicesPage({
             <div className="flex justify-end">
               <div className="w-64 space-y-2">
                 <div className="flex justify-between text-sm">
-                  <span className="text-gray-500">Subtotal</span>
+                  <span className="text-light-400">Subtotal</span>
                   <span className="font-medium">${subtotal.toFixed(2)}</span>
                 </div>
                 <div className="flex items-center justify-between text-sm gap-2">
-                  <span className="text-gray-500">Tax</span>
+                  <span className="text-light-400">Tax</span>
                   <div className="flex items-center gap-1">
                     <input
                       value={taxRate || ""}
@@ -786,15 +786,15 @@ export function AdminInvoicesPage({
                       }
                       type="number"
                       step="0.1"
-                      className="w-16 px-2 py-1 border border-gray-200 rounded text-sm text-right"
+                      className="w-16 px-2 py-1 border border-dark-600 rounded text-sm text-right"
                     />
-                    <span className="text-gray-500">%</span>
+                    <span className="text-light-400">%</span>
                     <span className="ml-2 font-medium">
                       ${taxAmount.toFixed(2)}
                     </span>
                   </div>
                 </div>
-                <div className="flex justify-between text-sm font-bold border-t border-gray-200 pt-2">
+                <div className="flex justify-between text-sm font-bold border-t border-dark-600 pt-2">
                   <span>Total</span>
                   <span>${total.toFixed(2)}</span>
                 </div>
@@ -803,7 +803,7 @@ export function AdminInvoicesPage({
 
             {/* Notes */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-white mb-1">
                 Notes
               </label>
               <textarea
@@ -811,7 +811,7 @@ export function AdminInvoicesPage({
                 onChange={(e) => setNotes(e.target.value)}
                 rows={3}
                 placeholder="Payment terms, additional notes..."
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
+                className="w-full px-3 py-2 border border-dark-600 rounded-lg text-sm"
               />
             </div>
 
@@ -820,13 +820,13 @@ export function AdminInvoicesPage({
               <button
                 onClick={createInvoice}
                 disabled={!clientName.trim() || saving}
-                className="px-4 py-2 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-800 disabled:opacity-50"
+                className="px-4 py-2 bg-dark-600 text-white text-sm font-medium rounded-lg hover:bg-dark-600 disabled:opacity-50"
               >
                 {saving ? "Creating..." : "Create Invoice"}
               </button>
               <button
                 onClick={resetForm}
-                className="px-4 py-2 border border-gray-300 text-sm font-medium rounded-lg hover:bg-gray-50"
+                className="px-4 py-2 border border-dark-600 text-sm font-medium rounded-lg hover:bg-dark-600"
               >
                 Cancel
               </button>
@@ -847,12 +847,12 @@ export function AdminInvoicesPage({
                 initial={{ opacity: 0, scale: 0.95, y: 10 }}
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.95, y: 10 }}
-                className="bg-white rounded-xl shadow-xl w-full max-w-lg mx-4"
+                className="bg-dark-400 rounded-xl shadow-xl w-full max-w-lg mx-4"
               >
-                <div className="flex items-center justify-between p-6 border-b border-gray-200">
+                <div className="flex items-center justify-between p-6 border-b border-dark-600">
                   <div className="flex items-center gap-2">
                     <RiSparklingLine className="w-5 h-5 text-purple-500" />
-                    <h2 className="text-lg font-semibold text-gray-900">Edit Invoice with AI</h2>
+                    <h2 className="text-lg font-semibold text-white">Edit Invoice with AI</h2>
                   </div>
                   <button
                     onClick={() => {
@@ -864,14 +864,14 @@ export function AdminInvoicesPage({
                         setListening(false);
                       }
                     }}
-                    className="text-gray-400 hover:text-gray-600"
+                    className="text-light-400 hover:text-light-400"
                   >
                     <RiCloseLine className="w-5 h-5" />
                   </button>
                 </div>
 
                 <div className="p-6 space-y-4">
-                  <p className="text-sm text-gray-500">
+                  <p className="text-sm text-light-400">
                     Describe the changes you want to make. Use the mic to dictate your prompt.
                   </p>
 
@@ -885,8 +885,8 @@ export function AdminInvoicesPage({
                       rows={4}
                       className={`w-full px-3 py-2 pr-12 border rounded-lg text-sm resize-none overflow-hidden transition-all ${
                         listening
-                          ? "ring-2 ring-red-400 border-red-300 text-transparent caret-transparent"
-                          : "border-gray-300 focus:ring-2 focus:ring-purple-300 focus:border-purple-300"
+                          ? "ring-2 ring-red-400 border-red-800 text-transparent caret-transparent"
+                          : "border-dark-600 focus:ring-2 focus:ring-purple-300 focus:border-purple-800"
                       }`}
                       placeholder={
                         listening
@@ -897,7 +897,7 @@ export function AdminInvoicesPage({
 
                     {/* Voice typewriter overlay */}
                     {listening && aiPrompt && (
-                      <div className="absolute inset-0 px-3 py-2 pr-12 text-sm text-gray-900 pointer-events-none whitespace-pre-wrap break-words overflow-hidden">
+                      <div className="absolute inset-0 px-3 py-2 pr-12 text-sm text-white pointer-events-none whitespace-pre-wrap break-words overflow-hidden">
                         {aiPrompt.split("").map((char, i) => {
                           if (i < voiceBaseLengthRef.current) {
                             return <span key={i}>{char}</span>;
@@ -934,8 +934,8 @@ export function AdminInvoicesPage({
                       disabled={aiLoading || isPolishing}
                       className={`absolute top-2 right-2 p-1.5 rounded-lg transition-all disabled:opacity-40 ${
                         listening
-                          ? "bg-red-100 text-red-500"
-                          : "bg-purple-100 text-purple-500 hover:bg-purple-200"
+                          ? "bg-red-900/40 text-red-500"
+                          : "bg-purple-900/40 text-purple-500 hover:bg-dark-600"
                       }`}
                       title={listening ? "Stop listening" : "Voice input"}
                     >
@@ -969,7 +969,7 @@ export function AdminInvoicesPage({
                         initial={{ opacity: 0, height: 0 }}
                         animate={{ opacity: 1, height: "auto" }}
                         exit={{ opacity: 0, height: 0 }}
-                        className="flex items-center gap-2 text-xs text-purple-600"
+                        className="flex items-center gap-2 text-xs text-purple-400"
                       >
                         <RiLoader4Line className="w-3 h-3 animate-spin" />
                         <span>Polishing prompt...</span>
@@ -980,11 +980,11 @@ export function AdminInvoicesPage({
                   {/* Provider selector + Edit button */}
                   <div className="flex items-end gap-3">
                     <div className="w-48 space-y-1">
-                      <label className="text-xs font-medium text-gray-500">AI Provider</label>
+                      <label className="text-xs font-medium text-light-400">AI Provider</label>
                       <select
                         value={aiProvider}
                         onChange={(e) => setAIProvider(e.target.value)}
-                        className="w-full px-2 py-1.5 text-xs border border-gray-300 rounded-lg"
+                        className="w-full px-2 py-1.5 text-xs border border-dark-600 rounded-lg"
                       >
                         {aiProviders.filter((p) => p.available).map((p) => (
                           <option key={p.name} value={p.name}>
@@ -1012,7 +1012,7 @@ export function AdminInvoicesPage({
 
                   {/* AI Error */}
                   {aiError && (
-                    <div className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg p-3">
+                    <div className="text-sm text-red-400 bg-red-950/40 border border-red-800 rounded-lg p-3">
                       {aiError}
                     </div>
                   )}
@@ -1023,46 +1023,46 @@ export function AdminInvoicesPage({
         </AnimatePresence>
 
         {/* Invoice List */}
-        <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+        <div className="bg-dark-400 rounded-lg border border-dark-600 overflow-hidden">
           <table className="w-full">
             <thead>
-              <tr className="bg-gray-50 border-b border-gray-200">
-                <th className="text-left px-4 py-3 text-xs font-medium text-gray-500 uppercase">
+              <tr className="bg-dark-400 border-b border-dark-600">
+                <th className="text-left px-4 py-3 text-xs font-medium text-light-400 uppercase">
                   Invoice #
                 </th>
-                <th className="text-left px-4 py-3 text-xs font-medium text-gray-500 uppercase">
+                <th className="text-left px-4 py-3 text-xs font-medium text-light-400 uppercase">
                   Date
                 </th>
-                <th className="text-left px-4 py-3 text-xs font-medium text-gray-500 uppercase">
+                <th className="text-left px-4 py-3 text-xs font-medium text-light-400 uppercase">
                   Period
                 </th>
-                <th className="text-left px-4 py-3 text-xs font-medium text-gray-500 uppercase">
+                <th className="text-left px-4 py-3 text-xs font-medium text-light-400 uppercase">
                   Client
                 </th>
-                <th className="text-left px-4 py-3 text-xs font-medium text-gray-500 uppercase">
+                <th className="text-left px-4 py-3 text-xs font-medium text-light-400 uppercase">
                   Hours
                 </th>
-                <th className="text-left px-4 py-3 text-xs font-medium text-gray-500 uppercase">
+                <th className="text-left px-4 py-3 text-xs font-medium text-light-400 uppercase">
                   Status
                 </th>
-                <th className="text-right px-4 py-3 text-xs font-medium text-gray-500 uppercase">
+                <th className="text-right px-4 py-3 text-xs font-medium text-light-400 uppercase">
                   Total
                 </th>
-                <th className="text-right px-4 py-3 text-xs font-medium text-gray-500 uppercase">
+                <th className="text-right px-4 py-3 text-xs font-medium text-light-400 uppercase">
                   Actions
                 </th>
               </tr>
             </thead>
             <tbody>
               {invoices.map((inv) => (
-                <tr key={inv.id} className="border-b border-gray-100 hover:bg-gray-50">
-                  <td className="px-4 py-3 text-sm font-medium text-gray-900">
+                <tr key={inv.id} className="border-b border-dark-600 hover:bg-dark-600">
+                  <td className="px-4 py-3 text-sm font-medium text-secondary">
                     {inv.invoiceNumber}
                   </td>
-                  <td className="px-4 py-3 text-sm text-gray-500">
+                  <td className="px-4 py-3 text-sm text-light-400">
                     {new Date(inv.date).toLocaleDateString()}
                   </td>
-                  <td className="px-4 py-3 text-sm text-gray-500 whitespace-nowrap">
+                  <td className="px-4 py-3 text-sm text-light-400 whitespace-nowrap">
                     {inv.periodStart && inv.periodEnd ? (
                       <>
                         {new Date(inv.periodStart).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
@@ -1073,15 +1073,15 @@ export function AdminInvoicesPage({
                       "—"
                     )}
                   </td>
-                  <td className="px-4 py-3 text-sm text-gray-900">
+                  <td className="px-4 py-3 text-sm text-white">
                     {inv.clientName}
                   </td>
-                  <td className="px-4 py-3 text-sm text-gray-500 whitespace-nowrap">
+                  <td className="px-4 py-3 text-sm text-light-400 whitespace-nowrap">
                     {inv.totalHours ? (
                       <span>
                         {inv.totalHours} hrs
                         {inv.hourlyRate ? (
-                          <span className="text-gray-400"> @ ${inv.hourlyRate}/hr</span>
+                          <span className="text-light-400"> @ ${inv.hourlyRate}/hr</span>
                         ) : null}
                       </span>
                     ) : (
@@ -1099,7 +1099,7 @@ export function AdminInvoicesPage({
                       <option value="paid">Paid</option>
                     </select>
                   </td>
-                  <td className="px-4 py-3 text-sm text-right font-medium text-gray-900">
+                  <td className="px-4 py-3 text-sm text-right font-medium text-white">
                     ${inv.total.toFixed(2)}
                   </td>
                   <td className="px-4 py-3 text-right">
@@ -1111,13 +1111,13 @@ export function AdminInvoicesPage({
                             "_blank"
                           )
                         }
-                        className="text-xs px-2 py-1 border border-gray-300 rounded hover:bg-gray-50"
+                        className="text-xs px-2 py-1 border border-dark-600 rounded hover:bg-dark-600"
                       >
                         PDF
                       </button>
                       <button
                         onClick={() => deleteInvoice(inv.id)}
-                        className="text-xs px-2 py-1 text-red-600 border border-red-200 rounded hover:bg-red-50"
+                        className="text-xs px-2 py-1 text-red-400 border border-red-800 rounded hover:bg-red-950/40"
                       >
                         Delete
                       </button>
@@ -1129,7 +1129,7 @@ export function AdminInvoicesPage({
                 <tr>
                   <td
                     colSpan={8}
-                    className="px-4 py-8 text-center text-sm text-gray-500"
+                    className="px-4 py-8 text-center text-sm text-light-400"
                   >
                     No invoices yet. Create your first invoice above.
                   </td>

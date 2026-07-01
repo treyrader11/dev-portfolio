@@ -58,21 +58,21 @@ export default function AdminSettings({
     <AdminLayout title="Settings">
       <div className="max-w-3xl space-y-8">
         {/* Meta Descriptions */}
-        <div className="bg-white rounded-lg border border-gray-200 p-6">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">
+        <div className="bg-dark-400 rounded-lg border border-dark-600 p-6">
+          <h2 className="text-lg font-semibold text-white mb-4">
             SEO Meta Descriptions
           </h2>
           <div className="space-y-4">
             {(Object.keys(meta) as Array<keyof MetaDescriptions>).map((key) => (
               <div key={key}>
-                <label className="block text-sm font-medium text-gray-700 mb-1 capitalize">
+                <label className="block text-sm font-medium text-white mb-1 capitalize">
                   {key}
                 </label>
                 <textarea
                   value={meta[key]}
                   onChange={(e) => setMeta({ ...meta, [key]: e.target.value })}
                   rows={2}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
+                  className="w-full px-3 py-2 border border-dark-600 rounded-lg text-sm"
                 />
               </div>
             ))}
@@ -80,27 +80,27 @@ export default function AdminSettings({
           <button
             onClick={() => saveConfig("metaDescriptions", meta)}
             disabled={saving === "metaDescriptions"}
-            className="mt-4 px-4 py-2 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-800 disabled:opacity-50"
+            className="mt-4 px-4 py-2 bg-dark-600 text-white text-sm font-medium rounded-lg hover:bg-dark-600 disabled:opacity-50"
           >
             {saving === "metaDescriptions" ? "Saving..." : "Save Meta"}
           </button>
         </div>
 
         {/* CTA Texts */}
-        <div className="bg-white rounded-lg border border-gray-200 p-6">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">
+        <div className="bg-dark-400 rounded-lg border border-dark-600 p-6">
+          <h2 className="text-lg font-semibold text-white mb-4">
             Call-to-Action Texts
           </h2>
           <div className="grid grid-cols-2 gap-4">
             {(Object.keys(cta) as Array<keyof CtaTexts>).map((key) => (
               <div key={key}>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-white mb-1">
                   {key.replace(/([A-Z])/g, " $1").trim()}
                 </label>
                 <input
                   value={cta[key]}
                   onChange={(e) => setCta({ ...cta, [key]: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
+                  className="w-full px-3 py-2 border border-dark-600 rounded-lg text-sm"
                 />
               </div>
             ))}
@@ -108,21 +108,21 @@ export default function AdminSettings({
           <button
             onClick={() => saveConfig("ctaTexts", cta)}
             disabled={saving === "ctaTexts"}
-            className="mt-4 px-4 py-2 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-800 disabled:opacity-50"
+            className="mt-4 px-4 py-2 bg-dark-600 text-white text-sm font-medium rounded-lg hover:bg-dark-600 disabled:opacity-50"
           >
             {saving === "ctaTexts" ? "Saving..." : "Save CTAs"}
           </button>
         </div>
 
         {/* Tag Colors */}
-        <div className="bg-white rounded-lg border border-gray-200 p-6">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">
+        <div className="bg-dark-400 rounded-lg border border-dark-600 p-6">
+          <h2 className="text-lg font-semibold text-white mb-4">
             Tag Colors
           </h2>
           <div className="space-y-2">
             {Object.entries(tagColors).map(([tag, color]) => (
               <div key={tag} className="flex items-center gap-3">
-                <span className="text-sm font-medium text-gray-700 w-32">
+                <span className="text-sm font-medium text-white w-32">
                   {tag}
                 </span>
                 <input
@@ -130,10 +130,10 @@ export default function AdminSettings({
                   onChange={(e) =>
                     setTagColors({ ...tagColors, [tag]: e.target.value })
                   }
-                  className="flex-1 px-3 py-1.5 border border-gray-300 rounded-lg text-sm"
+                  className="flex-1 px-3 py-1.5 border border-dark-600 rounded-lg text-sm"
                 />
                 <div
-                  className="w-8 h-8 rounded border border-gray-200"
+                  className="w-8 h-8 rounded border border-dark-600"
                   style={{ backgroundColor: color }}
                 />
                 <button
@@ -155,7 +155,7 @@ export default function AdminSettings({
                 const name = prompt("Tag name:");
                 if (name) setTagColors({ ...tagColors, [name]: "#6b7280" });
               }}
-              className="text-sm text-blue-600"
+              className="text-sm text-blue-400"
             >
               + Add tag color
             </button>
@@ -163,31 +163,31 @@ export default function AdminSettings({
           <button
             onClick={() => saveConfig("tagColors", tagColors)}
             disabled={saving === "tagColors"}
-            className="mt-4 px-4 py-2 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-800 disabled:opacity-50"
+            className="mt-4 px-4 py-2 bg-dark-600 text-white text-sm font-medium rounded-lg hover:bg-dark-600 disabled:opacity-50"
           >
             {saving === "tagColors" ? "Saving..." : "Save Tag Colors"}
           </button>
         </div>
 
         {/* Jira Integration */}
-        <div className="bg-white rounded-lg border border-gray-200 p-6">
-          <h2 className="text-lg font-semibold text-gray-900 mb-1">
+        <div className="bg-dark-400 rounded-lg border border-dark-600 p-6">
+          <h2 className="text-lg font-semibold text-white mb-1">
             Jira Integration
           </h2>
-          <p className="text-sm text-gray-500 mb-4">
+          <p className="text-sm text-light-400 mb-4">
             Connect to Jira Cloud to fetch tickets and track time.{" "}
             <a
               href="https://id.atlassian.com/manage-profile/security/api-tokens"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-blue-600 hover:underline"
+              className="text-blue-400 hover:underline"
             >
               Generate an API token here
             </a>
           </p>
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-white mb-1">
                 Jira Domain
               </label>
               <div className="flex items-center gap-1">
@@ -197,13 +197,13 @@ export default function AdminSettings({
                     setJira({ ...jira, domain: e.target.value })
                   }
                   placeholder="yourcompany"
-                  className="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm"
+                  className="flex-1 px-3 py-2 border border-dark-600 rounded-lg text-sm"
                 />
-                <span className="text-sm text-gray-500">.atlassian.net</span>
+                <span className="text-sm text-light-400">.atlassian.net</span>
               </div>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-white mb-1">
                 Email
               </label>
               <input
@@ -213,11 +213,11 @@ export default function AdminSettings({
                 }
                 type="email"
                 placeholder="you@example.com"
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
+                className="w-full px-3 py-2 border border-dark-600 rounded-lg text-sm"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-white mb-1">
                 API Token
               </label>
               <input
@@ -227,7 +227,7 @@ export default function AdminSettings({
                 }
                 type="password"
                 placeholder="Your Jira API token"
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
+                className="w-full px-3 py-2 border border-dark-600 rounded-lg text-sm"
               />
             </div>
           </div>
@@ -235,7 +235,7 @@ export default function AdminSettings({
             <button
               onClick={() => saveConfig("jiraCredentials", jira)}
               disabled={saving === "jiraCredentials"}
-              className="px-4 py-2 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-800 disabled:opacity-50"
+              className="px-4 py-2 bg-dark-600 text-white text-sm font-medium rounded-lg hover:bg-dark-600 disabled:opacity-50"
             >
               {saving === "jiraCredentials" ? "Saving..." : "Save Jira Settings"}
             </button>
@@ -258,13 +258,13 @@ export default function AdminSettings({
                 }
               }}
               disabled={!jira.domain || !jira.email || !jira.apiToken}
-              className="px-4 py-2 border border-gray-300 text-sm font-medium rounded-lg hover:bg-gray-50 disabled:opacity-50"
+              className="px-4 py-2 border border-dark-600 text-sm font-medium rounded-lg hover:bg-dark-600 disabled:opacity-50"
             >
               Test Connection
             </button>
             {jiraTestResult && (
               <span
-                className={`text-sm ${jiraTestResult.includes("successful") ? "text-green-600" : jiraTestResult === "Testing..." ? "text-gray-500" : "text-red-600"}`}
+                className={`text-sm ${jiraTestResult.includes("successful") ? "text-green-400" : jiraTestResult === "Testing..." ? "text-light-400" : "text-red-400"}`}
               >
                 {jiraTestResult}
               </span>
@@ -274,7 +274,7 @@ export default function AdminSettings({
 
         {message && (
           <p
-            className={`text-sm ${message.includes("saved") ? "text-green-600" : "text-red-600"}`}
+            className={`text-sm ${message.includes("saved") ? "text-green-400" : "text-red-400"}`}
           >
             {message}
           </p>

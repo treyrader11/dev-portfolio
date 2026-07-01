@@ -82,17 +82,17 @@ export function AdminExperiencesPage({ experiences: initial }: Props) {
     <AdminLayout title="Experiences">
       <div className="max-w-4xl">
         <div className="flex justify-between items-center mb-6">
-          <p className="text-sm text-gray-500">{items.length} experiences</p>
+          <p className="text-sm text-light-400">{items.length} experiences</p>
           <button
             onClick={startCreate}
-            className="px-4 py-2 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-800 transition-colors"
+            className="px-4 py-2 bg-dark-600 text-white text-sm font-medium rounded-lg hover:bg-dark-600 transition-colors"
           >
             Add Experience
           </button>
         </div>
 
         {showForm && (
-          <div className="bg-white rounded-lg border border-gray-200 p-6 mb-6">
+          <div className="bg-dark-400 rounded-lg border border-dark-600 p-6 mb-6">
             <h3 className="text-lg font-semibold mb-4">
               {creating ? "New Experience" : "Edit Experience"}
             </h3>
@@ -134,7 +134,7 @@ export function AdminExperiencesPage({ experiences: initial }: Props) {
               />
             </div>
             <div className="mt-4">
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-white mb-1">
                 Points
               </label>
               {form.points.map((point, i) => (
@@ -146,7 +146,7 @@ export function AdminExperiencesPage({ experiences: initial }: Props) {
                       next[i] = e.target.value;
                       setForm({ ...form, points: next });
                     }}
-                    className="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm"
+                    className="flex-1 px-3 py-2 border border-dark-600 rounded-lg text-sm"
                   />
                   <button
                     onClick={() =>
@@ -165,7 +165,7 @@ export function AdminExperiencesPage({ experiences: initial }: Props) {
                 onClick={() =>
                   setForm({ ...form, points: [...form.points, ""] })
                 }
-                className="text-sm text-blue-600"
+                className="text-sm text-blue-400"
               >
                 + Add point
               </button>
@@ -174,7 +174,7 @@ export function AdminExperiencesPage({ experiences: initial }: Props) {
               <button
                 onClick={creating ? handleCreate : handleUpdate}
                 disabled={saving}
-                className="px-4 py-2 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-800 disabled:opacity-50"
+                className="px-4 py-2 bg-dark-600 text-white text-sm font-medium rounded-lg hover:bg-dark-600 disabled:opacity-50"
               >
                 {saving ? "Saving..." : creating ? "Create" : "Update"}
               </button>
@@ -183,7 +183,7 @@ export function AdminExperiencesPage({ experiences: initial }: Props) {
                   setCreating(false);
                   setEditing(null);
                 }}
-                className="px-4 py-2 text-gray-600 text-sm"
+                className="px-4 py-2 text-light-400 text-sm"
               >
                 Cancel
               </button>
@@ -196,27 +196,27 @@ export function AdminExperiencesPage({ experiences: initial }: Props) {
           {items.map((item) => (
             <div
               key={item.id}
-              className="bg-white rounded-lg border border-gray-200 p-4 flex justify-between items-start"
+              className="bg-dark-400 rounded-lg border border-dark-600 p-4 flex justify-between items-start"
             >
               <div>
-                <h3 className="font-medium text-gray-900">{item.title}</h3>
-                <p className="text-sm text-gray-500">
+                <h3 className="font-medium text-secondary">{item.title}</h3>
+                <p className="text-sm text-light-400">
                   {item.company} &middot; {item.date}
                 </p>
-                <p className="text-xs text-gray-400 mt-1">
+                <p className="text-xs text-light-400 mt-1">
                   {item.points.length} points
                 </p>
               </div>
               <div className="flex gap-2">
                 <button
                   onClick={() => startEdit(item)}
-                  className="text-sm text-blue-600 hover:text-blue-800"
+                  className="text-sm text-blue-400 hover:text-blue-400"
                 >
                   Edit
                 </button>
                 <button
                   onClick={() => handleDelete(item.id)}
-                  className="text-sm text-red-600 hover:text-red-800"
+                  className="text-sm text-red-400 hover:text-red-400"
                 >
                   Delete
                 </button>
@@ -240,13 +240,13 @@ function Input({
 }) {
   return (
     <div>
-      <label className="block text-sm font-medium text-gray-700 mb-1">
+      <label className="block text-sm font-medium text-white mb-1">
         {label}
       </label>
       <input
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
+        className="w-full px-3 py-2 border border-dark-600 rounded-lg text-sm"
       />
     </div>
   );

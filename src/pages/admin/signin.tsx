@@ -9,16 +9,16 @@ export default function AdminSignIn() {
   const error = router.query.error as string | undefined;
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 text-gray-900 [color-scheme:light]">
-      <div className="bg-white p-8 rounded-xl shadow-lg max-w-md w-full text-center">
-        <h1 className="text-2xl font-bold text-gray-900 mb-2">Admin Panel</h1>
-        <p className="text-gray-500 mb-8">
+    <div className="min-h-screen flex items-center justify-center bg-dark-600 text-white [color-scheme:light]">
+      <div className="bg-dark-400 p-8 rounded-xl shadow-lg max-w-md w-full text-center">
+        <h1 className="text-2xl font-bold text-white mb-2">Admin Panel</h1>
+        <p className="text-light-400 mb-8">
           Sign in with your authorized Google account to access the admin
           dashboard.
         </p>
 
         {error && (
-          <div className="mb-6 p-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700">
+          <div className="mb-6 p-3 bg-red-950/40 border border-red-800 rounded-lg text-sm text-red-400">
             {error === "AccessDenied"
               ? "Access denied. Only authorized accounts can sign in."
               : "An error occurred during sign in. Please try again."}
@@ -27,7 +27,7 @@ export default function AdminSignIn() {
 
         <button
           onClick={() => signIn("google", { callbackUrl: "/admin" })}
-          className="w-full flex items-center justify-center gap-3 bg-white border border-gray-300 rounded-lg px-6 py-3 text-gray-700 hover:bg-gray-50 transition-colors font-medium"
+          className="w-full flex items-center justify-center gap-3 bg-dark-400 border border-dark-600 rounded-lg px-6 py-3 text-white hover:bg-dark-600 transition-colors font-medium"
         >
           <svg className="w-5 h-5" viewBox="0 0 24 24">
             <path

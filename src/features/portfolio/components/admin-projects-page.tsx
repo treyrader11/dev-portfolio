@@ -98,17 +98,17 @@ export function AdminProjectsPage({ projects: initial }: Props) {
     <AdminLayout title="Projects">
       <div className="max-w-4xl">
         <div className="flex justify-between items-center mb-6">
-          <p className="text-sm text-gray-500">{items.length} projects</p>
+          <p className="text-sm text-light-400">{items.length} projects</p>
           <button
             onClick={startCreate}
-            className="px-4 py-2 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-800 transition-colors"
+            className="px-4 py-2 bg-dark-600 text-white text-sm font-medium rounded-lg hover:bg-dark-600 transition-colors"
           >
             Add Project
           </button>
         </div>
 
         {showForm && (
-          <div className="bg-white rounded-lg border border-gray-200 p-6 mb-6">
+          <div className="bg-dark-400 rounded-lg border border-dark-600 p-6 mb-6">
             <h3 className="text-lg font-semibold mb-4">
               {creating ? "New Project" : "Edit Project"}
             </h3>
@@ -183,7 +183,7 @@ export function AdminProjectsPage({ projects: initial }: Props) {
               />
             </div>
             <div className="mt-4">
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-white mb-1">
                 Description
               </label>
               <textarea
@@ -192,7 +192,7 @@ export function AdminProjectsPage({ projects: initial }: Props) {
                   setForm({ ...form, description: e.target.value })
                 }
                 rows={4}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
+                className="w-full px-3 py-2 border border-dark-600 rounded-lg text-sm"
               />
             </div>
             <div className="grid grid-cols-2 gap-4 mt-4">
@@ -233,7 +233,7 @@ export function AdminProjectsPage({ projects: initial }: Props) {
               <button
                 onClick={creating ? handleCreate : handleUpdate}
                 disabled={saving}
-                className="px-4 py-2 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-800 disabled:opacity-50"
+                className="px-4 py-2 bg-dark-600 text-white text-sm font-medium rounded-lg hover:bg-dark-600 disabled:opacity-50"
               >
                 {saving ? "Saving..." : creating ? "Create" : "Update"}
               </button>
@@ -242,7 +242,7 @@ export function AdminProjectsPage({ projects: initial }: Props) {
                   setCreating(false);
                   setEditing(null);
                 }}
-                className="px-4 py-2 text-gray-600 text-sm"
+                className="px-4 py-2 text-light-400 text-sm"
               >
                 Cancel
               </button>
@@ -255,7 +255,7 @@ export function AdminProjectsPage({ projects: initial }: Props) {
           {items.map((item) => (
             <div
               key={item.id}
-              className="bg-white rounded-lg border border-gray-200 p-4 flex justify-between items-start"
+              className="bg-dark-400 rounded-lg border border-dark-600 p-4 flex justify-between items-start"
             >
               <div>
                 <div className="flex items-center gap-2">
@@ -263,26 +263,26 @@ export function AdminProjectsPage({ projects: initial }: Props) {
                     className="w-3 h-3 rounded-full"
                     style={{ backgroundColor: item.color }}
                   />
-                  <h3 className="font-medium text-gray-900">{item.title}</h3>
+                  <h3 className="font-medium text-secondary">{item.title}</h3>
                   {item.isPriority && (
-                    <span className="text-xs bg-yellow-100 text-yellow-800 px-2 py-0.5 rounded">
+                    <span className="text-xs bg-yellow-900/40 text-yellow-400 px-2 py-0.5 rounded">
                       Priority
                     </span>
                   )}
                   {item.isRecent && (
-                    <span className="text-xs bg-green-100 text-green-800 px-2 py-0.5 rounded">
+                    <span className="text-xs bg-green-900/40 text-green-400 px-2 py-0.5 rounded">
                       Recent
                     </span>
                   )}
                 </div>
-                <p className="text-sm text-gray-500 mt-1">
+                <p className="text-sm text-light-400 mt-1">
                   {item.category} &middot; {item.stack}
                 </p>
                 <div className="flex gap-1 mt-2">
                   {item.tags.slice(0, 4).map((tag) => (
                     <span
                       key={tag}
-                      className="text-xs bg-gray-100 text-gray-600 px-2 py-0.5 rounded"
+                      className="text-xs bg-dark-600 text-light-400 px-2 py-0.5 rounded"
                     >
                       {tag}
                     </span>
@@ -292,13 +292,13 @@ export function AdminProjectsPage({ projects: initial }: Props) {
               <div className="flex gap-2">
                 <button
                   onClick={() => startEdit(item)}
-                  className="text-sm text-blue-600 hover:text-blue-800"
+                  className="text-sm text-blue-400 hover:text-blue-400"
                 >
                   Edit
                 </button>
                 <button
                   onClick={() => handleDelete(item.id)}
-                  className="text-sm text-red-600 hover:text-red-800"
+                  className="text-sm text-red-400 hover:text-red-400"
                 >
                   Delete
                 </button>
@@ -322,13 +322,13 @@ function Input({
 }) {
   return (
     <div>
-      <label className="block text-sm font-medium text-gray-700 mb-1">
+      <label className="block text-sm font-medium text-white mb-1">
         {label}
       </label>
       <input
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
+        className="w-full px-3 py-2 border border-dark-600 rounded-lg text-sm"
       />
     </div>
   );
@@ -345,7 +345,7 @@ function ArrayField({
 }) {
   return (
     <div>
-      <label className="block text-sm font-medium text-gray-700 mb-1">
+      <label className="block text-sm font-medium text-white mb-1">
         {label}
       </label>
       {value.map((item, i) => (
@@ -357,7 +357,7 @@ function ArrayField({
               next[i] = e.target.value;
               onChange(next);
             }}
-            className="flex-1 px-3 py-1.5 border border-gray-300 rounded-lg text-sm"
+            className="flex-1 px-3 py-1.5 border border-dark-600 rounded-lg text-sm"
           />
           <button
             onClick={() => onChange(value.filter((_, j) => j !== i))}
@@ -369,7 +369,7 @@ function ArrayField({
       ))}
       <button
         onClick={() => onChange([...value, ""])}
-        className="text-sm text-blue-600"
+        className="text-sm text-blue-400"
       >
         + Add
       </button>

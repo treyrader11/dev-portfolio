@@ -77,11 +77,11 @@ export default function AdminDashboard({ counts }: Props) {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {sections.map((section) => (
           <Link key={section.href} href={section.href}>
-            <div className="bg-white rounded-lg border border-gray-200 p-6 hover:shadow-md transition-shadow h-full">
-              <h2 className="text-lg font-semibold text-gray-900">
+            <div className="bg-dark-400 rounded-lg border border-dark-600 p-6 hover:shadow-md transition-shadow h-full">
+              <h2 className="text-lg font-semibold text-white">
                 {section.title}
               </h2>
-              <p className="text-sm text-gray-500 mt-2">
+              <p className="text-sm text-light-400 mt-2">
                 {section.description}
               </p>
             </div>
@@ -93,11 +93,11 @@ export default function AdminDashboard({ counts }: Props) {
       {counts.experiences === 0 &&
         counts.projects === 0 &&
         counts.skills === 0 && (
-          <div className="mt-8 p-6 bg-blue-50 border border-blue-200 rounded-lg">
-            <h3 className="text-lg font-semibold text-blue-900">
+          <div className="mt-8 p-6 bg-blue-950/40 border border-blue-800 rounded-lg">
+            <h3 className="text-lg font-semibold text-blue-400">
               Database is empty
             </h3>
-            <p className="text-sm text-blue-700 mt-1">
+            <p className="text-sm text-blue-400 mt-1">
               Seed the database with your existing portfolio content to get
               started.
             </p>
@@ -108,7 +108,7 @@ export default function AdminDashboard({ counts }: Props) {
                   window.location.reload();
                 }
               }}
-              className="mt-4 px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors"
+              className="mt-4 px-4 py-2 bg-secondary text-white text-sm font-medium rounded-lg hover:bg-secondary/80 transition-colors"
             >
               Seed Database
             </button>
@@ -120,9 +120,9 @@ export default function AdminDashboard({ counts }: Props) {
 
 function StatCard({ label, count }: { label: string; count: number }) {
   return (
-    <div className="bg-white rounded-lg border border-gray-200 p-4">
-      <p className="text-sm text-gray-500">{label}</p>
-      <p className="text-2xl font-bold text-gray-900 mt-1">{count}</p>
+    <div className="bg-dark-400 rounded-lg border border-dark-600 p-4">
+      <p className="text-sm text-light-400">{label}</p>
+      <p className="text-2xl font-bold text-white mt-1">{count}</p>
     </div>
   );
 }
