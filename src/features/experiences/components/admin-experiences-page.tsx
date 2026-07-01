@@ -218,7 +218,10 @@ export function AdminExperiencesPage({ experiences: initial }: Props) {
         <ReorderableList
           items={items}
           getId={(item) => item.id}
-          onReorder={setItems}
+          onReorder={(next) => {
+            orderRef.current = next;
+            setItems(next);
+          }}
           onDragEnd={saveOrder}
           renderItem={(item) => (
             <div className="flex items-start justify-between gap-3">

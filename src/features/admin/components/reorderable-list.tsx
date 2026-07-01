@@ -1,31 +1,38 @@
 "use client";
 
-import { Reorder, useDragControls } from "framer-motion";
+import { motion, useDragControls, type PanInfo } from "framer-motion";
 import { RiDraggable } from "react-icons/ri";
 import { cn } from "@/lib/utils";
-import { useState, type ReactNode } from "react";
+import { useRef, useState, type ReactNode } from "react";
 
 interface ReorderableListProps<T> {
-  /** Ordered items. Reordering replaces this array (same object references). */
+  /** Ordered items. */
   items: T[];
-  /** Stable unique id for an item (used as React key). */
+  /** Stable unique id for an item (used as React key + drop calc). */
   getId: (item: T) => string;
-  /** Called continuously during a drag with the new order — wire to setState. */
+  /** Called with the new order after a drop reorders the list. */
   onReorder: (items: T[]) => void;
   /** Render the item's content (the card body). The drag handle is added for you. */
   renderItem: (item: T) => ReactNode;
-  /** Called once when a drag finishes — persist the order here. */
+  /** Called once after a drop that changed the order — persist here. */
   onDragEnd?: () => void;
   className?: string;
   /** Override the default card styling on each row. */
   itemClassName?: string;
 }
 
+// Shared card frame so the real card and the ghost placeholder match exactly
+// (same padding, border, radius, size → nothing jumps or reflows).
+const CARD_FRAME =
+  "flex items-start gap-3 rounded-lg border border-dark-600 bg-dark-400 p-4";
+
 /**
- * Generic drag-to-reorder list for admin pages. Dragging is restricted to the
- * grip handle (dragListener is off on the row, the handle starts the drag), so
- * buttons/links inside a row stay clickable. Reusable for any list with a
- * stable id — pass items, getId, renderItem, and persist in onDragEnd.
+ * Generic drag-to-reorder list for admin pages, with a Jira-style ghost.
+ *
+ * While a card is dragged it floats above (tilt + lift), and its original slot
+ * shows a dimmed ghost of the same card so the list never collapses or shifts.
+ * The list only reorders on drop. Fully Framer Motion — no HTML5 drag API.
+ * Reusable: pass items, getId, renderItem, onReorder, and persist in onDragEnd.
  */
 export function ReorderableList<T>({
   items,
@@ -36,91 +43,146 @@ export function ReorderableList<T>({
   className,
   itemClassName,
 }: ReorderableListProps<T>) {
+  const [draggingId, setDraggingId] = useState<string | null>(null);
+  const rowRefs = useRef(new Map<string, HTMLLIElement>());
+
+  function handleDrop(id: string, pointerY: number) {
+    setDraggingId(null);
+
+    const ids = items.map(getId);
+    const fromIndex = ids.indexOf(id);
+    if (fromIndex === -1) return;
+
+    // Insertion point: the first row whose vertical center is below the pointer.
+    let insertBefore = items.length;
+    for (let i = 0; i < ids.length; i++) {
+      const el = rowRefs.current.get(ids[i]);
+      if (!el) continue;
+      const rect = el.getBoundingClientRect();
+      if (pointerY < rect.top + rect.height / 2) {
+        insertBefore = i;
+        break;
+      }
+    }
+
+    const next = [...items];
+    const [moved] = next.splice(fromIndex, 1);
+    const insertIndex = insertBefore > fromIndex ? insertBefore - 1 : insertBefore;
+    next.splice(insertIndex, 0, moved);
+
+    const changed = next.some((it, i) => getId(it) !== ids[i]);
+    if (changed) {
+      onReorder(next);
+      onDragEnd?.();
+    }
+  }
+
   return (
-    <Reorder.Group
-      axis="y"
-      values={items}
-      onReorder={onReorder}
-      className={cn("space-y-3 list-none p-0 m-0", className)}
-    >
-      {items.map((item) => (
-        <ReorderableRow
-          key={getId(item)}
-          item={item}
-          onDragEnd={onDragEnd}
-          itemClassName={itemClassName}
-        >
-          {renderItem(item)}
-        </ReorderableRow>
-      ))}
-    </Reorder.Group>
+    <ul className={cn("m-0 list-none space-y-3 p-0", className)}>
+      {items.map((item) => {
+        const id = getId(item);
+        return (
+          <ReorderableRow
+            key={id}
+            content={renderItem(item)}
+            isDragging={draggingId === id}
+            itemClassName={itemClassName}
+            registerRef={(el) => {
+              if (el) rowRefs.current.set(id, el);
+              else rowRefs.current.delete(id);
+            }}
+            onDragStart={() => setDraggingId(id)}
+            onDrop={(pointerY) => handleDrop(id, pointerY)}
+          />
+        );
+      })}
+    </ul>
   );
 }
 
-interface RowProps<T> {
-  item: T;
-  children: ReactNode;
-  onDragEnd?: () => void;
+interface RowProps {
+  content: ReactNode;
+  isDragging: boolean;
   itemClassName?: string;
+  registerRef: (el: HTMLLIElement | null) => void;
+  onDragStart: () => void;
+  onDrop: (pointerY: number) => void;
 }
 
-function ReorderableRow<T>({
-  item,
-  children,
-  onDragEnd,
+function ReorderableRow({
+  content,
+  isDragging,
   itemClassName,
-}: RowProps<T>) {
+  registerRef,
+  onDragStart,
+  onDrop,
+}: RowProps) {
   const controls = useDragControls();
-  const [isDragging, setIsDragging] = useState(false);
 
   return (
-    <Reorder.Item
-      value={item}
-      dragListener={false}
-      dragControls={controls}
-      onDragStart={() => setIsDragging(true)}
-      onDragEnd={() => {
-        setIsDragging(false);
-        onDragEnd?.();
-      }}
-      // Jira-style tilt + lift while dragging. Driven by state via `animate`
-      // (not `whileDrag`) so the values reliably reset on drop — with Reorder's
-      // layout animation, whileDrag can otherwise leave the card stuck tilted.
-      // Reorder keeps the item in the flow, so the list never collapses/jumps.
-      animate={
-        isDragging
-          ? {
-              rotate: 3,
-              scale: 1.02,
-              boxShadow: "0px 16px 40px rgba(0,0,0,0.5)",
-              zIndex: 50,
-            }
-          : {
-              rotate: 0,
-              scale: 1,
-              boxShadow: "0px 0px 0px rgba(0,0,0,0)",
-              zIndex: 1,
-            }
-      }
-      transition={{ type: "spring", stiffness: 300, damping: 20 }}
-      className={cn(
-        "flex items-start gap-3 rounded-lg border border-dark-600 bg-dark-400 p-4",
-        isDragging && "cursor-grabbing",
-        itemClassName,
+    <li ref={registerRef} className="relative list-none">
+      {/* Ghost placeholder — dimmed copy in the original slot. Absolutely
+          positioned to fill the slot (the real card below reserves the height
+          via its in-flow transform), so the list never collapses. */}
+      {isDragging && (
+        <div
+          aria-hidden
+          className={cn(
+            CARD_FRAME,
+            "pointer-events-none absolute inset-0 !bg-dark-600 opacity-40",
+            itemClassName,
+          )}
+        >
+          <span className="-ml-1 mt-0.5 shrink-0 text-light-400">
+            <RiDraggable className="size-5" />
+          </span>
+          <div className="min-w-0 flex-1">{content}</div>
+        </div>
       )}
-    >
-      <button
-        type="button"
-        aria-label="Drag to reorder"
-        onPointerDown={(e) => controls.start(e)}
+
+      {/* The real card. A dragged transform keeps it in the flow (so the slot
+          height is reserved) while it visually floats above the ghost. */}
+      <motion.div
+        drag="y"
+        dragListener={false}
+        dragControls={controls}
+        dragSnapToOrigin
+        layout
+        onDragStart={onDragStart}
+        onDragEnd={(_, info: PanInfo) => onDrop(info.point.y)}
+        animate={
+          isDragging
+            ? {
+                rotate: 3,
+                scale: 1.02,
+                boxShadow: "0px 16px 40px rgba(0,0,0,0.5)",
+              }
+            : {
+                rotate: 0,
+                scale: 1,
+                boxShadow: "0px 0px 0px rgba(0,0,0,0)",
+              }
+        }
+        transition={{ type: "spring", stiffness: 300, damping: 20 }}
         className={cn(
-          "shrink-0 -ml-1 mt-0.5 touch-none text-light-400 transition-colors hover:text-white",
-          isDragging ? "cursor-grabbing" : "cursor-grab",
+          CARD_FRAME,
+          isDragging && "relative z-50 cursor-grabbing",
+          itemClassName,
         )}
       >
-        <RiDraggable className="size-5" />
-      </button>
-      <div className="min-w-0 flex-1">{children}</div>
-    </Reorder.Item>
+        <button
+          type="button"
+          aria-label="Drag to reorder"
+          onPointerDown={(e) => controls.start(e)}
+          className={cn(
+            "-ml-1 mt-0.5 shrink-0 touch-none text-light-400 transition-colors hover:text-white",
+            isDragging ? "cursor-grabbing" : "cursor-grab",
+          )}
+        >
+          <RiDraggable className="size-5" />
+        </button>
+        <div className="min-w-0 flex-1">{content}</div>
+      </motion.div>
+    </li>
   );
 }

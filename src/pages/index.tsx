@@ -56,7 +56,10 @@ const Home: NextPage<HomeProps> = ({ recentProjects }) => {
         <Hero className={cn("min-h-screen bg-dark")} />
         <Description className={cn("bg-white")} />
         <PositionProvider>
-          <RecentProjects className={cn("bg-white")} projects={recentProjects} />
+          <RecentProjects
+            className={cn("bg-white")}
+            projects={recentProjects}
+          />
         </PositionProvider>
 
         <Freelance className={cn("bg-white")} />

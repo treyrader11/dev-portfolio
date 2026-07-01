@@ -161,180 +161,182 @@ export default function AdminLayout({
         className,
       )}
     >
-      {/* SVG gradient definition for Jira icon */}
-      <svg width="0" height="0" className="absolute">
-        <defs>
-          <linearGradient
-            id="jira-gradient"
-            x1="0%"
-            y1="0%"
-            x2="100%"
-            y2="100%"
-          >
-            <stop offset="0%" stopColor="#2684FF" />
-            <stop offset="100%" stopColor="#3860F2" />
-          </linearGradient>
-        </defs>
-      </svg>
+      <div className={cn("max-w-5xl", "mx-auto", "w-full", "px-4")}>
+        {/* SVG gradient definition for Jira icon */}
+        <svg width="0" height="0" className="absolute">
+          <defs>
+            <linearGradient
+              id="jira-gradient"
+              x1="0%"
+              y1="0%"
+              x2="100%"
+              y2="100%"
+            >
+              <stop offset="0%" stopColor="#2684FF" />
+              <stop offset="100%" stopColor="#3860F2" />
+            </linearGradient>
+          </defs>
+        </svg>
 
-      {/* Toggle — identical markup to the public BurgerMenu (circle + bars that
+        {/* Toggle — identical markup to the public BurgerMenu (circle + bars that
           fold into an X). Stays on top of the drawer so it also closes it.
           Mobile: top-right; desktop: top-left. */}
-      <button
-        onClick={() => setSidebarOpen(!sidebarOpen)}
-        aria-label={sidebarOpen ? "Close menu" : "Open menu"}
-        className={cn(
-          "fixed",
-          "top-5",
-          "right-5",
-          "z-50",
-          "flex",
-          "size-16",
-          "items-center",
-          "justify-center",
-          "rounded-full",
-          "border",
-          "border-white/20",
-          "outline-none",
-          "transition-colors",
-          "duration-300",
-          sidebarOpen ? "bg-neutral-800" : "bg-dark",
-        )}
-      >
-        <div
+        <button
+          onClick={() => setSidebarOpen(!sidebarOpen)}
+          aria-label={sidebarOpen ? "Close menu" : "Open menu"}
           className={cn(
-            "relative",
-            "w-full",
-            "after:block",
-            "after:h-px after:w-2/5 after:m-auto after:bg-white after:relative after:transition-transform after:duration-300",
-            "before:block before:h-px before:w-2/5 before:m-auto before:bg-white before:relative before:transition-transform before:duration-300",
-            sidebarOpen
-              ? "after:rotate-45 after:-top-[1px] before:-rotate-45 before:top-0"
-              : "after:-top-[5px] before:top-[5px]",
+            "fixed",
+            "top-5",
+            "right-5",
+            "z-50",
+            "flex",
+            "size-16",
+            "items-center",
+            "justify-center",
+            "rounded-full",
+            "border",
+            "border-white/20",
+            "outline-none",
+            "transition-colors",
+            "duration-300",
+            sidebarOpen ? "bg-neutral-800" : "bg-dark",
           )}
-        />
-      </button>
+        >
+          <div
+            className={cn(
+              "relative",
+              "w-full",
+              "after:block",
+              "after:h-px after:w-2/5 after:m-auto after:bg-white after:relative after:transition-transform after:duration-300",
+              "before:block before:h-px before:w-2/5 before:m-auto before:bg-white before:relative before:transition-transform before:duration-300",
+              sidebarOpen
+                ? "after:rotate-45 after:-top-[1px] before:-rotate-45 before:top-0"
+                : "after:-top-[5px] before:top-[5px]",
+            )}
+          />
+        </button>
 
-      {/* Sidebar with Curve - slides from left */}
-      <AnimatePresence mode="wait">
-        {sidebarOpen && (
-          <motion.aside
-            variants={menuSlide}
-            initial="initial"
-            animate="enter"
-            exit="exit"
-            className="fixed inset-x-0 inset-y-0 z-40 flex h-screen flex-col bg-dark-500 text-white md:inset-x-auto md:left-0 md:w-80"
-          >
-            <AdminCurve />
+        {/* Sidebar with Curve - slides from left */}
+        <AnimatePresence mode="wait">
+          {sidebarOpen && (
+            <motion.aside
+              variants={menuSlide}
+              initial="initial"
+              animate="enter"
+              exit="exit"
+              className="fixed inset-x-0 inset-y-0 z-40 flex h-screen flex-col bg-dark-500 text-white md:inset-x-auto md:left-0 md:w-80"
+            >
+              <AdminCurve />
 
-            {/* Header — pinned top */}
-            <div className="shrink-0 p-6 pt-20 text-center border-b border-white/10 md:pt-6 md:text-left">
-              <Link
-                href="/admin"
-                className="text-xs uppercase tracking-widest text-light-100 md:text-lg md:font-bold md:normal-case md:tracking-normal md:text-white"
-              >
-                Admin Panel
-              </Link>
-              <p className="hidden text-xs text-light-100 mt-1 md:block">
-                Portfolio CMS
-              </p>
-            </div>
+              {/* Header — pinned top */}
+              <div className="shrink-0 p-6 pt-20 text-center border-b border-white/10 md:pt-6 md:text-left">
+                <Link
+                  href="/admin"
+                  className="text-xs uppercase tracking-widest text-light-100 md:text-lg md:font-bold md:normal-case md:tracking-normal md:text-white"
+                >
+                  Admin Panel
+                </Link>
+                <p className="hidden text-xs text-light-100 mt-1 md:block">
+                  Portfolio CMS
+                </p>
+              </div>
 
-            {/* Nav links with stagger animation.
+              {/* Nav links with stagger animation.
                   Mobile: big, bold, centered items with no icons, vertically
                   centered in the drawer. Desktop (md+): compact icon rows. */}
-            <nav className="min-h-0 flex-1 overflow-y-auto">
-              <div className="flex min-h-full flex-col justify-center gap-6 py-8 md:block md:min-h-0 md:gap-0 md:py-4">
-                {navItems.map((item, i) => {
-                  const isActive = router.pathname === item.href;
-                  return (
-                    <motion.div
-                      key={item.href}
-                      custom={i}
-                      variants={linkSlide}
-                      initial="initial"
-                      animate="enter"
-                      exit="exit"
-                    >
-                      <Link
-                        href={item.href}
-                        className={cn(
-                          "flex items-center justify-center gap-3 px-6 py-3 text-4xl font-bold transition-colors",
-                          "md:justify-start md:py-2.5 md:text-sm md:font-normal",
-                          isActive
-                            ? "text-white md:bg-dark-400 md:font-medium"
-                            : "text-light-100 hover:text-white md:hover:bg-dark-400/50",
-                        )}
+              <nav className="min-h-0 flex-1 overflow-y-auto">
+                <div className="flex min-h-full flex-col justify-center gap-6 py-8 md:block md:min-h-0 md:gap-0 md:py-4">
+                  {navItems.map((item, i) => {
+                    const isActive = router.pathname === item.href;
+                    return (
+                      <motion.div
+                        key={item.href}
+                        custom={i}
+                        variants={linkSlide}
+                        initial="initial"
+                        animate="enter"
+                        exit="exit"
                       >
-                        <span className="hidden md:inline-flex">
-                          {renderIcon(item)}
-                        </span>
-                        {item.label}
-                      </Link>
-                    </motion.div>
-                  );
-                })}
-              </div>
-            </nav>
-
-            {/* Footer — pinned to the bottom, never scrolls over the nav */}
-            <div className="shrink-0 border-t border-white/10">
-              <div className="p-4 flex items-center gap-3">
-                {session?.user?.image && (
-                  <Image
-                    src={session.user.image}
-                    alt=""
-                    width={32}
-                    height={32}
-                    className="size-8 rounded-full flex-shrink-0"
-                  />
-                )}
-                <div className="min-w-0 flex-1">
-                  <p className="text-sm font-medium truncate">
-                    {session?.user?.name}
-                  </p>
-                  <p className="text-xs text-light-100 truncate">
-                    {session?.user?.email}
-                  </p>
+                        <Link
+                          href={item.href}
+                          className={cn(
+                            "flex items-center justify-center gap-3 px-6 py-3 text-4xl font-bold transition-colors",
+                            "md:justify-start md:py-2.5 md:text-sm md:font-normal",
+                            isActive
+                              ? "text-white md:bg-dark-400 md:font-medium"
+                              : "text-light-100 hover:text-white md:hover:bg-dark-400/50",
+                          )}
+                        >
+                          <span className="hidden md:inline-flex">
+                            {renderIcon(item)}
+                          </span>
+                          {item.label}
+                        </Link>
+                      </motion.div>
+                    );
+                  })}
                 </div>
-                <button
-                  onClick={() => signOut({ callbackUrl: "/" })}
-                  className="flex flex-shrink-0 items-center gap-1.5 text-sm text-light-100 hover:text-white transition-colors"
-                  aria-label="Sign out"
-                >
-                  <RiLogoutBoxLine className="size-4 flex-shrink-0" />
-                  Sign out
-                </button>
-              </div>
+              </nav>
 
-              <div className="p-4 border-t border-white/10">
-                <Link
-                  href="/"
-                  className="flex items-center gap-3 text-sm text-light-100 hover:text-white transition-colors"
-                >
-                  <RiExternalLinkLine className="size-4 flex-shrink-0" />
-                  View site
-                </Link>
+              {/* Footer — pinned to the bottom, never scrolls over the nav */}
+              <div className="shrink-0 border-t border-white/10">
+                <div className="p-4 flex items-center gap-3">
+                  {session?.user?.image && (
+                    <Image
+                      src={session.user.image}
+                      alt=""
+                      width={32}
+                      height={32}
+                      className="size-8 rounded-full flex-shrink-0"
+                    />
+                  )}
+                  <div className="min-w-0 flex-1">
+                    <p className="text-sm font-medium truncate">
+                      {session?.user?.name}
+                    </p>
+                    <p className="text-xs text-light-100 truncate">
+                      {session?.user?.email}
+                    </p>
+                  </div>
+                  <button
+                    onClick={() => signOut({ callbackUrl: "/" })}
+                    className="flex flex-shrink-0 items-center gap-1.5 text-sm text-light-100 hover:text-white transition-colors"
+                    aria-label="Sign out"
+                  >
+                    <RiLogoutBoxLine className="size-4 flex-shrink-0" />
+                    Sign out
+                  </button>
+                </div>
+
+                <div className="p-4 border-t border-white/10">
+                  <Link
+                    href="/"
+                    className="flex items-center gap-3 text-sm text-light-100 hover:text-white transition-colors"
+                  >
+                    <RiExternalLinkLine className="size-4 flex-shrink-0" />
+                    View site
+                  </Link>
+                </div>
               </div>
+            </motion.aside>
+          )}
+        </AnimatePresence>
+
+        {/* Main content — centered horizontally to a max width */}
+        <main className="min-h-screen">
+          <header className="bg-dark-500 border-b border-dark-600">
+            <div className="max-w-6xl mx-auto px-8 py-6 flex justify-between items-center">
+              <h1 className="text-2xl font-bold text-secondary font-pp-acma">
+                {title || "Dashboard"}
+              </h1>
             </div>
-          </motion.aside>
-        )}
-      </AnimatePresence>
+          </header>
+          <div className="max-w-6xl mx-auto w-full p-8">{children}</div>
+        </main>
 
-      {/* Main content — centered horizontally to a max width */}
-      <main className="min-h-screen">
-        <header className="bg-dark-500 border-b border-dark-600">
-          <div className="max-w-6xl mx-auto px-8 py-6 flex justify-between items-center">
-            <h1 className="text-2xl font-bold text-secondary font-pp-acma">
-              {title || "Dashboard"}
-            </h1>
-          </div>
-        </header>
-        <div className="max-w-6xl mx-auto w-full p-8">{children}</div>
-      </main>
-
-      {/* Toast renderer (fixed bottom-right) — shared with the public site */}
-      <Notifications />
+        {/* Toast renderer (fixed bottom-right) — shared with the public site */}
+        <Notifications />
+      </div>
     </div>
   );
 }
