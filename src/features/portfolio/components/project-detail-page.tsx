@@ -89,7 +89,7 @@ export function ProjectDetailPage({ project }: Props) {
         {/* One column — every field stacks. */}
         <div className="bg-dark-400 rounded-lg border border-dark-600 p-6 space-y-4">
           <IconUploadField
-            label="Icon"
+            label="Logo"
             inline
             value={form.image.icon}
             onChange={(v) =>
