@@ -19,12 +19,20 @@ interface Props {
   onChange: (imageUrl: string) => void;
   /** Optional: also receive the chosen tech's name (e.g. to set the stack). */
   onSelectName?: (name: string) => void;
+  /** Render the label inline (to the left) instead of stacked above. */
+  inline?: boolean;
 }
 
 // Tech-stack picker: choose an existing tech (its logo becomes the value) or add
 // a new one by uploading + cropping a logo, which is persisted to the Skills
 // table so it's reusable next time.
-export function TechStackField({ label, value, onChange, onSelectName }: Props) {
+export function TechStackField({
+  label,
+  value,
+  onChange,
+  onSelectName,
+  inline = false,
+}: Props) {
   const [skills, setSkills] = useState<Skill[]>([]);
   const [open, setOpen] = useState(false);
   const [adding, setAdding] = useState(false);
@@ -68,12 +76,18 @@ export function TechStackField({ label, value, onChange, onSelectName }: Props) 
   }
 
   return (
-    <div>
-      <label className="block text-sm font-medium text-white mb-1">
+    <div className={cn(inline && "flex items-start gap-4")}>
+      <label
+        className={cn(
+          "text-sm font-medium text-white",
+          inline ? "w-40 shrink-0 pt-2" : "block mb-1",
+        )}
+      >
         {label}
       </label>
 
-      <div className="flex items-center gap-3">
+      <div className={cn(inline && "min-w-0 flex-1")}>
+        <div className="flex items-center gap-3">
         {value ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
@@ -189,6 +203,7 @@ export function TechStackField({ label, value, onChange, onSelectName }: Props) 
           </div>
         </div>
       )}
+      </div>
     </div>
   );
 }

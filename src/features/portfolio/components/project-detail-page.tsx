@@ -90,6 +90,7 @@ export function ProjectDetailPage({ project }: Props) {
         <div className="bg-dark-400 rounded-lg border border-dark-600 p-6 space-y-4">
           <IconUploadField
             label="Icon"
+            inline
             value={form.image.icon}
             onChange={(v) =>
               setForm((f) => ({ ...f, image: { ...f.image, icon: v } }))
@@ -109,6 +110,7 @@ export function ProjectDetailPage({ project }: Props) {
 
           <TechStackField
             label="Tech Stack"
+            inline
             value={form.techImage}
             onChange={(v) => setForm((f) => ({ ...f, techImage: v }))}
             onSelectName={(name) => setForm((f) => ({ ...f, stack: name }))}
@@ -132,6 +134,7 @@ export function ProjectDetailPage({ project }: Props) {
 
           <IconUploadField
             label="Project Image"
+            inline
             value={form.projectImage}
             previewBg="#141516"
             aspect={16 / 9}
@@ -171,15 +174,15 @@ export function ProjectDetailPage({ project }: Props) {
             onChange={(v) => setForm({ ...form, sortOrder: Number(v) || 0 })}
           />
 
-          <div>
-            <label className="block text-sm font-medium text-white mb-1">
+          <div className="flex items-start gap-4">
+            <label className="w-40 shrink-0 pt-2 text-sm font-medium text-white">
               Description
             </label>
             <textarea
               value={form.description}
               onChange={(e) => setForm({ ...form, description: e.target.value })}
               rows={4}
-              className="w-full px-3 py-2 border border-dark-600 rounded-lg text-sm"
+              className="min-w-0 flex-1 px-3 py-2 border border-dark-600 rounded-lg text-sm"
             />
           </div>
 
@@ -194,29 +197,34 @@ export function ProjectDetailPage({ project }: Props) {
             onChange={(v) => setForm({ ...form, technologyFeature: v })}
           />
 
-          <div className="flex gap-6 pt-1">
-            <label className="flex items-center gap-2 text-sm text-white">
-              <input
-                type="checkbox"
-                checked={form.isPriority}
-                onChange={(e) =>
-                  setForm({ ...form, isPriority: e.target.checked })
-                }
-                className="size-4 accent-secondary"
-              />
-              Priority
-            </label>
-            <label className="flex items-center gap-2 text-sm text-white">
-              <input
-                type="checkbox"
-                checked={form.isRecent}
-                onChange={(e) =>
-                  setForm({ ...form, isRecent: e.target.checked })
-                }
-                className="size-4 accent-success"
-              />
-              Show in Latest Work
-            </label>
+          <div className="flex items-center gap-4 pt-1">
+            <span className="w-40 shrink-0 text-sm font-medium text-white">
+              Visibility
+            </span>
+            <div className="flex min-w-0 flex-1 gap-6">
+              <label className="flex items-center gap-2 text-sm text-white">
+                <input
+                  type="checkbox"
+                  checked={form.isPriority}
+                  onChange={(e) =>
+                    setForm({ ...form, isPriority: e.target.checked })
+                  }
+                  className="size-4 accent-secondary"
+                />
+                Priority
+              </label>
+              <label className="flex items-center gap-2 text-sm text-white">
+                <input
+                  type="checkbox"
+                  checked={form.isRecent}
+                  onChange={(e) =>
+                    setForm({ ...form, isRecent: e.target.checked })
+                  }
+                  className="size-4 accent-success"
+                />
+                Show in Latest Work
+              </label>
+            </div>
           </div>
         </div>
       </div>
@@ -264,14 +272,14 @@ function Input({
   onChange: (v: string) => void;
 }) {
   return (
-    <div>
-      <label className="block text-sm font-medium text-white mb-1">
+    <div className="flex items-center gap-4">
+      <label className="w-40 shrink-0 text-sm font-medium text-white">
         {label}
       </label>
       <input
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="w-full px-3 py-2 border border-dark-600 rounded-lg text-sm"
+        className="min-w-0 flex-1 px-3 py-2 border border-dark-600 rounded-lg text-sm"
       />
     </div>
   );
@@ -287,11 +295,12 @@ function ArrayField({
   onChange: (v: string[]) => void;
 }) {
   return (
-    <div>
-      <label className="block text-sm font-medium text-white mb-1">
+    <div className="flex items-start gap-4">
+      <label className="w-40 shrink-0 pt-2 text-sm font-medium text-white">
         {label}
       </label>
-      {value.map((item, i) => (
+      <div className="min-w-0 flex-1">
+        {value.map((item, i) => (
         <div key={i} className="flex gap-2 mb-1">
           <input
             value={item}
@@ -309,15 +318,16 @@ function ArrayField({
           >
             x
           </button>
-        </div>
-      ))}
-      <button
-        type="button"
-        onClick={() => onChange([...value, ""])}
-        className="text-sm text-blue-400 hover:text-blue-300"
-      >
-        + Add
-      </button>
+          </div>
+        ))}
+        <button
+          type="button"
+          onClick={() => onChange([...value, ""])}
+          className="text-sm text-blue-400 hover:text-blue-300"
+        >
+          + Add
+        </button>
+      </div>
     </div>
   );
 }

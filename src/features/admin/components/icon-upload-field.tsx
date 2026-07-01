@@ -24,6 +24,8 @@ interface Props {
   folder?: string;
   /** Crop aspect ratio: 1 = square icon (default), e.g. 16/9 for wide shots. */
   aspect?: number;
+  /** Render the label inline (to the left) instead of stacked above. */
+  inline?: boolean;
 }
 
 // Image picker: shows the current image with a pencil button. The pencil opens a
@@ -37,6 +39,7 @@ export function IconUploadField({
   previewBg = "#ffffff",
   folder,
   aspect = 1,
+  inline = false,
 }: Props) {
   const [open, setOpen] = useState(false);
   const [rawSrc, setRawSrc] = useState<string | null>(null);
@@ -94,47 +97,57 @@ export function IconUploadField({
   }
 
   return (
-    <div>
-      <label className="block text-sm font-medium text-white mb-1">
+    <div className={cn(inline && "flex items-start gap-4")}>
+      <label
+        className={cn(
+          "text-sm font-medium text-white",
+          inline ? "w-40 shrink-0 pt-2" : "block mb-1",
+        )}
+      >
         {label}
       </label>
 
-      {/* Current image + pencil to edit/replace. Preview keeps the crop aspect. */}
-      <div className="flex items-center gap-3">
-        {value ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={value}
-            alt={label}
-            style={{ backgroundColor: previewBg, aspectRatio: String(aspect) }}
-            className="h-14 w-auto rounded-lg object-contain border border-dark-600 p-1.5"
-          />
-        ) : (
-          <div
-            style={{ aspectRatio: String(aspect) }}
-            className="flex h-14 items-center justify-center rounded-lg border border-dashed border-dark-600 text-light-400"
+      <div className={cn(inline && "min-w-0 flex-1")}>
+        {/* Current image + pencil to edit/replace. Preview keeps the crop aspect. */}
+        <div className="flex items-center gap-3">
+          {value ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={value}
+              alt={label}
+              style={{
+                backgroundColor: previewBg,
+                aspectRatio: String(aspect),
+              }}
+              className="h-14 w-auto rounded-lg object-contain border border-dark-600 p-1.5"
+            />
+          ) : (
+            <div
+              style={{ aspectRatio: String(aspect) }}
+              className="flex h-14 items-center justify-center rounded-lg border border-dashed border-dark-600 text-light-400"
+            >
+              <RiImageLine className="size-6" />
+            </div>
+          )}
+
+          <button
+            type="button"
+            onClick={() => setOpen(true)}
+            aria-label="Edit image"
+            className="inline-flex items-center gap-1.5 rounded-lg border border-dark-600 px-3 py-2 text-sm text-white transition-colors hover:border-secondary/60"
           >
-            <RiImageLine className="size-6" />
-          </div>
-        )}
+            <RiPencilLine className="size-4" />
+            {value ? "Change" : "Add image"}
+          </button>
+        </div>
 
-        <button
-          type="button"
-          onClick={() => setOpen(true)}
-          aria-label="Edit image"
-          className="inline-flex items-center gap-1.5 rounded-lg border border-dark-600 px-3 py-2 text-sm text-white transition-colors hover:border-secondary/60"
-        >
-          <RiPencilLine className="size-4" />
-          {value ? "Change" : "Add image"}
-        </button>
+        <input
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          placeholder="or paste an image URL / /public path"
+          className="mt-2 w-full px-3 py-2 border border-dark-600 rounded-lg text-sm"
+        />
       </div>
-
-      <input
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        placeholder="or paste an image URL / /public path"
-        className="mt-2 w-full px-3 py-2 border border-dark-600 rounded-lg text-sm"
-      />
 
       {/* Wide modal: dropzone first, then crop once an image is chosen. */}
       {open && (
