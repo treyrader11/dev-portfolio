@@ -2,6 +2,7 @@
 
 import { motion, useDragControls, type PanInfo } from "framer-motion";
 import { cn } from "@/lib/utils";
+import { lockScroll, unlockScroll } from "../lib/scroll-lock";
 import { useRef, useState, type PointerEvent as ReactPointerEvent, type ReactNode } from "react";
 
 interface ReorderableListProps<T> {
@@ -174,12 +175,23 @@ function ReorderableRow({
     }
   }
 
+  function endPress() {
+    clearTimer();
+    // Release the scroll lock if the long-press had engaged it.
+    unlockScroll();
+  }
+
   function handlePointerDown(e: ReactPointerEvent<HTMLDivElement>) {
     // Let interactive children (trash, confirm buttons) handle their own events.
     if ((e.target as HTMLElement).closest("[data-no-drag]")) return;
     draggedRef.current = false;
     startPos.current = { x: e.clientX, y: e.clientY };
-    pressTimer.current = setTimeout(() => controls.start(e), LONG_PRESS_MS);
+    pressTimer.current = setTimeout(() => {
+      // Lock scrolling BEFORE the drag begins so the very first touch move
+      // reorders instead of scrolling the page away on mobile.
+      lockScroll();
+      controls.start(e);
+    }, LONG_PRESS_MS);
   }
 
   function handlePointerMove(e: ReactPointerEvent<HTMLDivElement>) {
@@ -221,11 +233,14 @@ function ReorderableRow({
           onDragStart();
         }}
         onDrag={(_, info: PanInfo) => onDragMove(info.point.y)}
-        onDragEnd={(_, info: PanInfo) => onDrop(info.point.y)}
+        onDragEnd={(_, info: PanInfo) => {
+          unlockScroll();
+          onDrop(info.point.y);
+        }}
         onPointerDown={handlePointerDown}
         onPointerMove={handlePointerMove}
-        onPointerUp={clearTimer}
-        onPointerCancel={clearTimer}
+        onPointerUp={endPress}
+        onPointerCancel={endPress}
         onClick={(e) => {
           // Suppress the click that follows a drag; otherwise navigate.
           if (draggedRef.current) {
@@ -250,7 +265,10 @@ function ReorderableRow({
         transition={{ type: "spring", stiffness: 300, damping: 20 }}
         className={cn(
           CARD_FRAME,
-          "select-none touch-pan-y",
+          "select-none",
+          // Allow vertical page scroll when idle; once dragging, disable the
+          // browser's touch scrolling entirely so the gesture reorders instead.
+          isDragging ? "touch-none" : "touch-pan-y",
           clickable ? "cursor-pointer hover:border-secondary/60" : "cursor-grab",
           isDragging && "relative z-50 cursor-grabbing",
           itemClassName,
