@@ -151,28 +151,24 @@ export default function AdminLayout({ children, title }: AdminLayoutProps) {
         </defs>
       </svg>
 
-      {/* FAB - Animated Hamburger (always visible, top-left) */}
-      <button
-        onClick={() => setSidebarOpen(!sidebarOpen)}
-        className={cn(
-          // Mobile: small circle pinned top-right (matches the public nav close
-          // button). Desktop (md+): the original large top-left sidebar toggle.
-          "fixed top-4 right-4 md:right-auto md:left-4 z-[5] w-10 h-10 md:size-16 rounded-full border border-white/30 md:border-0 flex items-center justify-center transition-colors duration-300 outline-none",
-          sidebarOpen ? "bg-neutral-800" : "bg-dark"
-        )}
-        aria-label={sidebarOpen ? "Close menu" : "Open menu"}
-      >
-        <div
-          className={cn(
-            "relative w-full z-[5]",
-            "after:block after:h-px after:w-2/5 after:mx-auto after:bg-white after:relative after:transition-transform after:duration-300",
-            "before:block before:h-px before:w-2/5 before:mx-auto before:bg-white before:relative before:transition-transform before:duration-300",
-            sidebarOpen
-              ? "after:rotate-45 after:-top-[1px] before:-rotate-45 before:top-0"
-              : "after:-top-[5px] before:top-[5px]"
-          )}
-        />
-      </button>
+      {/* Open button (hamburger) — same bar markup as the public BurgerMenu.
+          Hidden while the drawer is open so the drawer overlaps it.
+          Mobile: top-right; desktop: top-left. */}
+      {!sidebarOpen && (
+        <button
+          onClick={() => setSidebarOpen(true)}
+          aria-label="Open menu"
+          className="fixed top-4 right-4 md:right-auto md:left-4 z-30 flex size-10 md:size-16 items-center justify-center rounded-full border border-white/20 bg-dark-400 transition-colors duration-300 outline-none hover:bg-dark-600"
+        >
+          <div
+            className={cn(
+              "relative w-full",
+              "after:block after:h-px after:w-2/5 after:m-auto after:bg-white after:relative after:-top-[5px]",
+              "before:block before:h-px before:w-2/5 before:m-auto before:bg-white before:relative before:top-[5px]"
+            )}
+          />
+        </button>
+      )}
 
       {/* Sidebar with Curve - slides from left */}
       <AnimatePresence mode="wait">
@@ -182,14 +178,30 @@ export default function AdminLayout({ children, title }: AdminLayoutProps) {
             initial="initial"
             animate="enter"
             exit="exit"
-            className="fixed inset-y-0 left-0 z-[4] w-full md:w-64 bg-dark-500 text-white flex flex-col"
+            className="fixed inset-y-0 left-0 z-40 flex h-screen w-full md:w-72 flex-col bg-dark-500 text-white"
           >
             <AdminCurve />
 
-            <div className="h-full flex flex-col overflow-y-auto">
-              {/* Header — small-caps label on mobile (clears the top-right close
-                  button with pt-20); left-aligned bold header on desktop */}
-              <div className="p-6 pt-20 text-center border-b border-white/10 md:pt-6 md:text-left">
+            {/* Close (X) button — inside the drawer so the drawer overlaps the
+                open toggle; sits above the drawer content, top-right. */}
+            <button
+              onClick={() => setSidebarOpen(false)}
+              aria-label="Close menu"
+              className="absolute top-4 right-4 z-10 flex size-10 items-center justify-center rounded-full border border-white/20 bg-dark-600 outline-none"
+            >
+              <div
+                className={cn(
+                  "relative w-full",
+                  "after:block after:h-px after:w-2/5 after:m-auto after:bg-white after:relative after:rotate-45 after:-top-[1px]",
+                  "before:block before:h-px before:w-2/5 before:m-auto before:bg-white before:relative before:-rotate-45 before:top-0"
+                )}
+              />
+            </button>
+
+            {/* Fixed-height column: header/footer pinned, nav scrolls between */}
+            <div className="flex h-full flex-col">
+              {/* Header — pinned top */}
+              <div className="shrink-0 p-6 pt-20 text-center border-b border-white/10 md:pt-6 md:text-left">
                 <Link
                   href="/admin"
                   className="text-xs uppercase tracking-widest text-light-100 md:text-lg md:font-bold md:normal-case md:tracking-normal md:text-white"
@@ -204,8 +216,9 @@ export default function AdminLayout({ children, title }: AdminLayoutProps) {
               {/* Nav links with stagger animation.
                   Mobile: big, bold, centered items with no icons, vertically
                   centered in the drawer. Desktop (md+): compact icon rows. */}
-              <nav className="flex-1 flex flex-col justify-center gap-6 py-8 md:block md:gap-0 md:py-4">
-                {navItems.map((item, i) => {
+              <nav className="flex-1 overflow-y-auto">
+                <div className="flex min-h-full flex-col justify-center gap-6 py-8 md:block md:min-h-0 md:gap-0 md:py-4">
+                  {navItems.map((item, i) => {
                   const isActive = router.pathname === item.href;
                   return (
                     <motion.div
@@ -233,45 +246,48 @@ export default function AdminLayout({ children, title }: AdminLayoutProps) {
                       </Link>
                     </motion.div>
                   );
-                })}
+                  })}
+                </div>
               </nav>
 
-              {/* User info + actions */}
-              <div className="p-4 border-t border-white/10">
-                <div className="flex items-center gap-3 mb-3">
-                  {session?.user?.image && (
-                    <img
-                      src={session.user.image}
-                      alt=""
-                      className="w-8 h-8 rounded-full"
-                    />
-                  )}
-                  <div className="min-w-0">
-                    <p className="text-sm font-medium truncate">
-                      {session?.user?.name}
-                    </p>
-                    <p className="text-xs text-light-100 truncate">
-                      {session?.user?.email}
-                    </p>
+              {/* Footer — pinned to the bottom, never scrolls over the nav */}
+              <div className="shrink-0 border-t border-white/10">
+                <div className="p-4">
+                  <div className="flex items-center gap-3 mb-3">
+                    {session?.user?.image && (
+                      <img
+                        src={session.user.image}
+                        alt=""
+                        className="w-8 h-8 rounded-full"
+                      />
+                    )}
+                    <div className="min-w-0">
+                      <p className="text-sm font-medium truncate">
+                        {session?.user?.name}
+                      </p>
+                      <p className="text-xs text-light-100 truncate">
+                        {session?.user?.email}
+                      </p>
+                    </div>
                   </div>
+                  <button
+                    onClick={() => signOut({ callbackUrl: "/" })}
+                    className="w-full flex items-center gap-3 text-left text-sm text-light-100 hover:text-white transition-colors"
+                  >
+                    <RiLogoutBoxLine className="w-4 h-4 flex-shrink-0" />
+                    Sign out
+                  </button>
                 </div>
-                <button
-                  onClick={() => signOut({ callbackUrl: "/" })}
-                  className="w-full flex items-center gap-3 text-left text-sm text-light-100 hover:text-white transition-colors"
-                >
-                  <RiLogoutBoxLine className="w-4 h-4 flex-shrink-0" />
-                  Sign out
-                </button>
-              </div>
 
-              <div className="p-4 border-t border-white/10">
-                <Link
-                  href="/"
-                  className="flex items-center gap-3 text-sm text-light-100 hover:text-white transition-colors"
-                >
-                  <RiExternalLinkLine className="w-4 h-4 flex-shrink-0" />
-                  View site
-                </Link>
+                <div className="p-4 border-t border-white/10">
+                  <Link
+                    href="/"
+                    className="flex items-center gap-3 text-sm text-light-100 hover:text-white transition-colors"
+                  >
+                    <RiExternalLinkLine className="w-4 h-4 flex-shrink-0" />
+                    View site
+                  </Link>
+                </div>
               </div>
             </div>
           </motion.aside>
