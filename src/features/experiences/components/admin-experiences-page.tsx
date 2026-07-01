@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import AdminLayout from "@/features/admin/components/admin-layout";
+import { ReorderableList } from "@/features/admin/components/reorderable-list";
 import { type ExperienceItem, emptyExperience } from "../types";
 
 interface Props {
@@ -12,6 +13,19 @@ export function AdminExperiencesPage({ experiences: initial }: Props) {
   const [creating, setCreating] = useState(false);
   const [form, setForm] = useState(emptyExperience);
   const [saving, setSaving] = useState(false);
+
+  // Keep the latest order in a ref so the drag-end handler persists the current
+  // arrangement without a stale closure.
+  const orderRef = useRef(items);
+  orderRef.current = items;
+
+  async function saveOrder() {
+    await fetch("/api/admin/experiences/reorder", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ ids: orderRef.current.map((i) => i.id) }),
+    });
+  }
 
   async function handleCreate() {
     setSaving(true);
@@ -191,13 +205,14 @@ export function AdminExperiencesPage({ experiences: initial }: Props) {
           </div>
         )}
 
-        {/* List */}
-        <div className="space-y-3">
-          {items.map((item) => (
-            <div
-              key={item.id}
-              className="bg-dark-400 rounded-lg border border-dark-600 p-4 flex justify-between items-start"
-            >
+        {/* List — drag the grip handle to reorder */}
+        <ReorderableList
+          items={items}
+          getId={(item) => item.id}
+          onReorder={setItems}
+          onDragEnd={saveOrder}
+          renderItem={(item) => (
+            <div className="flex items-start justify-between gap-3">
               <div>
                 <h3 className="font-medium text-secondary">{item.title}</h3>
                 <p className="text-sm text-light-400">
@@ -222,8 +237,8 @@ export function AdminExperiencesPage({ experiences: initial }: Props) {
                 </button>
               </div>
             </div>
-          ))}
-        </div>
+          )}
+        />
       </div>
     </AdminLayout>
   );
