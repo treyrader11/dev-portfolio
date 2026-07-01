@@ -23,8 +23,9 @@ interface ReorderableListProps<T> {
 
 // Shared card frame so the real card and the ghost placeholder match exactly
 // (same padding, border, radius, size → nothing jumps or reflows).
-const CARD_FRAME =
-  "flex items-start gap-3 rounded-lg border border-dark-600 bg-dark-400 p-4";
+const CARD_FRAME = cn(
+  "flex items-start gap-3 rounded-lg border border-dark-600 bg-dark-400 p-4",
+);
 
 /**
  * Generic drag-to-reorder list for admin pages, with a Jira-style ghost.
@@ -47,6 +48,9 @@ export function ReorderableList<T>({
   // Live insertion index (0..items.length) — drives the fuchsia drop indicator.
   const [dropIndex, setDropIndex] = useState<number | null>(null);
   const rowRefs = useRef(new Map<string, HTMLLIElement>());
+  // Bumped per id on drop so the dropped row remounts and its drag transform
+  // clears instantly — no fly-back, no leftover gap, lands in its new slot.
+  const remountCounts = useRef(new Map<string, number>());
 
   // Insertion point: the first row whose vertical center is below the pointer.
   function computeInsertIndex(pointerY: number): number {
@@ -71,8 +75,12 @@ export function ReorderableList<T>({
     const insertBefore = computeInsertIndex(pointerY);
     const next = [...items];
     const [moved] = next.splice(fromIndex, 1);
-    const insertIndex = insertBefore > fromIndex ? insertBefore - 1 : insertBefore;
+    const insertIndex =
+      insertBefore > fromIndex ? insertBefore - 1 : insertBefore;
     next.splice(insertIndex, 0, moved);
+
+    // Remount the dropped row (even on a no-op drop) to reset its transform.
+    remountCounts.current.set(id, (remountCounts.current.get(id) ?? 0) + 1);
 
     const changed = next.some((it, i) => getId(it) !== ids[i]);
     if (changed) {
@@ -87,7 +95,7 @@ export function ReorderableList<T>({
         const id = getId(item);
         return (
           <ReorderableRow
-            key={id}
+            key={`${id}:${remountCounts.current.get(id) ?? 0}`}
             index={index}
             count={items.length}
             dropIndex={draggingId ? dropIndex : null}
@@ -99,7 +107,9 @@ export function ReorderableList<T>({
               else rowRefs.current.delete(id);
             }}
             onDragStart={() => setDraggingId(id)}
-            onDragMove={(pointerY) => setDropIndex(computeInsertIndex(pointerY))}
+            onDragMove={(pointerY) =>
+              setDropIndex(computeInsertIndex(pointerY))
+            }
             onDrop={(pointerY) => handleDrop(id, pointerY)}
           />
         );
@@ -146,7 +156,9 @@ function ReorderableRow({
 
   return (
     <li ref={registerRef} className="relative list-none">
-      {showTopLine && <span aria-hidden className={cn(DROP_LINE, "-top-1.5")} />}
+      {showTopLine && (
+        <span aria-hidden className={cn(DROP_LINE, "-top-1.5")} />
+      )}
       {showBottomLine && (
         <span aria-hidden className={cn(DROP_LINE, "-bottom-1.5")} />
       )}
@@ -176,8 +188,6 @@ function ReorderableRow({
         drag="y"
         dragListener={false}
         dragControls={controls}
-        dragSnapToOrigin
-        layout
         onDragStart={onDragStart}
         onDrag={(_, info: PanInfo) => onDragMove(info.point.y)}
         onDragEnd={(_, info: PanInfo) => onDrop(info.point.y)}

@@ -11,6 +11,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   if (!session?.user?.isAdmin) {
     return { redirect: { destination: "/admin/signin", permanent: false } };
   }
-  const experiences = await prisma.experience.findMany({ orderBy: { sortOrder: "asc" } });
+  const experiences = await prisma.experience.findMany({
+    orderBy: { sortOrder: "asc" },
+  });
   return { props: { experiences: JSON.parse(JSON.stringify(experiences)) } };
 };
