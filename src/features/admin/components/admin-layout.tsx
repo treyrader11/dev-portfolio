@@ -161,7 +161,15 @@ export default function AdminLayout({
         className,
       )}
     >
-      <div className={cn("max-w-5xl", "mx-auto", "w-full", "px-4")}>
+      <div
+        className={cn(
+          "max-w-5xl",
+          "mx-auto",
+          "w-full",
+          // " w-full grid",
+          "px-4",
+        )}
+      >
         {/* SVG gradient definition for Jira icon */}
         <svg width="0" height="0" className="absolute">
           <defs>

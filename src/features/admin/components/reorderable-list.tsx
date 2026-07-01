@@ -44,27 +44,31 @@ export function ReorderableList<T>({
   itemClassName,
 }: ReorderableListProps<T>) {
   const [draggingId, setDraggingId] = useState<string | null>(null);
+  // Live insertion index (0..items.length) — drives the fuchsia drop indicator.
+  const [dropIndex, setDropIndex] = useState<number | null>(null);
   const rowRefs = useRef(new Map<string, HTMLLIElement>());
+
+  // Insertion point: the first row whose vertical center is below the pointer.
+  function computeInsertIndex(pointerY: number): number {
+    const ids = items.map(getId);
+    for (let i = 0; i < ids.length; i++) {
+      const el = rowRefs.current.get(ids[i]);
+      if (!el) continue;
+      const rect = el.getBoundingClientRect();
+      if (pointerY < rect.top + rect.height / 2) return i;
+    }
+    return items.length;
+  }
 
   function handleDrop(id: string, pointerY: number) {
     setDraggingId(null);
+    setDropIndex(null);
 
     const ids = items.map(getId);
     const fromIndex = ids.indexOf(id);
     if (fromIndex === -1) return;
 
-    // Insertion point: the first row whose vertical center is below the pointer.
-    let insertBefore = items.length;
-    for (let i = 0; i < ids.length; i++) {
-      const el = rowRefs.current.get(ids[i]);
-      if (!el) continue;
-      const rect = el.getBoundingClientRect();
-      if (pointerY < rect.top + rect.height / 2) {
-        insertBefore = i;
-        break;
-      }
-    }
-
+    const insertBefore = computeInsertIndex(pointerY);
     const next = [...items];
     const [moved] = next.splice(fromIndex, 1);
     const insertIndex = insertBefore > fromIndex ? insertBefore - 1 : insertBefore;
@@ -79,11 +83,14 @@ export function ReorderableList<T>({
 
   return (
     <ul className={cn("m-0 list-none space-y-3 p-0", className)}>
-      {items.map((item) => {
+      {items.map((item, index) => {
         const id = getId(item);
         return (
           <ReorderableRow
             key={id}
+            index={index}
+            count={items.length}
+            dropIndex={draggingId ? dropIndex : null}
             content={renderItem(item)}
             isDragging={draggingId === id}
             itemClassName={itemClassName}
@@ -92,6 +99,7 @@ export function ReorderableList<T>({
               else rowRefs.current.delete(id);
             }}
             onDragStart={() => setDraggingId(id)}
+            onDragMove={(pointerY) => setDropIndex(computeInsertIndex(pointerY))}
             onDrop={(pointerY) => handleDrop(id, pointerY)}
           />
         );
@@ -101,26 +109,48 @@ export function ReorderableList<T>({
 }
 
 interface RowProps {
+  index: number;
+  count: number;
+  /** Live insertion index for the whole list, or null when not dragging. */
+  dropIndex: number | null;
   content: ReactNode;
   isDragging: boolean;
   itemClassName?: string;
   registerRef: (el: HTMLLIElement | null) => void;
   onDragStart: () => void;
+  onDragMove: (pointerY: number) => void;
   onDrop: (pointerY: number) => void;
 }
 
+const DROP_LINE =
+  "pointer-events-none absolute inset-x-0 z-[60] h-0.5 rounded-full bg-fuchsia-500 shadow-[0_0_8px_rgba(217,70,239,0.7)]";
+
 function ReorderableRow({
+  index,
+  count,
+  dropIndex,
   content,
   isDragging,
   itemClassName,
   registerRef,
   onDragStart,
+  onDragMove,
   onDrop,
 }: RowProps) {
   const controls = useDragControls();
 
+  // Fuchsia indicator marking where the dragged card will land: a line above
+  // the target row (insert-before), or below the last row when dropping at end.
+  const showTopLine = dropIndex === index;
+  const showBottomLine = dropIndex === count && index === count - 1;
+
   return (
     <li ref={registerRef} className="relative list-none">
+      {showTopLine && <span aria-hidden className={cn(DROP_LINE, "-top-1.5")} />}
+      {showBottomLine && (
+        <span aria-hidden className={cn(DROP_LINE, "-bottom-1.5")} />
+      )}
+
       {/* Ghost placeholder — dimmed copy in the original slot. Absolutely
           positioned to fill the slot (the real card below reserves the height
           via its in-flow transform), so the list never collapses. */}
@@ -149,6 +179,7 @@ function ReorderableRow({
         dragSnapToOrigin
         layout
         onDragStart={onDragStart}
+        onDrag={(_, info: PanInfo) => onDragMove(info.point.y)}
         onDragEnd={(_, info: PanInfo) => onDrop(info.point.y)}
         animate={
           isDragging
