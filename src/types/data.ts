@@ -86,6 +86,8 @@ export interface ProjectDownloadLinks {
 export interface ProjectImage {
   isPriority?: boolean;
   src: string;
+  // Square app/project icon shown in the admin list (and available to the UI).
+  icon?: string;
 }
 
 export interface ProjectData {

@@ -23,7 +23,7 @@ export const emptyProject = {
   downloadLinks: { frontend: "", backend: "" },
   projectImage: "",
   projectVideo: "",
-  image: { isPriority: false, src: "" },
+  image: { isPriority: false, src: "", icon: "" },
   websiteUrl: "",
   isRecent: false,
   sortOrder: 0,

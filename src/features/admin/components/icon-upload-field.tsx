@@ -22,11 +22,13 @@ interface Props {
   /** Preview swatch background so transparent icons stay visible. */
   previewBg?: string;
   folder?: string;
+  /** Crop aspect ratio: 1 = square icon (default), e.g. 16/9 for wide shots. */
+  aspect?: number;
 }
 
-// Icon picker: shows the current icon with a pencil button. The pencil opens a
-// wide modal where you drag-and-drop or browse for a file, then crop it to a
-// square before it uploads to Cloudinary. A URL field remains as a manual
+// Image picker: shows the current image with a pencil button. The pencil opens a
+// wide modal where you drag-and-drop or browse for a file, then crop it (to the
+// given aspect) before it uploads to Cloudinary. A URL field remains as a manual
 // fallback (paste an existing URL or /public path).
 export function IconUploadField({
   label,
@@ -34,6 +36,7 @@ export function IconUploadField({
   onChange,
   previewBg = "#ffffff",
   folder,
+  aspect = 1,
 }: Props) {
   const [open, setOpen] = useState(false);
   const [rawSrc, setRawSrc] = useState<string | null>(null);
@@ -96,18 +99,21 @@ export function IconUploadField({
         {label}
       </label>
 
-      {/* Current icon + pencil to edit/replace. */}
+      {/* Current image + pencil to edit/replace. Preview keeps the crop aspect. */}
       <div className="flex items-center gap-3">
         {value ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
             src={value}
             alt={label}
-            style={{ backgroundColor: previewBg }}
-            className="size-14 rounded-lg object-contain border border-dark-600 p-1.5"
+            style={{ backgroundColor: previewBg, aspectRatio: String(aspect) }}
+            className="h-14 w-auto rounded-lg object-contain border border-dark-600 p-1.5"
           />
         ) : (
-          <div className="flex size-14 items-center justify-center rounded-lg border border-dashed border-dark-600 text-light-400">
+          <div
+            style={{ aspectRatio: String(aspect) }}
+            className="flex h-14 items-center justify-center rounded-lg border border-dashed border-dark-600 text-light-400"
+          >
             <RiImageLine className="size-6" />
           </div>
         )}
@@ -115,11 +121,11 @@ export function IconUploadField({
         <button
           type="button"
           onClick={() => setOpen(true)}
-          aria-label="Edit icon"
+          aria-label="Edit image"
           className="inline-flex items-center gap-1.5 rounded-lg border border-dark-600 px-3 py-2 text-sm text-white transition-colors hover:border-secondary/60"
         >
           <RiPencilLine className="size-4" />
-          {value ? "Change" : "Add icon"}
+          {value ? "Change" : "Add image"}
         </button>
       </div>
 
@@ -192,7 +198,7 @@ export function IconUploadField({
                       image={rawSrc}
                       crop={crop}
                       zoom={zoom}
-                      aspect={1}
+                      aspect={aspect}
                       showGrid={false}
                       onCropChange={setCrop}
                       onZoomChange={setZoom}

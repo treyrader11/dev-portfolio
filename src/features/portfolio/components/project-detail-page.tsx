@@ -2,7 +2,8 @@ import { useRef, useState } from "react";
 import { useRouter } from "next/router";
 import { motion } from "framer-motion";
 import AdminLayout from "@/features/admin/components/admin-layout";
-import { CloudinaryUploadField } from "./cloudinary-upload-field";
+import { IconUploadField } from "@/features/admin/components/icon-upload-field";
+import { TechStackField } from "./tech-stack-field";
 import { type ProjectItem, emptyProject } from "../types";
 
 interface Props {
@@ -40,8 +41,10 @@ export function ProjectDetailPage({ project }: Props) {
             emptyProject.downloadLinks,
           projectImage: project.projectImage,
           projectVideo: project.projectVideo,
-          image:
-            (project.image as typeof emptyProject.image) ?? emptyProject.image,
+          image: {
+            ...emptyProject.image,
+            ...((project.image as Partial<typeof emptyProject.image>) ?? {}),
+          },
           websiteUrl: project.websiteUrl,
           isRecent: project.isRecent,
           sortOrder: project.sortOrder,
@@ -83,79 +86,92 @@ export function ProjectDetailPage({ project }: Props) {
       ]}
     >
       <div className="w-full max-w-3xl pb-24">
-        <div className="bg-dark-400 rounded-lg border border-dark-600 p-6">
-          <div className="grid grid-cols-2 gap-4">
-            <Input
-              label="Title"
-              value={form.title}
-              onChange={(v) => setForm({ ...form, title: v })}
-            />
-            <Input
-              label="Category"
-              value={form.category}
-              onChange={(v) => setForm({ ...form, category: v })}
-            />
-            <Input
-              label="Stack"
-              value={form.stack}
-              onChange={(v) => setForm({ ...form, stack: v })}
-            />
-            <Input
-              label="Color"
-              value={form.color}
-              onChange={(v) => setForm({ ...form, color: v })}
-            />
-            <Input
-              label="Video Key"
-              value={form.videoKey}
-              onChange={(v) => setForm({ ...form, videoKey: v })}
-            />
-            <CloudinaryUploadField
-              label="Tech Image"
-              value={form.techImage}
-              onChange={(v) => setForm({ ...form, techImage: v })}
-              folder="portfolio/tech"
-            />
-            <Input
-              label="YouTube Link"
-              value={form.youtubeLink}
-              onChange={(v) => setForm({ ...form, youtubeLink: v })}
-            />
-            <Input
-              label="GitHub Link"
-              value={form.githubLink}
-              onChange={(v) => setForm({ ...form, githubLink: v })}
-            />
-            <Input
-              label="Website URL"
-              value={form.websiteUrl}
-              onChange={(v) => setForm({ ...form, websiteUrl: v })}
-            />
-            <CloudinaryUploadField
-              label="Project Image"
-              value={form.projectImage}
-              onChange={(v) =>
-                setForm({
-                  ...form,
-                  projectImage: v,
-                  // Keep the main product shot (image.src) in sync with the upload.
-                  image: { ...form.image, src: v },
-                })
-              }
-            />
-            <Input
-              label="Project Video"
-              value={form.projectVideo}
-              onChange={(v) => setForm({ ...form, projectVideo: v })}
-            />
-            <Input
-              label="Sort Order"
-              value={String(form.sortOrder)}
-              onChange={(v) => setForm({ ...form, sortOrder: Number(v) || 0 })}
-            />
-          </div>
+        {/* One column — every field stacks. */}
+        <div className="bg-dark-400 rounded-lg border border-dark-600 p-6 space-y-4">
+          <IconUploadField
+            label="Icon"
+            value={form.image.icon}
+            onChange={(v) =>
+              setForm((f) => ({ ...f, image: { ...f.image, icon: v } }))
+            }
+          />
 
-          <div className="mt-4">
+          <Input
+            label="Title"
+            value={form.title}
+            onChange={(v) => setForm({ ...form, title: v })}
+          />
+          <Input
+            label="Category"
+            value={form.category}
+            onChange={(v) => setForm({ ...form, category: v })}
+          />
+
+          <TechStackField
+            label="Tech Stack"
+            value={form.techImage}
+            onChange={(v) => setForm((f) => ({ ...f, techImage: v }))}
+            onSelectName={(name) => setForm((f) => ({ ...f, stack: name }))}
+          />
+          <Input
+            label="Stack (display text)"
+            value={form.stack}
+            onChange={(v) => setForm({ ...form, stack: v })}
+          />
+
+          <Input
+            label="Color"
+            value={form.color}
+            onChange={(v) => setForm({ ...form, color: v })}
+          />
+          <Input
+            label="Video Key"
+            value={form.videoKey}
+            onChange={(v) => setForm({ ...form, videoKey: v })}
+          />
+
+          <IconUploadField
+            label="Project Image"
+            value={form.projectImage}
+            previewBg="#141516"
+            aspect={16 / 9}
+            onChange={(v) =>
+              setForm((f) => ({
+                ...f,
+                projectImage: v,
+                // Keep the main product shot (image.src) in sync with the upload.
+                image: { ...f.image, src: v },
+              }))
+            }
+          />
+
+          <Input
+            label="YouTube Link"
+            value={form.youtubeLink}
+            onChange={(v) => setForm({ ...form, youtubeLink: v })}
+          />
+          <Input
+            label="GitHub Link"
+            value={form.githubLink}
+            onChange={(v) => setForm({ ...form, githubLink: v })}
+          />
+          <Input
+            label="Website URL"
+            value={form.websiteUrl}
+            onChange={(v) => setForm({ ...form, websiteUrl: v })}
+          />
+          <Input
+            label="Project Video"
+            value={form.projectVideo}
+            onChange={(v) => setForm({ ...form, projectVideo: v })}
+          />
+          <Input
+            label="Sort Order"
+            value={String(form.sortOrder)}
+            onChange={(v) => setForm({ ...form, sortOrder: Number(v) || 0 })}
+          />
+
+          <div>
             <label className="block text-sm font-medium text-white mb-1">
               Description
             </label>
@@ -167,20 +183,18 @@ export function ProjectDetailPage({ project }: Props) {
             />
           </div>
 
-          <div className="grid grid-cols-2 gap-4 mt-4">
-            <ArrayField
-              label="Tags"
-              value={form.tags}
-              onChange={(v) => setForm({ ...form, tags: v })}
-            />
-            <ArrayField
-              label="Technology Features"
-              value={form.technologyFeature}
-              onChange={(v) => setForm({ ...form, technologyFeature: v })}
-            />
-          </div>
+          <ArrayField
+            label="Tags"
+            value={form.tags}
+            onChange={(v) => setForm({ ...form, tags: v })}
+          />
+          <ArrayField
+            label="Technology Features"
+            value={form.technologyFeature}
+            onChange={(v) => setForm({ ...form, technologyFeature: v })}
+          />
 
-          <div className="flex gap-6 mt-4">
+          <div className="flex gap-6 pt-1">
             <label className="flex items-center gap-2 text-sm text-white">
               <input
                 type="checkbox"
