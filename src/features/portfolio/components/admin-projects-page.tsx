@@ -1,7 +1,13 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
+import { useRouter } from "next/router";
+import Link from "next/link";
+import { RiDeleteBinLine, RiStarLine, RiStarFill } from "react-icons/ri";
+import { HiOutlinePencilSquare } from "react-icons/hi2";
 import AdminLayout from "@/features/admin/components/admin-layout";
-import { type ProjectItem, emptyProject } from "../types";
-import { CloudinaryUploadField } from "./cloudinary-upload-field";
+import { ReorderableList } from "@/features/admin/components/reorderable-list";
+import { useNotificationsContext } from "@/components/providers/NotificationsProvider";
+import { cn, slugify } from "@/lib/utils";
+import { type ProjectItem } from "../types";
 
 interface Props {
   projects: ProjectItem[];
@@ -9,276 +15,121 @@ interface Props {
 
 export function AdminProjectsPage({ projects: initial }: Props) {
   const [items, setItems] = useState(initial);
-  const [editing, setEditing] = useState<ProjectItem | null>(null);
-  const [creating, setCreating] = useState(false);
-  const [form, setForm] = useState(emptyProject);
-  const [saving, setSaving] = useState(false);
+  const [confirmId, setConfirmId] = useState<string | null>(null);
+  const router = useRouter();
+  const { addNotification } = useNotificationsContext();
 
-  async function handleCreate() {
-    setSaving(true);
-    const res = await fetch("/api/admin/projects", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(form),
-    });
-    if (res.ok) {
-      const created = await res.json();
-      setItems([...items, created]);
-      setCreating(false);
-      setForm(emptyProject);
+  // Keep the latest order in a ref so the drag-end handler persists it.
+  const orderRef = useRef(items);
+  orderRef.current = items;
+
+  async function saveOrder() {
+    try {
+      const res = await fetch("/api/admin/projects/reorder", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ids: orderRef.current.map((i) => i.id) }),
+      });
+      if (!res.ok) throw new Error("Request failed");
+      addNotification({ text: "Order saved", variant: "success" });
+    } catch {
+      addNotification({ text: "Couldn't save order", variant: "error" });
     }
-    setSaving(false);
   }
 
-  async function handleUpdate() {
-    if (!editing) return;
-    setSaving(true);
-    const res = await fetch(`/api/admin/projects/${editing.id}`, {
-      method: "PUT",
+  // Toggle whether a project appears in the public "Latest Work" section. That
+  // section renders recent projects in this list's order.
+  async function toggleRecent(item: ProjectItem) {
+    const next = !item.isRecent;
+    setItems((prev) =>
+      prev.map((i) => (i.id === item.id ? { ...i, isRecent: next } : i)),
+    );
+    const res = await fetch(`/api/admin/projects/${item.id}`, {
+      method: "PATCH",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(form),
+      body: JSON.stringify({ isRecent: next }),
     });
-    if (res.ok) {
-      const updated = await res.json();
-      setItems(items.map((i) => (i.id === updated.id ? updated : i)));
-      setEditing(null);
+    if (!res.ok) {
+      setItems((prev) =>
+        prev.map((i) => (i.id === item.id ? { ...i, isRecent: !next } : i)),
+      );
+      addNotification({ text: "Couldn't update", variant: "error" });
+    } else {
+      addNotification({
+        text: next ? "Added to Latest Work" : "Removed from Latest Work",
+        variant: "success",
+      });
     }
-    setSaving(false);
   }
 
   async function handleDelete(id: string) {
-    if (!confirm("Delete this project?")) return;
     const res = await fetch(`/api/admin/projects/${id}`, { method: "DELETE" });
     if (res.ok) {
-      setItems(items.filter((i) => i.id !== id));
+      setItems((prev) => prev.filter((i) => i.id !== id));
+      setConfirmId(null);
+      addNotification({ text: "Project deleted", variant: "success" });
+    } else {
+      addNotification({ text: "Couldn't delete", variant: "error" });
     }
   }
 
-  function startEdit(item: ProjectItem) {
-    setEditing(item);
-    setCreating(false);
-    setForm({
-      title: item.title,
-      description: item.description,
-      color: item.color,
-      isPriority: item.isPriority,
-      videoKey: item.videoKey,
-      stack: item.stack,
-      techImage: item.techImage,
-      tags: item.tags,
-      category: item.category,
-      technologyFeature: item.technologyFeature,
-      packages:
-        (item.packages as typeof emptyProject.packages) ??
-        emptyProject.packages,
-      env: (item.env as typeof emptyProject.env) ?? emptyProject.env,
-      youtubeLink: item.youtubeLink,
-      githubLink: item.githubLink,
-      downloadLinks:
-        (item.downloadLinks as typeof emptyProject.downloadLinks) ??
-        emptyProject.downloadLinks,
-      projectImage: item.projectImage,
-      projectVideo: item.projectVideo,
-      image: (item.image as typeof emptyProject.image) ?? emptyProject.image,
-      websiteUrl: item.websiteUrl,
-      isRecent: item.isRecent,
-      sortOrder: item.sortOrder,
-    });
-  }
-
-  function startCreate() {
-    setCreating(true);
-    setEditing(null);
-    setForm(emptyProject);
-  }
-
-  const showForm = creating || editing;
-
   return (
     <AdminLayout title="Projects">
-      <div className="max-w-4xl">
+      <div className="w-full max-w-4xl">
         <div className="flex justify-between items-center mb-6">
-          <p className="text-sm text-light-400">{items.length} projects</p>
-          <button
-            onClick={startCreate}
-            className="px-4 py-2 bg-dark-600 text-white text-sm font-medium rounded-lg hover:bg-dark-600 transition-colors"
+          <p className="text-sm text-light-400">
+            {items.length} project{items.length === 1 ? "" : "s"}
+          </p>
+          <Link
+            href="/admin/projects/new"
+            className="px-4 py-2 bg-secondary text-white text-sm font-medium rounded-lg hover:bg-secondary/80 transition-colors"
           >
             Add Project
-          </button>
+          </Link>
         </div>
 
-        {showForm && (
-          <div className="bg-dark-400 rounded-lg border border-dark-600 p-6 mb-6">
-            <h3 className="text-lg font-semibold mb-4">
-              {creating ? "New Project" : "Edit Project"}
-            </h3>
-            <div className="grid grid-cols-2 gap-4">
-              <Input
-                label="Title"
-                value={form.title}
-                onChange={(v) => setForm({ ...form, title: v })}
-              />
-              <Input
-                label="Category"
-                value={form.category}
-                onChange={(v) => setForm({ ...form, category: v })}
-              />
-              <Input
-                label="Stack"
-                value={form.stack}
-                onChange={(v) => setForm({ ...form, stack: v })}
-              />
-              <Input
-                label="Color"
-                value={form.color}
-                onChange={(v) => setForm({ ...form, color: v })}
-              />
-              <Input
-                label="Video Key"
-                value={form.videoKey}
-                onChange={(v) => setForm({ ...form, videoKey: v })}
-              />
-              <CloudinaryUploadField
-                label="Tech Image"
-                value={form.techImage}
-                onChange={(v) => setForm({ ...form, techImage: v })}
-                folder="portfolio/tech"
-              />
-              <Input
-                label="YouTube Link"
-                value={form.youtubeLink}
-                onChange={(v) => setForm({ ...form, youtubeLink: v })}
-              />
-              <Input
-                label="GitHub Link"
-                value={form.githubLink}
-                onChange={(v) => setForm({ ...form, githubLink: v })}
-              />
-              <Input
-                label="Website URL"
-                value={form.websiteUrl}
-                onChange={(v) => setForm({ ...form, websiteUrl: v })}
-              />
-              <CloudinaryUploadField
-                label="Project Image"
-                value={form.projectImage}
-                onChange={(v) =>
-                  setForm({
-                    ...form,
-                    projectImage: v,
-                    // Keep the main product shot (image.src) in sync with the upload.
-                    image: { ...form.image, src: v },
-                  })
-                }
-              />
-              <Input
-                label="Project Video"
-                value={form.projectVideo}
-                onChange={(v) => setForm({ ...form, projectVideo: v })}
-              />
-              <Input
-                label="Sort Order"
-                value={String(form.sortOrder)}
-                onChange={(v) => setForm({ ...form, sortOrder: Number(v) })}
-              />
-            </div>
-            <div className="mt-4">
-              <label className="block text-sm font-medium text-white mb-1">
-                Description
-              </label>
-              <textarea
-                value={form.description}
-                onChange={(e) =>
-                  setForm({ ...form, description: e.target.value })
-                }
-                rows={4}
-                className="w-full px-3 py-2 border border-dark-600 rounded-lg text-sm"
-              />
-            </div>
-            <div className="grid grid-cols-2 gap-4 mt-4">
-              <ArrayField
-                label="Tags"
-                value={form.tags}
-                onChange={(v) => setForm({ ...form, tags: v })}
-              />
-              <ArrayField
-                label="Technology Features"
-                value={form.technologyFeature}
-                onChange={(v) => setForm({ ...form, technologyFeature: v })}
-              />
-            </div>
-            <div className="flex gap-4 mt-4">
-              <label className="flex items-center gap-2 text-sm">
-                <input
-                  type="checkbox"
-                  checked={form.isPriority}
-                  onChange={(e) =>
-                    setForm({ ...form, isPriority: e.target.checked })
-                  }
-                />
-                Priority
-              </label>
-              <label className="flex items-center gap-2 text-sm">
-                <input
-                  type="checkbox"
-                  checked={form.isRecent}
-                  onChange={(e) =>
-                    setForm({ ...form, isRecent: e.target.checked })
-                  }
-                />
-                Recent
-              </label>
-            </div>
-            <div className="flex gap-3 mt-6">
-              <button
-                onClick={creating ? handleCreate : handleUpdate}
-                disabled={saving}
-                className="px-4 py-2 bg-dark-600 text-white text-sm font-medium rounded-lg hover:bg-dark-600 disabled:opacity-50"
-              >
-                {saving ? "Saving..." : creating ? "Create" : "Update"}
-              </button>
-              <button
-                onClick={() => {
-                  setCreating(false);
-                  setEditing(null);
-                }}
-                className="px-4 py-2 text-light-400 text-sm"
-              >
-                Cancel
-              </button>
-            </div>
-          </div>
-        )}
+        <p className="mb-4 text-xs text-light-400">
+          Click a card to edit it, or press and hold to drag and reorder. The
+          star adds a project to the home page &ldquo;Latest Work&rdquo;
+          section, shown in this order.
+        </p>
 
-        {/* List */}
-        <div className="space-y-3">
-          {items.map((item) => (
-            <div
-              key={item.id}
-              className="bg-dark-400 rounded-lg border border-dark-600 p-4 flex justify-between items-start"
-            >
-              <div>
+        <ReorderableList
+          items={items}
+          getId={(item) => item.id}
+          onReorder={(next) => {
+            orderRef.current = next;
+            setItems(next);
+          }}
+          onDragEnd={saveOrder}
+          onItemClick={(item) =>
+            router.push(`/admin/projects/${slugify(item.title)}`)
+          }
+          itemClassName="group"
+          renderItem={(item) => (
+            <div className="flex items-start justify-between gap-3">
+              {/* Reveal an edit affordance in the card's bottom-right on hover. */}
+              <HiOutlinePencilSquare className="pointer-events-none absolute bottom-3 right-3 size-4 text-light-400 opacity-0 transition-opacity group-hover:opacity-100" />
+
+              <div className="min-w-0">
                 <div className="flex items-center gap-2">
-                  <div
-                    className="w-3 h-3 rounded-full"
+                  <span
+                    className="size-3 shrink-0 rounded-full"
                     style={{ backgroundColor: item.color }}
                   />
-                  <h3 className="font-medium text-secondary">{item.title}</h3>
+                  <h3 className="font-medium text-secondary truncate">
+                    {item.title}
+                  </h3>
                   {item.isPriority && (
                     <span className="text-xs bg-yellow-900/40 text-yellow-400 px-2 py-0.5 rounded">
                       Priority
-                    </span>
-                  )}
-                  {item.isRecent && (
-                    <span className="text-xs bg-green-900/40 text-green-400 px-2 py-0.5 rounded">
-                      Recent
                     </span>
                   )}
                 </div>
                 <p className="text-sm text-light-400 mt-1">
                   {item.category} &middot; {item.stack}
                 </p>
-                <div className="flex gap-1 mt-2">
+                <div className="flex flex-wrap gap-1 mt-2">
                   {item.tags.slice(0, 4).map((tag) => (
                     <span
                       key={tag}
@@ -289,90 +140,63 @@ export function AdminProjectsPage({ projects: initial }: Props) {
                   ))}
                 </div>
               </div>
-              <div className="flex gap-2">
+
+              {/* Controls: Latest Work toggle + delete. data-no-drag +
+                  stopPropagation so they never start a drag or open the editor. */}
+              <div
+                data-no-drag
+                className="flex shrink-0 flex-col items-end gap-2"
+                onClick={(e) => e.stopPropagation()}
+                onPointerDown={(e) => e.stopPropagation()}
+              >
                 <button
-                  onClick={() => startEdit(item)}
-                  className="text-sm text-blue-400 hover:text-blue-400"
+                  aria-pressed={item.isRecent}
+                  onClick={() => toggleRecent(item)}
+                  className={cn(
+                    "inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium transition-colors",
+                    item.isRecent
+                      ? "bg-success/15 text-success hover:bg-success/25"
+                      : "text-light-400 hover:bg-dark-600 hover:text-white",
+                  )}
                 >
-                  Edit
+                  {item.isRecent ? (
+                    <RiStarFill className="size-3.5" />
+                  ) : (
+                    <RiStarLine className="size-3.5" />
+                  )}
+                  {item.isRecent ? "In Latest Work" : "Add to Latest Work"}
                 </button>
-                <button
-                  onClick={() => handleDelete(item.id)}
-                  className="text-sm text-red-400 hover:text-red-400"
-                >
-                  Delete
-                </button>
+
+                {confirmId === item.id ? (
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs text-light-400">Delete?</span>
+                    <button
+                      onClick={() => handleDelete(item.id)}
+                      className="text-xs font-medium text-error hover:text-error-600"
+                    >
+                      Yes
+                    </button>
+                    <button
+                      onClick={() => setConfirmId(null)}
+                      className="text-xs text-light-400 hover:text-white"
+                    >
+                      No
+                    </button>
+                  </div>
+                ) : (
+                  <button
+                    aria-label="Delete project"
+                    onClick={() => setConfirmId(item.id)}
+                    className="text-error transition-colors hover:text-error-600"
+                  >
+                    <RiDeleteBinLine className="size-5" />
+                  </button>
+                )}
               </div>
             </div>
-          ))}
-        </div>
+          )}
+        />
       </div>
     </AdminLayout>
-  );
-}
-
-function Input({
-  label,
-  value,
-  onChange,
-}: {
-  label: string;
-  value: string;
-  onChange: (v: string) => void;
-}) {
-  return (
-    <div>
-      <label className="block text-sm font-medium text-white mb-1">
-        {label}
-      </label>
-      <input
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        className="w-full px-3 py-2 border border-dark-600 rounded-lg text-sm"
-      />
-    </div>
-  );
-}
-
-function ArrayField({
-  label,
-  value,
-  onChange,
-}: {
-  label: string;
-  value: string[];
-  onChange: (v: string[]) => void;
-}) {
-  return (
-    <div>
-      <label className="block text-sm font-medium text-white mb-1">
-        {label}
-      </label>
-      {value.map((item, i) => (
-        <div key={i} className="flex gap-2 mb-1">
-          <input
-            value={item}
-            onChange={(e) => {
-              const next = [...value];
-              next[i] = e.target.value;
-              onChange(next);
-            }}
-            className="flex-1 px-3 py-1.5 border border-dark-600 rounded-lg text-sm"
-          />
-          <button
-            onClick={() => onChange(value.filter((_, j) => j !== i))}
-            className="text-red-500 text-sm"
-          >
-            x
-          </button>
-        </div>
-      ))}
-      <button
-        onClick={() => onChange([...value, ""])}
-        className="text-sm text-blue-400"
-      >
-        + Add
-      </button>
-    </div>
   );
 }

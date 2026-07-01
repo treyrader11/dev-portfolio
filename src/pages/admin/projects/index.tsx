@@ -16,7 +16,5 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     orderBy: { sortOrder: "asc" },
   });
 
-  return {
-    props: { projects: JSON.parse(JSON.stringify(projects)) },
-  };
+  return { props: { projects: JSON.parse(JSON.stringify(projects)) } };
 };

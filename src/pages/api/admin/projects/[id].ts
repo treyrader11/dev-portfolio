@@ -38,6 +38,18 @@ export default async function handler(
     return res.json(item);
   }
 
+  // Partial update — used by the admin list to toggle the "Latest Work" flag
+  // (isRecent) without sending the whole project payload.
+  if (req.method === "PATCH") {
+    const { isRecent } = req.body as { isRecent?: boolean };
+    const data: { isRecent?: boolean } = {};
+    if (typeof isRecent === "boolean") data.isRecent = isRecent;
+
+    const item = await prisma.project.update({ where: { id }, data });
+    await revalidateProjects(res, item.videoKey);
+    return res.json(item);
+  }
+
   if (req.method === "DELETE") {
     const item = await prisma.project.delete({ where: { id } });
     await revalidateProjects(res, item.videoKey);
