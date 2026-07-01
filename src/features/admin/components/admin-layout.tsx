@@ -154,7 +154,9 @@ export default function AdminLayout({ children, title }: AdminLayoutProps) {
       <button
         onClick={() => setSidebarOpen(!sidebarOpen)}
         className={cn(
-          "fixed top-4 left-4 z-[5] size-16 rounded-full flex items-center justify-center transition-colors duration-300 border-0 outline-none",
+          // Mobile: small circle pinned top-right (matches the public nav close
+          // button). Desktop (md+): the original large top-left sidebar toggle.
+          "fixed top-4 right-4 md:right-auto md:left-4 z-[5] w-10 h-10 md:size-16 rounded-full border border-white/30 md:border-0 flex items-center justify-center transition-colors duration-300 outline-none",
           sidebarOpen ? "bg-neutral-800" : "bg-dark"
         )}
         aria-label={sidebarOpen ? "Close menu" : "Open menu"}
@@ -184,16 +186,24 @@ export default function AdminLayout({ children, title }: AdminLayoutProps) {
             <AdminCurve />
 
             <div className="h-full flex flex-col overflow-y-auto">
-              {/* Header */}
-              <div className="p-6 border-b border-white/10">
-                <Link href="/admin" className="text-lg font-bold">
+              {/* Header — small-caps label on mobile (clears the top-right close
+                  button with pt-20); left-aligned bold header on desktop */}
+              <div className="p-6 pt-20 text-center border-b border-white/10 md:pt-6 md:text-left">
+                <Link
+                  href="/admin"
+                  className="text-xs uppercase tracking-widest text-light-100 md:text-lg md:font-bold md:normal-case md:tracking-normal md:text-white"
+                >
                   Admin Panel
                 </Link>
-                <p className="text-xs text-light-100 mt-1">Portfolio CMS</p>
+                <p className="hidden text-xs text-light-100 mt-1 md:block">
+                  Portfolio CMS
+                </p>
               </div>
 
-              {/* Nav links with stagger animation */}
-              <nav className="flex-1 py-4">
+              {/* Nav links with stagger animation.
+                  Mobile: big, bold, centered items with no icons, vertically
+                  centered in the drawer. Desktop (md+): compact icon rows. */}
+              <nav className="flex-1 flex flex-col justify-center gap-6 py-8 md:block md:gap-0 md:py-4">
                 {navItems.map((item, i) => {
                   const isActive = router.pathname === item.href;
                   return (
@@ -208,13 +218,16 @@ export default function AdminLayout({ children, title }: AdminLayoutProps) {
                       <Link
                         href={item.href}
                         className={cn(
-                          "flex items-center gap-3 px-6 py-2.5 text-sm transition-colors",
+                          "flex items-center justify-center gap-3 px-6 py-3 text-4xl font-bold transition-colors",
+                          "md:justify-start md:py-2.5 md:text-sm md:font-normal",
                           isActive
-                            ? "bg-dark-400 text-white font-medium"
-                            : "text-light-100 hover:text-white hover:bg-dark-400/50"
+                            ? "text-white md:bg-dark-400 md:font-medium"
+                            : "text-light-100 hover:text-white md:hover:bg-dark-400/50"
                         )}
                       >
-                        {renderIcon(item)}
+                        <span className="hidden md:inline-flex">
+                          {renderIcon(item)}
+                        </span>
                         {item.label}
                       </Link>
                     </motion.div>
