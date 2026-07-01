@@ -9,7 +9,8 @@ const sections = [
   {
     title: "Profile & Hero",
     href: "/admin/profile",
-    description: "Edit name, designation, hero text, about section, social links",
+    description:
+      "Edit name, designation, hero text, about section, social links",
   },
   {
     title: "Experiences",
@@ -128,30 +129,41 @@ function StatCard({ label, count }: { label: string; count: number }) {
 }
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const session = await getServerSession(
-    context.req,
-    context.res,
-    authOptions
-  );
+  const session = await getServerSession(context.req, context.res, authOptions);
 
   if (!session?.user?.isAdmin) {
     return { redirect: { destination: "/admin/signin", permanent: false } };
   }
 
-  const [experiences, projects, skills, references, configs, timeEntries, invoices] =
-    await Promise.all([
-      prisma.experience.count(),
-      prisma.project.count(),
-      prisma.skill.count(),
-      prisma.reference.count(),
-      prisma.siteConfig.count(),
-      prisma.timeEntry.count(),
-      prisma.invoice.count(),
-    ]);
+  const [
+    experiences,
+    projects,
+    skills,
+    references,
+    configs,
+    timeEntries,
+    invoices,
+  ] = await Promise.all([
+    prisma.experience.count(),
+    prisma.project.count(),
+    prisma.skill.count(),
+    prisma.reference.count(),
+    prisma.siteConfig.count(),
+    prisma.timeEntry.count(),
+    prisma.invoice.count(),
+  ]);
 
   return {
     props: {
-      counts: { experiences, projects, skills, references, configs, timeEntries, invoices },
+      counts: {
+        experiences,
+        projects,
+        skills,
+        references,
+        configs,
+        timeEntries,
+        invoices,
+      },
     },
   };
 };

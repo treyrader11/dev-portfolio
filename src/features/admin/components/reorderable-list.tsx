@@ -92,7 +92,7 @@ function ReorderableRow<T>({
           "transition-colors hover:text-white active:cursor-grabbing",
         )}
       >
-        <RiDraggable className="h-5 w-5" />
+        <RiDraggable className="size-5 w-5" />
       </button>
       <div className="min-w-0 flex-1">{children}</div>
     </Reorder.Item>

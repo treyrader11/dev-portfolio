@@ -134,7 +134,7 @@ export default function AdminLayout({ children, title }: AdminLayoutProps) {
     // Permanently-dark admin to match the public site. [color-scheme:dark] makes
     // native form controls (inputs/selects/date pickers) render dark, and
     // text-white is the safe default on the dark surface.
-    <div className="min-h-screen bg-dark text-white [color-scheme:dark]">
+    <div className="min-h-screen bg-dark text-white [color-scheme:dark] mx-auto">
       {/* SVG gradient definition for Jira icon */}
       <svg width="0" height="0" className="absolute">
         <defs>
@@ -159,7 +159,7 @@ export default function AdminLayout({ children, title }: AdminLayoutProps) {
         aria-label={sidebarOpen ? "Close menu" : "Open menu"}
         className={cn(
           "fixed top-5 right-5 z-50 flex size-16 items-center justify-center rounded-full border border-white/20 outline-none transition-colors duration-300",
-          sidebarOpen ? "bg-neutral-800" : "bg-dark"
+          sidebarOpen ? "bg-neutral-800" : "bg-dark",
         )}
       >
         <div
@@ -169,7 +169,7 @@ export default function AdminLayout({ children, title }: AdminLayoutProps) {
             "before:block before:h-px before:w-2/5 before:m-auto before:bg-white before:relative before:transition-transform before:duration-300",
             sidebarOpen
               ? "after:rotate-45 after:-top-[1px] before:-rotate-45 before:top-0"
-              : "after:-top-[5px] before:top-[5px]"
+              : "after:-top-[5px] before:top-[5px]",
           )}
         />
       </button>
@@ -182,31 +182,29 @@ export default function AdminLayout({ children, title }: AdminLayoutProps) {
             initial="initial"
             animate="enter"
             exit="exit"
-            className="fixed inset-y-0 left-0 right-0 md:right-[calc(100vw-320px)] z-40 flex h-screen flex-col bg-dark-500 text-white"
+            className="fixed inset-x-0 inset-y-0 z-40 flex h-screen flex-col bg-dark-500 text-white md:inset-x-auto md:left-0 md:w-80"
           >
             <AdminCurve />
 
-            {/* Fixed-height column: header/footer pinned, nav scrolls between */}
-            <div className="flex h-full flex-col">
-              {/* Header — pinned top */}
-              <div className="shrink-0 p-6 pt-20 text-center border-b border-white/10 md:pt-6 md:text-left">
-                <Link
-                  href="/admin"
-                  className="text-xs uppercase tracking-widest text-light-100 md:text-lg md:font-bold md:normal-case md:tracking-normal md:text-white"
-                >
-                  Admin Panel
-                </Link>
-                <p className="hidden text-xs text-light-100 mt-1 md:block">
-                  Portfolio CMS
-                </p>
-              </div>
+            {/* Header — pinned top */}
+            <div className="shrink-0 p-6 pt-20 text-center border-b border-white/10 md:pt-6 md:text-left">
+              <Link
+                href="/admin"
+                className="text-xs uppercase tracking-widest text-light-100 md:text-lg md:font-bold md:normal-case md:tracking-normal md:text-white"
+              >
+                Admin Panel
+              </Link>
+              <p className="hidden text-xs text-light-100 mt-1 md:block">
+                Portfolio CMS
+              </p>
+            </div>
 
-              {/* Nav links with stagger animation.
+            {/* Nav links with stagger animation.
                   Mobile: big, bold, centered items with no icons, vertically
                   centered in the drawer. Desktop (md+): compact icon rows. */}
-              <nav className="min-h-0 flex-1 overflow-y-auto">
-                <div className="flex min-h-full flex-col justify-center gap-6 py-8 md:block md:min-h-0 md:gap-0 md:py-4">
-                  {navItems.map((item, i) => {
+            <nav className="min-h-0 flex-1 overflow-y-auto">
+              <div className="flex min-h-full flex-col justify-center gap-6 py-8 md:block md:min-h-0 md:gap-0 md:py-4">
+                {navItems.map((item, i) => {
                   const isActive = router.pathname === item.href;
                   return (
                     <motion.div
@@ -224,7 +222,7 @@ export default function AdminLayout({ children, title }: AdminLayoutProps) {
                           "md:justify-start md:py-2.5 md:text-sm md:font-normal",
                           isActive
                             ? "text-white md:bg-dark-400 md:font-medium"
-                            : "text-light-100 hover:text-white md:hover:bg-dark-400/50"
+                            : "text-light-100 hover:text-white md:hover:bg-dark-400/50",
                         )}
                       >
                         <span className="hidden md:inline-flex">
@@ -234,48 +232,47 @@ export default function AdminLayout({ children, title }: AdminLayoutProps) {
                       </Link>
                     </motion.div>
                   );
-                  })}
-                </div>
-              </nav>
+                })}
+              </div>
+            </nav>
 
-              {/* Footer — pinned to the bottom, never scrolls over the nav */}
-              <div className="shrink-0 border-t border-white/10">
-                <div className="p-4">
-                  <div className="flex items-center gap-3 mb-3">
-                    {session?.user?.image && (
-                      <img
-                        src={session.user.image}
-                        alt=""
-                        className="w-8 h-8 rounded-full"
-                      />
-                    )}
-                    <div className="min-w-0">
-                      <p className="text-sm font-medium truncate">
-                        {session?.user?.name}
-                      </p>
-                      <p className="text-xs text-light-100 truncate">
-                        {session?.user?.email}
-                      </p>
-                    </div>
+            {/* Footer — pinned to the bottom, never scrolls over the nav */}
+            <div className="shrink-0 border-t border-white/10">
+              <div className="p-4">
+                <div className="flex items-center gap-3 mb-3">
+                  {session?.user?.image && (
+                    <img
+                      src={session.user.image}
+                      alt=""
+                      className="size-8 rounded-full"
+                    />
+                  )}
+                  <div className="min-w-0">
+                    <p className="text-sm font-medium truncate">
+                      {session?.user?.name}
+                    </p>
+                    <p className="text-xs text-light-100 truncate">
+                      {session?.user?.email}
+                    </p>
                   </div>
-                  <button
-                    onClick={() => signOut({ callbackUrl: "/" })}
-                    className="w-full flex items-center gap-3 text-left text-sm text-light-100 hover:text-white transition-colors"
-                  >
-                    <RiLogoutBoxLine className="w-4 h-4 flex-shrink-0" />
-                    Sign out
-                  </button>
                 </div>
+                <button
+                  onClick={() => signOut({ callbackUrl: "/" })}
+                  className="w-full flex items-center gap-3 text-left text-sm text-light-100 hover:text-white transition-colors"
+                >
+                  <RiLogoutBoxLine className="w-4 h-4 flex-shrink-0" />
+                  Sign out
+                </button>
+              </div>
 
-                <div className="p-4 border-t border-white/10">
-                  <Link
-                    href="/"
-                    className="flex items-center gap-3 text-sm text-light-100 hover:text-white transition-colors"
-                  >
-                    <RiExternalLinkLine className="w-4 h-4 flex-shrink-0" />
-                    View site
-                  </Link>
-                </div>
+              <div className="p-4 border-t border-white/10">
+                <Link
+                  href="/"
+                  className="flex items-center gap-3 text-sm text-light-100 hover:text-white transition-colors"
+                >
+                  <RiExternalLinkLine className="w-4 h-4 flex-shrink-0" />
+                  View site
+                </Link>
               </div>
             </div>
           </motion.aside>
