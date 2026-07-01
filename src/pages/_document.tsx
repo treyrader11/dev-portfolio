@@ -29,7 +29,16 @@ export default function Document(): React.ReactElement {
       <body>
         <Main />
         <NextScript />
-        <div id="fab-portal" style={{ position: "fixed", bottom: 0, left: 0, zIndex: 2147483647, pointerEvents: "none" }} />
+        <div
+          id="fab-portal"
+          style={{
+            position: "fixed",
+            bottom: 0,
+            left: 0,
+            zIndex: 2147483647,
+            pointerEvents: "none",
+          }}
+        />
       </body>
     </Html>
   );

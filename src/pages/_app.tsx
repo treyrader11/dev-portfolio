@@ -32,7 +32,11 @@ export default function App({
 
   return (
     <SessionProvider session={session}>
-      <NextNProgress color="#A25600" height={3} options={{ showSpinner: false }} />
+      <NextNProgress
+        color="#A25600"
+        height={3}
+        options={{ showSpinner: false }}
+      />
       <NotificationsProvider>
         {isAdminRoute ? (
           <Component {...pageProps} router={router} />

@@ -90,7 +90,19 @@ function AdminCurve() {
   };
 
   return (
-    <svg className="absolute top-0 -right-[99px] w-[100px] h-full stroke-none fill-dark-500 hidden md:block">
+    <svg
+      className={cn(
+        "absolute",
+        "top-0",
+        "-right-[99px]",
+        "w-[100px]",
+        "h-full",
+        "stroke-none",
+        "fill-dark-500",
+        "hidden",
+        "md:block",
+      )}
+    >
       <motion.path
         variants={curve}
         initial="initial"

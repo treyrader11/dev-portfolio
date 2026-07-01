@@ -66,13 +66,13 @@ export default function AdminDashboard({ counts }: Props) {
   return (
     <AdminLayout
       title="Dashboard"
-      className={cn(
-        "flex",
-        // "flex-col",
-        "justify-center",
-        // "items-center",
-        "w-full",
-      )}
+      // className={cn(
+      //   "flex",
+      //   // "flex-col",
+      //   "justify-center",
+      //   // "items-center",
+      //   "w-full",
+      // )}
     >
       {/* Stats */}
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-8">
