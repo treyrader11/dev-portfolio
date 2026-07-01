@@ -97,7 +97,7 @@ export function ReorderableList<T>({
   }
 
   return (
-    <ul className={cn("m-0", "list-none", "space-y-3", "p-0", "", className)}>
+    <ul className={cn("m-0", "list-none", "space-y-3", "p-0", className)}>
       {items.map((item, index) => {
         const id = getId(item);
         return (

@@ -113,6 +113,71 @@ function AdminCurve() {
   );
 }
 
+// Floating "View site" CTA - mirrors the public AdminFAB (purple, glassy
+// rounded-square, sheen). Bottom-left; z-30 so the open drawer covers it.
+function ViewSiteFab() {
+  const [hovered, setHovered] = useState(false);
+  return (
+    <Link
+      href="/"
+      aria-label="View site"
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      className="admin-fab"
+      style={{
+        position: "fixed",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        zIndex: 30,
+        bottom: 28,
+        right: 28,
+        width: 52,
+        height: 52,
+        borderRadius: 14,
+        color: "#c084fc",
+        background: "rgba(255,255,255,0.04)",
+        border: hovered
+          ? "1px solid rgba(192,132,252,0.4)"
+          : "1px solid rgba(255,255,255,0.08)",
+        backdropFilter: "blur(12px)",
+        WebkitBackdropFilter: "blur(12px)",
+        transition: "all 300ms ease-out",
+        transform: hovered ? "scale(1.08)" : "scale(1)",
+        boxShadow: hovered ? "0 0 20px rgba(192,132,252,0.15)" : "none",
+        textDecoration: "none",
+      }}
+    >
+      <span className="admin-fab-sheen" />
+      <RiExternalLinkLine
+        style={{ position: "relative", zIndex: 1, width: 22, height: 22 }}
+      />
+      <span
+        style={{
+          position: "absolute",
+          right: "100%",
+          marginRight: 12,
+          whiteSpace: "nowrap",
+          borderRadius: 8,
+          padding: "6px 12px",
+          fontSize: 12,
+          fontWeight: 500,
+          background: "rgba(255,255,255,0.08)",
+          border: "1px solid rgba(255,255,255,0.1)",
+          backdropFilter: "blur(8px)",
+          color: "#c084fc",
+          opacity: hovered ? 1 : 0,
+          transform: hovered ? "translateX(0)" : "translateX(8px)",
+          transition: "all 200ms ease-out",
+          pointerEvents: "none",
+        }}
+      >
+        View site
+      </span>
+    </Link>
+  );
+}
+
 interface AdminLayoutProps {
   children: ReactNode;
   title?: string;
@@ -161,15 +226,7 @@ export default function AdminLayout({
         className,
       )}
     >
-      <div
-        className={cn(
-          "max-w-5xl",
-          "mx-auto",
-          "w-full",
-          // " w-full grid",
-          "px-4",
-        )}
-      >
+      <div className={cn("max-w-5xl", "mx-auto", "w-full", "px-4")}>
         {/* SVG gradient definition for Jira icon */}
         <svg width="0" height="0" className="absolute">
           <defs>
@@ -215,8 +272,21 @@ export default function AdminLayout({
               "relative",
               "w-full",
               "after:block",
-              "after:h-px after:w-2/5 after:m-auto after:bg-white after:relative after:transition-transform after:duration-300",
-              "before:block before:h-px before:w-2/5 before:m-auto before:bg-white before:relative before:transition-transform before:duration-300",
+              "after:h-px",
+              "after:w-2/5",
+              "after:m-auto",
+              "after:bg-white",
+              "after:relative",
+              "after:transition-transform",
+              "after:duration-300",
+              "before:block",
+              "before:h-px",
+              "before:w-2/5",
+              "before:m-auto",
+              "before:bg-white",
+              "before:relative",
+              "before:transition-transform",
+              "before:duration-300",
               sidebarOpen
                 ? "after:rotate-45 after:-top-[1px] before:-rotate-45 before:top-0"
                 : "after:-top-[5px] before:top-[5px]",
@@ -232,7 +302,9 @@ export default function AdminLayout({
               initial="initial"
               animate="enter"
               exit="exit"
-              className="fixed inset-x-0 inset-y-0 z-40 flex h-screen flex-col bg-dark-500 text-white md:inset-x-auto md:left-0 md:w-80"
+              className={cn(
+                "fixed inset-x-0 inset-y-0 z-40 flex h-screen flex-col bg-dark-500 text-white md:inset-x-auto md:left-0 md:w-80",
+              )}
             >
               <AdminCurve />
 
@@ -268,8 +340,19 @@ export default function AdminLayout({
                         <Link
                           href={item.href}
                           className={cn(
-                            "flex items-center justify-center gap-3 px-6 py-3 text-4xl font-bold transition-colors",
-                            "md:justify-start md:py-2.5 md:text-sm md:font-normal",
+                            "flex",
+                            "items-center",
+                            "justify-center",
+                            "gap-3",
+                            "px-6",
+                            "py-3",
+                            "text-4xl",
+                            "font-bold",
+                            "transition-colors",
+                            "md:justify-start",
+                            "md:py-2.5",
+                            "md:text-sm",
+                            "md:font-normal",
                             isActive
                               ? "text-white md:bg-dark-400 md:font-medium"
                               : "text-light-100 hover:text-white md:hover:bg-dark-400/50",
@@ -315,16 +398,6 @@ export default function AdminLayout({
                     Sign out
                   </button>
                 </div>
-
-                <div className="p-4 border-t border-white/10">
-                  <Link
-                    href="/"
-                    className="flex items-center gap-3 text-sm text-light-100 hover:text-white transition-colors"
-                  >
-                    <RiExternalLinkLine className="size-4 flex-shrink-0" />
-                    View site
-                  </Link>
-                </div>
               </div>
             </motion.aside>
           )}
@@ -343,6 +416,7 @@ export default function AdminLayout({
         </main>
 
         {/* Toast renderer (fixed bottom-right) — shared with the public site */}
+        <ViewSiteFab />
         <Notifications />
       </div>
     </div>
