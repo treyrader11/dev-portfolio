@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { useRouter } from "next/router";
 import { signOut, useSession } from "next-auth/react";
 import { cn } from "@/lib/utils";
@@ -240,9 +241,11 @@ export default function AdminLayout({ children, title }: AdminLayoutProps) {
             <div className="shrink-0 border-t border-white/10">
               <div className="p-4 flex items-center gap-3">
                 {session?.user?.image && (
-                  <img
+                  <Image
                     src={session.user.image}
                     alt=""
+                    width={32}
+                    height={32}
                     className="size-8 rounded-full flex-shrink-0"
                   />
                 )}
