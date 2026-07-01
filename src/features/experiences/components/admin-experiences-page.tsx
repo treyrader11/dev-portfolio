@@ -2,6 +2,7 @@ import { useRef, useState } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import { RiDeleteBinLine } from "react-icons/ri";
+import { HiOutlinePencilSquare } from "react-icons/hi2";
 import AdminLayout from "@/features/admin/components/admin-layout";
 import { ReorderableList } from "@/features/admin/components/reorderable-list";
 import { useNotificationsContext } from "@/components/providers/NotificationsProvider";
@@ -79,8 +80,11 @@ export function AdminExperiencesPage({ experiences: initial }: Props) {
           onItemClick={(item) =>
             router.push(`/admin/experience/${slugify(item.company)}`)
           }
+          itemClassName="group"
           renderItem={(item) => (
             <div className="flex items-start justify-between gap-3">
+              {/* Reveal an edit affordance in the card's bottom-right on hover. */}
+              <HiOutlinePencilSquare className="pointer-events-none absolute bottom-3 right-3 size-4 text-light-400 opacity-0 transition-opacity group-hover:opacity-100" />
               <div className="min-w-0">
                 <h3 className="font-medium text-secondary truncate">
                   {item.title}

@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
 import { AnimatePresence, motion, Reorder, useDragControls } from "framer-motion";
 import { RiDraggable, RiCloseLine, RiAddLine } from "react-icons/ri";
@@ -56,6 +56,13 @@ export function ExperienceDetailPage({ experience }: Props) {
   const [saving, setSaving] = useState(false);
   const [focusedTaskId, setFocusedTaskId] = useState<string | null>(null);
 
+  // Dirty-tracking: any field or task edit reveals the fixed save bar. The
+  // initial snapshot is captured once, on the first render.
+  const snapshot = JSON.stringify({ ...form, points: tasks.map((t) => t.value) });
+  const initialSnapshot = useRef<string | undefined>(undefined);
+  if (initialSnapshot.current === undefined) initialSnapshot.current = snapshot;
+  const dirty = snapshot !== initialSnapshot.current;
+
   function addTask() {
     setTasks((t) => [...t, { id: `t${idCounter.current++}`, value: "" }]);
   }
@@ -96,7 +103,7 @@ export function ExperienceDetailPage({ experience }: Props) {
         { label: isNew ? "New" : experience.company },
       ]}
     >
-      <div className="w-full max-w-3xl">
+      <div className="w-full max-w-3xl pb-24">
         <div className="bg-dark-400 rounded-lg border border-dark-600 p-6 space-y-5">
           <div className="grid grid-cols-2 gap-4">
             <Input
@@ -136,29 +143,29 @@ export function ExperienceDetailPage({ experience }: Props) {
             onChange={(v) => setForm({ ...form, iconBg: v })}
           />
 
-          {/* Tasks — drag the handle to reorder. When a task is focused it
-              lifts into a card and the rest of the page blurs behind it. The
-              section is elevated above the backdrop so the tasks stay sharp. */}
-          <div className={cn("relative", focusedTaskId && "z-50")}>
+          {/* Tasks — drag the handle to reorder. Focusing a task lifts only
+              that row above the blurred backdrop; everything else (page and the
+              other tasks) blurs behind it. */}
+          <div className="relative">
             <AnimatePresence>
               {focusedTaskId && (
                 <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
-                  className="fixed inset-0 bg-black/40 backdrop-blur-sm"
+                  className="fixed inset-0 z-40 bg-black/40 backdrop-blur-sm"
                 />
               )}
             </AnimatePresence>
 
-            <label className="relative block text-sm font-medium text-white mb-2">
+            <label className="block text-sm font-medium text-white mb-2">
               Tasks
             </label>
             <Reorder.Group
               axis="y"
               values={tasks}
               onReorder={setTasks}
-              className="relative space-y-2"
+              className="space-y-2"
             >
               {tasks.map((task) => (
                 <TaskRow
@@ -177,29 +184,43 @@ export function ExperienceDetailPage({ experience }: Props) {
             <button
               type="button"
               onClick={addTask}
-              className="relative mt-2 inline-flex items-center gap-1 text-sm text-blue-400 hover:text-blue-300"
+              className="mt-2 inline-flex items-center gap-1 text-sm text-blue-400 hover:text-blue-300"
             >
               <RiAddLine className="size-4" /> Add task
             </button>
           </div>
+        </div>
+      </div>
 
-          <div className="flex gap-3 pt-1">
+      {/* Save bar — hidden off the bottom of the screen until a change is made,
+          then it springs up into view. */}
+      <motion.div
+        initial={false}
+        animate={{ y: dirty ? "0%" : "110%" }}
+        transition={{ type: "spring", stiffness: 320, damping: 32 }}
+        className="fixed inset-x-0 bottom-0 z-30 border-t border-dark-600 bg-dark-500/95 backdrop-blur"
+      >
+        <div className="mx-auto flex max-w-3xl items-center justify-between gap-3 px-4 py-4">
+          <span className="text-sm text-light-400">You have unsaved changes</span>
+          <div className="flex gap-3">
             <button
-              onClick={handleSave}
-              disabled={saving}
-              className="px-4 py-2 bg-success text-white text-sm font-medium rounded-lg hover:bg-success-600 disabled:opacity-50"
-            >
-              {saving ? "Saving..." : isNew ? "Create" : "Save"}
-            </button>
-            <button
+              type="button"
               onClick={() => router.push("/admin/experience")}
-              className="px-4 py-2 text-light-400 text-sm hover:text-white"
+              className="px-4 py-2 text-sm text-light-400 hover:text-white"
             >
               Cancel
             </button>
+            <button
+              type="button"
+              onClick={handleSave}
+              disabled={saving}
+              className="rounded-lg bg-success px-4 py-2 text-sm font-medium text-white hover:bg-success-600 disabled:opacity-50"
+            >
+              {saving ? "Saving..." : isNew ? "Create" : "Save"}
+            </button>
           </div>
         </div>
-      </div>
+      </motion.div>
     </AdminLayout>
   );
 }
@@ -220,45 +241,71 @@ function TaskRow({
   onRemove: (id: string) => void;
 }) {
   const controls = useDragControls();
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  // While focused the textarea grows to fit its wrapped text; unfocused it
+  // collapses back to a single clipped line.
+  useEffect(() => {
+    const el = textareaRef.current;
+    if (!el) return;
+    if (focused) {
+      el.style.height = "auto";
+      el.style.height = `${el.scrollHeight}px`;
+    } else {
+      el.style.height = "";
+    }
+  }, [focused, task.value]);
+
   return (
     <Reorder.Item
       value={task}
       dragListener={false}
       dragControls={controls}
-      className="relative"
+      // Only the focused row rises above the blurred backdrop (z-40).
+      className={cn("relative", focused && "z-50")}
     >
       {/* No static border — on focus the row animates into a raised card. */}
       <motion.div
-        animate={{ scale: focused ? 1.03 : 1 }}
+        animate={{ scale: focused ? 1.02 : 1 }}
         transition={{ type: "spring", stiffness: 300, damping: 26 }}
         className={cn(
-          "flex items-center gap-2 rounded-lg p-2 transition-colors",
+          "flex gap-2 rounded-lg p-2 transition-colors",
           focused
-            ? "bg-dark-600 shadow-2xl ring-1 ring-secondary/50"
-            : "bg-transparent hover:bg-dark-500",
+            ? "items-start bg-dark-600 shadow-2xl ring-1 ring-secondary/50"
+            : "items-center bg-transparent hover:bg-dark-500",
         )}
       >
         <button
           type="button"
           aria-label="Drag to reorder"
           onPointerDown={(e) => controls.start(e)}
-          className="cursor-grab touch-none text-light-400 hover:text-white active:cursor-grabbing"
+          className={cn(
+            "cursor-grab touch-none text-light-400 hover:text-white active:cursor-grabbing",
+            focused && "mt-1",
+          )}
         >
           <RiDraggable className="size-5" />
         </button>
-        <input
+        <textarea
+          ref={textareaRef}
+          rows={1}
           value={task.value}
           onFocus={onFocus}
           onBlur={onBlur}
           onChange={(e) => onChange(task.id, e.target.value)}
           placeholder="Describe a task or achievement"
-          className="flex-1 bg-transparent px-1 py-1 text-sm text-white outline-none placeholder:text-light-400"
+          className={cn(
+            "flex-1 resize-none bg-transparent px-1 py-1 text-sm text-white outline-none placeholder:text-light-400",
+            focused
+              ? "whitespace-pre-wrap break-words"
+              : "h-7 overflow-hidden whitespace-nowrap",
+          )}
         />
         <button
           type="button"
           aria-label="Remove task"
           onClick={() => onRemove(task.id)}
-          className="text-error hover:text-error-600"
+          className={cn("text-error hover:text-error-600", focused && "mt-1")}
         >
           <RiCloseLine className="size-5" />
         </button>
