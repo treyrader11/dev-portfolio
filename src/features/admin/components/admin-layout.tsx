@@ -130,7 +130,11 @@ export default function AdminLayout({ children, title }: AdminLayoutProps) {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    // [color-scheme:light] pins native form controls to a light rendering so
+    // inputs/selects stay readable even when the OS/site is in dark mode (the
+    // site body is #0f0f0f). text-gray-900 gives a safe dark default on the
+    // light gray surface so nothing renders dark-on-dark.
+    <div className="min-h-screen bg-gray-50 text-gray-900 [color-scheme:light]">
       {/* SVG gradient definition for Jira icon */}
       <svg width="0" height="0" className="absolute">
         <defs>
@@ -261,14 +265,16 @@ export default function AdminLayout({ children, title }: AdminLayoutProps) {
         )}
       </AnimatePresence>
 
-      {/* Main content */}
+      {/* Main content — centered horizontally to a max width */}
       <main className="min-h-screen">
-        <header className="bg-gray-50 border-b border-gray-200 px-8 py-6 flex justify-end">
-          <h1 className="text-2xl font-bold text-gray-900">
-            {title || "Dashboard"}
-          </h1>
+        <header className="bg-gray-50 border-b border-gray-200">
+          <div className="max-w-6xl mx-auto px-8 py-6 flex justify-between items-center">
+            <h1 className="text-2xl font-bold text-gray-900">
+              {title || "Dashboard"}
+            </h1>
+          </div>
         </header>
-        <div className="p-8">{children}</div>
+        <div className="max-w-6xl mx-auto w-full p-8">{children}</div>
       </main>
     </div>
   );

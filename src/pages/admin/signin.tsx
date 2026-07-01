@@ -9,7 +9,7 @@ export default function AdminSignIn() {
   const error = router.query.error as string | undefined;
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
+    <div className="min-h-screen flex items-center justify-center bg-gray-100 text-gray-900 [color-scheme:light]">
       <div className="bg-white p-8 rounded-xl shadow-lg max-w-md w-full text-center">
         <h1 className="text-2xl font-bold text-gray-900 mb-2">Admin Panel</h1>
         <p className="text-gray-500 mb-8">
