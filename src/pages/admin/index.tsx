@@ -15,7 +15,7 @@ const sections = [
   },
   {
     title: "Experience",
-    href: "/admin/experiences",
+    href: "/admin/experience",
     description: "Manage work history and timeline entries",
   },
   {
@@ -70,7 +70,7 @@ export default function AdminDashboard({ counts }: Props) {
         <StatCard
           label="Experience"
           count={counts.experiences}
-          href="/admin/experiences"
+          href="/admin/experience"
         />
         <StatCard
           label="Projects"

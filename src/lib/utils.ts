@@ -36,6 +36,14 @@ export const resolveImageSrc = (src: string, base = "/shots"): string => {
   return `${base}/${src}`;
 };
 
+// URL-safe slug from a name, e.g. "Roux UI" -> "roux-ui", "Vouzot" -> "vouzot".
+export const slugify = (str: string): string =>
+  str
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+
 export const createScrollPositions = (
   positions: { title: string }[]
 ): ScrollPosition[] => {

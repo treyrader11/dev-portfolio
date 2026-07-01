@@ -28,7 +28,7 @@ import ViewSiteFab from "./view-site-fab";
 const navItems = [
   { label: "Dashboard", href: "/admin", icon: RiDashboardLine },
   { label: "Profile", href: "/admin/profile", icon: RiUserLine },
-  { label: "Experience", href: "/admin/experiences", icon: RiBriefcaseLine },
+  { label: "Experience", href: "/admin/experience", icon: RiBriefcaseLine },
   { label: "Projects", href: "/admin/projects", icon: RiFolderLine },
   { label: "Skills", href: "/admin/skills", icon: RiFlashlightLine },
   { label: "References", href: "/admin/references", icon: RiStarLine },
@@ -120,12 +120,16 @@ interface AdminLayoutProps {
   children: ReactNode;
   title?: string;
   className?: string;
+  // Override the auto-generated breadcrumbs (e.g. for nested detail routes
+  // that aren't in navItems, like /admin/experience/[slug]).
+  breadcrumbs?: { label: string; href?: string }[];
 }
 
 export default function AdminLayout({
   children,
   title,
   className,
+  breadcrumbs,
 }: AdminLayoutProps) {
   const router = useRouter();
   const { data: session } = useSession();
@@ -152,12 +156,13 @@ export default function AdminLayout({
   }
 
   const currentNav = navItems.find((n) => n.href === router.pathname);
-  const crumbs: { label: string; href?: string }[] = [
+  const autoCrumbs: { label: string; href?: string }[] = [
     { label: "Dashboard", href: "/admin" },
   ];
   if (currentNav && currentNav.href !== "/admin") {
-    crumbs.push({ label: currentNav.label, href: currentNav.href });
+    autoCrumbs.push({ label: currentNav.label, href: currentNav.href });
   }
+  const crumbs = breadcrumbs ?? autoCrumbs;
 
   return (
     // Permanently-dark admin to match the public site. [color-scheme:dark] makes
