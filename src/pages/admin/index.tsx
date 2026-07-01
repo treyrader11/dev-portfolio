@@ -67,12 +67,32 @@ export default function AdminDashboard({ counts }: Props) {
     <AdminLayout title="Dashboard">
       {/* Stats */}
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-8">
-        <StatCard label="Experiences" count={counts.experiences} />
-        <StatCard label="Projects" count={counts.projects} />
-        <StatCard label="Skills" count={counts.skills} />
-        <StatCard label="References" count={counts.references} />
-        <StatCard label="Time Entries" count={counts.timeEntries} />
-        <StatCard label="Invoices" count={counts.invoices} />
+        <StatCard
+          label="Experiences"
+          count={counts.experiences}
+          href="/admin/experiences"
+        />
+        <StatCard
+          label="Projects"
+          count={counts.projects}
+          href="/admin/projects"
+        />
+        <StatCard label="Skills" count={counts.skills} href="/admin/skills" />
+        <StatCard
+          label="References"
+          count={counts.references}
+          href="/admin/references"
+        />
+        <StatCard
+          label="Time Entries"
+          count={counts.timeEntries}
+          href="/admin/jira"
+        />
+        <StatCard
+          label="Invoices"
+          count={counts.invoices}
+          href="/admin/invoices"
+        />
       </div>
 
       {/* Section cards */}
@@ -120,12 +140,22 @@ export default function AdminDashboard({ counts }: Props) {
   );
 }
 
-function StatCard({ label, count }: { label: string; count: number }) {
+function StatCard({
+  label,
+  count,
+  href,
+}: {
+  label: string;
+  count: number;
+  href: string;
+}) {
   return (
-    <div className="bg-dark-400 rounded-lg border border-dark-600 p-4">
-      <p className="text-sm text-light-400">{label}</p>
-      <p className="text-2xl font-bold text-white mt-1">{count}</p>
-    </div>
+    <Link href={href}>
+      <div className="bg-dark-400 rounded-lg border border-dark-600 p-4 transition-colors hover:border-secondary hover:bg-dark-600">
+        <p className="text-sm text-light-400">{label}</p>
+        <p className="text-2xl font-bold text-white mt-1">{count}</p>
+      </div>
+    </Link>
   );
 }
 

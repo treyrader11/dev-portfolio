@@ -21,6 +21,8 @@ import {
 } from "react-icons/ri";
 import { SiJira } from "react-icons/si";
 import Notifications from "@/components/Notifications";
+import { AdminHeader } from "./admin-header";
+import ViewSiteFab from "./view-site-fab";
 
 const navItems = [
   { label: "Dashboard", href: "/admin", icon: RiDashboardLine },
@@ -113,71 +115,6 @@ function AdminCurve() {
   );
 }
 
-// Floating "View site" CTA - mirrors the public AdminFAB (purple, glassy
-// rounded-square, sheen). Bottom-left; z-30 so the open drawer covers it.
-function ViewSiteFab() {
-  const [hovered, setHovered] = useState(false);
-  return (
-    <Link
-      href="/"
-      aria-label="View site"
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      className="admin-fab"
-      style={{
-        position: "fixed",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        zIndex: 30,
-        bottom: 28,
-        right: 28,
-        width: 52,
-        height: 52,
-        borderRadius: 14,
-        color: "#c084fc",
-        background: "rgba(255,255,255,0.04)",
-        border: hovered
-          ? "1px solid rgba(192,132,252,0.4)"
-          : "1px solid rgba(255,255,255,0.08)",
-        backdropFilter: "blur(12px)",
-        WebkitBackdropFilter: "blur(12px)",
-        transition: "all 300ms ease-out",
-        transform: hovered ? "scale(1.08)" : "scale(1)",
-        boxShadow: hovered ? "0 0 20px rgba(192,132,252,0.15)" : "none",
-        textDecoration: "none",
-      }}
-    >
-      <span className="admin-fab-sheen" />
-      <RiExternalLinkLine
-        style={{ position: "relative", zIndex: 1, width: 22, height: 22 }}
-      />
-      <span
-        style={{
-          position: "absolute",
-          right: "100%",
-          marginRight: 12,
-          whiteSpace: "nowrap",
-          borderRadius: 8,
-          padding: "6px 12px",
-          fontSize: 12,
-          fontWeight: 500,
-          background: "rgba(255,255,255,0.08)",
-          border: "1px solid rgba(255,255,255,0.1)",
-          backdropFilter: "blur(8px)",
-          color: "#c084fc",
-          opacity: hovered ? 1 : 0,
-          transform: hovered ? "translateX(0)" : "translateX(8px)",
-          transition: "all 200ms ease-out",
-          pointerEvents: "none",
-        }}
-      >
-        View site
-      </span>
-    </Link>
-  );
-}
-
 interface AdminLayoutProps {
   children: ReactNode;
   title?: string;
@@ -226,6 +163,12 @@ export default function AdminLayout({
         className,
       )}
     >
+      {/* Main content — centered horizontally to a max width */}
+      <main className="min-h-screen">
+        <AdminHeader title={title} />
+        <div className="max-w-6xl mx-auto w-full p-8">{children}</div>
+      </main>
+
       <div className={cn("max-w-5xl", "mx-auto", "w-full", "px-4")}>
         {/* SVG gradient definition for Jira icon */}
         <svg width="0" height="0" className="absolute">
@@ -402,18 +345,6 @@ export default function AdminLayout({
             </motion.aside>
           )}
         </AnimatePresence>
-
-        {/* Main content — centered horizontally to a max width */}
-        <main className="min-h-screen">
-          <header className="bg-dark-500 border-b border-dark-600">
-            <div className="max-w-6xl mx-auto px-8 py-6 flex justify-between items-center">
-              <h1 className="text-2xl font-bold text-secondary font-pp-acma">
-                {title || "Dashboard"}
-              </h1>
-            </div>
-          </header>
-          <div className="max-w-6xl mx-auto w-full p-8">{children}</div>
-        </main>
 
         {/* Toast renderer (fixed bottom-right) — shared with the public site */}
         <ViewSiteFab />
