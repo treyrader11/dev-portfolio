@@ -1,7 +1,7 @@
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { useState } from "react";
-import { RiExternalLinkLine } from "react-icons/ri";
+import { RiExternalLinkLine, RiLoader4Line } from "react-icons/ri";
 
 interface Props {
   className?: string;
@@ -10,10 +10,29 @@ interface Props {
 // rounded-square, sheen). Bottom-left; z-30 so the open drawer covers it.
 export default function ViewSiteFab({ className }: Props) {
   const [hovered, setHovered] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
+
+  // On-demand revalidate the public ISR pages, then do a *hard* navigation so
+  // the freshly regenerated HTML loads instead of the client router's cached
+  // (possibly stale, prefetched) getStaticProps payload.
+  async function handleClick(e: React.MouseEvent) {
+    e.preventDefault();
+    if (refreshing) return;
+    setRefreshing(true);
+    try {
+      await fetch("/api/admin/revalidate", { method: "POST" });
+    } catch {
+      // Non-fatal — navigate anyway; ISR still catches up on its own.
+    }
+    window.location.href = "/";
+  }
+
   return (
     <Link
       href="/"
       aria-label="View site"
+      prefetch={false}
+      onClick={handleClick}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       className={cn(
@@ -53,9 +72,16 @@ export default function ViewSiteFab({ className }: Props) {
       }}
     >
       <span className="admin-fab-sheen" />
-      <RiExternalLinkLine
-        style={{ position: "relative", zIndex: 1, width: 22, height: 22 }}
-      />
+      {refreshing ? (
+        <RiLoader4Line
+          className="animate-spin"
+          style={{ position: "relative", zIndex: 1, width: 22, height: 22 }}
+        />
+      ) : (
+        <RiExternalLinkLine
+          style={{ position: "relative", zIndex: 1, width: 22, height: 22 }}
+        />
+      )}
       <span
         style={{
           position: "absolute",
