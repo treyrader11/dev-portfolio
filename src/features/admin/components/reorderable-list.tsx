@@ -24,7 +24,14 @@ interface ReorderableListProps<T> {
 // Shared card frame so the real card and the ghost placeholder match exactly
 // (same padding, border, radius, size → nothing jumps or reflows).
 const CARD_FRAME = cn(
-  "flex items-start gap-3 rounded-lg border border-dark-600 bg-dark-400 p-4",
+  "flex",
+  "items-start",
+  "gap-3",
+  "rounded-lg",
+  "border",
+  "border-dark-600",
+  "bg-dark-400",
+  "p-4",
 );
 
 /**
@@ -90,7 +97,7 @@ export function ReorderableList<T>({
   }
 
   return (
-    <ul className={cn("m-0 list-none space-y-3 p-0", className)}>
+    <ul className={cn("m-0", "list-none", "space-y-3", "p-0", "", className)}>
       {items.map((item, index) => {
         const id = getId(item);
         return (
