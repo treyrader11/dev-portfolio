@@ -1,9 +1,10 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import AdminLayout from "@/features/admin/components/admin-layout";
 import { useTimer } from "../hooks/use-timer";
 import Link from "next/link";
 import * as Popover from "@radix-ui/react-popover";
 import { RiMore2Fill, RiTimeLine, RiDeleteBinLine } from "react-icons/ri";
+import { cn } from "@/lib/utils";
 import type { JiraIssue } from "../types";
 
 interface JiraProject {
@@ -302,7 +303,7 @@ export function AdminJiraPage({ configured, issues: initialIssues, jiraError }: 
 
   return (
     <AdminLayout title="Jira Tickets">
-      <div className="space-y-6">
+      <div className="max-md:w-full space-y-6">
         {/* Active Timer Bar */}
         {isRunning && activeEntry && (
           <div className="bg-green-950/40 border border-green-800 rounded-lg p-4 flex flex-wrap items-center gap-4">
@@ -588,8 +589,11 @@ export function AdminJiraPage({ configured, issues: initialIssues, jiraError }: 
           </div>
         )}
 
-        {/* Issues Table */}
-        <div className="bg-dark-400 rounded-lg border border-dark-600 overflow-x-auto">
+        {/* Mobile: swipeable status columns, Jira-app style. Read-only. */}
+        <MobileIssueBoard issues={issues} />
+
+        {/* Issues Table (desktop and up) */}
+        <div className="hidden md:block bg-dark-400 rounded-lg border border-dark-600 overflow-x-auto">
           <table className="w-full min-w-[640px]">
             <thead>
               <tr className="bg-dark-400 border-b border-dark-600">
@@ -797,5 +801,182 @@ export function AdminJiraPage({ configured, issues: initialIssues, jiraError }: 
         </div>
       </div>
     </AdminLayout>
+  );
+}
+
+// Preferred left-to-right column order, mirroring a Jira board. Any status not
+// listed here falls to the end, in the order it first appears.
+const COLUMN_ORDER = [
+  "In Progress",
+  "To Do",
+  "Open",
+  "In Review",
+  "Cancelled",
+  "Rejected",
+  "Done",
+];
+
+/**
+ * Mobile-only board: the flat issue list is grouped by status into full-width
+ * cards laid out horizontally in a scroll-snap carousel — swipe between columns
+ * like the Jira mobile app. Pagination dots track the visible column via an
+ * IntersectionObserver and can snap back to any column on tap. Hidden at `md+`,
+ * where the desktop table takes over. Read/view-only (no drag or reorder).
+ */
+function MobileIssueBoard({ issues }: { issues: JiraIssue[] }) {
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const panelRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const [active, setActive] = useState(0);
+
+  const columns = useMemo(() => {
+    const map = new Map<string, JiraIssue[]>();
+    for (const issue of issues) {
+      const name = issue.fields?.status?.name || "No Status";
+      const bucket = map.get(name);
+      if (bucket) bucket.push(issue);
+      else map.set(name, [issue]);
+    }
+    return Array.from(map.entries())
+      .sort(([a], [b]) => {
+        const ia = COLUMN_ORDER.indexOf(a);
+        const ib = COLUMN_ORDER.indexOf(b);
+        return (ia === -1 ? 999 : ia) - (ib === -1 ? 999 : ib);
+      })
+      .map(([name, items]) => ({ name, items }));
+  }, [issues]);
+
+  // Highlight the dot for whichever column is mostly in view.
+  useEffect(() => {
+    const root = scrollRef.current;
+    if (!root) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            const idx = panelRefs.current.indexOf(
+              entry.target as HTMLDivElement,
+            );
+            if (idx !== -1) setActive(idx);
+          }
+        }
+      },
+      { root, threshold: 0.6 },
+    );
+    panelRefs.current.forEach((el) => el && observer.observe(el));
+    return () => observer.disconnect();
+  }, [columns.length]);
+
+  // Programmatically snap to a column (used by the dots, reusable later).
+  function snapTo(index: number) {
+    panelRefs.current[index]?.scrollIntoView({
+      behavior: "smooth",
+      inline: "start",
+      block: "nearest",
+    });
+  }
+
+  if (columns.length === 0) {
+    return (
+      <div className="md:hidden rounded-lg border border-dark-600 bg-dark-400 px-4 py-8 text-center text-sm text-light-400">
+        No issues found. Try a different filter or search query.
+      </div>
+    );
+  }
+
+  return (
+    <div className="md:hidden">
+      <div
+        ref={scrollRef}
+        className="flex snap-x snap-mandatory overflow-x-auto gap-3 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+      >
+        {columns.map((col, i) => (
+          <div
+            key={col.name}
+            ref={(el) => {
+              panelRefs.current[i] = el;
+            }}
+            className="snap-start shrink-0 w-full"
+          >
+            <div className="rounded-lg border border-dark-600 bg-dark-400 p-3">
+              {/* Column header — title + ticket count, e.g. "In Progress 7". */}
+              <div className="mb-3 flex items-center gap-2 px-1">
+                <h3 className="text-sm font-semibold uppercase tracking-wide text-white">
+                  {col.name}
+                </h3>
+                <span className="rounded-full bg-dark-600 px-2 py-0.5 text-xs font-medium text-light-400">
+                  {col.items.length}
+                </span>
+              </div>
+
+              <div className="space-y-2">
+                {col.items.map((issue) => (
+                  <MobileIssueCard key={issue.id} issue={issue} />
+                ))}
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Pagination dots — active column in the app's secondary color. */}
+      {columns.length > 1 && (
+        <div className="sticky bottom-0 flex justify-center gap-2 pt-3">
+          {columns.map((col, i) => (
+            <button
+              key={col.name}
+              aria-label={`Go to ${col.name}`}
+              onClick={() => snapTo(i)}
+              className={cn(
+                "h-2 rounded-full transition-all",
+                i === active ? "w-5 bg-secondary" : "w-2 bg-dark-600",
+              )}
+            />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function MobileIssueCard({ issue }: { issue: JiraIssue }) {
+  const priority = issue.fields?.priority;
+  const assignee = issue.fields?.assignee;
+  const avatar = assignee?.avatarUrls?.["24x24"];
+
+  return (
+    <div className="rounded-lg border border-dark-600 bg-dark-500 p-3">
+      <p className="text-sm text-white">{issue.fields?.summary || "—"}</p>
+      <div className="mt-2 flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          {priority?.iconUrl && (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={priority.iconUrl}
+              alt={priority.name}
+              title={priority.name}
+              className="h-4 w-4"
+            />
+          )}
+          <span className="text-xs font-medium text-blue-400">{issue.key}</span>
+        </div>
+        {assignee ? (
+          avatar ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={avatar}
+              alt={assignee.displayName}
+              title={assignee.displayName}
+              className="h-6 w-6 rounded-full"
+            />
+          ) : (
+            <span className="flex h-6 w-6 items-center justify-center rounded-full bg-dark-600 text-[10px] font-medium text-white">
+              {assignee.displayName?.[0]}
+            </span>
+          )
+        ) : (
+          <span className="h-6 w-6 rounded-full bg-dark-600" />
+        )}
+      </div>
+    </div>
   );
 }
