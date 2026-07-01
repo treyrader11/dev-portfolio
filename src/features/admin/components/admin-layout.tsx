@@ -19,6 +19,7 @@ import {
   RiSuitcaseLine,
 } from "react-icons/ri";
 import { SiJira } from "react-icons/si";
+import Notifications from "@/components/Notifications";
 
 const navItems = [
   { label: "Dashboard", href: "/admin", icon: RiDashboardLine },
@@ -288,6 +289,9 @@ export default function AdminLayout({ children, title }: AdminLayoutProps) {
         </header>
         <div className="max-w-6xl mx-auto w-full p-8">{children}</div>
       </main>
+
+      {/* Toast renderer (fixed bottom-right) — shared with the public site */}
+      <Notifications />
     </div>
   );
 }

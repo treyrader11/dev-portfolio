@@ -1,47 +1,41 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { FiAlertCircle, FiX } from "react-icons/fi";
+import { FiAlertCircle, FiCheckCircle, FiX } from "react-icons/fi";
 import { useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { useNotificationsContext } from "@/components/providers/NotificationsProvider";
+import type { Notification as NotificationType } from "@/types/hooks";
 
 export default function Notifications() {
   const { notifications, removeNotification } = useNotificationsContext();
 
+  // Toasts are fixed-positioned, so this only hosts them (no layout box).
   return (
-    <div
-      className={cn(
-        "bg-slate-900",
-        "min-h-[200px]",
-        "flex",
-        "items-center",
-        "justify-center"
-      )}
-    >
-      <AnimatePresence>
-        {notifications.map((notification) => (
-          <Notification
-            key={notification.id}
-            removeNotif={removeNotification}
-            {...notification}
-          />
-        ))}
-      </AnimatePresence>
-    </div>
+    <AnimatePresence>
+      {notifications.map((notification) => (
+        <Notification
+          key={notification.id}
+          removeNotif={removeNotification}
+          {...notification}
+        />
+      ))}
+    </AnimatePresence>
   );
 }
 
 const NOTIFICATION_TTL = 5000;
 
-interface NotificationProps {
-  text?: string;
-  id: string;
+interface NotificationProps extends NotificationType {
   removeNotif: (id: string) => void;
 }
 
-export function Notification({ text, id, removeNotif }: NotificationProps) {
-  console.log("id", id);
+export function Notification({
+  text,
+  id,
+  variant = "success",
+  removeNotif,
+}: NotificationProps) {
   useEffect(() => {
     const timeoutRef = setTimeout(() => {
       removeNotif(id);
@@ -49,6 +43,9 @@ export function Notification({ text, id, removeNotif }: NotificationProps) {
 
     return () => clearTimeout(timeoutRef);
   }, [id, removeNotif]);
+
+  const isError = variant === "error";
+  const Icon = isError ? FiAlertCircle : FiCheckCircle;
 
   return (
     <motion.div
@@ -68,14 +65,14 @@ export function Notification({ text, id, removeNotif }: NotificationProps) {
         "font-medium",
         "shadow-lg",
         "text-white",
-        "bg-emerald-500",
         "fixed",
         "z-50",
         "bottom-4",
-        "right-4"
+        "right-4",
+        isError ? "bg-red-500" : "bg-emerald-500"
       )}
     >
-      <FiAlertCircle
+      <Icon
         className={cn(
           "text-3xl",
           "absolute",
@@ -84,9 +81,8 @@ export function Notification({ text, id, removeNotif }: NotificationProps) {
           "p-2",
           "rounded-full",
           "bg-white",
-          // "text-purple-600",
-          "text-emerald-500",
-          "shadow"
+          "shadow",
+          isError ? "text-red-500" : "text-emerald-500"
         )}
       />
       <span>{text}</span>

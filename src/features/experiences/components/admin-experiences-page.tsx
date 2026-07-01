@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
 import AdminLayout from "@/features/admin/components/admin-layout";
 import { ReorderableList } from "@/features/admin/components/reorderable-list";
+import { useNotificationsContext } from "@/components/providers/NotificationsProvider";
 import { type ExperienceItem, emptyExperience } from "../types";
 
 interface Props {
@@ -14,17 +15,25 @@ export function AdminExperiencesPage({ experiences: initial }: Props) {
   const [form, setForm] = useState(emptyExperience);
   const [saving, setSaving] = useState(false);
 
+  const { addNotification } = useNotificationsContext();
+
   // Keep the latest order in a ref so the drag-end handler persists the current
   // arrangement without a stale closure.
   const orderRef = useRef(items);
   orderRef.current = items;
 
   async function saveOrder() {
-    await fetch("/api/admin/experiences/reorder", {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ ids: orderRef.current.map((i) => i.id) }),
-    });
+    try {
+      const res = await fetch("/api/admin/experiences/reorder", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ids: orderRef.current.map((i) => i.id) }),
+      });
+      if (!res.ok) throw new Error("Request failed");
+      addNotification({ text: "Order saved", variant: "success" });
+    } catch {
+      addNotification({ text: "Couldn't save order", variant: "error" });
+    }
   }
 
   async function handleCreate() {
