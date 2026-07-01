@@ -102,7 +102,7 @@ export function AdminExperiencesPage({ experiences: initial }: Props) {
   const showForm = creating || editing;
 
   return (
-    <AdminLayout title="Experiences">
+    <AdminLayout title="Experience">
       <div className="max-w-4xl">
         <div className="flex justify-between items-center mb-6">
           <p className="text-sm text-light-400">{items.length} experiences</p>

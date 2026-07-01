@@ -22,12 +22,13 @@ import {
 import { SiJira } from "react-icons/si";
 import Notifications from "@/components/Notifications";
 import { AdminHeader } from "./admin-header";
+import Breadcrumbs from "@/components/Breadcrumbs";
 import ViewSiteFab from "./view-site-fab";
 
 const navItems = [
   { label: "Dashboard", href: "/admin", icon: RiDashboardLine },
   { label: "Profile", href: "/admin/profile", icon: RiUserLine },
-  { label: "Experiences", href: "/admin/experiences", icon: RiBriefcaseLine },
+  { label: "Experience", href: "/admin/experiences", icon: RiBriefcaseLine },
   { label: "Projects", href: "/admin/projects", icon: RiFolderLine },
   { label: "Skills", href: "/admin/skills", icon: RiFlashlightLine },
   { label: "References", href: "/admin/references", icon: RiStarLine },
@@ -150,6 +151,14 @@ export default function AdminLayout({
     return <Icon className="size-4 flex-shrink-0" />;
   }
 
+  const currentNav = navItems.find((n) => n.href === router.pathname);
+  const crumbs: { label: string; href?: string }[] = [
+    { label: "Dashboard", href: "/admin" },
+  ];
+  if (currentNav && currentNav.href !== "/admin") {
+    crumbs.push({ label: currentNav.label, href: currentNav.href });
+  }
+
   return (
     // Permanently-dark admin to match the public site. [color-scheme:dark] makes
     // native form controls (inputs/selects/date pickers) render dark, and
@@ -166,7 +175,10 @@ export default function AdminLayout({
       {/* Main content — centered horizontally to a max width */}
       <main className="min-h-screen">
         <AdminHeader title={title} />
-        <div className="max-w-6xl mx-auto w-full p-8">{children}</div>
+        <div className="max-w-6xl mx-auto w-full p-8">
+            <Breadcrumbs items={crumbs} className="mb-6" />
+            {children}
+          </div>
       </main>
 
       <div className={cn("max-w-5xl", "mx-auto", "w-full", "px-4")}>

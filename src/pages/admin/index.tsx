@@ -14,7 +14,7 @@ const sections = [
       "Edit name, designation, hero text, about section, social links",
   },
   {
-    title: "Experiences",
+    title: "Experience",
     href: "/admin/experiences",
     description: "Manage work history and timeline entries",
   },
@@ -68,7 +68,7 @@ export default function AdminDashboard({ counts }: Props) {
       {/* Stats */}
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-8">
         <StatCard
-          label="Experiences"
+          label="Experience"
           count={counts.experiences}
           href="/admin/experiences"
         />
