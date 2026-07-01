@@ -88,7 +88,7 @@ function AdminCurve() {
   };
 
   return (
-    <svg className="absolute top-0 -right-[99px] w-[100px] h-full stroke-none fill-dark-500">
+    <svg className="absolute top-0 -right-[99px] w-[100px] h-full stroke-none fill-dark-500 hidden md:block">
       <motion.path
         variants={curve}
         initial="initial"
@@ -180,7 +180,7 @@ export default function AdminLayout({ children, title }: AdminLayoutProps) {
             initial="initial"
             animate="enter"
             exit="exit"
-            className="fixed inset-y-0 left-0 z-[4] w-64 bg-dark-500 text-white flex flex-col"
+            className="fixed inset-y-0 left-0 z-[4] w-full md:w-64 bg-dark-500 text-white flex flex-col"
           >
             <AdminCurve />
 
