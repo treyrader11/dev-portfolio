@@ -197,6 +197,9 @@ function ReorderableRow({
         transition={{ type: "spring", stiffness: 300, damping: 20 }}
         className={cn(
           CARD_FRAME,
+          // Mobile only: block text selection while dragging by touch; desktop
+          // keeps text selectable.
+          "select-none md:select-text",
           isDragging && "relative z-50 cursor-grabbing",
           itemClassName,
         )}
