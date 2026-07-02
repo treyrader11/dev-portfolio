@@ -113,14 +113,18 @@ export default function ProjectFlipCard({
         onClick={handleFlip}
         className={cn(
           "h-screen",
-          "rotate-[100deg]",
           "fixed",
-          "inset-x-0",
           "w-[120%]",
-          "-left-[10%]",
+          "-left-[calc(20%_-_10%)]",
+          "flex",
+          "items-center",
+          "justify-center",
         )}
       >
-        <ProjectCardBack project={project} />
+        {/* Same sized wrapper as the front so the mockup overlaps exactly. */}
+        <div className="relative w-[min(94vw,90vh)] sm:w-[62%] max-w-[900px]">
+          <ProjectCardBack project={project} />
+        </div>
       </motion.div>
     </div>
   );
