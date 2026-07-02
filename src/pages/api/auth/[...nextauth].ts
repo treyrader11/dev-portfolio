@@ -18,6 +18,11 @@ export const authOptions: NextAuthOptions = {
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID!,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+      // Always show Google's account chooser so you can pick which of your
+      // accounts to sign in with, instead of Google silently reusing whichever
+      // one the browser is already signed into (why each device defaulted to a
+      // different email).
+      authorization: { params: { prompt: "select_account" } },
     }),
   ],
   callbacks: {
