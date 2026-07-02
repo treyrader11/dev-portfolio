@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "Project" ADD COLUMN     "isSlider" BOOLEAN NOT NULL DEFAULT false,
+ADD COLUMN     "sliderOrder" INTEGER NOT NULL DEFAULT 0;
