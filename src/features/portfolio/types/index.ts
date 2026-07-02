@@ -27,4 +27,6 @@ export const emptyProject = {
   websiteUrl: "",
   isRecent: false,
   sortOrder: 0,
+  isSlider: false,
+  sliderOrder: 0,
 };

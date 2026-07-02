@@ -22,7 +22,7 @@ export default async function handler(
       title, description, color, isPriority, videoKey, stack, techImage,
       tags, category, technologyFeature, packages, env, youtubeLink,
       githubLink, downloadLinks, projectImage, projectVideo, image,
-      websiteUrl, isRecent, sortOrder,
+      websiteUrl, isRecent, sortOrder, isSlider, sliderOrder,
     } = req.body;
 
     const item = await prisma.project.update({
@@ -31,7 +31,7 @@ export default async function handler(
         title, description, color, isPriority, videoKey, stack, techImage,
         tags, category, technologyFeature, packages, env, youtubeLink,
         githubLink, downloadLinks, projectImage, projectVideo, image,
-        websiteUrl, isRecent, sortOrder,
+        websiteUrl, isRecent, sortOrder, isSlider, sliderOrder,
       },
     });
     await revalidateProjects(res, item);
@@ -39,14 +39,17 @@ export default async function handler(
   }
 
   // Partial update — used by the admin list to toggle the "Latest Work" flag
-  // (isRecent), and by the product-shots screen to persist the image JSON.
+  // (isRecent) and the "Sliding Images" flag (isSlider), and by the product-shots
+  // screen to persist the image JSON.
   if (req.method === "PATCH") {
-    const { isRecent, image } = req.body as {
+    const { isRecent, isSlider, image } = req.body as {
       isRecent?: boolean;
+      isSlider?: boolean;
       image?: unknown;
     };
-    const data: { isRecent?: boolean; image?: unknown } = {};
+    const data: { isRecent?: boolean; isSlider?: boolean; image?: unknown } = {};
     if (typeof isRecent === "boolean") data.isRecent = isRecent;
+    if (typeof isSlider === "boolean") data.isSlider = isSlider;
     if (image !== undefined) data.image = image;
 
     const item = await prisma.project.update({

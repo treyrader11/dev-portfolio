@@ -12,7 +12,11 @@ import LatestWork from "@/components/LatestWork";
 import Freelance from "@/components/Freelance";
 import Hero from "@/components/Hero";
 import PositionProvider from "@/components/providers/PositionProvider";
-import { getLatestWorkProjects } from "@/features/portfolio/lib/projects";
+import {
+  getLatestWorkProjects,
+  getSliderProjects,
+  type SliderProject,
+} from "@/features/portfolio/lib/projects";
 import type { ProjectData } from "@/types/data";
 import type Lenis from "lenis";
 // import References from "@/components/References";
@@ -31,9 +35,10 @@ interface LocomotiveScrollInstance {
 
 interface HomeProps {
   latestWorkProjects: ProjectData[];
+  sliderProjects: SliderProject[];
 }
 
-const Home: NextPage<HomeProps> = ({ latestWorkProjects }) => {
+const Home: NextPage<HomeProps> = ({ latestWorkProjects, sliderProjects }) => {
   const container = useRef<HTMLDivElement>(null);
   const locomotiveScrollRef = useRef<LocomotiveScrollInstance | null>(null);
   const pathname = usePathname();
@@ -233,7 +238,7 @@ const Home: NextPage<HomeProps> = ({ latestWorkProjects }) => {
 
         <div className={cn("relative px-6 sm:min-h-screen sm:px-20")}>
           {/* <References /> */}
-          <SlidingImages className="bg-white" />
+          <SlidingImages className="bg-white" projects={sliderProjects} />
         </div>
       </Inner>
     </main>
@@ -245,9 +250,12 @@ export default Home;
 // Static generation + ISR: the home page ships as static HTML (SEO-friendly,
 // no client-side data fetching) and revalidates so admin edits surface quickly.
 export const getStaticProps: GetStaticProps<HomeProps> = async () => {
-  const latestWorkProjects = await getLatestWorkProjects();
+  const [latestWorkProjects, sliderProjects] = await Promise.all([
+    getLatestWorkProjects(),
+    getSliderProjects(),
+  ]);
   return {
-    props: { latestWorkProjects },
+    props: { latestWorkProjects, sliderProjects },
     revalidate: 60,
   };
 };

@@ -64,6 +64,44 @@ export async function getLatestWorkProjects(): Promise<ProjectData[]> {
   }
 }
 
+// The home page sliding-images strip: a project's poster + its brand color,
+// only for projects flagged as slider images, in their sliderOrder.
+export type SliderProject = {
+  title: string;
+  poster: string;
+  color: string;
+  isPriority: boolean;
+};
+
+export async function getSliderProjects(): Promise<SliderProject[]> {
+  try {
+    const items = await prisma.project.findMany({
+      where: { isSlider: true },
+      orderBy: { sliderOrder: "asc" },
+      select: {
+        title: true,
+        projectImage: true,
+        color: true,
+        isPriority: true,
+        image: true,
+      },
+    });
+    return items.map((p) => {
+      const img = (
+        p.image && typeof p.image === "object" ? p.image : {}
+      ) as { src?: string };
+      return {
+        title: p.title,
+        poster: p.projectImage || img.src || "",
+        color: p.color,
+        isPriority: p.isPriority,
+      };
+    });
+  } catch {
+    return [];
+  }
+}
+
 export async function getProjectVideoKeys(): Promise<string[]> {
   try {
     const items = await prisma.project.findMany({ select: { videoKey: true } });

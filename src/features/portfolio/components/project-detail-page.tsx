@@ -53,6 +53,8 @@ export function ProjectDetailPage({ project }: Props) {
           websiteUrl: project.websiteUrl,
           isRecent: project.isRecent,
           sortOrder: project.sortOrder,
+          isSlider: project.isSlider,
+          sliderOrder: project.sliderOrder,
         }
       : {
           ...emptyProject,
@@ -168,6 +170,18 @@ export function ProjectDetailPage({ project }: Props) {
               }))
             }
           />
+
+          {/* Use this project's poster in the home page sliding-images strip.
+              Reorder the strip in the Projects list's "Sliding Images" section. */}
+          <label className="flex items-center gap-2 text-sm text-white">
+            <input
+              type="checkbox"
+              checked={form.isSlider}
+              onChange={(e) => setForm({ ...form, isSlider: e.target.checked })}
+              className="size-4 accent-success"
+            />
+            Show poster in home sliding images
+          </label>
 
           {/* Product Shots — managed on a dedicated screen. */}
           <div className="flex flex-col gap-1">

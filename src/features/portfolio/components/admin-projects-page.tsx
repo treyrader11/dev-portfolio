@@ -1,7 +1,14 @@
 import { useRef, useState } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
-import { RiDeleteBinLine, RiStarLine, RiStarFill } from "react-icons/ri";
+import {
+  RiDeleteBinLine,
+  RiStarLine,
+  RiStarFill,
+  RiImageLine,
+  RiImageFill,
+  RiCloseLine,
+} from "react-icons/ri";
 import { HiOutlinePencilSquare } from "react-icons/hi2";
 import AdminLayout from "@/features/admin/components/admin-layout";
 import { ReorderableList } from "@/features/admin/components/reorderable-list";
@@ -24,6 +31,14 @@ function projectIcon(item: ProjectItem): string {
 
 export function AdminProjectsPage({ projects: initial }: Props) {
   const [items, setItems] = useState(initial);
+  // The home page sliding-images strip: the projects flagged isSlider, in their
+  // sliderOrder. Reordered/removed here; added via a project's own toggle or the
+  // per-row control below.
+  const [sliderItems, setSliderItems] = useState<ProjectItem[]>(() =>
+    initial
+      .filter((p) => p.isSlider)
+      .sort((a, b) => a.sliderOrder - b.sliderOrder),
+  );
   const [confirmId, setConfirmId] = useState<string | null>(null);
   const router = useRouter();
   const { addNotification } = useNotificationsContext();
@@ -31,6 +46,8 @@ export function AdminProjectsPage({ projects: initial }: Props) {
   // Keep the latest order in a ref so the drag-end handler persists it.
   const orderRef = useRef(items);
   orderRef.current = items;
+  const sliderOrderRef = useRef(sliderItems);
+  sliderOrderRef.current = sliderItems;
 
   async function saveOrder() {
     try {
@@ -43,6 +60,61 @@ export function AdminProjectsPage({ projects: initial }: Props) {
       addNotification({ text: "Order saved", variant: "success" });
     } catch {
       addNotification({ text: "Couldn't save order", variant: "error" });
+    }
+  }
+
+  async function saveSliderOrder() {
+    try {
+      const res = await fetch("/api/admin/projects/slider-reorder", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ids: sliderOrderRef.current.map((i) => i.id) }),
+      });
+      if (!res.ok) throw new Error("Request failed");
+      addNotification({ text: "Slider order saved", variant: "success" });
+    } catch {
+      addNotification({ text: "Couldn't save slider order", variant: "error" });
+    }
+  }
+
+  // Toggle whether a project's poster appears in the home sliding-images strip.
+  async function toggleSlider(item: ProjectItem) {
+    const next = !item.isSlider;
+    setItems((prev) =>
+      prev.map((i) => (i.id === item.id ? { ...i, isSlider: next } : i)),
+    );
+    setSliderItems((prev) =>
+      next
+        ? prev.some((i) => i.id === item.id)
+          ? prev
+          : [...prev, { ...item, isSlider: true }]
+        : prev.filter((i) => i.id !== item.id),
+    );
+    const res = await fetch(`/api/admin/projects/${item.id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ isSlider: next }),
+    });
+    if (!res.ok) {
+      // Revert on failure.
+      setItems((prev) =>
+        prev.map((i) => (i.id === item.id ? { ...i, isSlider: !next } : i)),
+      );
+      setSliderItems((prev) =>
+        !next
+          ? prev.some((i) => i.id === item.id)
+            ? prev
+            : [...prev, { ...item, isSlider: true }]
+          : prev.filter((i) => i.id !== item.id),
+      );
+      addNotification({ text: "Couldn't update", variant: "error" });
+    } else {
+      addNotification({
+        text: next ? "Added to sliding images" : "Removed from sliding images",
+        variant: "success",
+      });
+      // Persist the new slider order after an add so the appended item sticks.
+      if (next) saveSliderOrder();
     }
   }
 
@@ -100,8 +172,56 @@ export function AdminProjectsPage({ projects: initial }: Props) {
         <p className="mb-4 text-xs text-light-400">
           Click a card to edit it, or press and hold to drag and reorder. The
           star adds a project to the home page &ldquo;Latest Work&rdquo;
-          section, shown in this order.
+          section, shown in this order; the image icon adds its poster to the
+          home &ldquo;Sliding Images&rdquo; strip.
         </p>
+
+        {sliderItems.length > 0 && (
+          <div className="mb-8 rounded-lg border border-dark-600 bg-dark-400/40 p-4">
+            <h2 className="text-sm font-medium text-white">Sliding Images</h2>
+            <p className="mb-3 mt-1 text-xs text-light-400">
+              Project posters shown in the home page sliding strip. Press and
+              hold to drag and reorder; the &times; removes a poster.
+            </p>
+            <ReorderableList
+              items={sliderItems}
+              getId={(item) => item.id}
+              onReorder={(next) => {
+                sliderOrderRef.current = next;
+                setSliderItems(next);
+              }}
+              onDragEnd={saveSliderOrder}
+              renderItem={(item) => (
+                <div className="flex items-center justify-between gap-3">
+                  <div className="flex min-w-0 items-center gap-3">
+                    {/* The poster is what actually shows in the strip. */}
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={item.projectImage || projectIcon(item)}
+                      alt=""
+                      className="h-10 w-16 shrink-0 rounded-md border border-dark-600 bg-dark-600 object-cover"
+                    />
+                    <h3 className="min-w-0 truncate font-medium text-secondary">
+                      {item.title}
+                    </h3>
+                  </div>
+                  <button
+                    data-no-drag
+                    aria-label="Remove from sliding images"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      toggleSlider(item);
+                    }}
+                    onPointerDown={(e) => e.stopPropagation()}
+                    className="shrink-0 text-light-400 transition-colors hover:text-error"
+                  >
+                    <RiCloseLine className="size-5" />
+                  </button>
+                </div>
+              )}
+            />
+          </div>
+        )}
 
         <ReorderableList
           items={items}
@@ -180,6 +300,24 @@ export function AdminProjectsPage({ projects: initial }: Props) {
                     <RiStarLine className="size-3.5" />
                   )}
                   {item.isRecent ? "In Latest Work" : "Add to Latest Work"}
+                </button>
+
+                <button
+                  aria-pressed={item.isSlider}
+                  onClick={() => toggleSlider(item)}
+                  className={cn(
+                    "inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium transition-colors",
+                    item.isSlider
+                      ? "bg-success/15 text-success hover:bg-success/25"
+                      : "text-light-400 hover:bg-dark-600 hover:text-white",
+                  )}
+                >
+                  {item.isSlider ? (
+                    <RiImageFill className="size-3.5" />
+                  ) : (
+                    <RiImageLine className="size-3.5" />
+                  )}
+                  {item.isSlider ? "In Sliding Images" : "Add to Sliding Images"}
                 </button>
 
                 {confirmId === item.id ? (
