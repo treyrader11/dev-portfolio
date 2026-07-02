@@ -94,17 +94,20 @@ export function Carousel({
     const clamped = Math.max(0, Math.min(count - 1, index));
     if (isStack) {
       if (clamped === current || overlay) return; // ignore during a transition
-      if (clamped > current) {
-        // Forward: new shot slides in from the right on top; the old one stays
-        // put underneath (always covering the centre) until the move completes.
-        setOverlay({ index: clamped, from: "100%", to: "0%", settleTo: clamped });
-      } else {
-        // Backward: new shot becomes the base immediately; the old one slides
-        // off to the right on top, uncovering it.
-        const old = current;
-        setCurrent(clamped);
-        setOverlay({ index: old, from: "0%", to: "100%", settleTo: null });
-      }
+      // Both directions use the same reliable "uncover" path: the new shot
+      // becomes the covering base immediately, and the old shot slides off on
+      // top to reveal it — off to the left when advancing, to the right when
+      // going back. (The old "cover" path for next swapped the base mid-move,
+      // which briefly exposed the project behind on iOS.)
+      const forward = clamped > current;
+      const old = current;
+      setCurrent(clamped);
+      setOverlay({
+        index: old,
+        from: "0%",
+        to: forward ? "-100%" : "100%",
+        settleTo: null,
+      });
       return;
     }
     const el = trackRef.current;

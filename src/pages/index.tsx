@@ -123,6 +123,19 @@ const Home: NextPage<HomeProps> = ({ latestWorkProjects }) => {
         const fresh =
           currentIndex < 0 || Math.abs(pos[currentIndex] - y) > vh * 0.6;
 
+        // At an end and heading further out (down past the last card, or up past
+        // the first) — never re-grab the boundary card, just let the scroll flow
+        // out to Freelance / Description. This is what was trapping you on the
+        // last project: after exiting, the "fresh" branch kept snapping back.
+        const lastIdx = pos.length - 1;
+        if (
+          (dir > 0 && near === lastIdx && y > pos[lastIdx] - 4) ||
+          (dir < 0 && near === 0 && y < pos[0] + 4)
+        ) {
+          currentIndex = -1;
+          return;
+        }
+
         let targetIndex: number;
         if (fresh) {
           // Drifting in between cards → land on the nearest first; already on a
@@ -154,6 +167,11 @@ const Home: NextPage<HomeProps> = ({ latestWorkProjects }) => {
             window.setTimeout(() => {
               accumDelta = 0;
               animating = false;
+              // Release the scroll lock this snap set. Card-to-card snaps override
+              // it with the next scrollTo, but at the first/last card there is no
+              // next snap — without this you get stuck, unable to scroll out to
+              // Description/Freelance.
+              (lenis as unknown as { isLocked: boolean }).isLocked = false;
             }, 80);
           },
         });
