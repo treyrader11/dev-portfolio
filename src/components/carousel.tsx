@@ -2,7 +2,7 @@
 
 import { IconArrowNarrowRight } from "@tabler/icons-react";
 import { useRef, useState, type ReactNode } from "react";
-import { AnimatePresence, motion, type Variants } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 
 interface CarouselControlProps {
@@ -30,16 +30,6 @@ function CarouselControl({ type, title, handleClick }: CarouselControlProps) {
     </button>
   );
 }
-
-// Stack transition: forward, the incoming slide slides in from the right on top
-// of the current one (which stays put and gets covered); backward, the current
-// slide slides off to the right to reveal the previous one beneath. This mirrors
-// the vertical project-card stacking (cover / uncover) instead of a track slide.
-const stackVariants: Variants = {
-  enter: (dir: number) => ({ x: dir > 0 ? "100%" : "0%", zIndex: dir > 0 ? 2 : 1 }),
-  center: (dir: number) => ({ x: "0%", zIndex: dir > 0 ? 2 : 1 }),
-  exit: (dir: number) => ({ x: dir > 0 ? "0%" : "100%", zIndex: dir > 0 ? 1 : 2 }),
-};
 
 interface CarouselProps {
   /** Slide content — pass any node (e.g. an image rendered with next/image). */
@@ -73,8 +63,15 @@ export function Carousel({
 }: CarouselProps) {
   const trackRef = useRef<HTMLUListElement>(null);
   const [current, setCurrent] = useState(0);
-  // Direction of the last transition (1 = forward, -1 = back) — drives the stack.
-  const [dir, setDir] = useState(1);
+  // The single shot that animates during a stack transition. `settleTo` is the
+  // index to promote to the base layer once the animation finishes (only on a
+  // forward move; on a backward move the base is switched up front).
+  const [overlay, setOverlay] = useState<{
+    index: number;
+    from: string;
+    to: string;
+    settleTo: number | null;
+  } | null>(null);
   const count = slides.length;
   const isStack = variant === "stack";
 
@@ -85,11 +82,25 @@ export function Carousel({
     setCurrent((c) => (c === index ? c : index));
   };
 
+  // The slide the controls should reflect — the transition's destination while
+  // one is in flight, otherwise the settled slide.
+  const activeIndex = overlay?.settleTo != null ? overlay.settleTo : current;
+
   const goTo = (index: number) => {
     const clamped = Math.max(0, Math.min(count - 1, index));
     if (isStack) {
-      setDir(clamped >= current ? 1 : -1);
-      setCurrent(clamped);
+      if (clamped === current || overlay) return; // ignore during a transition
+      if (clamped > current) {
+        // Forward: new shot slides in from the right on top; the old one stays
+        // put underneath (always covering the centre) until the move completes.
+        setOverlay({ index: clamped, from: "100%", to: "0%", settleTo: clamped });
+      } else {
+        // Backward: new shot becomes the base immediately; the old one slides
+        // off to the right on top, uncovering it.
+        const old = current;
+        setCurrent(clamped);
+        setOverlay({ index: old, from: "0%", to: "100%", settleTo: null });
+      }
       return;
     }
     const el = trackRef.current;
@@ -97,10 +108,10 @@ export function Carousel({
     el.scrollTo({ left: clamped * el.clientWidth, behavior: "smooth" });
   };
 
-  const goPrev = () => goTo(current - 1);
-  const goNext = () => goTo(current + 1);
-  const hasPrev = current > 0;
-  const hasNext = current < count - 1;
+  const goPrev = () => goTo(activeIndex - 1);
+  const goNext = () => goTo(activeIndex + 1);
+  const hasPrev = activeIndex > 0;
+  const hasNext = activeIndex < count - 1;
 
   if (count === 0) return null;
 
@@ -127,20 +138,28 @@ export function Carousel({
       <div className="invisible" aria-hidden>
         {slides[0]}
       </div>
-      <AnimatePresence initial={false} custom={dir}>
+      {/* Base layer — always centred and covering, so nothing behind the
+          carousel ever shows through mid-transition. */}
+      <div className="absolute inset-0 flex items-center justify-center">
+        {slides[current]}
+      </div>
+      {/* Overlay — the one shot that slides during a transition, on top. */}
+      {overlay && (
         <motion.div
-          key={current}
-          custom={dir}
-          variants={stackVariants}
-          initial="enter"
-          animate="center"
-          exit="exit"
+          key={`${overlay.index}-${overlay.to}`}
+          style={{ zIndex: 2 }}
+          initial={{ x: overlay.from }}
+          animate={{ x: overlay.to }}
           transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+          onAnimationComplete={() => {
+            if (overlay.settleTo != null) setCurrent(overlay.settleTo);
+            setOverlay(null);
+          }}
           className="absolute inset-0 flex items-center justify-center"
         >
-          {slides[current]}
+          {slides[overlay.index]}
         </motion.div>
-      </AnimatePresence>
+      )}
     </div>
   );
 
@@ -159,7 +178,7 @@ export function Carousel({
           }}
           className={cn(
             "h-1.5 rounded-full transition-all",
-            i === current ? "w-5 bg-secondary" : "w-1.5 bg-neutral-400/80",
+            i === activeIndex ? "w-5 bg-secondary" : "w-1.5 bg-neutral-400/80",
           )}
         />
       ))}
