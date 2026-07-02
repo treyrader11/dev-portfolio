@@ -39,14 +39,18 @@ export default function LatestWork({ className, projects }: Props) {
 
   const titleY = useTransform(lastProjectProgress, [0.7, 0.92], [0, -30]);
 
-  // "scroll down" hint: fade it in shortly after the section sticks (so it
-  // appears just after the title), then it inherits the title's fade-out when
-  // the last work item is reached.
+  // "scroll down" hint: fade it in shortly after the section sticks (just after
+  // the title), then fade it out as the last work item is reached.
   const { scrollYProgress: sectionProgress } = useScroll({
     target: container,
     offset: ["start start", "end end"],
   });
-  const hintOpacity = useTransform(sectionProgress, [0.03, 0.12], [0, 1]);
+  const hintFadeIn = useTransform(sectionProgress, [0.03, 0.12], [0, 1]);
+  const hintFadeOut = useTransform(lastProjectProgress, [0.6, 0.85], [1, 0]);
+  const hintOpacity = useTransform(
+    [hintFadeIn, hintFadeOut],
+    ([i, o]: number[]) => Math.min(i, o),
+  );
 
   return (
     <motion.section
@@ -89,15 +93,17 @@ export default function LatestWork({ className, projects }: Props) {
           title="Latest Work."
           className={cn("py-0 md:text-[5vw]")}
         />
+      </motion.div>
 
-        {/* Centered "scroll down" hint below the title. Its own opacity fades it
-            in; the parent's titleOpacity fades it out at the last work item. */}
-        <motion.div
-          style={{ opacity: hintOpacity }}
-          className="mt-16 flex justify-center md:mt-24"
-        >
-          <ScrollDownIndicator />
-        </motion.div>
+      {/* "scroll down" hint — pinned midway between the title and the work card,
+          independent of the title block so it never overlaps the title on mobile.
+          Floats above the cards (z-30) and ignores pointer events. */}
+      <motion.div
+        aria-hidden
+        style={{ opacity: hintOpacity }}
+        className="pointer-events-none sticky top-[32vh] z-30 flex justify-center"
+      >
+        <ScrollDownIndicator />
       </motion.div>
 
       <Scrollbar positions={projectPositions} />
