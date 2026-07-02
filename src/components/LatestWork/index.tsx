@@ -59,8 +59,10 @@ export default function LatestWork({ className, projects }: Props) {
         "relative",
         "z-[2]",
         "mx-4",
-        "pb-[20vh]",
-        "sm:pb-[60vh]",
+        // Small trailing space only. A large pb kept the last card (sticky, with
+        // nothing after it to cover it) pinned for most of a screen, which read
+        // as "can't scroll past" — keep it minimal so it releases to Freelance.
+        "pb-[8vh]",
         "flex",
         "flex-col",
         "gap-y-10",
@@ -113,6 +115,10 @@ export default function LatestWork({ className, projects }: Props) {
             {isLast && (
               <div ref={lastProjectRef} aria-hidden className="h-0 -mb-10" />
             )}
+            {/* Non-sticky anchor marking this card's true flow position. The
+                cards themselves are sticky, so once pinned they all report the
+                same (top:0) position — the snap logic measures these instead. */}
+            <div data-snap-anchor aria-hidden className="h-0" />
             <LatestWorkFlipCard
               project={project}
               position={projectPositions[i]}

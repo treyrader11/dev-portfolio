@@ -54,27 +54,16 @@ const Home: NextPage<HomeProps> = ({ latestWorkProjects, sliderProjects }) => {
       const lenis = loco.lenisInstance;
       if (!lenis) return;
 
-      // Directional one-card-at-a-time snapping that rides Locomotive's own
-      // smooth scroll. Nearest-point snapping pulls you back to the current card
-      // on a small upward nudge; instead we read the direction of the user's
-      // gesture and glide to the next card that way (down = next, up = previous).
-
-      // Document-space top of a card. offsetTop is the static layout position, so
-      // it is unaffected by the cards being sticky-pinned at the top.
-      const docTop = (el: HTMLElement) => {
-        let y = 0;
-        let node: HTMLElement | null = el;
-        while (node) {
-          y += node.offsetTop;
-          node = node.offsetParent as HTMLElement | null;
-        }
-        return y;
-      };
+      // Positions come from the non-sticky [data-snap-anchor] markers before each
+      // card. Measuring the sticky cards directly is wrong: once pinned they all
+      // report the same top:0 position, so "nearest card" resolved to 0 and the
+      // snap yanked back to the first card while you were on the last. Anchors
+      // stay in normal flow, so rect.top + scroll is always the card's true top.
       const positions = () =>
         Array.from(
-          document.querySelectorAll<HTMLElement>("[data-snap-project]"),
+          document.querySelectorAll<HTMLElement>("[data-snap-anchor]"),
         )
-          .map(docTop)
+          .map((el) => el.getBoundingClientRect().top + lenis.scroll)
           .sort((a, b) => a - b);
 
       const nearestIndex = (pos: number[], y: number) => {
@@ -90,26 +79,18 @@ const Home: NextPage<HomeProps> = ({ latestWorkProjects, sliderProjects }) => {
         return best;
       };
 
-      // A gesture commits a snap once its accumulated delta crosses this many px.
-      // Small, so "even a tiny scroll" locks to the next card — and because we
-      // commit mid-gesture (not on settle) you can't fling straight through the
-      // projects without snapping, in either direction.
       const GESTURE_THRESHOLD = 30;
-
-      let accumDelta = 0; // summed wheel/touch delta for the current gesture
+      let accumDelta = 0;
       let settleTimer: ReturnType<typeof setTimeout> | null = null;
       let animating = false;
-      let currentIndex = -1; // card we're locked to; -1 = not engaged/unknown
+      let currentIndex = -1;
 
-      // isLocked (not isStopped) is what blocks scroll after a lock:true snap;
-      // lenis.start() only clears isStopped, so we clear isLocked directly.
       const releaseLock = () => {
         (lenis as unknown as { isLocked: boolean }).isLocked = false;
       };
 
       const commitSnap = (dir: number) => {
         if (animating || dir === 0) return;
-
         const pos = positions();
         if (pos.length === 0) return;
 
@@ -118,9 +99,8 @@ const Home: NextPage<HomeProps> = ({ latestWorkProjects, sliderProjects }) => {
         const near = nearestIndex(pos, y);
         const lastIdx = pos.length - 1;
 
-        // Exit cleanly at the boundaries FIRST, before any snap is attempted:
-        // heading down past the last card, or up past the first, never re-grabs
-        // the boundary card — the scroll flows out to Freelance / Description.
+        // Exit at the ends — don't re-grab the first/last card when heading out,
+        // so the scroll flows on to Description / Freelance.
         if (dir > 0 && near === lastIdx && y >= pos[lastIdx] - 2) {
           currentIndex = -1;
           animating = false;
@@ -134,33 +114,24 @@ const Home: NextPage<HomeProps> = ({ latestWorkProjects, sliderProjects }) => {
           return;
         }
 
-        // Outside the projects band entirely → leave scrolling alone.
+        // Outside the projects band → leave scrolling alone.
         if (y < pos[0] - vh * 0.5 || y > pos[lastIdx] + vh * 0.5) {
           currentIndex = -1;
           return;
         }
 
-        // Step by index rather than by scroll position: lenis.scroll lags the
-        // input by a few px. currentIndex is only trusted while we're near it;
-        // otherwise (fresh entry / a fling across cards) resync to the nearest.
+        // Step by index; currentIndex is trusted while we're near it, otherwise
+        // (fresh entry / a fling) resync to the nearest card.
         const onCard = Math.abs(pos[near] - y) < 4;
         const fresh =
           currentIndex < 0 || Math.abs(pos[currentIndex] - y) > vh * 0.6;
+        const targetIndex = fresh
+          ? onCard
+            ? near + dir
+            : near
+          : currentIndex + dir;
 
-        let targetIndex: number;
-        if (fresh) {
-          if (dir < 0 && y > pos[lastIdx] - vh * 0.5) {
-            // Re-entering from below (Freelance) heading up → land on the last
-            // card first, so scroll-up snapping works from the bottom.
-            targetIndex = lastIdx;
-          } else {
-            targetIndex = onCard ? near + dir : near;
-          }
-        } else {
-          targetIndex = currentIndex + dir;
-        }
-
-        // Off either end → let the scroll continue out to Description/Freelance.
+        // Off either end → let the scroll continue out.
         if (targetIndex < 0 || targetIndex >= pos.length) {
           currentIndex = -1;
           return;
@@ -171,19 +142,25 @@ const Home: NextPage<HomeProps> = ({ latestWorkProjects, sliderProjects }) => {
         if (Math.abs(target - y) < 2) return; // already in place
 
         animating = true;
+        let released = false;
+        const release = () => {
+          if (released) return;
+          released = true;
+          accumDelta = 0;
+          animating = false;
+          releaseLock();
+        };
+        // Fallback release in case onComplete never fires, so a stuck lock can
+        // never freeze scrolling.
+        const guard = window.setTimeout(release, 1300);
         lenis.scrollTo(target, {
           duration: 0.9,
           easing: (t) => 1 - Math.pow(1 - t, 3),
           lock: true,
           force: true,
           onComplete: () => {
-            // Small cooldown, drop residual momentum, and release the lock this
-            // snap set so the next gesture (or exiting at an end) isn't blocked.
-            window.setTimeout(() => {
-              accumDelta = 0;
-              animating = false;
-              releaseLock();
-            }, 80);
+            window.clearTimeout(guard);
+            window.setTimeout(release, 80);
           },
         });
       };
@@ -194,18 +171,13 @@ const Home: NextPage<HomeProps> = ({ latestWorkProjects, sliderProjects }) => {
         commitSnap(dir);
       };
 
-      // Drive the snap from Lenis's own `scroll` output rather than the raw
-      // `virtual-scroll` input event. virtual-scroll doesn't fire for native
-      // touch scrolling on mobile (Lenis doesn't smooth touch by default), so
-      // listening to `scroll` (which reflects both wheel and touch) makes the
-      // snap work on phones as well as desktop. Direction = sign of the delta.
+      // Drive from Lenis's `scroll` output (fires for wheel and native touch, so
+      // it works on mobile too). Direction = sign of the scroll-position delta.
       let lastScrollY = lenis.scroll;
       const unsub = lenis.on("scroll", (instance) => {
         const scroll = instance.scroll;
         const delta = scroll - lastScrollY;
-        // Update every event, even mid-snap, so the first event after our own
-        // programmatic scroll doesn't register the whole snap as a fresh gesture.
-        lastScrollY = scroll;
+        lastScrollY = scroll; // update always, even mid-snap
         if (animating) return;
         if (Math.abs(delta) < 1) return;
 
@@ -214,8 +186,6 @@ const Home: NextPage<HomeProps> = ({ latestWorkProjects, sliderProjects }) => {
           clearTimeout(settleTimer);
           settleTimer = null;
         }
-        // Commit as soon as intent is clear (works while still scrolling), so a
-        // continuous scroll snaps card-by-card instead of blowing past.
         if (Math.abs(accumDelta) >= GESTURE_THRESHOLD) {
           flushGesture();
         } else {
@@ -230,7 +200,6 @@ const Home: NextPage<HomeProps> = ({ latestWorkProjects, sliderProjects }) => {
     })();
 
     return () => {
-      // Cleanup on unmount
       cleanup?.();
       if (locomotiveScrollRef.current) {
         locomotiveScrollRef.current.destroy();
