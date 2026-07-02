@@ -3,6 +3,7 @@
 import { useScroll, useTransform, motion } from "framer-motion";
 import React, { useRef, useMemo } from "react";
 import LatestWorkFlipCard from "@/components/latest-work-flip-card";
+import ScrollDownIndicator from "@/components/scroll-down-indicator";
 import Rounded from "@/components/Rounded";
 import { cn, createScrollPositions } from "@/lib/utils";
 import PageTitle from "../PageTitle";
@@ -37,6 +38,15 @@ export default function LatestWork({ className, projects }: Props) {
   const titleOpacity = useTransform(lastProjectProgress, [0.7, 0.92], [1, 0]);
 
   const titleY = useTransform(lastProjectProgress, [0.7, 0.92], [0, -30]);
+
+  // "scroll down" hint: fade it in shortly after the section sticks (so it
+  // appears just after the title), then it inherits the title's fade-out when
+  // the last work item is reached.
+  const { scrollYProgress: sectionProgress } = useScroll({
+    target: container,
+    offset: ["start start", "end end"],
+  });
+  const hintOpacity = useTransform(sectionProgress, [0.03, 0.12], [0, 1]);
 
   return (
     <motion.section
@@ -79,6 +89,15 @@ export default function LatestWork({ className, projects }: Props) {
           title="Latest Work."
           className={cn("py-0 md:text-[5vw]")}
         />
+
+        {/* Centered "scroll down" hint below the title. Its own opacity fades it
+            in; the parent's titleOpacity fades it out at the last work item. */}
+        <motion.div
+          style={{ opacity: hintOpacity }}
+          className="mt-16 flex justify-center md:mt-24"
+        >
+          <ScrollDownIndicator />
+        </motion.div>
       </motion.div>
 
       <Scrollbar positions={projectPositions} />
