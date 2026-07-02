@@ -72,19 +72,32 @@ const Home: NextPage<HomeProps> = ({ latestWorkProjects }) => {
           .map(docTop)
           .sort((a, b) => a - b);
 
+      const nearestIndex = (pos: number[], y: number) => {
+        let best = 0;
+        let bestDist = Infinity;
+        pos.forEach((p, i) => {
+          const d = Math.abs(p - y);
+          if (d < bestDist) {
+            bestDist = d;
+            best = i;
+          }
+        });
+        return best;
+      };
+
+      // A gesture commits a snap once its accumulated delta crosses this many px.
+      // Small, so "even a tiny scroll" locks to the next card — and because we
+      // commit mid-gesture (not on settle) you can't fling straight through the
+      // projects without snapping, in either direction.
+      const GESTURE_THRESHOLD = 30;
+
       let accumDelta = 0; // summed wheel/touch delta for the current gesture
       let settleTimer: ReturnType<typeof setTimeout> | null = null;
       let animating = false;
+      let currentIndex = -1; // card we're locked to; -1 = not engaged/unknown
 
-      const snapInDirection = () => {
-        const delta = accumDelta;
-        accumDelta = 0;
-        if (animating) return;
-        // Direction from the gesture's net delta, not its last event — trackpads
-        // emit a tiny opposite-sign delta at the end of a flick, which would
-        // otherwise flip a small scroll-up into a snap back down.
-        const dir = delta > 0 ? 1 : delta < 0 ? -1 : 0;
-        if (dir === 0) return;
+      const commitSnap = (dir: number) => {
+        if (animating || dir === 0) return;
 
         const pos = positions();
         if (pos.length === 0) return;
@@ -95,14 +108,39 @@ const Home: NextPage<HomeProps> = ({ latestWorkProjects }) => {
         const last = pos[pos.length - 1];
         // Only snap while within the projects band — leave the sections above and
         // below (Description, Freelance) scrolling normally.
-        if (y < first - vh * 0.5 || y > last + vh * 0.5) return;
+        if (y < first - vh * 0.5 || y > last + vh * 0.5) {
+          currentIndex = -1;
+          return;
+        }
 
-        const target =
-          dir > 0
-            ? pos.find((p) => p > y + 4) // next card down
-            : [...pos].reverse().find((p) => p < y - 4); // previous card up
-        // No card that way (first/last) → let the scroll continue out of section.
-        if (target === undefined || Math.abs(target - y) < 4) return;
+        // Step by index rather than by scroll position: lenis.scroll lags the
+        // input by a few px, which made "the next card up" resolve back to the
+        // current card and hang. `currentIndex` is only trusted while we're still
+        // near that card; otherwise (fresh entry, or a fling across cards) we
+        // resync to the nearest card first.
+        const near = nearestIndex(pos, y);
+        const onCard = Math.abs(pos[near] - y) < 4;
+        const fresh =
+          currentIndex < 0 || Math.abs(pos[currentIndex] - y) > vh * 0.6;
+
+        let targetIndex: number;
+        if (fresh) {
+          // Drifting in between cards → land on the nearest first; already on a
+          // card → step off it in the gesture direction.
+          targetIndex = onCard ? near + dir : near;
+        } else {
+          targetIndex = currentIndex + dir;
+        }
+
+        // Off either end → let the scroll continue out to Description/Freelance.
+        if (targetIndex < 0 || targetIndex >= pos.length) {
+          currentIndex = -1;
+          return;
+        }
+
+        currentIndex = targetIndex;
+        const target = pos[targetIndex];
+        if (Math.abs(target - y) < 2) return; // already in place
 
         animating = true;
         lenis.scrollTo(target, {
@@ -111,13 +149,20 @@ const Home: NextPage<HomeProps> = ({ latestWorkProjects }) => {
           lock: true,
           force: true,
           onComplete: () => {
-            // Small cooldown so the tail of this programmatic scroll can't be
-            // mistaken for a fresh gesture.
+            // Small cooldown, and drop any residual momentum, so the tail of this
+            // programmatic scroll can't be mistaken for a fresh gesture.
             window.setTimeout(() => {
+              accumDelta = 0;
               animating = false;
             }, 80);
           },
         });
+      };
+
+      const flushGesture = () => {
+        const dir = accumDelta > 0 ? 1 : accumDelta < 0 ? -1 : 0;
+        accumDelta = 0;
+        commitSnap(dir);
       };
 
       // virtual-scroll fires only for real wheel/touch input (never for our own
@@ -125,8 +170,18 @@ const Home: NextPage<HomeProps> = ({ latestWorkProjects }) => {
       const unsub = lenis.on("virtual-scroll", ({ deltaY }) => {
         if (animating || deltaY === 0) return;
         accumDelta += deltaY;
-        if (settleTimer) clearTimeout(settleTimer);
-        settleTimer = setTimeout(snapInDirection, 140);
+        if (settleTimer) {
+          clearTimeout(settleTimer);
+          settleTimer = null;
+        }
+        // Commit as soon as intent is clear (works while still scrolling), so a
+        // continuous scroll up snaps card-by-card instead of blowing past.
+        if (Math.abs(accumDelta) >= GESTURE_THRESHOLD) {
+          flushGesture();
+        } else {
+          // Fallback for a very small, slow nudge that never reaches threshold.
+          settleTimer = setTimeout(flushGesture, 140);
+        }
       });
 
       cleanup = () => {
