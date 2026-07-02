@@ -1,4 +1,5 @@
 import LaptopMockup from "./laptop-mockup";
+import { Carousel } from "./carousel";
 import type { ProjectData, ProjectImage } from "@/types/data";
 
 interface Props {
@@ -11,14 +12,29 @@ export default function LatestWorkCardFront({ project }: Props) {
       ? (project.image as ProjectImage)
       : null;
 
-  // The default product shot is the first uploaded shot; fall back to the
-  // project poster, then the legacy image src.
-  const imageSrc =
-    image?.shots?.[0] || project.project_image || image?.src || "";
+  const shots = (image?.shots ?? []).filter(Boolean);
+  const fallback = project.project_image || image?.src || "";
 
+  // Multiple product shots → a horizontal carousel, each shot in a laptop frame.
+  if (shots.length >= 2) {
+    return (
+      <Carousel
+        slides={shots.map((shot, i) => (
+          <LaptopMockup
+            key={i}
+            src={shot}
+            alt={`${project.title} shot ${i + 1}`}
+            className="w-full"
+          />
+        ))}
+      />
+    );
+  }
+
+  // One (or none) → the default shot / poster in a single laptop frame.
   return (
     <LaptopMockup
-      src={imageSrc}
+      src={shots[0] || fallback}
       alt={`${project.title} preview`}
       className="w-full"
     />

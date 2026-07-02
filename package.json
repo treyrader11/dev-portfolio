@@ -23,6 +23,7 @@
     "@react-three/drei": "^10",
     "@react-three/fiber": "^9",
     "@studio-freight/lenis": "^1.0.34",
+    "@tabler/icons-react": "^3.44.0",
     "ai": "^6.0.134",
     "axios": "^1.6.8",
     "cloudinary": "^2.10.0",

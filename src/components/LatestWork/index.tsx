@@ -101,7 +101,7 @@ export default function LatestWork({ className, projects }: Props) {
       <motion.div
         aria-hidden
         style={{ opacity: hintOpacity }}
-        className="pointer-events-none sticky top-[32vh] z-30 flex justify-center"
+        className="pointer-events-none sticky top-[32vh] z-30 flex justify-center sm:top-[16vh]"
       >
         <ScrollDownIndicator />
       </motion.div>
