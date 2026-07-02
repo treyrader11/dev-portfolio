@@ -9,6 +9,7 @@ import { IconUploadField } from "@/features/admin/components/icon-upload-field";
 import { TechStackField } from "./tech-stack-field";
 import { TagInputField, type Suggestion } from "./tag-input-field";
 import { CategoryMultiField } from "./category-multi-field";
+import { AdminInput, AdminTextarea } from "@/features/admin/components/admin-field";
 import { resolveImageSrc, slugify } from "@/lib/utils";
 import { type ProjectItem, emptyProject } from "../types";
 
@@ -108,19 +109,19 @@ export function ProjectDetailPage({ project }: Props) {
     >
       <div className="w-full max-w-3xl pb-24">
         <div className="bg-dark-400 rounded-lg border border-dark-600 p-4 sm:p-6 space-y-3">
-          <Input
+          <AdminInput
             label="Title"
             required
             value={form.title}
             onChange={(v) => setForm({ ...form, title: v })}
           />
-          <Input
+          <AdminInput
             label="Category"
             required
             value={form.category}
             onChange={(v) => setForm({ ...form, category: v })}
           />
-          <Input
+          <AdminInput
             label="Video Key"
             required
             value={form.videoKey}
@@ -141,13 +142,13 @@ export function ProjectDetailPage({ project }: Props) {
             onChange={(v) => setForm((f) => ({ ...f, techImage: v }))}
             onSelectName={(name) => setForm((f) => ({ ...f, stack: name }))}
           />
-          <Input
+          <AdminInput
             label="Stack Text"
             value={form.stack}
             onChange={(v) => setForm({ ...form, stack: v })}
           />
 
-          <Input
+          <AdminInput
             label="Color"
             value={form.color}
             onChange={(v) => setForm({ ...form, color: v })}
@@ -219,41 +220,38 @@ export function ProjectDetailPage({ project }: Props) {
             )}
           </div>
 
-          <Input
+          <AdminInput
             label="YouTube Link"
             value={form.youtubeLink}
             onChange={(v) => setForm({ ...form, youtubeLink: v })}
           />
-          <Input
+          <AdminInput
             label="GitHub Link"
             value={form.githubLink}
             onChange={(v) => setForm({ ...form, githubLink: v })}
           />
-          <Input
+          <AdminInput
             label="Website URL"
             value={form.websiteUrl}
             onChange={(v) => setForm({ ...form, websiteUrl: v })}
           />
-          <Input
+          <AdminInput
             label="Project Video"
             value={form.projectVideo}
             onChange={(v) => setForm({ ...form, projectVideo: v })}
           />
-          <Input
+          <AdminInput
             label="Sort Order"
             value={String(form.sortOrder)}
             onChange={(v) => setForm({ ...form, sortOrder: Number(v) || 0 })}
           />
 
-          <div className="flex flex-col gap-1">
-            <label className="text-sm font-medium text-white">Description</label>
-            <textarea
-              value={form.description}
-              onChange={(e) => setForm({ ...form, description: e.target.value })}
-              rows={4}
-              className="w-full px-3 py-2 border border-dark-600 rounded-lg text-sm"
-            />
-          </div>
+          <AdminTextarea
+            label="Description"
+            value={form.description}
+            onChange={(v) => setForm({ ...form, description: v })}
+            rows={4}
+          />
 
           <TagInputField
             label="Tags"
@@ -330,28 +328,3 @@ export function ProjectDetailPage({ project }: Props) {
   );
 }
 
-function Input({
-  label,
-  value,
-  onChange,
-  required,
-}: {
-  label: string;
-  value: string;
-  onChange: (v: string) => void;
-  required?: boolean;
-}) {
-  return (
-    <div className="flex flex-col gap-1">
-      <label className="text-sm font-medium text-white">
-        {label}
-        {required && <span className="text-red-500"> *</span>}
-      </label>
-      <input
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        className="w-full px-3 py-2 border border-dark-600 rounded-lg text-sm"
-      />
-    </div>
-  );
-}

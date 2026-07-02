@@ -87,29 +87,29 @@ export function AdminReferencesPage({ references: initial }: Props) {
               {creating ? "New Reference" : "Edit Reference"}
             </h3>
             <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-white mb-1">Name</label>
+              <div className="flex flex-col gap-1">
+                <label className="text-sm font-medium text-white">Name</label>
                 <input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} className="w-full px-3 py-2 border border-dark-600 rounded-lg text-sm" />
               </div>
-              <div>
-                <label className="block text-sm font-medium text-white mb-1">Role</label>
+              <div className="flex flex-col gap-1">
+                <label className="text-sm font-medium text-white">Role</label>
                 <input value={form.role} onChange={(e) => setForm({ ...form, role: e.target.value })} className="w-full px-3 py-2 border border-dark-600 rounded-lg text-sm" />
               </div>
-              <div>
-                <label className="block text-sm font-medium text-white mb-1">Company</label>
+              <div className="flex flex-col gap-1">
+                <label className="text-sm font-medium text-white">Company</label>
                 <input value={form.company} onChange={(e) => setForm({ ...form, company: e.target.value })} className="w-full px-3 py-2 border border-dark-600 rounded-lg text-sm" />
               </div>
-              <div>
-                <label className="block text-sm font-medium text-white mb-1">Image URL</label>
+              <div className="flex flex-col gap-1">
+                <label className="text-sm font-medium text-white">Image URL</label>
                 <input value={form.imageUrl} onChange={(e) => setForm({ ...form, imageUrl: e.target.value })} className="w-full px-3 py-2 border border-dark-600 rounded-lg text-sm" />
               </div>
-              <div>
-                <label className="block text-sm font-medium text-white mb-1">Sort Order</label>
+              <div className="flex flex-col gap-1">
+                <label className="text-sm font-medium text-white">Sort Order</label>
                 <input type="number" value={form.sortOrder} onChange={(e) => setForm({ ...form, sortOrder: Number(e.target.value) })} className="w-full px-3 py-2 border border-dark-600 rounded-lg text-sm" />
               </div>
             </div>
-            <div className="mt-4">
-              <label className="block text-sm font-medium text-white mb-1">Testimonial Text</label>
+            <div className="mt-4 flex flex-col gap-1">
+              <label className="text-sm font-medium text-white">Testimonial Text</label>
               <textarea
                 value={form.text}
                 onChange={(e) => setForm({ ...form, text: e.target.value })}

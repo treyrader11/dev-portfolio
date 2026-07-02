@@ -385,8 +385,8 @@ export function AdminJiraPage({ configured, issues: initialIssues, jiraError }: 
                 </button>
               </div>
               <form onSubmit={handleCreateTicket} className="p-6 space-y-4">
-                <div>
-                  <label className="block text-sm font-medium text-white mb-1">Project</label>
+                <div className="flex flex-col gap-1">
+                  <label className="text-sm font-medium text-white">Project</label>
                   <select
                     value={createForm.projectKey}
                     onChange={(e) => setCreateForm({ ...createForm, projectKey: e.target.value })}
@@ -401,8 +401,8 @@ export function AdminJiraPage({ configured, issues: initialIssues, jiraError }: 
                     ))}
                   </select>
                 </div>
-                <div>
-                  <label className="block text-sm font-medium text-white mb-1">Issue Type</label>
+                <div className="flex flex-col gap-1">
+                  <label className="text-sm font-medium text-white">Issue Type</label>
                   <select
                     value={createForm.issueType}
                     onChange={(e) => setCreateForm({ ...createForm, issueType: e.target.value })}
@@ -415,8 +415,8 @@ export function AdminJiraPage({ configured, issues: initialIssues, jiraError }: 
                     <option value="Subtask">Subtask</option>
                   </select>
                 </div>
-                <div>
-                  <label className="block text-sm font-medium text-white mb-1">Summary</label>
+                <div className="flex flex-col gap-1">
+                  <label className="text-sm font-medium text-white">Summary</label>
                   <input
                     value={createForm.summary}
                     onChange={(e) => setCreateForm({ ...createForm, summary: e.target.value })}
@@ -425,8 +425,8 @@ export function AdminJiraPage({ configured, issues: initialIssues, jiraError }: 
                     required
                   />
                 </div>
-                <div>
-                  <label className="block text-sm font-medium text-white mb-1">
+                <div className="flex flex-col gap-1">
+                  <label className="text-sm font-medium text-white">
                     Description <span className="text-light-400 font-normal">(optional)</span>
                   </label>
                   <textarea

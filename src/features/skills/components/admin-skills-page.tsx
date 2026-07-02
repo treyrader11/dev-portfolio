@@ -87,16 +87,16 @@ export function AdminSkillsPage({ skills: initial }: Props) {
               {creating ? "New Skill" : "Edit Skill"}
             </h3>
             <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-white mb-1">Skill Name</label>
+              <div className="flex flex-col gap-1">
+                <label className="text-sm font-medium text-white">Skill Name</label>
                 <input value={form.skillName} onChange={(e) => setForm({ ...form, skillName: e.target.value })} className="w-full px-3 py-2 border border-dark-600 rounded-lg text-sm" />
               </div>
-              <div>
-                <label className="block text-sm font-medium text-white mb-1">Image URL</label>
+              <div className="flex flex-col gap-1">
+                <label className="text-sm font-medium text-white">Image URL</label>
                 <input value={form.imageUrl} onChange={(e) => setForm({ ...form, imageUrl: e.target.value })} className="w-full px-3 py-2 border border-dark-600 rounded-lg text-sm" />
               </div>
-              <div>
-                <label className="block text-sm font-medium text-white mb-1">Category</label>
+              <div className="flex flex-col gap-1">
+                <label className="text-sm font-medium text-white">Category</label>
                 <select value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })} className="w-full px-3 py-2 border border-dark-600 rounded-lg text-sm">
                   <option value="all">All</option>
                   <option value="frontend">Frontend</option>
@@ -105,16 +105,16 @@ export function AdminSkillsPage({ skills: initial }: Props) {
                   <option value="other">Other</option>
                 </select>
               </div>
-              <div>
-                <label className="block text-sm font-medium text-white mb-1">Sort Order</label>
+              <div className="flex flex-col gap-1">
+                <label className="text-sm font-medium text-white">Sort Order</label>
                 <input type="number" value={form.sortOrder} onChange={(e) => setForm({ ...form, sortOrder: Number(e.target.value) })} className="w-full px-3 py-2 border border-dark-600 rounded-lg text-sm" />
               </div>
-              <div>
-                <label className="block text-sm font-medium text-white mb-1">Width</label>
+              <div className="flex flex-col gap-1">
+                <label className="text-sm font-medium text-white">Width</label>
                 <input type="number" value={form.width} onChange={(e) => setForm({ ...form, width: Number(e.target.value) })} className="w-full px-3 py-2 border border-dark-600 rounded-lg text-sm" />
               </div>
-              <div>
-                <label className="block text-sm font-medium text-white mb-1">Height</label>
+              <div className="flex flex-col gap-1">
+                <label className="text-sm font-medium text-white">Height</label>
                 <input type="number" value={form.height} onChange={(e) => setForm({ ...form, height: Number(e.target.value) })} className="w-full px-3 py-2 border border-dark-600 rounded-lg text-sm" />
               </div>
             </div>

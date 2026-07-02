@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import { AnimatePresence, motion, Reorder, useDragControls } from "framer-motion";
 import { RiDraggable, RiCloseLine, RiAddLine } from "react-icons/ri";
 import AdminLayout from "@/features/admin/components/admin-layout";
+import { AdminInput } from "@/features/admin/components/admin-field";
 import { IconUploadField } from "@/features/admin/components/icon-upload-field";
 import { ColorSwatchPicker } from "@/features/admin/components/color-swatch-picker";
 import { MonthYearRangePicker } from "@/features/admin/components/month-year-range-picker";
@@ -106,13 +107,15 @@ export function ExperienceDetailPage({ experience }: Props) {
       <div className="w-full max-w-3xl pb-24">
         <div className="bg-dark-400 rounded-lg border border-dark-600 p-6 space-y-3">
           <div className="grid grid-cols-2 gap-4">
-            <Input
+            <AdminInput
               label="Title/Role"
+              required
               value={form.title}
               onChange={(v) => setForm({ ...form, title: v })}
             />
-            <Input
+            <AdminInput
               label="Company"
+              required
               value={form.company}
               onChange={(v) => setForm({ ...form, company: v })}
             />
@@ -124,7 +127,7 @@ export function ExperienceDetailPage({ experience }: Props) {
             onChange={(v) => setForm({ ...form, date: v })}
           />
 
-          <Input
+          <AdminInput
             label="Website URL"
             value={form.websiteUrl}
             onChange={(v) => setForm({ ...form, websiteUrl: v })}
@@ -161,17 +164,21 @@ export function ExperienceDetailPage({ experience }: Props) {
             <label className="block text-sm font-medium text-white mb-2">
               Tasks
             </label>
+            {/* When a task is focused, lift the whole list above the blurred
+                backdrop, then blur only the non-focused rows — so the focused
+                input stays perfectly sharp and readable. */}
             <Reorder.Group
               axis="y"
               values={tasks}
               onReorder={setTasks}
-              className="space-y-2"
+              className={cn("space-y-2", focusedTaskId && "relative z-50")}
             >
               {tasks.map((task) => (
                 <TaskRow
                   key={task.id}
                   task={task}
                   focused={focusedTaskId === task.id}
+                  dim={focusedTaskId !== null && focusedTaskId !== task.id}
                   onFocus={() => setFocusedTaskId(task.id)}
                   onBlur={() =>
                     setFocusedTaskId((cur) => (cur === task.id ? null : cur))
@@ -228,6 +235,7 @@ export function ExperienceDetailPage({ experience }: Props) {
 function TaskRow({
   task,
   focused,
+  dim,
   onFocus,
   onBlur,
   onChange,
@@ -235,6 +243,7 @@ function TaskRow({
 }: {
   task: Task;
   focused: boolean;
+  dim: boolean;
   onFocus: () => void;
   onBlur: () => void;
   onChange: (id: string, value: string) => void;
@@ -257,22 +266,18 @@ function TaskRow({
   }, [focused, task.value]);
 
   return (
-    <Reorder.Item
-      value={task}
-      dragListener={false}
-      dragControls={controls}
-      // Only the focused row rises above the blurred backdrop (z-40).
-      className={cn("relative", focused && "z-50")}
-    >
-      {/* No static border — on focus the row animates into a raised card. */}
+    <Reorder.Item value={task} dragListener={false} dragControls={controls}>
+      {/* No static border — on focus the row animates into a raised card. The
+          non-focused rows blur themselves; the focused one stays sharp. */}
       <motion.div
         animate={{ scale: focused ? 1.02 : 1 }}
         transition={{ type: "spring", stiffness: 300, damping: 26 }}
         className={cn(
-          "flex gap-2 rounded-lg p-2 transition-colors",
+          "flex gap-2 rounded-lg p-2 transition-all",
           focused
             ? "items-start bg-dark-600 shadow-2xl ring-1 ring-secondary/50"
             : "items-center bg-transparent hover:bg-dark-500",
+          dim && "opacity-50 blur-[2px]",
         )}
       >
         <button
@@ -314,25 +319,3 @@ function TaskRow({
   );
 }
 
-function Input({
-  label,
-  value,
-  onChange,
-}: {
-  label: string;
-  value: string;
-  onChange: (v: string) => void;
-}) {
-  return (
-    <div>
-      <label className="block text-sm font-medium text-white mb-1">
-        {label}
-      </label>
-      <input
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        className="w-full px-3 py-2 border border-dark-600 rounded-lg text-sm"
-      />
-    </div>
-  );
-}

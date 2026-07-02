@@ -600,8 +600,8 @@ export function AdminInvoicesPage({
 
             {/* Client Info */}
             <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-white mb-1">
+              <div className="flex flex-col gap-1">
+                <label className="text-sm font-medium text-white">
                   Client Name *
                 </label>
                 <input
@@ -610,8 +610,8 @@ export function AdminInvoicesPage({
                   className="w-full px-3 py-2 border border-dark-600 rounded-lg text-sm"
                 />
               </div>
-              <div>
-                <label className="block text-sm font-medium text-white mb-1">
+              <div className="flex flex-col gap-1">
+                <label className="text-sm font-medium text-white">
                   Client Email
                 </label>
                 <input
@@ -621,8 +621,8 @@ export function AdminInvoicesPage({
                   className="w-full px-3 py-2 border border-dark-600 rounded-lg text-sm"
                 />
               </div>
-              <div>
-                <label className="block text-sm font-medium text-white mb-1">
+              <div className="flex flex-col gap-1">
+                <label className="text-sm font-medium text-white">
                   Client Address
                 </label>
                 <textarea
@@ -632,8 +632,8 @@ export function AdminInvoicesPage({
                   className="w-full px-3 py-2 border border-dark-600 rounded-lg text-sm"
                 />
               </div>
-              <div>
-                <label className="block text-sm font-medium text-white mb-1">
+              <div className="flex flex-col gap-1">
+                <label className="text-sm font-medium text-white">
                   Due Date
                 </label>
                 <input
@@ -802,8 +802,8 @@ export function AdminInvoicesPage({
             </div>
 
             {/* Notes */}
-            <div>
-              <label className="block text-sm font-medium text-white mb-1">
+            <div className="flex flex-col gap-1">
+              <label className="text-sm font-medium text-white">
                 Notes
               </label>
               <textarea
