@@ -67,15 +67,10 @@ export function Carousel({
 }: CarouselProps) {
   const trackRef = useRef<HTMLUListElement>(null);
   const [current, setCurrent] = useState(0);
-  // The single shot that animates during a stack transition. `settleTo` is the
-  // index to promote to the base layer once the animation finishes (only on a
-  // forward move; on a backward move the base is switched up front).
-  const [overlay, setOverlay] = useState<{
-    index: number;
-    from: string;
-    to: string;
-    settleTo: number | null;
-  } | null>(null);
+  // The outgoing shot during a stack transition: it stays on top and fades out,
+  // revealing the new shot (already the covering base) beneath. Keeps the
+  // layered stacking so nothing behind the carousel is ever exposed.
+  const [overlay, setOverlay] = useState<{ index: number } | null>(null);
   const count = slides.length;
   const isStack = variant === "stack";
 
@@ -86,28 +81,15 @@ export function Carousel({
     setCurrent((c) => (c === index ? c : index));
   };
 
-  // The slide the controls should reflect — the transition's destination while
-  // one is in flight, otherwise the settled slide.
-  const activeIndex = overlay?.settleTo != null ? overlay.settleTo : current;
-
   const goTo = (index: number) => {
     const clamped = Math.max(0, Math.min(count - 1, index));
     if (isStack) {
       if (clamped === current || overlay) return; // ignore during a transition
-      // Both directions use the same reliable "uncover" path: the new shot
-      // becomes the covering base immediately, and the old shot slides off on
-      // top to reveal it — off to the left when advancing, to the right when
-      // going back. (The old "cover" path for next swapped the base mid-move,
-      // which briefly exposed the project behind on iOS.)
-      const forward = clamped > current;
+      // New shot becomes the covering base immediately; the old shot stays on
+      // top and fades out to reveal it (crossfade), in both directions.
       const old = current;
       setCurrent(clamped);
-      setOverlay({
-        index: old,
-        from: "0%",
-        to: forward ? "-100%" : "100%",
-        settleTo: null,
-      });
+      setOverlay({ index: old });
       return;
     }
     const el = trackRef.current;
@@ -115,10 +97,10 @@ export function Carousel({
     el.scrollTo({ left: clamped * el.clientWidth, behavior: "smooth" });
   };
 
-  const goPrev = () => goTo(activeIndex - 1);
-  const goNext = () => goTo(activeIndex + 1);
-  const hasPrev = activeIndex > 0;
-  const hasNext = activeIndex < count - 1;
+  const goPrev = () => goTo(current - 1);
+  const goNext = () => goTo(current + 1);
+  const hasPrev = current > 0;
+  const hasNext = current < count - 1;
 
   if (count === 0) return null;
 
@@ -150,18 +132,15 @@ export function Carousel({
       <div className="absolute inset-0 flex items-center justify-center">
         {slides[current]}
       </div>
-      {/* Overlay — the one shot that slides during a transition, on top. */}
+      {/* Overlay — the outgoing shot, on top, fading out to reveal the new one. */}
       {overlay && (
         <motion.div
-          key={`${overlay.index}-${overlay.to}`}
+          key={overlay.index}
           style={{ zIndex: 2 }}
-          initial={{ x: overlay.from }}
-          animate={{ x: overlay.to }}
-          transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-          onAnimationComplete={() => {
-            if (overlay.settleTo != null) setCurrent(overlay.settleTo);
-            setOverlay(null);
-          }}
+          initial={{ opacity: 1 }}
+          animate={{ opacity: 0 }}
+          transition={{ duration: 0.5, ease: "easeInOut" }}
+          onAnimationComplete={() => setOverlay(null)}
           className="absolute inset-0 flex items-center justify-center"
         >
           {slides[overlay.index]}
@@ -185,7 +164,7 @@ export function Carousel({
           }}
           className={cn(
             "h-1.5 rounded-full transition-all",
-            i === activeIndex ? "w-5 bg-secondary" : "w-1.5 bg-neutral-400/80",
+            i === current ? "w-5 bg-secondary" : "w-1.5 bg-neutral-400/80",
           )}
         />
       ))}
