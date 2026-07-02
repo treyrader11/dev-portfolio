@@ -339,38 +339,6 @@ body {
   .contact-form button span.success svg {
     stroke-dashoffset: var(--success-stroke);
   }
-
-  /* Scroll snap */
-
-  .snap-parent-y-mandatory {
-    scroll-snap-type: y mandatory;
-    overflow: scroll;
-    height: 100vh;
-    width: 100%;
-    /* -webkit-overflow-scrolling: touch; */
-  }
-
-  .snap-parent-y-proximity {
-    scroll-snap-type: y proximity;
-    overflow: scroll;
-    height: 100vh;
-    width: 100%;
-    -webkit-overflow-scrolling: touch;
-  }
-
-  .snap-child-start {
-    opacity: 0.5;
-    z-index: 10;
-    scroll-snap-align: start;
-    flex: none;
-  }
-
-  .snap-child-center {
-    opacity: 0.5;
-    z-index: 10;
-    scroll-snap-align: center;
-    flex: none;
-  }
 }
 
 /* Font below is used for hero */

@@ -64,9 +64,6 @@ export default function LatestWork({ className, projects }: Props) {
         "flex",
         "flex-col",
         "gap-y-10",
-        "snap-y",
-        "snap-mandatory",
-        "scroll-smooth",
         "sticky",
         className,
       )}
