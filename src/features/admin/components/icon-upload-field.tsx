@@ -97,11 +97,11 @@ export function IconUploadField({
   }
 
   return (
-    <div className={cn(inline && "flex items-start gap-4")}>
+    <div className={cn(inline ? "flex items-start gap-4" : "flex flex-col gap-1")}>
       <label
         className={cn(
           "text-sm font-medium text-white",
-          inline ? "w-44 shrink-0 whitespace-nowrap pt-2" : "block mb-1 whitespace-nowrap",
+          inline && "w-44 shrink-0 whitespace-nowrap pt-2",
         )}
       >
         {label}

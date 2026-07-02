@@ -169,10 +169,8 @@ export function ProjectDetailPage({ project }: Props) {
           />
 
           {/* Product Shots — managed on a dedicated screen. */}
-          <div>
-            <label className="block mb-1 whitespace-nowrap text-sm font-medium text-white">
-              Product Shots
-            </label>
+          <div className="flex flex-col gap-1">
+            <label className="text-sm font-medium text-white">Product Shots</label>
             <p className="mb-2 text-xs text-light-400">
               Landscape screenshots shown inside a laptop frame. Add as many as
               you like and reorder them.
@@ -247,10 +245,8 @@ export function ProjectDetailPage({ project }: Props) {
             onChange={(v) => setForm({ ...form, sortOrder: Number(v) || 0 })}
           />
 
-          <div>
-            <label className="block mb-1 whitespace-nowrap text-sm font-medium text-white">
-              Description
-            </label>
+          <div className="flex flex-col gap-1">
+            <label className="text-sm font-medium text-white">Description</label>
             <textarea
               value={form.description}
               onChange={(e) => setForm({ ...form, description: e.target.value })}
@@ -272,10 +268,8 @@ export function ProjectDetailPage({ project }: Props) {
             onChange={(v) => setForm({ ...form, technologyFeature: v })}
           />
 
-          <div>
-            <label className="block mb-2 whitespace-nowrap text-sm font-medium text-white">
-              Visibility
-            </label>
+          <div className="flex flex-col gap-1">
+            <label className="text-sm font-medium text-white">Visibility</label>
             <div className="flex flex-wrap gap-x-6 gap-y-3">
               <label className="flex items-center gap-2 text-sm text-white">
                 <input
@@ -348,10 +342,10 @@ function Input({
   required?: boolean;
 }) {
   return (
-    <div>
-      <label className="block mb-1 whitespace-nowrap text-sm font-medium text-white">
+    <div className="flex flex-col gap-1">
+      <label className="text-sm font-medium text-white">
         {label}
-        {required && <span className="text-error"> *</span>}
+        {required && <span className="text-red-500"> *</span>}
       </label>
       <input
         value={value}
