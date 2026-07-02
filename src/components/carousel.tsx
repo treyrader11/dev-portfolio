@@ -2,7 +2,7 @@
 
 import { IconArrowNarrowRight } from "@tabler/icons-react";
 import { useRef, useState, type ReactNode } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, type Variants } from "framer-motion";
 import { cn } from "@/lib/utils";
 
 interface CarouselControlProps {
@@ -31,10 +31,23 @@ function CarouselControl({ type, title, handleClick }: CarouselControlProps) {
   );
 }
 
+// Stack transition: forward, the incoming slide slides in from the right on top
+// of the current one (which stays put and gets covered); backward, the current
+// slide slides off to the right to reveal the previous one beneath. This mirrors
+// the vertical project-card stacking (cover / uncover) instead of a track slide.
+const stackVariants: Variants = {
+  enter: (dir: number) => ({ x: dir > 0 ? "100%" : "0%", zIndex: dir > 0 ? 2 : 1 }),
+  center: (dir: number) => ({ x: "0%", zIndex: dir > 0 ? 2 : 1 }),
+  exit: (dir: number) => ({ x: dir > 0 ? "0%" : "100%", zIndex: dir > 0 ? 1 : 2 }),
+};
+
 interface CarouselProps {
   /** Slide content — pass any node (e.g. an image rendered with next/image). */
   slides: ReactNode[];
   className?: string;
+  /** Transition style. `slide` = native horizontal scroll-snap track (default).
+   *  `stack` = incoming slide covers / outgoing uncovers, like the card stack. */
+  variant?: "slide" | "stack";
   /** Overlay the controls over the slide (arrows on the sides, dots on top)
    *  instead of laying them out below it. */
   overlayControls?: boolean;
@@ -44,13 +57,15 @@ interface CarouselProps {
   dotsClassName?: string;
 }
 
-// Global reusable carousel: native horizontal scroll-snap, so slides snap into
-// place on swipe and when the prev/next controls scroll to them. In
-// `overlayControls` mode the arrows sit on the slide's left/right (each shown
+// Global reusable carousel. `slide` mode uses native horizontal scroll-snap so
+// slides snap on swipe and when the controls scroll to them. `stack` mode swaps
+// that for a cover/uncover transition matching the vertical project-card stack.
+// In `overlayControls` mode the arrows sit on the slide's left/right (each shown
 // only when a slide exists that way, fading in/out) and the dots sit on top.
 export function Carousel({
   slides,
   className,
+  variant = "slide",
   overlayControls,
   prevClassName,
   nextClassName,
@@ -58,7 +73,10 @@ export function Carousel({
 }: CarouselProps) {
   const trackRef = useRef<HTMLUListElement>(null);
   const [current, setCurrent] = useState(0);
+  // Direction of the last transition (1 = forward, -1 = back) — drives the stack.
+  const [dir, setDir] = useState(1);
   const count = slides.length;
+  const isStack = variant === "stack";
 
   const handleScroll = () => {
     const el = trackRef.current;
@@ -67,20 +85,26 @@ export function Carousel({
     setCurrent((c) => (c === index ? c : index));
   };
 
-  const scrollToIndex = (index: number) => {
+  const goTo = (index: number) => {
+    const clamped = Math.max(0, Math.min(count - 1, index));
+    if (isStack) {
+      setDir(clamped >= current ? 1 : -1);
+      setCurrent(clamped);
+      return;
+    }
     const el = trackRef.current;
     if (!el) return;
-    el.scrollTo({ left: index * el.clientWidth, behavior: "smooth" });
+    el.scrollTo({ left: clamped * el.clientWidth, behavior: "smooth" });
   };
 
-  const goPrev = () => scrollToIndex(Math.max(0, current - 1));
-  const goNext = () => scrollToIndex(Math.min(count - 1, current + 1));
+  const goPrev = () => goTo(current - 1);
+  const goNext = () => goTo(current + 1);
   const hasPrev = current > 0;
   const hasNext = current < count - 1;
 
   if (count === 0) return null;
 
-  const track = (
+  const slideTrack = (
     <ul
       ref={trackRef}
       onScroll={handleScroll}
@@ -97,6 +121,31 @@ export function Carousel({
     </ul>
   );
 
+  const stackTrack = (
+    <div className="relative w-full overflow-hidden">
+      {/* Invisible sizer reserves one slide's height (all slides share size). */}
+      <div className="invisible" aria-hidden>
+        {slides[0]}
+      </div>
+      <AnimatePresence initial={false} custom={dir}>
+        <motion.div
+          key={current}
+          custom={dir}
+          variants={stackVariants}
+          initial="enter"
+          animate="center"
+          exit="exit"
+          transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+          className="absolute inset-0 flex items-center justify-center"
+        >
+          {slides[current]}
+        </motion.div>
+      </AnimatePresence>
+    </div>
+  );
+
+  const track = isStack ? stackTrack : slideTrack;
+
   const dots = (
     <div className="flex items-center gap-1.5">
       {slides.map((_, i) => (
@@ -106,7 +155,7 @@ export function Carousel({
           aria-label={`Go to slide ${i + 1}`}
           onClick={(e) => {
             e.stopPropagation();
-            scrollToIndex(i);
+            goTo(i);
           }}
           className={cn(
             "h-1.5 rounded-full transition-all",

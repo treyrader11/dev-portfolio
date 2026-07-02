@@ -20,6 +20,8 @@ export default function LatestWorkCardFront({ project }: Props) {
     return (
       <Carousel
         overlayControls
+        // Shots cover/uncover like the vertical card stack instead of sliding.
+        variant="stack"
         // Anchored to the laptop screen (see SCREEN in laptop-mockup): arrows on
         // the screen's left/right edges, dots over the screen's top.
         prevClassName="left-[16%] top-1/2 -translate-y-1/2"

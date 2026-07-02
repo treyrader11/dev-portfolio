@@ -72,14 +72,18 @@ const Home: NextPage<HomeProps> = ({ latestWorkProjects }) => {
           .map(docTop)
           .sort((a, b) => a - b);
 
-      let intentDir = 0; // last user gesture: 1 = down, -1 = up
+      let accumDelta = 0; // summed wheel/touch delta for the current gesture
       let settleTimer: ReturnType<typeof setTimeout> | null = null;
       let animating = false;
 
       const snapInDirection = () => {
+        const delta = accumDelta;
+        accumDelta = 0;
         if (animating) return;
-        const dir = intentDir;
-        intentDir = 0;
+        // Direction from the gesture's net delta, not its last event — trackpads
+        // emit a tiny opposite-sign delta at the end of a flick, which would
+        // otherwise flip a small scroll-up into a snap back down.
+        const dir = delta > 0 ? 1 : delta < 0 ? -1 : 0;
         if (dir === 0) return;
 
         const pos = positions();
@@ -120,7 +124,7 @@ const Home: NextPage<HomeProps> = ({ latestWorkProjects }) => {
       // scrollTo), so it captures genuine user intent without self-triggering.
       const unsub = lenis.on("virtual-scroll", ({ deltaY }) => {
         if (animating || deltaY === 0) return;
-        intentDir = deltaY > 0 ? 1 : -1;
+        accumDelta += deltaY;
         if (settleTimer) clearTimeout(settleTimer);
         settleTimer = setTimeout(snapInDirection, 140);
       });
