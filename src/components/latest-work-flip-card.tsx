@@ -64,6 +64,9 @@ export default function LatestWorkFlipCard({
     <div
       style={{ perspective: 1000 }}
       ref={container}
+      // Snap target: the home page registers these with Lenis Snap so each card
+      // locks to the top of the viewport as you scroll.
+      data-snap-project
       className={cn(
         "z-10",
         "w-full",
