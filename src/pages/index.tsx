@@ -59,12 +59,23 @@ const Home: NextPage<HomeProps> = ({ latestWorkProjects, sliderProjects }) => {
       // report the same top:0 position, so "nearest card" resolved to 0 and the
       // snap yanked back to the first card while you were on the last. Anchors
       // stay in normal flow, so rect.top + scroll is always the card's true top.
-      const positions = () =>
-        Array.from(
+      // Each anchor is an h-0 flex child, so the card actually starts one flex
+      // row-gap below it — add that gap so the snap lands the card flush at the
+      // top (otherwise it stops ~a gap short, which also hid the carousel
+      // controls, since they only show when the card is pinned within 8px).
+      const positions = () => {
+        const anchors = Array.from(
           document.querySelectorAll<HTMLElement>("[data-snap-anchor]"),
-        )
-          .map((el) => el.getBoundingClientRect().top + lenis.scroll)
+        );
+        if (anchors.length === 0) return [];
+        const parent = anchors[0].parentElement;
+        const gap = parent
+          ? parseFloat(getComputedStyle(parent).rowGap) || 0
+          : 0;
+        return anchors
+          .map((el) => el.getBoundingClientRect().top + lenis.scroll + gap)
           .sort((a, b) => a - b);
+      };
 
       const nearestIndex = (pos: number[], y: number) => {
         let best = 0;
