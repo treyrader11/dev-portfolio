@@ -1,11 +1,15 @@
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
+import Link from "next/link";
+import Image from "next/image";
 import { motion } from "framer-motion";
+import { RiAddLine } from "react-icons/ri";
 import AdminLayout from "@/features/admin/components/admin-layout";
 import { IconUploadField } from "@/features/admin/components/icon-upload-field";
 import { TechStackField } from "./tech-stack-field";
 import { TagInputField, type Suggestion } from "./tag-input-field";
 import { CategoryMultiField } from "./category-multi-field";
+import { cn, resolveImageSrc, slugify } from "@/lib/utils";
 import { type ProjectItem, emptyProject } from "../types";
 
 interface Props {
@@ -49,12 +53,15 @@ export function ProjectDetailPage({ project }: Props) {
           isRecent: project.isRecent,
           sortOrder: project.sortOrder,
         }
-      : { ...emptyProject, tags: [] as string[], technologyFeature: [] as string[] },
+      : {
+          ...emptyProject,
+          tags: [] as string[],
+          technologyFeature: [] as string[],
+        },
   );
   const [saving, setSaving] = useState(false);
 
-  // Existing tag + technology-feature values, used to suggest as the user types
-  // (like roux-ui's tag/category pickers).
+  // Existing tag + technology-feature values, used to suggest as the user types.
   const [tagOptions, setTagOptions] = useState<Suggestion[]>([]);
   const [featureOptions, setFeatureOptions] = useState<Suggestion[]>([]);
   useEffect(() => {
@@ -67,8 +74,7 @@ export function ProjectDetailPage({ project }: Props) {
       .catch(() => {});
   }, []);
 
-  // Dirty-tracking: any change reveals the fixed save bar. The initial snapshot
-  // is captured once, on the first render.
+  // Dirty-tracking: any change reveals the fixed save bar.
   const snapshot = JSON.stringify(form);
   const initialSnapshot = useRef<string | undefined>(undefined);
   if (initialSnapshot.current === undefined) initialSnapshot.current = snapshot;
@@ -89,6 +95,7 @@ export function ProjectDetailPage({ project }: Props) {
   }
 
   const title = isNew ? "New Project" : project.title || "Project";
+  const shots = form.image.shots ?? [];
 
   return (
     <AdminLayout
@@ -100,31 +107,36 @@ export function ProjectDetailPage({ project }: Props) {
       ]}
     >
       <div className="w-full max-w-3xl pb-24">
-        {/* One column — every field stacks. */}
-        <div className="bg-dark-400 rounded-lg border border-dark-600 p-6 space-y-4">
+        <div className="bg-dark-400 rounded-lg border border-dark-600 p-4 sm:p-6 space-y-5">
+          <Input
+            label="Title"
+            required
+            value={form.title}
+            onChange={(v) => setForm({ ...form, title: v })}
+          />
+          <Input
+            label="Category"
+            required
+            value={form.category}
+            onChange={(v) => setForm({ ...form, category: v })}
+          />
+          <Input
+            label="Video Key"
+            required
+            value={form.videoKey}
+            onChange={(v) => setForm({ ...form, videoKey: v })}
+          />
+
           <IconUploadField
             label="Logo"
-            inline
             value={form.image.icon}
             onChange={(v) =>
               setForm((f) => ({ ...f, image: { ...f.image, icon: v } }))
             }
           />
 
-          <Input
-            label="Title"
-            value={form.title}
-            onChange={(v) => setForm({ ...form, title: v })}
-          />
-          <Input
-            label="Category"
-            value={form.category}
-            onChange={(v) => setForm({ ...form, category: v })}
-          />
-
           <TechStackField
             label="Tech Stack"
-            inline
             value={form.techImage}
             onChange={(v) => setForm((f) => ({ ...f, techImage: v }))}
             onSelectName={(name) => setForm((f) => ({ ...f, stack: name }))}
@@ -140,15 +152,9 @@ export function ProjectDetailPage({ project }: Props) {
             value={form.color}
             onChange={(v) => setForm({ ...form, color: v })}
           />
-          <Input
-            label="Video Key"
-            value={form.videoKey}
-            onChange={(v) => setForm({ ...form, videoKey: v })}
-          />
 
           <IconUploadField
-            label="Project Image"
-            inline
+            label="Project Poster"
             value={form.projectImage}
             previewBg="#141516"
             aspect={16 / 9}
@@ -161,6 +167,59 @@ export function ProjectDetailPage({ project }: Props) {
               }))
             }
           />
+
+          {/* Product Shots — managed on a dedicated screen. */}
+          <div>
+            <label className="block text-sm font-medium text-white mb-1">
+              Product Shots
+            </label>
+            <p className="mb-2 text-xs text-light-400">
+              Landscape screenshots shown inside a laptop frame. Add as many as
+              you like and reorder them.
+            </p>
+
+            {shots.length > 0 && (
+              <div className="mb-3 flex flex-wrap gap-2">
+                {shots.map((shot) => (
+                  <div
+                    key={shot}
+                    className="relative h-12 w-20 overflow-hidden rounded border border-dark-600 bg-dark-600"
+                  >
+                    <Image
+                      src={resolveImageSrc(shot)}
+                      alt=""
+                      fill
+                      sizes="80px"
+                      className="object-cover"
+                    />
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {isNew ? (
+              <div className="space-y-1">
+                <button
+                  type="button"
+                  disabled
+                  className="inline-flex items-center gap-1.5 rounded-lg border border-dark-600 px-4 py-2 text-sm text-light-400 opacity-60"
+                >
+                  <RiAddLine className="size-4" /> Add product shots
+                </button>
+                <p className="text-xs text-light-400">
+                  Save the project first to add product shots.
+                </p>
+              </div>
+            ) : (
+              <Link
+                href={`/admin/projects/${slugify(project.title)}/product-shots`}
+                className="inline-flex items-center gap-1.5 rounded-lg border border-dark-600 px-4 py-2 text-sm text-white transition-colors hover:border-secondary/60"
+              >
+                <RiAddLine className="size-4" />
+                {shots.length ? "Manage product shots" : "Add product shots"}
+              </Link>
+            )}
+          </div>
 
           <Input
             label="YouTube Link"
@@ -188,38 +247,36 @@ export function ProjectDetailPage({ project }: Props) {
             onChange={(v) => setForm({ ...form, sortOrder: Number(v) || 0 })}
           />
 
-          <div className="flex items-start gap-4">
-            <label className="w-40 shrink-0 pt-2 text-sm font-medium text-white">
+          <div>
+            <label className="block text-sm font-medium text-white mb-1">
               Description
             </label>
             <textarea
               value={form.description}
               onChange={(e) => setForm({ ...form, description: e.target.value })}
               rows={4}
-              className="min-w-0 flex-1 px-3 py-2 border border-dark-600 rounded-lg text-sm"
+              className="w-full px-3 py-2 border border-dark-600 rounded-lg text-sm"
             />
           </div>
 
           <TagInputField
             label="Tags"
-            inline
             value={form.tags}
             suggestions={tagOptions}
             onChange={(v) => setForm({ ...form, tags: v })}
           />
           <CategoryMultiField
             label="Technology Features"
-            inline
             value={form.technologyFeature}
             options={featureOptions}
             onChange={(v) => setForm({ ...form, technologyFeature: v })}
           />
 
-          <div className="flex items-center gap-4 pt-1">
-            <span className="w-40 shrink-0 text-sm font-medium text-white">
+          <div>
+            <label className="block text-sm font-medium text-white mb-2">
               Visibility
-            </span>
-            <div className="flex min-w-0 flex-1 gap-6">
+            </label>
+            <div className="flex flex-wrap gap-x-6 gap-y-3">
               <label className="flex items-center gap-2 text-sm text-white">
                 <input
                   type="checkbox"
@@ -247,8 +304,7 @@ export function ProjectDetailPage({ project }: Props) {
         </div>
       </div>
 
-      {/* Save bar — hidden off the bottom of the screen until a change is made,
-          then it springs up into view. */}
+      {/* Save bar — springs up when a change is made. */}
       <motion.div
         initial={false}
         animate={{ y: dirty ? "0%" : "110%" }}
@@ -284,22 +340,26 @@ function Input({
   label,
   value,
   onChange,
+  required,
 }: {
   label: string;
   value: string;
   onChange: (v: string) => void;
+  required?: boolean;
 }) {
   return (
-    <div className="flex items-center gap-4">
-      <label className="w-40 shrink-0 text-sm font-medium text-white">
+    <div>
+      <label className="block text-sm font-medium text-white mb-1">
         {label}
+        {required && <span className="text-error"> *</span>}
       </label>
       <input
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="min-w-0 flex-1 px-3 py-2 border border-dark-600 rounded-lg text-sm"
+        className={cn(
+          "w-full px-3 py-2 border border-dark-600 rounded-lg text-sm",
+        )}
       />
     </div>
   );
 }
-

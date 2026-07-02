@@ -39,13 +39,20 @@ export default async function handler(
   }
 
   // Partial update — used by the admin list to toggle the "Latest Work" flag
-  // (isRecent) without sending the whole project payload.
+  // (isRecent), and by the product-shots screen to persist the image JSON.
   if (req.method === "PATCH") {
-    const { isRecent } = req.body as { isRecent?: boolean };
-    const data: { isRecent?: boolean } = {};
+    const { isRecent, image } = req.body as {
+      isRecent?: boolean;
+      image?: unknown;
+    };
+    const data: { isRecent?: boolean; image?: unknown } = {};
     if (typeof isRecent === "boolean") data.isRecent = isRecent;
+    if (image !== undefined) data.image = image;
 
-    const item = await prisma.project.update({ where: { id }, data });
+    const item = await prisma.project.update({
+      where: { id },
+      data: data as never,
+    });
     await revalidateProjects(res, item);
     return res.json(item);
   }
