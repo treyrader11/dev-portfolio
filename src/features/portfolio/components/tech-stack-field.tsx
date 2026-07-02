@@ -86,7 +86,7 @@ export function TechStackField({
       <label
         className={cn(
           "text-sm font-medium text-white",
-          inline ? "w-40 shrink-0 pt-2" : "block mb-1",
+          inline ? "w-44 shrink-0 whitespace-nowrap pt-2" : "block mb-1",
         )}
       >
         {label}

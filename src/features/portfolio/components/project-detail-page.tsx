@@ -129,6 +129,7 @@ export function ProjectDetailPage({ project }: Props) {
 
           <IconUploadField
             label="Logo"
+            inline
             value={form.image.icon}
             onChange={(v) =>
               setForm((f) => ({ ...f, image: { ...f.image, icon: v } }))
@@ -137,12 +138,13 @@ export function ProjectDetailPage({ project }: Props) {
 
           <TechStackField
             label="Tech Stack"
+            inline
             value={form.techImage}
             onChange={(v) => setForm((f) => ({ ...f, techImage: v }))}
             onSelectName={(name) => setForm((f) => ({ ...f, stack: name }))}
           />
           <Input
-            label="Stack (display text)"
+            label="Stack Text"
             value={form.stack}
             onChange={(v) => setForm({ ...form, stack: v })}
           />
@@ -155,6 +157,7 @@ export function ProjectDetailPage({ project }: Props) {
 
           <IconUploadField
             label="Project Poster"
+            inline
             value={form.projectImage}
             previewBg="#141516"
             aspect={16 / 9}
@@ -169,10 +172,11 @@ export function ProjectDetailPage({ project }: Props) {
           />
 
           {/* Product Shots — managed on a dedicated screen. */}
-          <div>
-            <label className="block text-sm font-medium text-white mb-1">
+          <div className="flex items-start gap-4">
+            <label className="w-44 shrink-0 whitespace-nowrap pt-2 text-sm font-medium text-white">
               Product Shots
             </label>
+            <div className="min-w-0 flex-1">
             <p className="mb-2 text-xs text-light-400">
               Landscape screenshots shown inside a laptop frame. Add as many as
               you like and reorder them.
@@ -219,6 +223,7 @@ export function ProjectDetailPage({ project }: Props) {
                 {shots.length ? "Manage product shots" : "Add product shots"}
               </Link>
             )}
+            </div>
           </div>
 
           <Input
@@ -247,36 +252,38 @@ export function ProjectDetailPage({ project }: Props) {
             onChange={(v) => setForm({ ...form, sortOrder: Number(v) || 0 })}
           />
 
-          <div>
-            <label className="block text-sm font-medium text-white mb-1">
+          <div className="flex items-start gap-4">
+            <label className="w-44 shrink-0 whitespace-nowrap pt-2 text-sm font-medium text-white">
               Description
             </label>
             <textarea
               value={form.description}
               onChange={(e) => setForm({ ...form, description: e.target.value })}
               rows={4}
-              className="w-full px-3 py-2 border border-dark-600 rounded-lg text-sm"
+              className="min-w-0 flex-1 px-3 py-2 border border-dark-600 rounded-lg text-sm"
             />
           </div>
 
           <TagInputField
             label="Tags"
+            inline
             value={form.tags}
             suggestions={tagOptions}
             onChange={(v) => setForm({ ...form, tags: v })}
           />
           <CategoryMultiField
             label="Technology Features"
+            inline
             value={form.technologyFeature}
             options={featureOptions}
             onChange={(v) => setForm({ ...form, technologyFeature: v })}
           />
 
-          <div>
-            <label className="block text-sm font-medium text-white mb-2">
+          <div className="flex items-start gap-4">
+            <label className="w-44 shrink-0 whitespace-nowrap pt-1 text-sm font-medium text-white">
               Visibility
             </label>
-            <div className="flex flex-wrap gap-x-6 gap-y-3">
+            <div className="flex min-w-0 flex-1 flex-wrap gap-x-6 gap-y-3">
               <label className="flex items-center gap-2 text-sm text-white">
                 <input
                   type="checkbox"
@@ -348,8 +355,8 @@ function Input({
   required?: boolean;
 }) {
   return (
-    <div>
-      <label className="block text-sm font-medium text-white mb-1">
+    <div className="flex items-center gap-4">
+      <label className="w-44 shrink-0 whitespace-nowrap text-sm font-medium text-white">
         {label}
         {required && <span className="text-error"> *</span>}
       </label>
@@ -357,7 +364,7 @@ function Input({
         value={value}
         onChange={(e) => onChange(e.target.value)}
         className={cn(
-          "w-full px-3 py-2 border border-dark-600 rounded-lg text-sm",
+          "min-w-0 flex-1 px-3 py-2 border border-dark-600 rounded-lg text-sm",
         )}
       />
     </div>
