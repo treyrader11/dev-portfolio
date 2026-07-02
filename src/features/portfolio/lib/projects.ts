@@ -67,7 +67,9 @@ export async function getLatestWorkProjects(): Promise<ProjectData[]> {
 export async function getProjectVideoKeys(): Promise<string[]> {
   try {
     const items = await prisma.project.findMany({ select: { videoKey: true } });
-    return items.map((i) => i.videoKey);
+    // Drop empty keys — an empty videoKey would generate the path "/project",
+    // which doesn't match the /project/[projectId] route and breaks the build.
+    return items.map((i) => i.videoKey).filter(Boolean);
   } catch {
     return [];
   }
