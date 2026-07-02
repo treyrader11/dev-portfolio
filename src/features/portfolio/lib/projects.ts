@@ -52,7 +52,7 @@ export async function getAllProjects(): Promise<ProjectData[]> {
   }
 }
 
-export async function getRecentProjects(): Promise<ProjectData[]> {
+export async function getLatestWorkProjects(): Promise<ProjectData[]> {
   try {
     const items = await prisma.project.findMany({
       where: { isRecent: true },

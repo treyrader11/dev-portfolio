@@ -2,7 +2,7 @@
 
 import { useScroll, useTransform, motion } from "framer-motion";
 import React, { useRef, useMemo } from "react";
-import ProjectFlipCard from "@/components/project-flip-card";
+import LatestWorkFlipCard from "@/components/latest-work-flip-card";
 import Rounded from "@/components/Rounded";
 import { cn, createScrollPositions } from "@/lib/utils";
 import PageTitle from "../PageTitle";
@@ -14,7 +14,7 @@ interface Props {
   projects: ProjectData[];
 }
 
-export default function RecentProjects({ className, projects }: Props) {
+export default function LatestWork({ className, projects }: Props) {
   const container = useRef<HTMLElement>(null);
   const lastProjectRef = useRef<HTMLDivElement>(null);
 
@@ -91,7 +91,7 @@ export default function RecentProjects({ className, projects }: Props) {
             {isLast && (
               <div ref={lastProjectRef} aria-hidden className="h-0 -mb-10" />
             )}
-            <ProjectFlipCard project={project} position={projectPositions[i]} />
+            <LatestWorkFlipCard project={project} position={projectPositions[i]} />
           </React.Fragment>
         );
       })}

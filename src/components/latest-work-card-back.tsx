@@ -10,9 +10,9 @@ interface Props {
 
 // Back face of the flip card — the same laptop frame as the front, but with the
 // blank screenshot inside, and the "View" button overlaid on the screen. Sits
-// inside a `relative` wrapper (from ProjectFlipCard) so the button centers over
+// inside a `relative` wrapper (from LatestWorkFlipCard) so the button centers over
 // the mockup and layers above the frame.
-export default function ProjectCardBack({ project }: Props) {
+export default function LatestWorkCardBack({ project }: Props) {
   return (
     <>
       <LaptopMockup

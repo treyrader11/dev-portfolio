@@ -8,11 +8,11 @@ import Inner from "@/components/layout/Inner";
 import { cn } from "@/lib/utils";
 import Description from "@/components/Description";
 import SlidingImages from "@/components/SlidingImages";
-import RecentProjects from "@/components/RecentProjects";
+import LatestWork from "@/components/LatestWork";
 import Freelance from "@/components/Freelance";
 import Hero from "@/components/Hero";
 import PositionProvider from "@/components/providers/PositionProvider";
-import { getRecentProjects } from "@/features/portfolio/lib/projects";
+import { getLatestWorkProjects } from "@/features/portfolio/lib/projects";
 import type { ProjectData } from "@/types/data";
 // import References from "@/components/References";
 
@@ -27,10 +27,10 @@ interface LocomotiveScrollInstance {
 }
 
 interface HomeProps {
-  recentProjects: ProjectData[];
+  latestWorkProjects: ProjectData[];
 }
 
-const Home: NextPage<HomeProps> = ({ recentProjects }) => {
+const Home: NextPage<HomeProps> = ({ latestWorkProjects }) => {
   const container = useRef<HTMLDivElement>(null);
   const locomotiveScrollRef = useRef<LocomotiveScrollInstance | null>(null);
   const pathname = usePathname();
@@ -56,9 +56,9 @@ const Home: NextPage<HomeProps> = ({ recentProjects }) => {
         <Hero className={cn("min-h-screen bg-dark")} />
         <Description className={cn("bg-white")} />
         <PositionProvider>
-          <RecentProjects
+          <LatestWork
             className={cn("bg-white")}
-            projects={recentProjects}
+            projects={latestWorkProjects}
           />
         </PositionProvider>
 
@@ -78,9 +78,9 @@ export default Home;
 // Static generation + ISR: the home page ships as static HTML (SEO-friendly,
 // no client-side data fetching) and revalidates so admin edits surface quickly.
 export const getStaticProps: GetStaticProps<HomeProps> = async () => {
-  const recentProjects = await getRecentProjects();
+  const latestWorkProjects = await getLatestWorkProjects();
   return {
-    props: { recentProjects },
+    props: { latestWorkProjects },
     revalidate: 60,
   };
 };

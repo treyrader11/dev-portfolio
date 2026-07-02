@@ -4,8 +4,8 @@ import { useContext, useRef, useState } from "react";
 import { motion, useScroll, useMotionValueEvent } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { PositionContext } from "@/lib/contexts";
-import ProjectCardFront from "./project-card-front";
-import ProjectCardBack from "./project-card-back";
+import LatestWorkCardFront from "./latest-work-card-front";
+import LatestWorkCardBack from "./latest-work-card-back";
 import type { ProjectData } from "@/types/data";
 import type { ScrollPosition } from "@/types/components";
 
@@ -21,7 +21,7 @@ interface Props {
 // mockup of the screenshot; back is the "View" button. The sticky container,
 // scroll-position tracking, and flip timing/easing are preserved from the
 // original Latest Work card.
-export default function ProjectFlipCard({
+export default function LatestWorkFlipCard({
   project,
   className,
   position,
@@ -99,7 +99,7 @@ export default function ProjectFlipCard({
         {/* Mobile: as large as possible, capped by both viewport dimensions so
             the square frame never overflows. Desktop keeps its smaller size. */}
         <div className="w-[min(94vw,90vh)] sm:w-[62%] max-w-[900px]">
-          <ProjectCardFront project={project} />
+          <LatestWorkCardFront project={project} />
         </div>
       </motion.div>
 
@@ -123,7 +123,7 @@ export default function ProjectFlipCard({
       >
         {/* Same sized wrapper as the front so the mockup overlaps exactly. */}
         <div className="relative w-[min(94vw,90vh)] sm:w-[62%] max-w-[900px]">
-          <ProjectCardBack project={project} />
+          <LatestWorkCardBack project={project} />
         </div>
       </motion.div>
     </div>

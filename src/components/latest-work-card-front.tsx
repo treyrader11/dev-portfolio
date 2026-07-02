@@ -5,7 +5,7 @@ interface Props {
   project: ProjectData;
 }
 
-export default function ProjectCardFront({ project }: Props) {
+export default function LatestWorkCardFront({ project }: Props) {
   // Prefer project_image (Cloudinary upload), fall back to image.src (legacy)
   const imageSrc =
     project.project_image ||

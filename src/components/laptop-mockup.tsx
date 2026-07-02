@@ -15,7 +15,7 @@ const FRAME_ASPECT = "1 / 1";
 // bezel with no hairline gaps. The frame on top masks the rounded corners.
 const SCREEN = { top: "32.6%", left: "16.9%", width: "66.3%", height: "38.3%" };
 
-// The mockup renders up to ~900px wide (see ProjectFlipCard); on mobile it's
+// The mockup renders up to ~900px wide (see LatestWorkFlipCard); on mobile it's
 // close to the viewport width.
 const SIZES = "(max-width: 640px) 94vw, 900px";
 
