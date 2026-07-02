@@ -1,7 +1,7 @@
 "use client";
 
 import { IconArrowNarrowRight } from "@tabler/icons-react";
-import { useState, type ReactNode } from "react";
+import { useRef, useState, type ReactNode } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 
@@ -44,10 +44,10 @@ interface CarouselProps {
   dotsClassName?: string;
 }
 
-// Global reusable carousel: horizontal scroll with prev/next controls and dot
-// indicators. In `overlayControls` mode the arrows sit on the left/right of the
-// slide (each shown only when a slide exists that way and fading in/out as you
-// navigate) and the dots sit over the top.
+// Global reusable carousel: native horizontal scroll-snap, so slides snap into
+// place on swipe and when the prev/next controls scroll to them. In
+// `overlayControls` mode the arrows sit on the slide's left/right (each shown
+// only when a slide exists that way, fading in/out) and the dots sit on top.
 export function Carousel({
   slides,
   className,
@@ -56,14 +56,46 @@ export function Carousel({
   nextClassName,
   dotsClassName,
 }: CarouselProps) {
+  const trackRef = useRef<HTMLUListElement>(null);
   const [current, setCurrent] = useState(0);
   const count = slides.length;
-  if (count === 0) return null;
 
-  const goPrev = () => setCurrent((c) => Math.max(0, c - 1));
-  const goNext = () => setCurrent((c) => Math.min(count - 1, c + 1));
+  const handleScroll = () => {
+    const el = trackRef.current;
+    if (!el) return;
+    const index = Math.round(el.scrollLeft / el.clientWidth);
+    setCurrent((c) => (c === index ? c : index));
+  };
+
+  const scrollToIndex = (index: number) => {
+    const el = trackRef.current;
+    if (!el) return;
+    el.scrollTo({ left: index * el.clientWidth, behavior: "smooth" });
+  };
+
+  const goPrev = () => scrollToIndex(Math.max(0, current - 1));
+  const goNext = () => scrollToIndex(Math.min(count - 1, current + 1));
   const hasPrev = current > 0;
   const hasNext = current < count - 1;
+
+  if (count === 0) return null;
+
+  const track = (
+    <ul
+      ref={trackRef}
+      onScroll={handleScroll}
+      className="flex snap-x snap-mandatory overflow-x-auto scroll-smooth [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+    >
+      {slides.map((slide, index) => (
+        <li
+          key={index}
+          className="flex w-full shrink-0 snap-center items-center justify-center"
+        >
+          {slide}
+        </li>
+      ))}
+    </ul>
+  );
 
   const dots = (
     <div className="flex items-center gap-1.5">
@@ -74,7 +106,7 @@ export function Carousel({
           aria-label={`Go to slide ${i + 1}`}
           onClick={(e) => {
             e.stopPropagation();
-            setCurrent(i);
+            scrollToIndex(i);
           }}
           className={cn(
             "h-1.5 rounded-full transition-all",
@@ -85,24 +117,6 @@ export function Carousel({
     </div>
   );
 
-  const track = (
-    <div className="overflow-hidden">
-      <ul
-        className="flex transition-transform duration-700 ease-in-out"
-        style={{ transform: `translateX(-${current * 100}%)` }}
-      >
-        {slides.map((slide, index) => (
-          <li
-            key={index}
-            className="flex w-full shrink-0 items-center justify-center"
-          >
-            {slide}
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
-
   if (overlayControls) {
     return (
       <div className={cn("relative w-full", className)}>
@@ -110,7 +124,6 @@ export function Carousel({
 
         {count > 1 && (
           <>
-            {/* Left arrow — only when a slide exists to the left. */}
             <AnimatePresence>
               {hasPrev && (
                 <motion.div
@@ -132,7 +145,6 @@ export function Carousel({
               )}
             </AnimatePresence>
 
-            {/* Right arrow — only when a slide exists to the right. */}
             <AnimatePresence>
               {hasNext && (
                 <motion.div
@@ -154,7 +166,6 @@ export function Carousel({
               )}
             </AnimatePresence>
 
-            {/* Dots — overlaid above the slide. */}
             <div
               className={cn(
                 "absolute z-50 flex justify-center rounded-full bg-black/30 px-2 py-1 backdrop-blur-sm",

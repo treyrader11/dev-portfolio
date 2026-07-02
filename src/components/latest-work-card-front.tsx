@@ -24,7 +24,8 @@ export default function LatestWorkCardFront({ project }: Props) {
         // the screen's left/right edges, dots over the screen's top.
         prevClassName="left-[16%] top-1/2 -translate-y-1/2"
         nextClassName="right-[16%] top-1/2 -translate-y-1/2"
-        dotsClassName="top-[35%] left-1/2 -translate-x-1/2"
+        // Dots sit over the top of the screen — a touch higher on mobile.
+        dotsClassName="top-[27%] left-1/2 -translate-x-1/2 sm:top-[35%]"
         slides={shots.map((shot, i) => (
           <LaptopMockup
             key={i}

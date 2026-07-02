@@ -72,6 +72,7 @@ export default function LatestWorkFlipCard({
         "items-center",
         "justify-center",
         "min-h-screen",
+        "snap-start",
         "sticky",
         "top-0",
         "cursor-pointer",
