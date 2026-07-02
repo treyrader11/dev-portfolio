@@ -96,7 +96,9 @@ export default function ProjectFlipCard({
           "justify-center",
         )}
       >
-        <div className="w-[62%] max-w-[900px]">
+        {/* Mobile: as large as possible, capped by both viewport dimensions so
+            the square frame never overflows. Desktop keeps its smaller size. */}
+        <div className="w-[min(94vw,90vh)] sm:w-[62%] max-w-[900px]">
           <ProjectCardFront project={project} />
         </div>
       </motion.div>
