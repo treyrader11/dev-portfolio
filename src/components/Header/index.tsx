@@ -30,7 +30,12 @@ export default function Header() {
   const showButton = isMobile && isNavOpen;
 
   const isProjectPage = path.includes("project");
-  const backgroundHasColor = !isProjectPage;
+  // Portfolio detail pages (/portfolio/<slug>) have a white background too, so
+  // the nav/brand need dark text there like the project pages — otherwise the
+  // white links sit invisibly on white. The portfolio index (/portfolio) keeps
+  // its white text.
+  const isPortfolioDetail = path.startsWith("/portfolio/");
+  const backgroundHasColor = !isProjectPage && !isPortfolioDetail;
 
   const isHomePage = path === "/";
   const headerVariants = isHomePage ? slideDown : blur;
