@@ -44,7 +44,22 @@ export default function LatestWorkFlipCard({
     const check = () => {
       const el = container.current;
       if (!el) return;
-      setSnapped(Math.abs(el.getBoundingClientRect().top) < 8);
+      const pinned = Math.abs(el.getBoundingClientRect().top) < 8;
+      // All earlier cards stay pinned at the top too, but are covered by the
+      // ones stacked over them. Only treat this card as snapped if the next
+      // project hasn't risen up to cover it — otherwise its controls would show
+      // (and bleed through the covering card's transparent frame margins).
+      let covered = false;
+      if (pinned) {
+        const all = Array.from(
+          document.querySelectorAll<HTMLElement>("[data-snap-project]"),
+        );
+        const next = all[all.indexOf(el) + 1];
+        if (next && next.getBoundingClientRect().top < window.innerHeight * 0.5) {
+          covered = true;
+        }
+      }
+      setSnapped(pinned && !covered);
     };
     const onScroll = () => {
       setSnapped(false); // hide controls while moving
