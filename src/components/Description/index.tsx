@@ -31,9 +31,15 @@ export default function Description({ scrollYProgress, className }: Props) {
   const isInView = useInView(description);
 
   return (
+    // relative z-10 keeps this section (and its parallaxed "Learn more" button)
+    // above the sticky Latest Work section (z-[2]) as it rises from the bottom,
+    // so the button is never overlapped during the scroll transition.
     <motion.section
       ref={description}
-      className={cn("px-[200px] mt-[200px] flex justify-center", className)}
+      className={cn(
+        "relative z-10 px-[200px] mt-[200px] flex justify-center",
+        className
+      )}
     >
       <div className="flex gap-[50px] relative max-w-[1400px]">
         <p className="m-0 text-4xl gap-2 leading-[1.3]">
