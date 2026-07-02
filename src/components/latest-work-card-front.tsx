@@ -1,18 +1,20 @@
 import LaptopMockup from "./laptop-mockup";
-import type { ProjectData } from "@/types/data";
+import type { ProjectData, ProjectImage } from "@/types/data";
 
 interface Props {
   project: ProjectData;
 }
 
 export default function LatestWorkCardFront({ project }: Props) {
-  // Prefer project_image (Cloudinary upload), fall back to image.src (legacy)
+  const image =
+    project.image && typeof project.image === "object"
+      ? (project.image as ProjectImage)
+      : null;
+
+  // The default product shot is the first uploaded shot; fall back to the
+  // project poster, then the legacy image src.
   const imageSrc =
-    project.project_image ||
-    (project.image && typeof project.image === "object"
-      ? (project.image as { src: string }).src
-      : (project.image as string)) ||
-    "";
+    image?.shots?.[0] || project.project_image || image?.src || "";
 
   return (
     <LaptopMockup

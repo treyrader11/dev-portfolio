@@ -88,6 +88,8 @@ export interface ProjectImage {
   src: string;
   // Square app/project icon shown in the admin list (and available to the UI).
   icon?: string;
+  // Product screenshots (in order). The first is the project's default shot.
+  shots?: string[];
 }
 
 export interface ProjectData {
