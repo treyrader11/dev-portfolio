@@ -116,7 +116,11 @@ export default function LatestWorkFlipCard({
         style={{ transition: "transform 0.6s", backfaceVisibility: "hidden" }}
         className={cn(
           "h-screen",
-          "fixed",
+          // absolute (not fixed): the faces still fill the sticky, 100vh card,
+          // but avoid iOS Safari's broken rendering of fixed elements nested in
+          // a `perspective` ancestor (which hid the laptop/shots on iPhone).
+          "absolute",
+          "top-0",
           "w-[120%]",
           "-left-[calc(20%_-_10%)]",
           "flex",
@@ -141,7 +145,11 @@ export default function LatestWorkFlipCard({
         onClick={handleFlip}
         className={cn(
           "h-screen",
-          "fixed",
+          // absolute (not fixed): the faces still fill the sticky, 100vh card,
+          // but avoid iOS Safari's broken rendering of fixed elements nested in
+          // a `perspective` ancestor (which hid the laptop/shots on iPhone).
+          "absolute",
+          "top-0",
           "w-[120%]",
           "-left-[calc(20%_-_10%)]",
           "flex",
