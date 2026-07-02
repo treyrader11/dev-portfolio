@@ -41,6 +41,9 @@ interface CarouselProps {
   /** Overlay the controls over the slide (arrows on the sides, dots on top)
    *  instead of laying them out below it. */
   overlayControls?: boolean;
+  /** Gate the overlaid controls (arrows + dots) — they zoom out when false.
+   *  Defaults to shown. */
+  showControls?: boolean;
   /** Positions (Tailwind inset classes) for the overlaid controls. */
   prevClassName?: string;
   nextClassName?: string;
@@ -57,6 +60,7 @@ export function Carousel({
   className,
   variant = "slide",
   overlayControls,
+  showControls = true,
   prevClassName,
   nextClassName,
   dotsClassName,
@@ -202,7 +206,7 @@ export function Carousel({
               )}
             >
               <AnimatePresence>
-                {hasPrev && (
+                {hasPrev && showControls && (
                   <motion.div
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
@@ -226,7 +230,7 @@ export function Carousel({
               )}
             >
               <AnimatePresence>
-                {hasNext && (
+                {hasNext && showControls && (
                   <motion.div
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
@@ -245,11 +249,23 @@ export function Carousel({
 
             <div
               className={cn(
-                "absolute z-50 flex justify-center rounded-full bg-black/30 px-2 py-1 backdrop-blur-sm",
+                "absolute z-50",
                 dotsClassName ?? "top-4 left-1/2 -translate-x-1/2",
               )}
             >
-              {dots}
+              <AnimatePresence>
+                {showControls && (
+                  <motion.div
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    exit={{ scale: 0 }}
+                    transition={{ duration: 0.25, ease: [0.25, 0.46, 0.45, 0.94] }}
+                    className="flex justify-center rounded-full bg-black/30 px-2 py-1 backdrop-blur-sm"
+                  >
+                    {dots}
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
           </>
         )}

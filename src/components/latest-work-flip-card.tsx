@@ -1,6 +1,6 @@
 "use client";
 
-import { useContext, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { motion, useScroll, useMotionValueEvent } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { PositionContext } from "@/lib/contexts";
@@ -34,6 +34,30 @@ export default function LatestWorkFlipCard({
 
   const [isFlipped, setIsFlipped] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
+
+  // True only when this card is pinned at the top of the viewport (i.e. snapped
+  // into position) and scrolling has settled — used to reveal the carousel
+  // controls only on the project that's locked in place.
+  const [snapped, setSnapped] = useState(false);
+  useEffect(() => {
+    let timer: ReturnType<typeof setTimeout>;
+    const check = () => {
+      const el = container.current;
+      if (!el) return;
+      setSnapped(Math.abs(el.getBoundingClientRect().top) < 8);
+    };
+    const onScroll = () => {
+      setSnapped(false); // hide controls while moving
+      clearTimeout(timer);
+      timer = setTimeout(check, 160); // re-check once the scroll settles
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    check();
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      clearTimeout(timer);
+    };
+  }, []);
 
   const handleFlip = () => {
     if (!isAnimating) {
@@ -103,7 +127,7 @@ export default function LatestWorkFlipCard({
         {/* Mobile: as large as possible, capped by both viewport dimensions so
             the square frame never overflows. Desktop keeps its smaller size. */}
         <div className="w-[min(94vw,90vh)] sm:w-[62%] max-w-[900px]">
-          <LatestWorkCardFront project={project} />
+          <LatestWorkCardFront project={project} showControls={snapped} />
         </div>
       </motion.div>
 

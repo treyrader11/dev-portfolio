@@ -4,9 +4,11 @@ import type { ProjectData, ProjectImage } from "@/types/data";
 
 interface Props {
   project: ProjectData;
+  // Reveal the carousel arrows/dots only once the project has snapped into place.
+  showControls?: boolean;
 }
 
-export default function LatestWorkCardFront({ project }: Props) {
+export default function LatestWorkCardFront({ project, showControls }: Props) {
   const image =
     project.image && typeof project.image === "object"
       ? (project.image as ProjectImage)
@@ -20,12 +22,14 @@ export default function LatestWorkCardFront({ project }: Props) {
     return (
       <Carousel
         overlayControls
+        // Arrows/dots appear only once the project is snapped into position.
+        showControls={showControls}
         // Shots cover/uncover like the vertical card stack instead of sliding.
         variant="stack"
         // Anchored to the laptop screen (see SCREEN in laptop-mockup): arrows on
         // the screen's left/right edges, dots over the screen's top.
-        prevClassName="left-[16%] top-1/2 -translate-y-1/2"
-        nextClassName="right-[16%] top-1/2 -translate-y-1/2"
+        prevClassName="left-[11%] top-1/2 -translate-y-1/2"
+        nextClassName="right-[11%] top-1/2 -translate-y-1/2"
         // Dots sit over the top of the screen — a touch higher on mobile.
         dotsClassName="top-[27%] left-1/2 -translate-x-1/2 sm:top-[35%]"
         slides={shots.map((shot, i) => (
