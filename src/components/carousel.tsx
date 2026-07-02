@@ -34,12 +34,15 @@ interface CarouselProps {
   /** Slide content — pass any node (e.g. an image rendered with next/image). */
   slides: ReactNode[];
   className?: string;
+  /** Overlay the controls at the bottom-right of the carousel instead of
+   *  laying them out below it (keeps them anchored to each slide). */
+  overlayControls?: boolean;
 }
 
 // Global reusable carousel: horizontal scroll with prev/next controls and dot
 // indicators. Behavior mirrors the reference implementation (translateX by the
 // current index, looping controls); slide content is arbitrary.
-export function Carousel({ slides, className }: CarouselProps) {
+export function Carousel({ slides, className, overlayControls }: CarouselProps) {
   const [current, setCurrent] = useState(0);
   const count = slides.length;
   if (count === 0) return null;
@@ -66,7 +69,15 @@ export function Carousel({ slides, className }: CarouselProps) {
       </div>
 
       {count > 1 && (
-        <div className="mt-4 flex items-center justify-center gap-3">
+        <div
+          className={cn(
+            "flex items-center gap-2",
+            overlayControls
+              ? // Anchored to this slide's bottom-right, above everything.
+                "absolute bottom-3 right-3 z-50 rounded-full bg-black/40 px-2 py-1 backdrop-blur-sm"
+              : "mt-4 justify-center gap-3",
+          )}
+        >
           <CarouselControl
             type="previous"
             title="Go to previous slide"

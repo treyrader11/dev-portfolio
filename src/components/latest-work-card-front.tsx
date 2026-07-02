@@ -19,6 +19,7 @@ export default function LatestWorkCardFront({ project }: Props) {
   if (shots.length >= 2) {
     return (
       <Carousel
+        overlayControls
         slides={shots.map((shot, i) => (
           <LaptopMockup
             key={i}
