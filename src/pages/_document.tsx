@@ -11,15 +11,9 @@ export default function Document(): React.ReactElement {
         />
         <meta property="og:locale" content="en_US" />
         <meta name="author" content="Trey Rader" />
-        <meta property="og:image:width" content="920" />
-        <meta property="og:image:height" content="470" />
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta
-          property="og:portfolio"
-          content={`Portfolio ${new Date().toLocaleDateString("en-US", {
-            year: "numeric",
-          })}`}
-        />
+        {/* og:title / og:description / og:image / twitter:card are set per page
+            via <SocialMeta> (site-wide default in _app, project override on the
+            project page), so they're intentionally not hard-coded here. */}
         <meta
           name="keywords"
           content="JavaScript developer, TypeScript developer, Web developer, New Orleans developer, New Orleans web developer, Web design"

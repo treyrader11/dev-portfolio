@@ -16,6 +16,7 @@ import ResumeCornerBadge from "@/components/ResumeCornerBadge";
 import NextNProgress from "nextjs-progressbar";
 import { cn } from "@/lib/utils";
 import { fontPP, fontCursive, fontMono } from "@/lib/fonts";
+import SocialMeta from "@/components/SocialMeta";
 
 export default function App({
   Component,
@@ -54,6 +55,15 @@ export default function App({
           </div>
         ) : (
           <NavProvider>
+            {/* Site-wide share card default: profile photo + name + what I do.
+                Individual pages (e.g. a project) override this via SocialMeta. */}
+            <SocialMeta
+              title="Trey Rader's Portfolio"
+              description="Senior mobile architect specializing in React Native. Transforming complex challenges into elegant, performant solutions."
+              image="/images/portraits/headshot.png"
+              card="summary"
+              path={router.asPath.split("?")[0]}
+            />
             <AnimatePresence mode="wait">
               <Preloader />
             </AnimatePresence>

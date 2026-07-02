@@ -1,5 +1,6 @@
 import type { NextPage, GetStaticPaths, GetStaticProps } from "next";
-import { cn } from "@/lib/utils";
+import { cn, slugify, resolveImageSrc } from "@/lib/utils";
+import SocialMeta from "@/components/SocialMeta";
 import ProjectDetails from "@/components/Project/components/ProjectDetails";
 import {
   getProjectBySlug,
@@ -16,8 +17,21 @@ interface PortfolioProjectPageProps {
 const PortfolioProjectPage: NextPage<PortfolioProjectPageProps> = ({
   project,
 }) => {
+  const proj = project[0];
+  const poster = resolveImageSrc(proj.project_image || "", "/images");
+
   return (
     <Inner backgroundColor="#934E00" className="">
+      {/* Share card for a project: poster image + title + "developed by Trey". */}
+      <SocialMeta
+        title={proj.title}
+        description={`${proj.title} — a project developed by Trey Rader.`}
+        image={poster || undefined}
+        imageAlt={`${proj.title} poster`}
+        card="summary_large_image"
+        type="article"
+        path={`/portfolio/${slugify(proj.title)}`}
+      />
       <PageTitle
         once
         title={`${project[0].title}`}
