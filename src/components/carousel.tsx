@@ -192,47 +192,56 @@ export function Carousel({
 
         {count > 1 && (
           <>
-            <AnimatePresence>
-              {hasPrev && (
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.3 }}
-                  className={cn(
-                    "absolute z-50",
-                    prevClassName ?? "left-4 top-1/2 -translate-y-1/2",
-                  )}
-                >
-                  <CarouselControl
-                    type="previous"
-                    title="Go to previous slide"
-                    handleClick={goPrev}
-                  />
-                </motion.div>
+            {/* Positioning stays on the static wrapper; the inner element does
+                the scale pop (matching the nav burger's zoom in/out) so it never
+                fights the wrapper's -translate-y transform. */}
+            <div
+              className={cn(
+                "absolute z-50",
+                prevClassName ?? "left-4 top-1/2 -translate-y-1/2",
               )}
-            </AnimatePresence>
+            >
+              <AnimatePresence>
+                {hasPrev && (
+                  <motion.div
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    exit={{ scale: 0 }}
+                    transition={{ duration: 0.25, ease: [0.25, 0.46, 0.45, 0.94] }}
+                  >
+                    <CarouselControl
+                      type="previous"
+                      title="Go to previous slide"
+                      handleClick={goPrev}
+                    />
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
 
-            <AnimatePresence>
-              {hasNext && (
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.3 }}
-                  className={cn(
-                    "absolute z-50",
-                    nextClassName ?? "right-4 top-1/2 -translate-y-1/2",
-                  )}
-                >
-                  <CarouselControl
-                    type="next"
-                    title="Go to next slide"
-                    handleClick={goNext}
-                  />
-                </motion.div>
+            <div
+              className={cn(
+                "absolute z-50",
+                nextClassName ?? "right-4 top-1/2 -translate-y-1/2",
               )}
-            </AnimatePresence>
+            >
+              <AnimatePresence>
+                {hasNext && (
+                  <motion.div
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    exit={{ scale: 0 }}
+                    transition={{ duration: 0.25, ease: [0.25, 0.46, 0.45, 0.94] }}
+                  >
+                    <CarouselControl
+                      type="next"
+                      title="Go to next slide"
+                      handleClick={goNext}
+                    />
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
 
             <div
               className={cn(
