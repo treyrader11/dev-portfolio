@@ -2,7 +2,7 @@
 
 import { useScroll, useTransform, motion } from "framer-motion";
 import React, { useRef, useMemo } from "react";
-import Project from "./components/Project";
+import ProjectFlipCard from "@/components/project-flip-card";
 import Rounded from "@/components/Rounded";
 import { cn, createScrollPositions } from "@/lib/utils";
 import PageTitle from "../PageTitle";
@@ -23,11 +23,6 @@ export default function RecentProjects({ className, projects }: Props) {
     [projects],
   );
 
-  const { scrollYProgress } = useScroll({
-    target: container,
-    offset: ["start start", "end end"],
-  });
-
   // Track the last project relative to the viewport: progress reaches 1 when its
   // top edge meets the top of the screen — i.e. when it touches the sticky title.
   // Element-based, so it stays accurate across every screen size. Falls back to
@@ -39,11 +34,7 @@ export default function RecentProjects({ className, projects }: Props) {
   });
 
   // Title stays visible until the last card reaches it, then fades out.
-  const titleOpacity = useTransform(
-    lastProjectProgress,
-    [0.7, 0.92],
-    [1, 0]
-  );
+  const titleOpacity = useTransform(lastProjectProgress, [0.7, 0.92], [1, 0]);
 
   const titleY = useTransform(lastProjectProgress, [0.7, 0.92], [0, -30]);
 
@@ -63,7 +54,7 @@ export default function RecentProjects({ className, projects }: Props) {
         "snap-mandatory",
         "scroll-smooth",
         "sticky",
-        className
+        className,
       )}
     >
       <motion.div
@@ -77,7 +68,7 @@ export default function RecentProjects({ className, projects }: Props) {
           "pt-14",
           "mt-[30%]",
           "pointer-events-none",
-          "mx-auto"
+          "mx-auto",
         )}
       >
         <PageTitle
@@ -100,11 +91,7 @@ export default function RecentProjects({ className, projects }: Props) {
             {isLast && (
               <div ref={lastProjectRef} aria-hidden className="h-0 -mb-10" />
             )}
-            <Project
-              position={projectPositions[i]}
-              {...project}
-              progress={scrollYProgress}
-            />
+            <ProjectFlipCard project={project} position={projectPositions[i]} />
           </React.Fragment>
         );
       })}
@@ -122,7 +109,7 @@ export default function RecentProjects({ className, projects }: Props) {
             "py-6",
             "text-black",
             "mt-[-10rem]",
-            "sm:-mt-0"
+            "sm:-mt-0",
           )}
         />
       </div>
