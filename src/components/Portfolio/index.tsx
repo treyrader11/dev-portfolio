@@ -150,11 +150,9 @@ export default function Portfolio({ repositories, projects }: Props) {
   };
 
   const mouseMove = (e: React.MouseEvent) => {
-    const { clientX, clientY } = e;
-    const targetX = clientX - (window.innerWidth / 2) * 0.25;
-    const targetY = clientY - (window.innerWidth / 2) * 0.3;
-    mousePosition.x.set(targetX);
-    mousePosition.y.set(targetY);
+    // Track the raw cursor position; the follower centers itself on this point.
+    mousePosition.x.set(e.clientX);
+    mousePosition.y.set(e.clientY);
   };
 
   const { scrollYProgress } = useScroll({

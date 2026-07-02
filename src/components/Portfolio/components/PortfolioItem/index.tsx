@@ -5,7 +5,8 @@ import Link from "next/link";
 import Image from "next/image";
 import { RiArrowRightUpLine } from "react-icons/ri";
 import Tags from "./Tags";
-import { type RefObject } from "react";
+import { motion } from "framer-motion";
+import { useEffect, useState, type RefObject } from "react";
 import type { MotionValue } from "framer-motion";
 
 interface MousePosition {
@@ -34,9 +35,30 @@ export default function PortfolioItem({
   project_image,
   tech_image,
   tags,
+  mousePosition,
 }: Props) {
+  const { x, y } = mousePosition;
+  const [isActive, setIsActive] = useState(false);
+
+  // Only enable the cursor-following preview on devices with a real pointer
+  // (a mouse) — never on iOS / touch screens, which have no hover.
+  const [canHover, setCanHover] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia("(hover: hover) and (pointer: fine)");
+    const update = () => setCanHover(mq.matches);
+    update();
+    mq.addEventListener("change", update);
+    return () => mq.removeEventListener("change", update);
+  }, []);
+
+  const showPreview = canHover && isActive && !!project_image;
+
   return (
-    <li className={cn("group", "w-full", "border-b", "py-2")}>
+    <li
+      onMouseEnter={() => setIsActive(true)}
+      onMouseLeave={() => setIsActive(false)}
+      className={cn("group", "w-full", "border-b", "py-8", "sm:py-10")}
+    >
       <Link
         href={`/portfolio/${slugify(title)}`}
         aria-label={`View ${title} project`}
@@ -45,15 +67,19 @@ export default function PortfolioItem({
         <div
           className={cn(
             "md:flex",
-            "justify-between",
             "items-center",
-            "py-12",
+            "justify-between",
+            "gap-6",
+            "py-10",
             "px-16",
             "md:px-24",
           )}
         >
           <h2
             className={cn(
+              "min-w-0",
+              "max-w-full",
+              "truncate",
               "text-[6vw]",
               "m-0",
               "transition-all",
@@ -68,6 +94,7 @@ export default function PortfolioItem({
 
           <div
             className={cn(
+              "shrink-0",
               "transition-all",
               "duration-[400]",
               "group-hover:translate-x-2.5",
@@ -90,92 +117,40 @@ export default function PortfolioItem({
           data={tags}
           className={cn("absolute bottom-2 left-16 flex-nowrap max-w-none")}
         />
-
-        {/* Hover preview — the project's poster reveals over the row (fades and
-            scales in). A clean inline replacement for the old cursor-follow
-            video modal. Desktop/hover only, so it never shows on touch. */}
-        {project_image && (
-          <span
-            aria-hidden
-            className={cn(
-              "pointer-events-none",
-              "absolute",
-              "left-1/2",
-              "top-1/2",
-              "z-10",
-              "hidden",
-              "md:block",
-              "aspect-video",
-              "w-[36vw]",
-              "max-w-md",
-              "-translate-x-1/2",
-              "-translate-y-1/2",
-              "scale-90",
-              "overflow-hidden",
-              "rounded-xl",
-              "opacity-0",
-              "shadow-2xl",
-              "transition-all",
-              "duration-500",
-              "ease-out",
-              "group-hover:scale-100",
-              "group-hover:opacity-100",
-            )}
-          >
-            <Image
-              src={resolveImageSrc(project_image, "/images")}
-              alt=""
-              fill
-              sizes="(max-width: 768px) 36vw, 448px"
-              className="object-cover"
-            />
-          </span>
-        )}
-
-        {/* "View project" pill — sits above the preview on hover. */}
-        <span
-          aria-hidden
-          className={cn(
-            "pointer-events-none",
-            "absolute",
-            "left-1/2",
-            "top-1/2",
-            "z-20",
-            "-translate-x-1/2",
-            "-translate-y-1/2",
-          )}
-        >
-          <span
-            className={cn(
-              "flex",
-              "items-center",
-              "gap-2",
-              "rounded-full",
-              "border",
-              "border-white/30",
-              "bg-black/40",
-              "px-5",
-              "py-2.5",
-              "font-pp-acma",
-              "text-sm",
-              "font-medium",
-              "text-white",
-              "shadow-lg",
-              "backdrop-blur-sm",
-              "translate-y-8",
-              "opacity-0",
-              "transition-all",
-              "duration-500",
-              "ease-out",
-              "group-hover:translate-y-0",
-              "group-hover:opacity-100",
-            )}
-          >
-            View project
-            <RiArrowRightUpLine className="size-4" />
-          </span>
-        </span>
       </Link>
+
+      {/* Cursor-following poster preview — desktop/mouse only (guarded by
+          canHover), so it never appears on iOS/touch. The outer layer follows
+          the cursor (x/y springs from the parent), the middle centers on it, and
+          the inner fades/scales in without fighting those transforms. */}
+      {showPreview && (
+        <motion.div
+          aria-hidden
+          style={{ x, y }}
+          className="pointer-events-none fixed left-0 top-0 z-50"
+        >
+          <div className="-translate-x-1/2 -translate-y-1/2">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.85 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.25, ease: "easeOut" }}
+              className="relative aspect-video w-72 overflow-hidden rounded-xl shadow-2xl"
+            >
+              <Image
+                src={resolveImageSrc(project_image, "/images")}
+                alt=""
+                fill
+                sizes="288px"
+                className="object-cover"
+              />
+              <span className="absolute inset-x-0 bottom-0 flex items-center justify-center gap-1.5 bg-black/50 py-2 font-pp-acma text-xs font-medium text-white backdrop-blur-sm">
+                View project
+                <RiArrowRightUpLine className="size-3.5" />
+              </span>
+            </motion.div>
+          </div>
+        </motion.div>
+      )}
     </li>
   );
 }
