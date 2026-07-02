@@ -116,7 +116,10 @@ export default function LatestWork({ className, projects }: Props) {
             {isLast && (
               <div ref={lastProjectRef} aria-hidden className="h-0 -mb-10" />
             )}
-            <LatestWorkFlipCard project={project} position={projectPositions[i]} />
+            <LatestWorkFlipCard
+              project={project}
+              position={projectPositions[i]}
+            />
           </React.Fragment>
         );
       })}

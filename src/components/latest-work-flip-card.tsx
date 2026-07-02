@@ -55,7 +55,10 @@ export default function LatestWorkFlipCard({
           document.querySelectorAll<HTMLElement>("[data-snap-project]"),
         );
         const next = all[all.indexOf(el) + 1];
-        if (next && next.getBoundingClientRect().top < window.innerHeight * 0.5) {
+        if (
+          next &&
+          next.getBoundingClientRect().top < window.innerHeight * 0.5
+        ) {
           covered = true;
         }
       }
