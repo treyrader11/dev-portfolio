@@ -34,15 +34,23 @@ interface CarouselProps {
   /** Slide content — pass any node (e.g. an image rendered with next/image). */
   slides: ReactNode[];
   className?: string;
-  /** Overlay the controls at the bottom-right of the carousel instead of
-   *  laying them out below it (keeps them anchored to each slide). */
+  /** Overlay the controls over the slide instead of laying them out below it,
+   *  so they stay anchored to each slide. */
   overlayControls?: boolean;
+  /** Position of the overlay controls (Tailwind inset classes). Defaults to the
+   *  bottom-right corner. */
+  overlayClassName?: string;
 }
 
 // Global reusable carousel: horizontal scroll with prev/next controls and dot
 // indicators. Behavior mirrors the reference implementation (translateX by the
 // current index, looping controls); slide content is arbitrary.
-export function Carousel({ slides, className, overlayControls }: CarouselProps) {
+export function Carousel({
+  slides,
+  className,
+  overlayControls,
+  overlayClassName,
+}: CarouselProps) {
   const [current, setCurrent] = useState(0);
   const count = slides.length;
   if (count === 0) return null;
@@ -73,8 +81,11 @@ export function Carousel({ slides, className, overlayControls }: CarouselProps) 
           className={cn(
             "flex items-center gap-2",
             overlayControls
-              ? // Anchored to this slide's bottom-right, above everything.
-                "absolute bottom-3 right-3 z-50 rounded-full bg-black/40 px-2 py-1 backdrop-blur-sm"
+              ? // Anchored over the slide, above everything.
+                cn(
+                  "absolute z-50 rounded-full bg-black/40 px-2 py-1 backdrop-blur-sm",
+                  overlayClassName ?? "bottom-3 right-3",
+                )
               : "mt-4 justify-center gap-3",
           )}
         >
