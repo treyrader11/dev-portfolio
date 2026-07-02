@@ -20,8 +20,11 @@ export default function LatestWorkCardFront({ project }: Props) {
     return (
       <Carousel
         overlayControls
-        // Sit in the laptop screen's bottom-right (see SCREEN in laptop-mockup).
-        overlayClassName="bottom-[30%] right-[18%]"
+        // Anchored to the laptop screen (see SCREEN in laptop-mockup): arrows on
+        // the screen's left/right edges, dots over the screen's top.
+        prevClassName="left-[16%] top-1/2 -translate-y-1/2"
+        nextClassName="right-[16%] top-1/2 -translate-y-1/2"
+        dotsClassName="top-[35%] left-1/2 -translate-x-1/2"
         slides={shots.map((shot, i) => (
           <LaptopMockup
             key={i}
