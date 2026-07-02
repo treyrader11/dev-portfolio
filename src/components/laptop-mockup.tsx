@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { cn, resolveImageSrc } from "@/lib/utils";
 
 interface Props {
@@ -14,6 +15,10 @@ const FRAME_ASPECT = "1 / 1";
 // bezel with no hairline gaps. The frame on top masks the rounded corners.
 const SCREEN = { top: "32.6%", left: "16.9%", width: "66.3%", height: "38.3%" };
 
+// The mockup renders up to ~900px wide (see ProjectFlipCard); on mobile it's
+// close to the viewport width.
+const SIZES = "(max-width: 640px) 94vw, 900px";
+
 export default function LaptopMockup({ src, alt, className }: Props) {
   const resolvedSrc = resolveImageSrc(src);
 
@@ -25,22 +30,26 @@ export default function LaptopMockup({ src, alt, className }: Props) {
       {/* Screenshot sits behind the transparent screen hole */}
       <div className="absolute overflow-hidden" style={SCREEN}>
         {resolvedSrc ? (
-          <img
+          <Image
             src={resolvedSrc}
             alt={alt}
-            className="w-full h-full object-cover"
+            fill
+            sizes={SIZES}
+            className="object-cover"
           />
         ) : (
-          <div className="w-full h-full bg-black" />
+          <div className="size-full bg-black" />
         )}
       </div>
 
       {/* Frame overlay — object-fill stretches it to fill the 1:1 wrapper exactly */}
-      <img
+      <Image
         src="/mockup-laptop-frame.png"
         alt=""
         aria-hidden
-        className="absolute inset-0 w-full h-full object-fill z-10 pointer-events-none"
+        fill
+        sizes={SIZES}
+        className="object-fill z-10 pointer-events-none"
       />
     </div>
   );
