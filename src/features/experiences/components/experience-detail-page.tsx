@@ -104,7 +104,7 @@ export function ExperienceDetailPage({ experience }: Props) {
       ]}
     >
       <div className="w-full max-w-3xl pb-24">
-        <div className="bg-dark-400 rounded-lg border border-dark-600 p-6 space-y-5">
+        <div className="bg-dark-400 rounded-lg border border-dark-600 p-6 space-y-3">
           <div className="grid grid-cols-2 gap-4">
             <Input
               label="Title/Role"

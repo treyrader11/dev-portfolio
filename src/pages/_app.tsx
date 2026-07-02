@@ -14,6 +14,8 @@ import Preloader from "@/components/Preloader";
 import AdminFAB from "@/components/AdminFAB";
 import ResumeCornerBadge from "@/components/ResumeCornerBadge";
 import NextNProgress from "nextjs-progressbar";
+import { cn } from "@/lib/utils";
+import { fontPP, fontCursive, fontMono } from "@/lib/fonts";
 
 export default function App({
   Component,
@@ -39,7 +41,17 @@ export default function App({
       />
       <NotificationsProvider>
         {isAdminRoute ? (
-          <Component {...pageProps} router={router} />
+          // Admin routes bypass Layout, so apply the font CSS variables here
+          // too — otherwise font-pp-acma (etc.) falls back to the default font.
+          <div
+            className={cn(
+              fontPP.variable,
+              fontCursive.variable,
+              fontMono.variable,
+            )}
+          >
+            <Component {...pageProps} router={router} />
+          </div>
         ) : (
           <NavProvider>
             <AnimatePresence mode="wait">

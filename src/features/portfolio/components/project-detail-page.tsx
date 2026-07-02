@@ -107,7 +107,7 @@ export function ProjectDetailPage({ project }: Props) {
       ]}
     >
       <div className="w-full max-w-3xl pb-24">
-        <div className="bg-dark-400 rounded-lg border border-dark-600 p-4 sm:p-6 space-y-5">
+        <div className="bg-dark-400 rounded-lg border border-dark-600 p-4 sm:p-6 space-y-3">
           <Input
             label="Title"
             required
