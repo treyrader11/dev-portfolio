@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
 
 interface Props {
   className?: string;
-  height?: string | number | MotionValue<number>;
+  height?: string | number | MotionValue<number> | MotionValue<string>;
 }
 
 // The bottom curve that domes over the dark footer and flattens to a straight

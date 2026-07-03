@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef } from "react";
-import { useScroll, useTransform } from "framer-motion";
+import { useScroll, useTransform, useMotionTemplate } from "framer-motion";
 import PageCurve from "./index";
 import { cn } from "@/lib/utils";
 
@@ -23,7 +23,13 @@ export default function FooterCurve({ className }: Props) {
     target: container,
     offset: ["start end", "end start"],
   });
-  const height = useTransform(scrollYProgress, [0, 0.9], [50, 0]);
+  // Drive the base height in vw (not px) so the curve keeps the SAME proportions
+  // on every screen. The child dome is 1550% of this, and its width is 120vw —
+  // a px base made the dome ~775px tall everywhere, which reads as a shallow arc
+  // on a wide desktop but a deep circle on a narrow phone. 3.5vw ≈ 50px at a
+  // ~1440px desktop (so desktop is unchanged) and scales down with the width.
+  const heightVw = useTransform(scrollYProgress, [0, 0.9], [3.5, 0]);
+  const height = useMotionTemplate`${heightVw}vw`;
 
   return (
     <div
