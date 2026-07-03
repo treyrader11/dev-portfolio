@@ -84,7 +84,7 @@ function SeeAll({ className }: SeeAllProps) {
           "group",
           "flex",
           "w-fit",
-          className
+          className,
         )}
       >
         <LinkDecorator isActive className="my-auto mr-2" />
@@ -96,7 +96,7 @@ function SeeAll({ className }: SeeAllProps) {
             "hover:underline",
             "font-normal",
             "text-lg",
-            "animate-pulse"
+            "animate-pulse",
           )}
         >
           Projects
