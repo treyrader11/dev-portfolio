@@ -8,6 +8,11 @@ import { cn } from "@/lib/utils";
 interface Props {
   className?: string;
   height?: string | number | MotionValue<number> | MotionValue<string>;
+  // Fill color of the curve (Tailwind bg-* class). Should match the color of the
+  // content it caps so it reads as that content doming over the footer. Defaults
+  // to white; pages with a different bottom color (e.g. the contact page's
+  // slate-100 panel) pass their own.
+  bgClass?: string;
 }
 
 // The bottom curve that domes over the dark footer and flattens to a straight
@@ -18,12 +23,12 @@ interface Props {
 // the content above it (no top margin) so the curve always caps the content
 // directly, regardless of a page's own trailing padding.
 const PageCurve = forwardRef<HTMLDivElement, Props>(
-  function PageCurve({ className, height }, ref) {
+  function PageCurve({ className, height, bgClass = "bg-white" }, ref) {
     return (
       <motion.div
         ref={ref}
         style={{ height }}
-        className={cn("relative", "bg-white", className)}
+        className={cn("relative", bgClass, className)}
       >
         <div
           className={cn(
@@ -32,7 +37,7 @@ const PageCurve = forwardRef<HTMLDivElement, Props>(
             "w-[120%]",
             "-left-[10%]",
             "rounded-b-[50%]",
-            "bg-white",
+            bgClass,
             "z-[1]",
             "shadow-[0px_60px_50px_rgba(0,0,0,0.748)]",
           )}

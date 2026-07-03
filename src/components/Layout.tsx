@@ -17,6 +17,10 @@ interface LayoutProps {
 function MainLayout({ children, route }: LayoutProps) {
   const { isNavOpen } = useNav();
 
+  // The curve should match the color of the content it caps. Most pages end on
+  // white; the contact page's bottom panel is slate-100, so its curve matches.
+  const curveBg = route === "/contact" ? "bg-slate-100" : "bg-white";
+
   return (
     <AnimatePresence mode="wait" onExitComplete={() => window.scrollTo(0, 0)}>
       <main
@@ -31,9 +35,10 @@ function MainLayout({ children, route }: LayoutProps) {
       >
         <Header />
         {children}
-        {/* White curve that domes over the dark footer and flattens to a
-            straight divider on scroll — shared across every public page. */}
-        <FooterCurve className="bg-white" />
+        {/* Curve that domes over the dark footer and flattens to a straight
+            divider on scroll — shared across every public page. Its fill matches
+            the page's bottom content color. */}
+        <FooterCurve bgClass={curveBg} />
         <Footer />
       </main>
     </AnimatePresence>
