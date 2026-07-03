@@ -180,11 +180,11 @@ export default function AdminLayout({
       {/* Main content — centered horizontally to a max width */}
       <main className="min-h-screen">
         <AdminHeader title={title} />
-        {/* Center every admin page's content column horizontally. Pages set
-            their own max-width (e.g. max-w-4xl) without mx-auto, so items-center
-            here centers them instead of letting them hug the left edge. */}
-        <div className="mx-auto flex w-full max-w-6xl flex-col items-center p-8">
-          <Breadcrumbs items={crumbs} className="mb-6 self-start" />
+        {/* Single shared content column. Every admin page's content and the
+            header above align to the same max-width + horizontal padding, so
+            pages never need their own max-w-* overrides. */}
+        <div className="mx-auto w-full max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
+          <Breadcrumbs items={crumbs} className="mb-6" />
           {children}
         </div>
       </main>
