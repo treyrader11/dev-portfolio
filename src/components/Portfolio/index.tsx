@@ -182,7 +182,7 @@ export default function Portfolio({ repositories, projects }: Props) {
   }, []);
 
   return (
-    <section onMouseMove={mouseMove} className="pb-[100px]">
+    <section onMouseMove={mouseMove} className="pb-8">
       <div className={cn("pt-12 pb-8 mx-0 bg-dark")}>
         <p className="px-6 text-white">
           The following projects showcase my skills and experience through
@@ -242,7 +242,7 @@ export default function Portfolio({ repositories, projects }: Props) {
           "flex-col",
           "items-center",
           "justify-center",
-          "mb-[100px]",
+          "mb-8",
         )}
       >
         {filteredProjects.map((proj, i) => {
