@@ -26,5 +26,12 @@ export default async function handler(
     return res.json(config);
   }
 
+  // Reset to defaults: remove the saved override so the app falls back to the
+  // bundled/static values. deleteMany so it's a no-op when nothing is saved.
+  if (req.method === "DELETE") {
+    await prisma.siteConfig.deleteMany({ where: { key } });
+    return res.json({ success: true });
+  }
+
   return res.status(405).json({ error: "Method not allowed" });
 }
