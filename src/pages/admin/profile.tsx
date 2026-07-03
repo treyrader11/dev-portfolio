@@ -22,9 +22,15 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     where: { key: "userData" },
   });
 
-  return {
-    props: {
-      data: config ? (config.value as unknown as UserData) : fallbackUserData,
-    },
-  };
+  const data: UserData = config
+    ? { ...(config.value as unknown as UserData) }
+    : { ...fallbackUserData };
+
+  // Auto-fill the GitHub username from the logged-in GitHub account when it
+  // hasn't been set yet.
+  if (!data.githubUsername && session.user.githubUsername) {
+    data.githubUsername = session.user.githubUsername;
+  }
+
+  return { props: { data } };
 };

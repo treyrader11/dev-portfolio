@@ -5,6 +5,15 @@ declare module "next-auth" {
     user: {
       id: string;
       isAdmin: boolean;
+      githubUsername?: string;
     } & DefaultSession["user"];
+  }
+}
+
+declare module "next-auth/jwt" {
+  interface JWT {
+    id?: string;
+    isAdmin?: boolean;
+    githubUsername?: string;
   }
 }
