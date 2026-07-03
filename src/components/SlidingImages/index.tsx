@@ -86,11 +86,15 @@ function SlideRow({
 export default function SlidingImages({ className, projects = [] }: Props) {
   const container = useRef<HTMLDivElement>(null);
 
+  // Drive the bottom curve off the slider's *bottom edge* crossing the
+  // viewport: it's a full dome while that edge sits at the fold (footer still
+  // below), and flattens to a straight divider line as you scroll the last
+  // screen and the footer comes fully into view.
   const { scrollYProgress } = useScroll({
     target: container,
-    offset: ["start end", "end start"],
+    offset: ["end end", "end start"],
   });
-  const height = useTransform(scrollYProgress, [0, 0.9], [50, 0]);
+  const height = useTransform(scrollYProgress, [0, 1], [60, 0]);
 
   // Only posters that actually have an image, chunked into rows of PER_ROW.
   const usable = projects.filter((p) => p.poster);
@@ -109,8 +113,12 @@ export default function SlidingImages({ className, projects = [] }: Props) {
         "relative",
         "bg-white",
         "z-[1]",
-        "py-10",
-        "sm:py-20",
+        // A little breathing room above the rows; only a small, constant gap
+        // below them (independent of row count) so the curve sits right against
+        // the footer rather than floating in empty white space.
+        "pt-10",
+        "sm:pt-20",
+        "pb-4",
         className,
       )}
     >
