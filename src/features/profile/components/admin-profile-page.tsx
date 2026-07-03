@@ -1,5 +1,6 @@
 import { useState } from "react";
 import AdminLayout from "@/features/admin/components/admin-layout";
+import { IconUploadField } from "@/features/admin/components/icon-upload-field";
 import type { UserData } from "@/types/data";
 
 interface Props {
@@ -47,6 +48,23 @@ export function AdminProfilePage({ data }: Props) {
   return (
     <AdminLayout title="Profile & Hero">
       <div className="max-w-3xl space-y-8">
+        {/* Profile photo — used for the header avatar and social share cards.
+            Square crop; leave empty to fall back to the default headshot. */}
+        <Section title="Profile Photo">
+          <IconUploadField
+            label="Avatar"
+            value={form.avatarUrl ?? ""}
+            previewBg="#141516"
+            aspect={1}
+            folder="profile"
+            onChange={(url) => update("avatarUrl", url)}
+          />
+          <p className="text-xs text-light-400">
+            Shown as the site header avatar and in link share previews. If left
+            empty, the default headshot is used.
+          </p>
+        </Section>
+
         {/* Basic info */}
         <Section title="Basic Information">
           <Field

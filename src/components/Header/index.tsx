@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useCallback } from "react";
+import { useRef, useCallback, useEffect, useState } from "react";
 import { AnimatePresence } from "framer-motion";
 import gsap from "gsap";
 import ScrollTrigger from "gsap/dist/ScrollTrigger";
@@ -42,6 +42,22 @@ export default function Header() {
 
   const handleNavMenu = useCallback(() => {
     setIsNavOpen((prevIsNavOpen) => !prevIsNavOpen);
+  }, []);
+
+  // Avatar comes from the CMS (falls back to the bundled headshot). Fetched
+  // client-side so this global header doesn't need per-page server props.
+  const [avatar, setAvatar] = useState("/images/portraits/headshot.png");
+  useEffect(() => {
+    let active = true;
+    fetch("/api/avatar")
+      .then((r) => r.json())
+      .then((d) => {
+        if (active && d?.url) setAvatar(d.url);
+      })
+      .catch(() => {});
+    return () => {
+      active = false;
+    };
   }, []);
 
   useIsomorphicLayoutEffect(() => {
@@ -108,7 +124,7 @@ export default function Header() {
         >
           <ProfilePicture
             isMagnetic
-            src={`/images/portraits/headshot.png`}
+            src={avatar}
             className="size-20"
             isBlob
           />

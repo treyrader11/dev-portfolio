@@ -17,6 +17,11 @@ import {
   getSliderProjects,
   type SliderProject,
 } from "@/features/portfolio/lib/projects";
+import {
+  getUserData,
+  resolveAvatarUrl,
+} from "@/features/profile/lib/get-user-data";
+import SocialMeta from "@/components/SocialMeta";
 import type { ProjectData } from "@/types/data";
 import type Lenis from "lenis";
 // import References from "@/components/References";
@@ -36,9 +41,14 @@ interface LocomotiveScrollInstance {
 interface HomeProps {
   latestWorkProjects: ProjectData[];
   sliderProjects: SliderProject[];
+  avatarUrl: string;
 }
 
-const Home: NextPage<HomeProps> = ({ latestWorkProjects, sliderProjects }) => {
+const Home: NextPage<HomeProps> = ({
+  latestWorkProjects,
+  sliderProjects,
+  avatarUrl,
+}) => {
   const container = useRef<HTMLDivElement>(null);
   const locomotiveScrollRef = useRef<LocomotiveScrollInstance | null>(null);
   const pathname = usePathname();
@@ -220,6 +230,14 @@ const Home: NextPage<HomeProps> = ({ latestWorkProjects, sliderProjects }) => {
 
   return (
     <main className={cn(inter.className, "overflow-clip")}>
+      {/* Home share card uses the CMS avatar (overrides the _app default). */}
+      <SocialMeta
+        title="Trey Rader's Portfolio"
+        description="Senior mobile architect specializing in React Native. Transforming complex challenges into elegant, performant solutions."
+        image={avatarUrl}
+        card="summary"
+        path="/"
+      />
       <Inner ref={container} backgroundColor="#934E00">
         <Hero className={cn("min-h-screen bg-dark")} />
         <Description className={cn("bg-white")} />
@@ -246,12 +264,17 @@ export default Home;
 // Static generation + ISR: the home page ships as static HTML (SEO-friendly,
 // no client-side data fetching) and revalidates so admin edits surface quickly.
 export const getStaticProps: GetStaticProps<HomeProps> = async () => {
-  const [latestWorkProjects, sliderProjects] = await Promise.all([
+  const [latestWorkProjects, sliderProjects, user] = await Promise.all([
     getLatestWorkProjects(),
     getSliderProjects(),
+    getUserData(),
   ]);
   return {
-    props: { latestWorkProjects, sliderProjects },
+    props: {
+      latestWorkProjects,
+      sliderProjects,
+      avatarUrl: resolveAvatarUrl(user),
+    },
     revalidate: 60,
   };
 };
