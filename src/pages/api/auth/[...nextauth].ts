@@ -34,6 +34,11 @@ if (process.env.GITHUB_CLIENT_ID && process.env.GITHUB_CLIENT_SECRET) {
       clientId: process.env.GITHUB_CLIENT_ID,
       clientSecret: process.env.GITHUB_CLIENT_SECRET,
       authorization: { params: { scope: "read:user user:email" } },
+      // Link GitHub to the existing account that already uses the same (verified)
+      // email — e.g. treyrdr09@gmail.com, which you first signed in with via
+      // Google. Without this NextAuth blocks it with OAuthAccountNotLinked. Safe
+      // here: both Google and GitHub verify email ownership and you own both.
+      allowDangerousEmailAccountLinking: true,
     }),
   );
 }
