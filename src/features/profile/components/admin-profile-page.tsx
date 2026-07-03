@@ -10,7 +10,7 @@ import {
 import { AnimatePresence, motion } from "framer-motion";
 import { RiLinkedinFill, RiGithubFill, RiYoutubeFill } from "react-icons/ri";
 import AdminLayout from "@/features/admin/components/admin-layout";
-import { IconUploadField } from "@/features/admin/components/icon-upload-field";
+import { ProfileAvatarField } from "./profile-avatar-field";
 import { cn } from "@/lib/utils";
 import type { UserData } from "@/types/data";
 
@@ -105,17 +105,15 @@ export function AdminProfilePage({ data }: Props) {
         <div className="w-full max-w-5xl space-y-8">
           {/* Profile photo — header avatar + social share cards. */}
           <Section title="Profile Photo">
-            <IconUploadField
-              label="Avatar"
+            <ProfileAvatarField
               value={form.avatarUrl ?? ""}
-              previewBg="#141516"
-              aspect={1}
-              folder="profile"
               onChange={(url) => update("avatarUrl", url)}
             />
             <p className="text-xs text-light-400">
-              Shown as the site header avatar and in link share previews. If left
-              empty, the default headshot is used.
+              Shown as the site header avatar and in link share previews. Upload
+              or pick an existing image, optionally remove the background and set
+              a theme-color backdrop. If left empty, the default headshot is
+              used.
             </p>
           </Section>
 
