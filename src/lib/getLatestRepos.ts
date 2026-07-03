@@ -27,9 +27,9 @@ interface GitHubSearchResponse {
 
 export const getLatestRepos = async (
   data: Pick<UserData, "githubUsername">,
-  token?: string
+  token?: string,
 ): Promise<GitHubRepo[] | undefined> => {
-  console.log("data", data);
+  // console.log("data", data);
   try {
     const username = data.githubUsername;
 
@@ -40,7 +40,7 @@ export const getLatestRepos = async (
           headers: {
             Authorization: `token ${token}`,
           },
-        }
+        },
       );
       let repos = res.data.items;
       let latestSixRepos = repos.splice(0, 6);
@@ -48,7 +48,7 @@ export const getLatestRepos = async (
       return latestTwelveRepos;
     } else {
       const res = await axios.get<GitHubSearchResponse>(
-        `https://api.github.com/search/repositories?q=user:${username}+sort:author-date-asc`
+        `https://api.github.com/search/repositories?q=user:${username}+sort:author-date-asc`,
       );
       let repos = res.data.items;
       let latestTwelveRepos = repos.splice(0, 12);
