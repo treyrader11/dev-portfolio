@@ -2,6 +2,7 @@ import type { NextPage, GetStaticProps } from "next";
 import Inner from "@/components/layout/Inner";
 import PageTitle from "@/components/PageTitle";
 import Portfolio from "@/components/Portfolio";
+import FooterCurve from "@/components/PageCurve/FooterCurve";
 import { userData } from "@/lib/data";
 import { getLatestRepos } from "@/lib/getLatestRepos";
 import { getAllProjects } from "@/features/portfolio/lib/projects";
@@ -44,6 +45,7 @@ const PortfolioPage: NextPage<PortfolioPageProps> = ({
         containerClass={cn("py-[90px]", "sm:py-[100px]", "z-50")}
       />
       <Portfolio repositories={repositories} projects={projects} />
+      <FooterCurve />
     </Inner>
   );
 };
