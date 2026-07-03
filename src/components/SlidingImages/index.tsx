@@ -9,7 +9,6 @@ import {
 } from "framer-motion";
 import Image from "next/image";
 import { cn, resolveImageSrc } from "@/lib/utils";
-import PageCurve from "../PageCurve";
 import type { SliderProject } from "@/features/portfolio/lib/projects";
 
 interface Props {
@@ -86,15 +85,12 @@ function SlideRow({
 export default function SlidingImages({ className, projects = [] }: Props) {
   const container = useRef<HTMLDivElement>(null);
 
-  // Drive the bottom curve off the slider's *bottom edge* crossing the
-  // viewport: it's a full dome while that edge sits at the fold (footer still
-  // below), and flattens to a straight divider line as you scroll the last
-  // screen and the footer comes fully into view.
+  // Row parallax runs across the whole time the slider is in view. The bottom
+  // curve now lives in the shared Layout (so every page gets it), not here.
   const { scrollYProgress } = useScroll({
     target: container,
-    offset: ["end end", "end start"],
+    offset: ["start end", "end start"],
   });
-  const height = useTransform(scrollYProgress, [0, 1], [60, 0]);
 
   // Only posters that actually have an image, chunked into rows of PER_ROW.
   const usable = projects.filter((p) => p.poster);
@@ -125,7 +121,6 @@ export default function SlidingImages({ className, projects = [] }: Props) {
       {rows.map((row, i) => (
         <SlideRow key={i} items={row} progress={scrollYProgress} index={i} />
       ))}
-      <PageCurve height={height} />
     </div>
   );
 }

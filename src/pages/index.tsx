@@ -228,12 +228,8 @@ const Home: NextPage<HomeProps> = ({
     };
   }, []);
 
-  // Clip horizontal overflow only (the 120vw sliding-image rows), but leave
-  // vertical overflow visible so the SlidingImages bottom curve can dome down
-  // over the dark footer. The outer Layout <main> still clips both axes, which
-  // bounds the dome at the footer's base.
   return (
-    <main className={cn(inter.className, "overflow-x-clip")}>
+    <main className={cn(inter.className, "overflow-clip")}>
       {/* Home share card uses the CMS avatar (overrides the _app default). */}
       <SocialMeta
         title="Trey Rader's Portfolio"

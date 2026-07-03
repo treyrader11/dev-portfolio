@@ -10,36 +10,34 @@ interface Props {
   height?: string | number | MotionValue<number>;
 }
 
+// The bottom curve that domes over the dark footer and flattens to a straight
+// line on scroll. Dimensions mirror the awwwards portfolio original exactly:
+// the child is 1550% tall / 120% wide, shifted -10% left, with a `0 0 50% 50%`
+// radius (a wide elliptical dome, NOT a full pill) and a large soft drop shadow.
+// The parent's animated height (50 -> 0) drives the flatten.
 const PageCurve = forwardRef<HTMLDivElement, Props>(
   function PageCurve({ className, height }, ref) {
     return (
       <motion.div
         ref={ref}
         style={{ height }}
-        className={cn(
-          "bg-white",
-          "relative",
-          // "pt-[100px]",
-          "-mt-[2px]",
-          className
-        )}
+        className={cn("relative", "mt-[100px]", "bg-white", className)}
       >
         <div
           className={cn(
+            "absolute",
             "h-[1550%]",
             "w-[120%]",
             "-left-[10%]",
-            "rounded-bl-full",
-            "rounded-br-full",
+            "rounded-b-[50%]",
             "bg-white",
             "z-[1]",
-            "absolute",
-            ""
+            "shadow-[0px_60px_50px_rgba(0,0,0,0.748)]",
           )}
         />
       </motion.div>
     );
-  }
+  },
 );
 
 export default PageCurve;

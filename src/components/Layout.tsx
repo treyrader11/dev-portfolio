@@ -2,6 +2,7 @@
 
 import { AnimatePresence } from "framer-motion";
 import Footer from "./Footer";
+import FooterCurve from "./PageCurve/FooterCurve";
 import Header from "./Header";
 import { useNav } from "./providers/NavProvider";
 import { cn } from "@/lib/utils";
@@ -30,6 +31,9 @@ function MainLayout({ children, route }: LayoutProps) {
       >
         <Header />
         {children}
+        {/* White curve that domes over the dark footer and flattens to a
+            straight divider on scroll — shared across every public page. */}
+        <FooterCurve className="bg-white" />
         <Footer />
       </main>
     </AnimatePresence>
