@@ -192,6 +192,7 @@ import { cn } from "@/lib/utils";
 import { PositionContext } from "@/lib/contexts";
 import LatestWorkCardFront from "./latest-work-card-front";
 import LatestWorkCardBack from "./latest-work-card-back";
+import MaskedRevealText from "./masked-reveal-text";
 import type { ProjectData } from "@/types/data";
 import type { ScrollPosition } from "@/types/components";
 
@@ -356,6 +357,55 @@ export default function LatestWorkFlipCard({
           <LatestWorkCardBack project={project} />
         </div>
       </motion.div>
+
+      {/* Caption below the card — the masked text-reveal from the Evolve demos
+          page. It plays IN when this card snaps into place and OUT (masking up)
+          when it snaps away, keyed off the same `snapped` signal as the
+          carousel controls. */}
+      <MaskedRevealText
+        show={snapped}
+        className={cn(
+          "pointer-events-none",
+          "absolute",
+          "inset-x-0",
+          "bottom-[6vh]",
+          "z-20",
+          "flex",
+          "flex-col",
+          "items-center",
+          "gap-1",
+          "px-6",
+          "text-center",
+        )}
+        lines={[
+          {
+            text: project.title,
+            className: cn(
+              "font-pp-acma",
+              "font-bold",
+              "uppercase",
+              "tracking-wide",
+              "leading-none",
+              "text-dark",
+              "text-3xl sm:text-5xl",
+            ),
+          },
+          ...(project.category
+            ? [
+                {
+                  text: project.category,
+                  className: cn(
+                    "font-pp-acma",
+                    "uppercase",
+                    "tracking-[0.25em]",
+                    "text-secondary",
+                    "text-xs sm:text-sm",
+                  ),
+                },
+              ]
+            : []),
+        ]}
+      />
     </div>
   );
 }
