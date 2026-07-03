@@ -17,7 +17,7 @@ const PageCurve = forwardRef<HTMLDivElement, Props>(
         ref={ref}
         style={{ height }}
         className={cn(
-          "bg-slate-100",
+          "bg-white",
           "relative",
           // "pt-[100px]",
           "-mt-[2px]",
@@ -31,7 +31,7 @@ const PageCurve = forwardRef<HTMLDivElement, Props>(
             "-left-[10%]",
             "rounded-bl-full",
             "rounded-br-full",
-            "bg-slate-100",
+            "bg-white",
             "z-[1]",
             "absolute",
             ""
