@@ -1,6 +1,6 @@
 import Link from "next/link";
 import ProjectVideo from "./ProjectVideo";
-import { cn } from "@/lib/utils";
+import { cn, resolveImageSrc } from "@/lib/utils";
 import Environment from "./Environment";
 import Magnetic from "@/components/Magnetic";
 import ProjectLinks from "./ProjectLinks";
@@ -14,8 +14,20 @@ interface Props {
 }
 
 export default function ProjectDetails({ data }: Props) {
-  const { title, video_key, desc, technology_feature, env, download_links } =
-    data[0];
+  const {
+    video_key,
+    desc,
+    technology_feature,
+    env,
+    download_links,
+    image,
+  } = data[0];
+
+  // The admin can pick one of the project's images to sit inside the Safari
+  // frame; when none is chosen we fall back to autoplaying the project video.
+  const safariImage = image?.safari?.length
+    ? resolveImageSrc(image.safari)
+    : undefined;
 
   const _links = [
     {
@@ -34,7 +46,11 @@ export default function ProjectDetails({ data }: Props) {
     <section className="pb-28 bg-[#F1F1F1] w-full">
       <div className={cn("md:w-[800px]", "px-2.5", "sm:px-4", "md::px-0")}>
         {/* <ProjectVideo src={video_key} /> */}
-        <Safari videoSrc={video_key} className="pt-10 size-4/5" />
+        <Safari
+          imageSrc={safariImage}
+          videoSrc={safariImage ? undefined : video_key}
+          className="pt-10 size-4/5"
+        />
         <Block title="About this project" desc={desc} />
         <Block title="Technology & Features">
           <ul className="list-disc font-pp-acma ml-5 mt-2.5 text-secondary">

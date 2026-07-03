@@ -3,14 +3,18 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { RiAddLine } from "react-icons/ri";
+import { RiAddLine, RiCheckLine, RiCloseLine } from "react-icons/ri";
 import AdminLayout from "@/features/admin/components/admin-layout";
 import { IconUploadField } from "@/features/admin/components/icon-upload-field";
 import { TechStackField } from "./tech-stack-field";
 import { TagInputField, type Suggestion } from "./tag-input-field";
 import { CategoryMultiField } from "./category-multi-field";
-import { AdminInput, AdminTextarea } from "@/features/admin/components/admin-field";
-import { resolveImageSrc, slugify } from "@/lib/utils";
+import {
+  AdminInput,
+  AdminTextarea,
+  ADMIN_CONTROL,
+} from "@/features/admin/components/admin-field";
+import { cn, resolveImageSrc, slugify } from "@/lib/utils";
 import { type ProjectItem, emptyProject } from "../types";
 
 interface Props {
@@ -99,6 +103,12 @@ export function ProjectDetailPage({ project }: Props) {
 
   const title = isNew ? "New Project" : project.title || "Project";
   const shots = form.image.shots ?? [];
+  // Images the admin can pick to show inside the Safari frame on the public
+  // project page: the poster plus every product shot (de-duped, order kept).
+  const safariOptions = Array.from(
+    new Set([form.projectImage, ...shots].filter(Boolean)),
+  );
+  const safariSelected = form.image.safari ?? "";
 
   return (
     <AdminLayout
@@ -234,6 +244,67 @@ export function ProjectDetailPage({ project }: Props) {
             )}
           </div>
 
+          {/* Safari Frame Image — pick which image renders inside the Safari
+              browser mockup on the public project page. Unset → the project
+              video plays there instead. */}
+          <div className="flex flex-col gap-1">
+            <label className="text-sm font-medium text-white">
+              Safari Frame Image
+            </label>
+            <p className="mb-2 text-xs text-light-400">
+              Choose one of this project&apos;s images to display inside the
+              Safari browser frame on the project page. Leave unset to fall back
+              to the project video.
+            </p>
+            {safariOptions.length ? (
+              <div className="flex flex-wrap gap-2">
+                {safariOptions.map((img) => {
+                  const selected = safariSelected === img;
+                  return (
+                    <button
+                      type="button"
+                      key={img}
+                      // Click to select; click the selected one again to clear
+                      // it (fall back to the video).
+                      onClick={() =>
+                        setForm({
+                          ...form,
+                          image: {
+                            ...form.image,
+                            safari: selected ? "" : img,
+                          },
+                        })
+                      }
+                      className={cn(
+                        "relative h-16 w-28 overflow-hidden rounded border-2 transition-colors",
+                        selected
+                          ? "border-secondary"
+                          : "border-dark-600 hover:border-secondary/50",
+                      )}
+                    >
+                      <Image
+                        fill
+                        alt=""
+                        src={resolveImageSrc(img)}
+                        className="object-cover"
+                        sizes="112px"
+                      />
+                      {selected && (
+                        <span className="absolute right-1 top-1 rounded bg-secondary p-0.5 text-white">
+                          <RiCheckLine className="size-3" />
+                        </span>
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
+            ) : (
+              <p className="text-xs text-light-400">
+                Add a project poster or product shots first.
+              </p>
+            )}
+          </div>
+
           <AdminInput
             label="YouTube Link"
             value={form.youtubeLink}
@@ -279,6 +350,54 @@ export function ProjectDetailPage({ project }: Props) {
             options={featureOptions}
             onChange={(v) => setForm({ ...form, technologyFeature: v })}
           />
+
+          {/* Environment — the "Frontend" / "Backend" tech lists shown under
+              Environment on the public project page. One entry per line. */}
+          <div className="flex flex-col gap-4 rounded-lg border border-dark-600 p-4">
+            <p className="text-sm font-medium text-white">Environment</p>
+            <StringListField
+              label="Frontend"
+              value={form.env.frontend ?? []}
+              placeholder="e.g. Next.js"
+              onChange={(v) =>
+                setForm({ ...form, env: { ...form.env, frontend: v } })
+              }
+            />
+            <StringListField
+              label="Backend"
+              value={form.env.backend ?? []}
+              placeholder="e.g. Node.js"
+              onChange={(v) =>
+                setForm({ ...form, env: { ...form.env, backend: v } })
+              }
+            />
+          </div>
+
+          {/* Source code — the download/repo links shown under Source code on
+              the public project page. Leave blank to hide a link. */}
+          <div className="flex flex-col gap-4 rounded-lg border border-dark-600 p-4">
+            <p className="text-sm font-medium text-white">Source Code Links</p>
+            <AdminInput
+              label="Frontend URL"
+              value={form.downloadLinks.frontend ?? ""}
+              onChange={(v) =>
+                setForm({
+                  ...form,
+                  downloadLinks: { ...form.downloadLinks, frontend: v },
+                })
+              }
+            />
+            <AdminInput
+              label="Backend URL"
+              value={form.downloadLinks.backend ?? ""}
+              onChange={(v) =>
+                setForm({
+                  ...form,
+                  downloadLinks: { ...form.downloadLinks, backend: v },
+                })
+              }
+            />
+          </div>
 
           <div className="flex flex-col gap-1">
             <label className="text-sm font-medium text-white">Visibility</label>
@@ -339,6 +458,61 @@ export function ProjectDetailPage({ project }: Props) {
         </div>
       </motion.div>
     </AdminLayout>
+  );
+}
+
+// A casing-preserving list editor: one text input per entry with a remove
+// button, plus an "Add" button. Used for the Environment tech lists (unlike
+// TagInputField, which lowercases and #-prefixes values for tags).
+function StringListField({
+  label,
+  value,
+  placeholder,
+  onChange,
+}: {
+  label: string;
+  value: string[];
+  placeholder?: string;
+  onChange: (value: string[]) => void;
+}) {
+  const items = value.length ? value : [];
+
+  const setAt = (index: number, next: string) =>
+    onChange(items.map((item, i) => (i === index ? next : item)));
+  const removeAt = (index: number) =>
+    onChange(items.filter((_, i) => i !== index));
+  const add = () => onChange([...items, ""]);
+
+  return (
+    <div className="flex flex-col gap-2">
+      <label className="text-sm font-medium text-white">{label}</label>
+      {items.map((item, i) => (
+        <div key={i} className="flex items-center gap-2">
+          <input
+            value={item}
+            placeholder={placeholder}
+            onChange={(e) => setAt(i, e.target.value)}
+            className={cn(ADMIN_CONTROL)}
+          />
+          <button
+            type="button"
+            aria-label={`Remove ${label} entry ${i + 1}`}
+            onClick={() => removeAt(i)}
+            className="shrink-0 rounded-lg border border-dark-600 p-2 text-light-400 transition-colors hover:border-red-500/60 hover:text-red-500"
+          >
+            <RiCloseLine className="size-4" />
+          </button>
+        </div>
+      ))}
+      <button
+        type="button"
+        onClick={add}
+        className="inline-flex w-fit items-center gap-1.5 rounded-lg border border-dark-600 px-3 py-1.5 text-sm text-white transition-colors hover:border-secondary/60"
+      >
+        <RiAddLine className="size-4" />
+        Add {label.toLowerCase()}
+      </button>
+    </div>
   );
 }
 

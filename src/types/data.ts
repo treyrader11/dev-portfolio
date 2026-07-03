@@ -90,6 +90,9 @@ export interface ProjectImage {
   icon?: string;
   // Product screenshots (in order). The first is the project's default shot.
   shots?: string[];
+  // Chosen image (a shot or the poster) shown inside the Safari browser frame on
+  // the public project detail page. Falls back to the project video when unset.
+  safari?: string;
 }
 
 export interface ProjectData {

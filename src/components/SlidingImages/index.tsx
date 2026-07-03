@@ -1,7 +1,12 @@
 "use client";
 
 import { useRef } from "react";
-import { useScroll, useTransform, motion } from "framer-motion";
+import {
+  useScroll,
+  useTransform,
+  motion,
+  type MotionValue,
+} from "framer-motion";
 import Image from "next/image";
 import { cn, resolveImageSrc } from "@/lib/utils";
 import PageCurve from "../PageCurve";
@@ -14,7 +19,11 @@ interface Props {
   projects?: SliderProject[];
 }
 
-function SlideTile({ project, alt }: { project: SliderProject; alt: string }) {
+// Each tile is ~25% of the 120vw track, so ~4 tiles fill one row. Fewer images
+// than that stay a single row; every extra ~4 adds another row.
+const PER_ROW = 4;
+
+function SlideTile({ project }: { project: SliderProject }) {
   return (
     <div
       className={cn(
@@ -29,7 +38,7 @@ function SlideTile({ project, alt }: { project: SliderProject; alt: string }) {
       <div className={cn("relative size-4/5")}>
         <Image
           fill
-          alt={alt}
+          alt={project.title}
           src={resolveImageSrc(project.poster)}
           className="object-cover"
           sizes="25vw"
@@ -40,6 +49,40 @@ function SlideTile({ project, alt }: { project: SliderProject; alt: string }) {
   );
 }
 
+// One horizontal row. Each row drifts a different distance and direction as you
+// scroll, so the rows never move in lockstep.
+function SlideRow({
+  items,
+  progress,
+  index,
+}: {
+  items: SliderProject[];
+  progress: MotionValue<number>;
+  index: number;
+}) {
+  const dir = index % 2 === 0 ? 1 : -1;
+  const distance = 130 + (index % 3) * 55; // 130 / 185 / 240, repeating
+  const x = useTransform(progress, [0, 1], [0, dir * distance]);
+
+  return (
+    <motion.div
+      style={{ x }}
+      className={cn(
+        "flex",
+        "relative",
+        "gap-[3vw]",
+        "w-[120vw]",
+        "-left-[10vw]",
+        "justify-center",
+      )}
+    >
+      {items.map((project, i) => (
+        <SlideTile key={i} project={project} />
+      ))}
+    </motion.div>
+  );
+}
+
 export default function SlidingImages({ className, projects = [] }: Props) {
   const container = useRef<HTMLDivElement>(null);
 
@@ -47,16 +90,14 @@ export default function SlidingImages({ className, projects = [] }: Props) {
     target: container,
     offset: ["start end", "end start"],
   });
-
-  const x1 = useTransform(scrollYProgress, [0, 1], [0, 150]);
-  const x2 = useTransform(scrollYProgress, [0, 1], [0, -150]);
   const height = useTransform(scrollYProgress, [0, 0.9], [50, 0]);
 
-  // Only posters that actually have an image; split across the two opposing rows
-  // (evens on top, odds on the bottom) so the strip stays balanced.
+  // Only posters that actually have an image, chunked into rows of PER_ROW.
   const usable = projects.filter((p) => p.poster);
-  const row1 = usable.filter((_, i) => i % 2 === 0);
-  const row2 = usable.filter((_, i) => i % 2 === 1);
+  const rows: SliderProject[][] = [];
+  for (let i = 0; i < usable.length; i += PER_ROW) {
+    rows.push(usable.slice(i, i + PER_ROW));
+  }
 
   return (
     <div
@@ -73,35 +114,10 @@ export default function SlidingImages({ className, projects = [] }: Props) {
         className,
       )}
     >
-      <motion.div
-        style={{ x: x1 }}
-        className={cn(
-          "flex",
-          "relative",
-          "gap-[3vw]",
-          "w-[120vw]",
-          "-left-[10vw]",
-        )}
-      >
-        {row1.map((project, index) => (
-          <SlideTile key={index} project={project} alt={project.title} />
-        ))}
-      </motion.div>
-      <motion.div
-        style={{ x: x2 }}
-        className={cn(
-          "flex",
-          "relative",
-          "gap-[3vw]",
-          "w-[120vw]",
-          "-left-[10vw]",
-        )}
-      >
-        {row2.map((project, index) => (
-          <SlideTile key={index} project={project} alt={project.title} />
-        ))}
-        <PageCurve height={height} />
-      </motion.div>
+      {rows.map((row, i) => (
+        <SlideRow key={i} items={row} progress={scrollYProgress} index={i} />
+      ))}
+      <PageCurve height={height} />
     </div>
   );
 }

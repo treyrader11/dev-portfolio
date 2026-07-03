@@ -1,6 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
-import { AnimatePresence, motion, Reorder, useDragControls } from "framer-motion";
+import {
+  AnimatePresence,
+  motion,
+  Reorder,
+  useDragControls,
+} from "framer-motion";
 import { RiDraggable, RiCloseLine, RiAddLine } from "react-icons/ri";
 import AdminLayout from "@/features/admin/components/admin-layout";
 import { AdminInput } from "@/features/admin/components/admin-field";
@@ -59,7 +64,10 @@ export function ExperienceDetailPage({ experience }: Props) {
 
   // Dirty-tracking: any field or task edit reveals the fixed save bar. The
   // initial snapshot is captured once, on the first render.
-  const snapshot = JSON.stringify({ ...form, points: tasks.map((t) => t.value) });
+  const snapshot = JSON.stringify({
+    ...form,
+    points: tasks.map((t) => t.value),
+  });
   const initialSnapshot = useRef<string | undefined>(undefined);
   if (initialSnapshot.current === undefined) initialSnapshot.current = snapshot;
   const dirty = snapshot !== initialSnapshot.current;
@@ -208,7 +216,9 @@ export function ExperienceDetailPage({ experience }: Props) {
         className="fixed inset-x-0 bottom-0 z-30 border-t border-dark-600 bg-dark-500/95 backdrop-blur"
       >
         <div className="mx-auto flex max-w-3xl items-center justify-between gap-3 px-4 py-4">
-          <span className="text-sm text-light-400">You have unsaved changes</span>
+          <span className="text-sm text-light-400">
+            You have unsaved changes
+          </span>
           <div className="flex gap-3">
             <button
               type="button"
@@ -318,4 +328,3 @@ function TaskRow({
     </Reorder.Item>
   );
 }
-
