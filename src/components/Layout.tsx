@@ -17,9 +17,18 @@ interface LayoutProps {
 function MainLayout({ children, route }: LayoutProps) {
   const { isNavOpen } = useNav();
 
-  // The curve should match the color of the content it caps. Most pages end on
-  // white; the contact page's bottom panel is slate-100, so its curve matches.
-  const curveBg = route === "/contact" ? "bg-slate-100" : "bg-white";
+  // The curve should match the color of the content it caps so it reads as that
+  // content doming over the footer. Each page whose bottom section isn't plain
+  // white maps its route to that section's background here. The project detail
+  // route is dynamic, but every project shares the same ProjectDetails
+  // background (#F1F1F1), so the route pattern maps them all.
+  const curveBgByRoute: Record<string, string> = {
+    "/contact": "bg-slate-100", // Contact bottom panel
+    "/pricing": "bg-neutral-100", // Pricing section
+    "/info": "bg-dark", // Info page ends on the dark Experience section
+    "/portfolio/[project]": "bg-[#F1F1F1]", // ProjectDetails section
+  };
+  const curveBg = curveBgByRoute[route] ?? "bg-white";
 
   return (
     <AnimatePresence mode="wait" onExitComplete={() => window.scrollTo(0, 0)}>
