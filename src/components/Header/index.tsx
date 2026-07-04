@@ -60,27 +60,24 @@ export default function Header() {
     };
   }, []);
 
+  // Built once and kept alive. The burger's scale is scrubbed directly to scroll
+  // position: it begins scaling in the moment the header's bottom passes the top
+  // of the viewport and is fully in 120px of scroll later. scrub ties it 1:1 to
+  // the scroll, so it reveals/hides at exactly the speed the user scrolls and
+  // reverses symmetrically on the way back up.
+  const scrubTween = useRef<gsap.core.Tween | null>(null);
   useIsomorphicLayoutEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
 
-    // While the mobile nav is open the burger doubles as the close (X) button,
-    // so force it fully visible and skip the scroll-driven scaling.
-    if (showButton) {
-      gsap.to(button.current, { scale: 1, duration: 0.25, ease: "power1.out" });
-      return;
-    }
-
-    // Otherwise the burger's scale is scrubbed directly to scroll position: it
-    // begins scaling in the moment the header's bottom passes the top of the
-    // viewport and is fully in 120px of scroll later. scrub ties it 1:1 to the
-    // scroll, so it reveals/hides at exactly the speed the user scrolls and
-    // reverses symmetrically on the way back up.
     const tween = gsap.fromTo(
       button.current,
       { scale: 0 },
       {
         scale: 1,
         ease: "none",
+        // Let ScrollTrigger set the initial scale from the current scroll
+        // position instead of flashing the scale-0 from-state on creation.
+        immediateRender: false,
         scrollTrigger: {
           trigger: header.current,
           start: "bottom top",
@@ -90,11 +87,30 @@ export default function Header() {
         },
       },
     );
+    scrubTween.current = tween;
 
     return () => {
       tween.scrollTrigger?.kill();
       tween.kill();
+      scrubTween.current = null;
     };
+  }, []);
+
+  // The scrub trigger is created once and never rebuilt, so opening/closing the
+  // nav can't resize the burger. While the mobile nav is open the burger is the
+  // close (X) button: pause the scrub so scroll can't shrink it and pin it fully
+  // visible. On close, resume the scrub and re-sync its scale to the current
+  // scroll position (full if you're scrolled down, hidden if you're at the top).
+  useIsomorphicLayoutEffect(() => {
+    const st = scrubTween.current?.scrollTrigger;
+    if (!st) return;
+    if (showButton) {
+      st.disable(false);
+      gsap.to(button.current, { scale: 1, duration: 0.25, ease: "power1.out" });
+    } else {
+      st.enable();
+      st.refresh();
+    }
   }, [showButton]);
 
   return (
