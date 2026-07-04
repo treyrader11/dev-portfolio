@@ -39,7 +39,7 @@ function MainLayout({ children, route }: LayoutProps) {
           fontCursive.variable,
           fontMono.variable,
           "mx-auto",
-          "overflow-clip"
+          "overflow-clip",
         )}
       >
         <Header />

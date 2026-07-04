@@ -22,7 +22,9 @@ const BurgerMenu = forwardRef<HTMLDivElement, Props>(
           "z-[101]",
           "after:top-[-5px]",
           "before:top-[5px]",
-          "top-8"
+          // Sits just below the resume corner badge (fixed top-0, h-20 = 80px):
+          // the circle's bottom = top + m-5 margin + size-16 = 4 + 20 + 64 = 88px.
+          "top-1"
         )}
       >
         <Rounded

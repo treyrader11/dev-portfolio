@@ -1,161 +1,3 @@
-// "use client";
-
-// import { useScroll, useTransform, motion } from "framer-motion";
-// import React, { useRef, useMemo } from "react";
-// import LatestWorkFlipCard from "@/components/latest-work-flip-card";
-// import ScrollDownIndicator from "@/components/scroll-down-indicator";
-// import Rounded from "@/components/Rounded";
-// import { cn, createScrollPositions } from "@/lib/utils";
-// import PageTitle from "../PageTitle";
-// import Scrollbar from "../Scrollbar";
-// import type { ProjectData } from "@/types/data";
-
-// interface Props {
-//   className?: string;
-//   projects: ProjectData[];
-// }
-
-// export default function LatestWork({ className, projects }: Props) {
-//   const container = useRef<HTMLElement>(null);
-//   const lastProjectRef = useRef<HTMLDivElement>(null);
-
-//   const projectPositions = useMemo(
-//     () => createScrollPositions(projects),
-//     [projects],
-//   );
-
-//   // Track the last project relative to the viewport: progress reaches 1 when its
-//   // top edge meets the top of the screen — i.e. when it touches the sticky title.
-//   // Element-based, so it stays accurate across every screen size. Falls back to
-//   // the section ref when there are no projects so the target is always hydrated.
-//   const hasProjects = projects.length > 0;
-//   const { scrollYProgress: lastProjectProgress } = useScroll({
-//     target: hasProjects ? lastProjectRef : container,
-//     offset: ["start end", "start start"],
-//   });
-
-//   // "scroll down" hint: fade it in shortly after the section sticks (just after
-//   // the title), then fade it out as the last work item is reached.
-//   const { scrollYProgress: sectionProgress } = useScroll({
-//     target: container,
-//     offset: ["start start", "end end"],
-//   });
-//   const hintFadeIn = useTransform(sectionProgress, [0.03, 0.12], [0, 1]);
-//   const hintFadeOut = useTransform(lastProjectProgress, [0.6, 0.85], [1, 0]);
-//   const hintOpacity = useTransform(
-//     [hintFadeIn, hintFadeOut],
-//     ([i, o]: number[]) => Math.min(i, o),
-//   );
-
-//   // Fade the title out as the last project starts scrolling upward — i.e. once
-//   // the section releases at the bottom and begins leaving the viewport. Stays
-//   // fully visible the whole time you're on the last project.
-//   const { scrollYProgress: exitProgress } = useScroll({
-//     target: container,
-//     offset: ["end end", "end start"],
-//   });
-//   const titleOpacity = useTransform(exitProgress, [0, 0.3], [1, 0]);
-//   const titleY = useTransform(exitProgress, [0, 0.3], [0, -40]);
-
-//   return (
-//     <motion.section
-//       ref={container}
-//       className={cn(
-//         "relative",
-//         "z-[2]",
-//         "mx-4",
-//         // Small trailing space only. A large pb kept the last card (sticky, with
-//         // nothing after it to cover it) pinned for most of a screen, which read
-//         // as "can't scroll past" — keep it minimal so it releases to Freelance.
-//         "pb-[8vh]",
-//         "flex",
-//         "flex-col",
-//         "gap-y-10",
-//         "sticky",
-//         className,
-//       )}
-//     >
-//       {/* The "Latest Work." title stays pinned and fully visible the whole time
-//           you're on the projects; it fades (and drifts up) only once the last
-//           project starts scrolling up off the top at the bottom of the page. */}
-//       <motion.div
-//         style={{ opacity: titleOpacity, y: titleY }}
-//         className={cn(
-//           "sticky",
-//           "top-0",
-//           "pt-14",
-//           "mt-[30%]",
-//           "pointer-events-none",
-//           "mx-auto",
-//         )}
-//       >
-//         <PageTitle
-//           once={false}
-//           delay={0.8}
-//           backgroundColor="transparent"
-//           containerClass={cn("h-0", "font-pp-acma")}
-//           title="Latest Work."
-//           className={cn("py-0 md:text-[5vw]")}
-//         />
-//       </motion.div>
-
-//       {/* "scroll down" hint — pinned midway between the title and the work card,
-//           independent of the title block so it never overlaps the title on mobile.
-//           Floats above the cards (z-30) and ignores pointer events. */}
-//       <motion.div
-//         aria-hidden
-//         style={{ opacity: hintOpacity }}
-//         className="pointer-events-none sticky top-[32vh] z-30 flex justify-center sm:top-[16vh]"
-//       >
-//         <ScrollDownIndicator />
-//       </motion.div>
-
-//       <Scrollbar positions={projectPositions} />
-
-//       {projects.map((project, i) => {
-//         const isLast = i === projects.length - 1;
-//         return (
-//           <React.Fragment key={i}>
-//             {/* Sentinel marks the top of the last project for the title fade */}
-//             {isLast && (
-//               <div ref={lastProjectRef} aria-hidden className="h-0 -mb-10" />
-//             )}
-//             {/* Non-sticky anchor marking this card's true flow position. The
-//                 cards themselves are sticky, so once pinned they all report the
-//                 same (top:0) position — the snap logic measures these instead. */}
-//             <div data-snap-anchor aria-hidden className="h-0" />
-//             <LatestWorkFlipCard
-//               project={project}
-//               position={projectPositions[i]}
-//             />
-//           </React.Fragment>
-//         );
-//       })}
-
-//       {/* Spacer so the "See all projects" button sits well below the last
-//           card: it stays off-screen while the final project is snapped, and only
-//           comes into view once you scroll past the project. */}
-//       <div aria-hidden className="h-[60vh]" />
-
-//       <div className={cn("relative", "z-20", "pb-24")}>
-//         <Rounded
-//           backgroundColor="#934e00"
-//           text="See all projects"
-//           href="/portfolio"
-//           className={cn(
-//             "border-secondary",
-//             "rounded-full",
-//             "w-fit",
-//             "mx-auto",
-//             "py-6",
-//             "text-black",
-//           )}
-//         />
-//       </div>
-//     </motion.section>
-//   );
-// }
-
 "use client";
 
 import { useScroll, useTransform, motion } from "framer-motion";
@@ -257,7 +99,14 @@ export default function LatestWork({ className, projects }: Props) {
         return (
           <React.Fragment key={i}>
             {isLast && (
-              <div ref={lastProjectRef} aria-hidden className="h-0 -mb-10" />
+              <div
+                ref={lastProjectRef}
+                aria-hidden
+                // relative (not static) so framer-motion's useScroll can measure
+                // this target's offset correctly — silences the "container has a
+                // non-static position" console warning. h-0, so no visual change.
+                className="relative h-0 -mb-10"
+              />
             )}
             <div data-snap-anchor aria-hidden className="h-0" />
             <LatestWorkFlipCard

@@ -63,39 +63,37 @@ export default function Header() {
   useIsomorphicLayoutEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
 
+    // While the mobile nav is open the burger doubles as the close (X) button,
+    // so force it fully visible and skip the scroll-driven scaling.
     if (showButton) {
       gsap.to(button.current, { scale: 1, duration: 0.25, ease: "power1.out" });
-    } else {
-      gsap.to(button.current, { scale: 0, duration: 0.25, ease: "power1.out" });
+      return;
     }
 
-    ScrollTrigger.create({
-      trigger: document.documentElement,
-      start: 0,
-      end: window.innerHeight,
-      onLeave: () => {
-        if (!showButton) {
-          gsap.to(button.current, {
-            scale: 1,
-            duration: 0.25,
-            ease: "power1.out",
-          });
-        }
+    // Otherwise the burger's scale is scrubbed directly to scroll position: it
+    // begins scaling in the moment the header's bottom passes the top of the
+    // viewport and is fully in 120px of scroll later. scrub ties it 1:1 to the
+    // scroll, so it reveals/hides at exactly the speed the user scrolls and
+    // reverses symmetrically on the way back up.
+    const tween = gsap.fromTo(
+      button.current,
+      { scale: 0 },
+      {
+        scale: 1,
+        ease: "none",
+        scrollTrigger: {
+          trigger: header.current,
+          start: "bottom top",
+          end: "+=120",
+          scrub: true,
+          onLeaveBack: () => setIsNavOpen(false),
+        },
       },
-      onEnterBack: () => {
-        if (!showButton) {
-          gsap.to(button.current, {
-            scale: 0,
-            duration: 0.25,
-            ease: "power1.out",
-          });
-          setIsNavOpen(false);
-        }
-      },
-    });
+    );
 
     return () => {
-      ScrollTrigger.refresh();
+      tween.scrollTrigger?.kill();
+      tween.kill();
     };
   }, [showButton]);
 
