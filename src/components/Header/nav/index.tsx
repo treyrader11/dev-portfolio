@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { usePathname } from "next/navigation";
-import { menuSlide } from "../motion";
+import { menuSlide, slide } from "../motion";
 import Navlink from "./Navlink";
 import Curve from "./Curve";
 import Footer from "./Footer";
@@ -64,7 +64,13 @@ export default function Nav({ onClose }: NavProps) {
             "md:w-auto"
           )}
         >
-          <div
+          {/* Menu title slides in first, then each page link staggers after. */}
+          <motion.div
+            custom={0}
+            variants={slide}
+            initial="initial"
+            animate="enter"
+            exit="exit"
             className={cn(
               "text-light-100",
               "border-b",
@@ -75,11 +81,12 @@ export default function Nav({ onClose }: NavProps) {
             )}
           >
             <p>Trey Rader</p>
-          </div>
+          </motion.div>
           {routes.map((route, index) => {
             return (
               <Navlink
                 key={index}
+                index={index + 1}
                 data={route}
                 isActive={selectedIndicator == route.href}
                 setSelectedIndicator={setSelectedIndicator}

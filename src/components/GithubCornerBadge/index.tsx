@@ -36,10 +36,10 @@ export default function GithubCornerBadge({ className }: Props) {
             style={{ transformOrigin: "130px 110px" }}
             className={cn(
               "octo-arm",
-              // Mobile (no hover): wave continuously. Desktop: only on hover.
+              // Wave continuously: ~0.5s per wave on mobile, a slower 1s per
+              // wave on desktop.
               "animate-[octocat-wave_0.56s_ease-in-out_infinite]",
-              "md:animate-none",
-              "md:group-hover:animate-octocat-wave",
+              "md:animate-[octocat-wave_1s_ease-in-out_infinite]",
             )}
           />
           <path

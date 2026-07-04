@@ -2,13 +2,16 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { scale, slide } from "../../motion";
+import { slide } from "../../motion";
 import { cn } from "@/lib/utils";
 import LinkDecorator from "@/components/LinkDecorator";
 import type { Route } from "@/types";
 
 interface Props {
   data: Route;
+  // Stagger position, fed to the `slide` variant so each link (and the title)
+  // slides in/out one after another — like the awwwards original.
+  index: number;
   isActive: boolean;
   setSelectedIndicator: (href: string) => void;
   onClose: () => void;
@@ -17,6 +20,7 @@ interface Props {
 
 export default function Navlink({
   data,
+  index,
   isActive,
   setSelectedIndicator,
   onClose,
@@ -25,20 +29,27 @@ export default function Navlink({
   const { label, href } = data;
 
   return (
-    <Link
-      href={href}
-      scroll={false}
-      className={cn("relative flex items-center", className)}
-      onClick={onClose}
-      onMouseEnter={() => {
-        setSelectedIndicator(href);
-      }}
+    <motion.div
+      custom={index}
+      variants={slide}
+      initial="initial"
+      animate="enter"
+      exit="exit"
+      onMouseEnter={() => setSelectedIndicator(href)}
+      className="relative"
     >
-      <LinkDecorator
-        isActive={isActive}
-        className={cn("size-2.5 bg-white absolute -left-[30px]")}
-      />
-      {label}
-    </Link>
+      <Link
+        href={href}
+        scroll={false}
+        className={cn("relative flex items-center", className)}
+        onClick={onClose}
+      >
+        <LinkDecorator
+          isActive={isActive}
+          className={cn("size-2.5 bg-white absolute -left-[30px]")}
+        />
+        {label}
+      </Link>
+    </motion.div>
   );
 }
