@@ -127,7 +127,12 @@ export default function LatestWork({ className, projects }: Props) {
         );
       })}
 
-      <div className={cn("relative", "z-20", "py-20 sm:py-0")}>
+      {/* Spacer so the "See all projects" button sits well below the last
+          card: it stays off-screen while the final project is snapped, and only
+          comes into view once you scroll past the project. */}
+      <div aria-hidden className="h-[60vh]" />
+
+      <div className={cn("relative", "z-20", "pb-24")}>
         <Rounded
           backgroundColor="#934e00"
           text="See all projects"
@@ -139,8 +144,6 @@ export default function LatestWork({ className, projects }: Props) {
             "mx-auto",
             "py-6",
             "text-black",
-            "mt-[-10rem]",
-            "sm:-mt-0",
           )}
         />
       </div>
