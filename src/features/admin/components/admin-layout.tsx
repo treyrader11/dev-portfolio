@@ -24,7 +24,6 @@ import Notifications from "@/components/Notifications";
 import { AdminHeader } from "./admin-header";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import ViewSiteFab from "./view-site-fab";
-import FooterCurve from "@/components/PageCurve/FooterCurve";
 
 const navItems = [
   { label: "Dashboard", href: "/admin", icon: RiDashboardLine },
@@ -188,9 +187,6 @@ export default function AdminLayout({
           <Breadcrumbs items={crumbs} className="mb-6" />
           {children}
         </div>
-        {/* Same bottom curve as the public site — domes over the dark admin
-            surface and flattens to a divider as you scroll to the bottom. */}
-        <FooterCurve />
       </main>
 
       <div className={cn("max-w-5xl", "mx-auto", "w-full", "px-4")}>

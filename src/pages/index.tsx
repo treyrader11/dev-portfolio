@@ -213,30 +213,41 @@ const Home: NextPage<HomeProps> = ({
         commitSnap(dir);
       };
 
-      // Drive from Lenis's `scroll` output (fires for wheel and native touch, so
-      // it works on mobile too). Direction = sign of the scroll-position delta.
-      let lastScrollY = lenis.scroll;
-      const unsub = lenis.on("scroll", (instance) => {
-        const scroll = instance.scroll;
-        const delta = scroll - lastScrollY;
-        lastScrollY = scroll; // update always, even mid-snap
-        if (animating) return;
-        if (Math.abs(delta) < 1) return;
+      // Snapping is a wheel/trackpad affordance. On touch devices the snap's
+      // scrollTo(lock) fights native momentum scrolling and jumps the page —
+      // worst on iOS/WebKit when scrolling back up through the section — so it's
+      // gated to fine-pointer devices only; touch scrolls freely.
+      const isTouch =
+        typeof window !== "undefined" &&
+        window.matchMedia("(pointer: coarse)").matches;
 
-        accumDelta += delta;
-        if (settleTimer) {
-          clearTimeout(settleTimer);
-          settleTimer = null;
-        }
-        if (Math.abs(accumDelta) >= GESTURE_THRESHOLD) {
-          flushGesture();
-        } else {
-          settleTimer = setTimeout(flushGesture, 140);
-        }
-      });
+      let unsub: (() => void) | null = null;
+      if (!isTouch) {
+        // Drive from Lenis's `scroll` output. Direction = sign of the
+        // scroll-position delta.
+        let lastScrollY = lenis.scroll;
+        unsub = lenis.on("scroll", (instance) => {
+          const scroll = instance.scroll;
+          const delta = scroll - lastScrollY;
+          lastScrollY = scroll; // update always, even mid-snap
+          if (animating) return;
+          if (Math.abs(delta) < 1) return;
+
+          accumDelta += delta;
+          if (settleTimer) {
+            clearTimeout(settleTimer);
+            settleTimer = null;
+          }
+          if (Math.abs(accumDelta) >= GESTURE_THRESHOLD) {
+            flushGesture();
+          } else {
+            settleTimer = setTimeout(flushGesture, 140);
+          }
+        });
+      }
 
       cleanup = () => {
-        unsub();
+        unsub?.();
         if (settleTimer) clearTimeout(settleTimer);
       };
     })();
