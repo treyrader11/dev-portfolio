@@ -60,57 +60,58 @@ export default function Header() {
     };
   }, []);
 
-  // Built once and kept alive. The burger's scale is scrubbed directly to scroll
-  // position: it begins scaling in the moment the header's bottom passes the top
-  // of the viewport and is fully in 120px of scroll later. scrub ties it 1:1 to
-  // the scroll, so it reveals/hides at exactly the speed the user scrolls and
-  // reverses symmetrically on the way back up.
-  const scrubTween = useRef<gsap.core.Tween | null>(null);
+  // The burger's scale is driven imperatively so one value can combine two
+  // inputs without them fighting (which is what caused the blink/resize when
+  // toggling the nav): the scroll reveal (tied 1:1 to scroll position, so it
+  // scales in/out at the speed you scroll) and the mobile nav-open state (the
+  // burger becomes the close X, so it must be full size). We always apply
+  // max(scrollScale, navOpen ? 1 : 0), so neither input can shrink the other and
+  // nothing ever hard-resets the scale.
+  const scrollScale = useRef(0);
+  const navForcing = useRef(false);
   useIsomorphicLayoutEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
 
-    const tween = gsap.fromTo(
-      button.current,
-      { scale: 0 },
-      {
-        scale: 1,
-        ease: "none",
-        // Let ScrollTrigger set the initial scale from the current scroll
-        // position instead of flashing the scale-0 from-state on creation.
-        immediateRender: false,
-        scrollTrigger: {
-          trigger: header.current,
-          start: "bottom top",
-          end: "+=120",
-          scrub: true,
-          onLeaveBack: () => setIsNavOpen(false),
-        },
-      },
-    );
-    scrubTween.current = tween;
+    const setScale = gsap.quickSetter(button.current, "scale") as (
+      v: number,
+    ) => void;
+    const apply = () =>
+      setScale(Math.max(scrollScale.current, navForcing.current ? 1 : 0));
 
-    return () => {
-      tween.scrollTrigger?.kill();
-      tween.kill();
-      scrubTween.current = null;
-    };
+    const st = ScrollTrigger.create({
+      trigger: header.current,
+      // Reveal starts the moment the header's bottom passes the top of the
+      // viewport and completes 120px of scroll later.
+      start: "bottom top",
+      end: "+=120",
+      onUpdate: (self) => {
+        scrollScale.current = self.progress;
+        if (!navForcing.current) apply();
+      },
+      // Pin the extremes so a fast fling can't leave the burger a hair under or
+      // over full size.
+      onLeave: () => {
+        scrollScale.current = 1;
+        if (!navForcing.current) apply();
+      },
+      onLeaveBack: () => {
+        scrollScale.current = 0;
+        if (!navForcing.current) apply();
+        setIsNavOpen(false);
+      },
+    });
+    apply();
+
+    return () => st.kill();
   }, []);
 
-  // The scrub trigger is created once and never rebuilt, so opening/closing the
-  // nav can't resize the burger. While the mobile nav is open the burger is the
-  // close (X) button: pause the scrub so scroll can't shrink it and pin it fully
-  // visible. On close, resume the scrub and re-sync its scale to the current
-  // scroll position (full if you're scrolled down, hidden if you're at the top).
+  // Ease to the combined target whenever the nav open state flips: opening grows
+  // the X in, closing eases back to the scroll-driven size. No hard reset, so no
+  // blink.
   useIsomorphicLayoutEffect(() => {
-    const st = scrubTween.current?.scrollTrigger;
-    if (!st) return;
-    if (showButton) {
-      st.disable(false);
-      gsap.to(button.current, { scale: 1, duration: 0.25, ease: "power1.out" });
-    } else {
-      st.enable();
-      st.refresh();
-    }
+    navForcing.current = showButton;
+    const target = Math.max(scrollScale.current, showButton ? 1 : 0);
+    gsap.to(button.current, { scale: target, duration: 0.25, ease: "power1.out" });
   }, [showButton]);
 
   return (
