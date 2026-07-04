@@ -216,38 +216,58 @@ export default function LatestWorkFlipCard({
   const [isFlipped, setIsFlipped] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
 
+  // "Snapped" = this card is pinned at the top AND the next card hasn't yet
+  // risen to cover it — used to reveal the carousel controls/caption only on the
+  // visible card. Detected with IntersectionObserver (geometry read off the main
+  // thread) instead of getBoundingClientRect in a scroll handler, which forced a
+  // synchronous layout/reflow on every scroll tick and caused ~40ms layout
+  // events mid-animation.
+  //
+  // These are full-height sticky cards that STACK at the top, so a covered card
+  // still fully intersects the viewport (occlusion doesn't lower its ratio) —
+  // that's why we also watch the next card to decide if this one is covered.
   const [snapped, setSnapped] = useState(false);
   useEffect(() => {
-    let timer: ReturnType<typeof setTimeout>;
-    const check = () => {
-      const el = container.current;
-      if (!el) return;
-      const pinned = Math.abs(el.getBoundingClientRect().top) < 8;
-      let covered = false;
-      if (pinned) {
-        const all = Array.from(
-          document.querySelectorAll<HTMLElement>("[data-snap-project]"),
-        );
-        const next = all[all.indexOf(el) + 1];
-        if (
-          next &&
-          next.getBoundingClientRect().top < window.innerHeight * 0.5
-        ) {
-          covered = true;
-        }
-      }
-      setSnapped(pinned && !covered);
-    };
-    const onScroll = () => {
-      setSnapped(false);
-      clearTimeout(timer);
-      timer = setTimeout(check, 160);
-    };
-    window.addEventListener("scroll", onScroll, { passive: true });
-    check();
+    const el = container.current;
+    if (!el) return;
+
+    const all = Array.from(
+      document.querySelectorAll<HTMLElement>("[data-snap-project]"),
+    );
+    const next = all[all.indexOf(el) + 1] ?? null;
+
+    let pinned = false;
+    let covered = false;
+    const update = () => setSnapped(pinned && !covered);
+
+    // This card essentially fills the viewport (pinned at the top).
+    const selfObserver = new IntersectionObserver(
+      ([entry]) => {
+        pinned = entry.intersectionRatio >= 0.99;
+        update();
+      },
+      { threshold: [0.99, 1] },
+    );
+    selfObserver.observe(el);
+
+    // The next card has risen into the top half of the viewport and now covers
+    // this one. The negative bottom rootMargin shrinks the root to the top half,
+    // mirroring the old `next.top < innerHeight * 0.5` check.
+    let nextObserver: IntersectionObserver | undefined;
+    if (next) {
+      nextObserver = new IntersectionObserver(
+        ([entry]) => {
+          covered = entry.isIntersecting;
+          update();
+        },
+        { rootMargin: "0px 0px -50% 0px" },
+      );
+      nextObserver.observe(next);
+    }
+
     return () => {
-      window.removeEventListener("scroll", onScroll);
-      clearTimeout(timer);
+      selfObserver.disconnect();
+      nextObserver?.disconnect();
     };
   }, []);
 
