@@ -39,7 +39,11 @@ export default function Nav({ onClose }: NavProps) {
       <div
         className={cn(
           "h-full",
+          // Lighter vertical padding on the narrow desktop panel so the links +
+          // footer fit within the viewport (with browser chrome) instead of the
+          // footer overflowing off the bottom.
           "py-[100px]",
+          "md:py-14",
           "items-center",
           "flex",
           "flex-col",
@@ -57,9 +61,14 @@ export default function Nav({ onClose }: NavProps) {
           className={cn(
             "flex",
             "flex-col",
+            // Smaller links + tighter spacing on desktop so five items + the
+            // footer clear the viewport; mobile keeps the big type.
             "text-6xl",
+            "md:text-5xl",
             "gap-5",
+            "md:gap-3",
             "mt-[80px]",
+            "md:mt-8",
             "w-full",
             "md:w-auto"
           )}
