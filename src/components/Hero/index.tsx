@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 import { slideUp } from "./anim";
 import Image from "next/image";
 import BlurredIn from "../BlurredIn";
+import FuzzyOverlay from "./FuzzyOverlay";
 import { userData } from "@/lib/data";
 
 // const phrase =
@@ -39,13 +40,21 @@ export default function Hero({ className }: Props) {
         "h-dvh",
         "bg-transparent",
         "relative",
+        // Contain the oversized fuzzy overlay so it only shows within the hero.
+        "overflow-hidden",
         "flex",
         className
       )}
     >
+      {/* Full-bleed grain sitting behind everything (z-0); content is lifted to
+          z-10 so the overlay never covers it. */}
+      <FuzzyOverlay className="z-0" />
+
       <div
         className={cn(
           "size-full",
+          "relative",
+          "z-10",
           "flex",
           "items-center",
           "text-light-400",
