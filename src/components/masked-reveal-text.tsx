@@ -7,6 +7,11 @@ import { cn } from "@/lib/utils";
 // each line lives in an overflow-hidden box and slides up from below on enter,
 // then up and out on exit — with a per-line stagger. Driven by `show`, so it
 // plays IN when a card snaps into place and OUT when it snaps away.
+//
+// NOTE: uses <div>/<motion.div> (block by default) rather than <span> + the
+// Tailwind `block` utility, because this project's globals.css defines a custom
+// `.block { width: 50px; height: 50px }` decoration class that collides with the
+// utility and would clamp every line to a 50px box.
 const maskTransition = { duration: 0.75, ease: [0.33, 1, 0.68, 1] as const };
 
 export interface RevealLine {
@@ -25,24 +30,25 @@ export default function MaskedRevealText({ lines, show, className }: Props) {
   return (
     <div className={className}>
       {lines.map((line, i) => (
-        // The clip box stays mounted; the text inside mounts/unmounts so its
-        // enter/exit slide is masked by this box's overflow-hidden.
-        <span key={i} className="block overflow-hidden">
+        // The clip box stays mounted (full width); the text inside mounts /
+        // unmounts so its enter/exit slide is masked by overflow-hidden. The
+        // text centers via the parent's text-center.
+        <div key={i} className="overflow-hidden">
           <AnimatePresence initial={false}>
             {show && (
-              <motion.span
+              <motion.div
                 key="line"
-                className={cn("block will-change-transform", line.className)}
+                className={cn("will-change-transform", line.className)}
                 initial={{ y: "110%" }}
                 animate={{ y: "0%" }}
                 exit={{ y: "-110%" }}
                 transition={{ ...maskTransition, delay: i * 0.08 }}
               >
                 {line.text}
-              </motion.span>
+              </motion.div>
             )}
           </AnimatePresence>
-        </span>
+        </div>
       ))}
     </div>
   );

@@ -370,10 +370,10 @@ export default function LatestWorkFlipCard({
           "inset-x-0",
           "bottom-[6vh]",
           "z-20",
-          "flex",
-          "flex-col",
-          "items-center",
-          "gap-1",
+          // Block layout (NOT flex): each line's overflow-hidden mask box needs
+          // to be full width so the text isn't clipped to a narrow column — the
+          // mask only clips vertically. Lines center via text-center.
+          "space-y-1",
           "px-6",
           "text-center",
         )}
