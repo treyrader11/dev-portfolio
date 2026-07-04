@@ -24,7 +24,9 @@ export default function PackagesCodeBlock({
       {title && <h3 className="text-xl font-bold">{title}</h3>}
       <div
         className={cn(
-          "my-4 w-full rounded-lg border border-purple-500 px-2.5 py-8 text-slate-200 shadow-2xl",
+          // overflow-hidden clips the wide code to the rounded border so long
+          // dependency lines can't spill outside the block.
+          "my-4 w-full overflow-hidden rounded-lg border border-purple-500 px-2.5 py-8 text-slate-200 shadow-2xl",
           "bg-[linear-gradient(110deg,#181818,45%,#1e2631,55%,#181818)]",
           className,
         )}
@@ -34,7 +36,9 @@ export default function PackagesCodeBlock({
             <i>#</i> {fileType}
           </code>
         </div>
-        <code className="block whitespace-pre px-4 font-mono text-sm">
+        {/* overflow-x-auto lets long lines scroll within the block instead of
+            overflowing the card. */}
+        <code className="block overflow-x-auto whitespace-pre px-4 font-mono text-sm">
           <span className="text-neutral-300">{"{"}</span>
           {"\n"}
           <span className="text-[#588A44]">{'  "dependencies": {'}</span>
