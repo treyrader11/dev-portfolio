@@ -6,6 +6,7 @@ import { cn, getLocalTime } from "@/lib/utils";
 import Brand from "@/components/Brand";
 import Socials from "./components/Socials";
 import Contact from "./components/Contact";
+import FuzzyOverlay from "@/components/Hero/FuzzyOverlay";
 
 const springConfig = { stiffness: 100, damping: 30, restDelta: 0.001 };
 
@@ -40,6 +41,14 @@ export default function Footer() {
         "font-light"
       )}
     >
+      {/* Fuzzy grain background. Wrapped in its own inset-0 overflow-hidden clip
+          layer (not the footer root) so it stays confined to the footer without
+          clipping the rotated Contact element, and sits behind everything via a
+          negative z-index — so no content button/text z-index needs changing. */}
+      <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
+        <FuzzyOverlay />
+      </div>
+
       <Contact style={{ x }} rotate={rotate} />
       <footer
         className={cn(
