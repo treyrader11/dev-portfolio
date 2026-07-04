@@ -8,6 +8,8 @@ import { z } from "zod";
 import AdminLayout from "@/features/admin/components/admin-layout";
 import { AdminForm } from "@/features/admin/components/admin-form";
 import { AdminTextField } from "@/features/admin/components/admin-field";
+import { ConfirmDialog } from "@/features/admin/components/confirm-dialog";
+import { useNotificationsContext } from "@/components/providers/NotificationsProvider";
 import { IconUploadField } from "@/features/admin/components/icon-upload-field";
 import { ColorSwatchPicker } from "@/features/admin/components/color-swatch-picker";
 import { MonthYearRangePicker } from "@/features/admin/components/month-year-range-picker";
@@ -76,6 +78,10 @@ export function ExperienceDetailPage({ experience }: Props) {
 
   const [saving, setSaving] = useState(false);
 
+  // The task pending deletion drives the confirm modal; null when closed.
+  const { addNotification } = useNotificationsContext();
+  const [pendingDelete, setPendingDelete] = useState<string | null>(null);
+
   // Dirty-tracking reveals the fixed save bar. react-hook-form owns the scalar
   // fields; the tasks are compared against their initial serialization.
   const initialPoints = useRef(
@@ -95,6 +101,15 @@ export function ExperienceDetailPage({ experience }: Props) {
   }
   function removeTask(id: string) {
     setTasks((t) => t.filter((x) => x.id !== id));
+  }
+  // Clicking a task's X asks for confirmation first; confirming removes it and
+  // shows a toast.
+  function confirmRemoveTask() {
+    if (pendingDelete) {
+      removeTask(pendingDelete);
+      addNotification({ text: "Task removed", variant: "success" });
+    }
+    setPendingDelete(null);
   }
 
   async function onSubmit(values: ExperienceFormValues) {
@@ -186,7 +201,7 @@ export function ExperienceDetailPage({ experience }: Props) {
               setTasks={setTasks}
               onAdd={addTask}
               onChange={updateTask}
-              onRemove={removeTask}
+              onRemove={(id) => setPendingDelete(id)}
             />
           </AdminForm>
         </div>
@@ -223,6 +238,15 @@ export function ExperienceDetailPage({ experience }: Props) {
           </div>
         </div>
       </motion.div>
+
+      <ConfirmDialog
+        open={pendingDelete !== null}
+        title="Delete task?"
+        message="This task will be removed from the list. This can't be undone once you save."
+        confirmLabel="Delete"
+        onConfirm={confirmRemoveTask}
+        onCancel={() => setPendingDelete(null)}
+      />
     </AdminLayout>
   );
 }

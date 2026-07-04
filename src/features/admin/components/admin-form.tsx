@@ -33,7 +33,10 @@ export function AdminForm<T extends FieldValues>({
 
   return (
     <FocusExpandProvider value={focus}>
-      <AdminFocusOverlay active={focus.focusedId !== null} />
+      <AdminFocusOverlay
+        active={focus.focusedId !== null}
+        onClose={() => focus.setFocusedId(null)}
+      />
       <FormProvider {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
@@ -42,6 +45,29 @@ export function AdminForm<T extends FieldValues>({
           {children}
         </form>
       </FormProvider>
+    </FocusExpandProvider>
+  );
+}
+
+// Focus-expand + blur backdrop for admin forms that manage their own local state
+// (no react-hook-form). Wrap the fields in this and any focus-aware
+// AdminInput/AdminTextarea inside lifts above the blur when focused; clicking the
+// backdrop closes it. Same UX as <AdminForm> without the RHF wiring.
+export function AdminFocusScope({
+  children,
+  className,
+}: {
+  children: ReactNode;
+  className?: string;
+}) {
+  const focus = useFocusExpand();
+  return (
+    <FocusExpandProvider value={focus}>
+      <AdminFocusOverlay
+        active={focus.focusedId !== null}
+        onClose={() => focus.setFocusedId(null)}
+      />
+      <div className={className}>{children}</div>
     </FocusExpandProvider>
   );
 }

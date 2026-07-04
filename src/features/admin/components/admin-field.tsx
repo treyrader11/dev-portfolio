@@ -1,5 +1,6 @@
 import {
   useEffect,
+  useId,
   useRef,
   type ReactNode,
   type InputHTMLAttributes,
@@ -59,15 +60,32 @@ export function AdminInput({
   className,
   ...rest
 }: InputProps) {
+  const id = useId();
+  const focus = useFocusExpandContext();
+  const focused = focus?.isFocused(id) ?? false;
+  const dimmed = focus?.isDimmed(id) ?? false;
+  const fp = focus?.getFocusProps(id);
   return (
-    <AdminField label={label} required={required} className={fieldClassName}>
+    <FieldFrame
+      label={label}
+      required={required}
+      focused={focused}
+      dimmed={dimmed}
+      className={fieldClassName}
+    >
       <input
+        {...rest}
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className={cn(ADMIN_CONTROL, className)}
-        {...rest}
+        onFocus={fp?.onFocus}
+        onBlur={fp?.onBlur}
+        className={cn(
+          ADMIN_FIELD_CONTROL,
+          focused && "ring-1 ring-secondary/50",
+          className,
+        )}
       />
-    </AdminField>
+    </FieldFrame>
   );
 }
 
@@ -88,18 +106,31 @@ export function AdminTextarea({
   value,
   onChange,
   fieldClassName,
-  className,
-  ...rest
+  placeholder,
 }: TextareaProps) {
+  const id = useId();
+  const focus = useFocusExpandContext();
+  const focused = focus?.isFocused(id) ?? false;
+  const dimmed = focus?.isDimmed(id) ?? false;
+  const fp = focus?.getFocusProps(id);
   return (
-    <AdminField label={label} required={required} className={fieldClassName}>
-      <textarea
+    <FieldFrame
+      label={label}
+      required={required}
+      focused={focused}
+      dimmed={dimmed}
+      className={fieldClassName}
+    >
+      <ExpandingTextarea
         value={value}
+        focused={focused}
+        placeholder={placeholder}
+        fieldRef={() => {}}
         onChange={(e) => onChange(e.target.value)}
-        className={cn(ADMIN_CONTROL, className)}
-        {...rest}
+        onFocus={fp?.onFocus}
+        onBlur={() => fp?.onBlur()}
       />
-    </AdminField>
+    </FieldFrame>
   );
 }
 

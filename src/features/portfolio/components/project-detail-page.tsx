@@ -1,10 +1,11 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { RiAddLine, RiCheckLine, RiCloseLine } from "react-icons/ri";
 import AdminLayout from "@/features/admin/components/admin-layout";
+import { AdminFocusScope } from "@/features/admin/components/admin-form";
 import { IconUploadField } from "@/features/admin/components/icon-upload-field";
 import { TechStackField } from "./tech-stack-field";
 import { TagInputField, type Suggestion } from "./tag-input-field";
@@ -12,8 +13,9 @@ import { CategoryMultiField } from "./category-multi-field";
 import {
   AdminInput,
   AdminTextarea,
-  ADMIN_CONTROL,
+  ADMIN_FIELD_CONTROL,
 } from "@/features/admin/components/admin-field";
+import { useFocusExpandContext } from "@/hooks/use-focus-expand";
 import { cn, resolveImageSrc, slugify } from "@/lib/utils";
 import { type ProjectItem, emptyProject } from "../types";
 
@@ -120,7 +122,7 @@ export function ProjectDetailPage({ project }: Props) {
       ]}
     >
       <div className="w-full max-w-3xl pb-24">
-        <div className="bg-dark-400 rounded-lg border border-dark-600 p-4 sm:p-6 space-y-3">
+        <AdminFocusScope className="bg-dark-400 rounded-lg border border-dark-600 p-4 sm:p-6 space-y-3">
           <AdminInput
             label="Title"
             required
@@ -426,7 +428,7 @@ export function ProjectDetailPage({ project }: Props) {
               </label>
             </div>
           </div>
-        </div>
+        </AdminFocusScope>
       </div>
 
       {/* Save bar — springs up when a change is made. */}
@@ -476,6 +478,8 @@ function StringListField({
   onChange: (value: string[]) => void;
 }) {
   const items = value.length ? value : [];
+  const focus = useFocusExpandContext();
+  const baseId = useId();
 
   const setAt = (index: number, next: string) =>
     onChange(items.map((item, i) => (i === index ? next : item)));
@@ -486,24 +490,46 @@ function StringListField({
   return (
     <div className="flex flex-col gap-2">
       <label className="text-sm font-medium text-white">{label}</label>
-      {items.map((item, i) => (
-        <div key={i} className="flex items-center gap-2">
-          <input
-            value={item}
-            placeholder={placeholder}
-            onChange={(e) => setAt(i, e.target.value)}
-            className={cn(ADMIN_CONTROL)}
-          />
-          <button
-            type="button"
-            aria-label={`Remove ${label} entry ${i + 1}`}
-            onClick={() => removeAt(i)}
-            className="shrink-0 rounded-lg border border-dark-600 p-2 text-light-400 transition-colors hover:border-red-500/60 hover:text-red-500"
+      {items.map((item, i) => {
+        // Each entry participates in the shared focus-expand blur: focusing one
+        // lifts its row above the backdrop while the rest dim.
+        const fid = `${baseId}-${i}`;
+        const focused = focus?.isFocused(fid) ?? false;
+        const dimmed = focus?.isDimmed(fid) ?? false;
+        const fp = focus?.getFocusProps(fid);
+        return (
+          <motion.div
+            key={i}
+            animate={{ scale: focused ? 1.02 : 1 }}
+            transition={{ type: "spring", stiffness: 300, damping: 26 }}
+            className={cn(
+              "flex items-center gap-2",
+              focused && "relative z-50",
+              dimmed && "opacity-50 blur-[2px]",
+            )}
           >
-            <RiCloseLine className="size-4" />
-          </button>
-        </div>
-      ))}
+            <input
+              value={item}
+              placeholder={placeholder}
+              onChange={(e) => setAt(i, e.target.value)}
+              onFocus={fp?.onFocus}
+              onBlur={fp?.onBlur}
+              className={cn(
+                ADMIN_FIELD_CONTROL,
+                focused && "ring-1 ring-secondary/50",
+              )}
+            />
+            <button
+              type="button"
+              aria-label={`Remove ${label} entry ${i + 1}`}
+              onClick={() => removeAt(i)}
+              className="shrink-0 rounded-lg border border-dark-600 p-2 text-light-400 transition-colors hover:border-red-500/60 hover:text-red-500"
+            >
+              <RiCloseLine className="size-4" />
+            </button>
+          </motion.div>
+        );
+      })}
       <button
         type="button"
         onClick={add}
