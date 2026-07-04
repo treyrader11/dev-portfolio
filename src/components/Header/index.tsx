@@ -60,58 +60,43 @@ export default function Header() {
     };
   }, []);
 
-  // The burger's scale is driven imperatively so one value can combine two
-  // inputs without them fighting (which is what caused the blink/resize when
-  // toggling the nav): the scroll reveal (tied 1:1 to scroll position, so it
-  // scales in/out at the speed you scroll) and the mobile nav-open state (the
-  // burger becomes the close X, so it must be full size). We always apply
-  // max(scrollScale, navOpen ? 1 : 0), so neither input can shrink the other and
-  // nothing ever hard-resets the scale.
-  const scrollScale = useRef(0);
-  const navForcing = useRef(false);
   useIsomorphicLayoutEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
 
-    const setScale = gsap.quickSetter(button.current, "scale") as (
-      v: number,
-    ) => void;
-    const apply = () =>
-      setScale(Math.max(scrollScale.current, navForcing.current ? 1 : 0));
+    if (showButton) {
+      gsap.to(button.current, { scale: 1, duration: 0.25, ease: "power1.out" });
+    } else {
+      gsap.to(button.current, { scale: 0, duration: 0.25, ease: "power1.out" });
+    }
 
-    const st = ScrollTrigger.create({
-      trigger: header.current,
-      // Reveal starts the moment the header's bottom passes the top of the
-      // viewport and completes 120px of scroll later.
-      start: "bottom top",
-      end: "+=120",
-      onUpdate: (self) => {
-        scrollScale.current = self.progress;
-        if (!navForcing.current) apply();
-      },
-      // Pin the extremes so a fast fling can't leave the burger a hair under or
-      // over full size.
+    ScrollTrigger.create({
+      trigger: document.documentElement,
+      start: 0,
+      end: window.innerHeight,
       onLeave: () => {
-        scrollScale.current = 1;
-        if (!navForcing.current) apply();
+        if (!showButton) {
+          gsap.to(button.current, {
+            scale: 1,
+            duration: 0.25,
+            ease: "power1.out",
+          });
+        }
       },
-      onLeaveBack: () => {
-        scrollScale.current = 0;
-        if (!navForcing.current) apply();
-        setIsNavOpen(false);
+      onEnterBack: () => {
+        if (!showButton) {
+          gsap.to(button.current, {
+            scale: 0,
+            duration: 0.25,
+            ease: "power1.out",
+          });
+          setIsNavOpen(false);
+        }
       },
     });
-    apply();
 
-    return () => st.kill();
-  }, []);
-
-  // Ease to the combined target whenever the nav open state flips: opening grows
-  // the X in, closing eases back to the scroll-driven size. No hard reset, so no
-  // blink.
-  useIsomorphicLayoutEffect(() => {
-    navForcing.current = showButton;
-    const target = Math.max(scrollScale.current, showButton ? 1 : 0);
-    gsap.to(button.current, { scale: target, duration: 0.25, ease: "power1.out" });
+    return () => {
+      ScrollTrigger.refresh();
+    };
   }, [showButton]);
 
   return (
