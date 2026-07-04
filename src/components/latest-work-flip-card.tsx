@@ -263,20 +263,25 @@ export default function LatestWorkFlipCard({
     offset: ["start center", "end center"],
   });
 
-  useMotionValueEvent(scrollYProgress, "change", (value) => {
+  useMotionValueEvent(scrollYProgress, "change", () => {
     const el = container.current;
     if (!el || !setActivePosition || !setActivePositionProgress) return;
     // Claim the active indicator only when THIS card occupies the viewport
-    // center — i.e. it's the snapped/dominant one. This is direction-independent:
-    // the previous logic let whichever card fired its scroll event last win,
-    // which scrolling up was the card exiting at the bottom (progress ~0), so it
-    // overwrote the fill to empty (grey) even though a higher card was snapped.
+    // center — i.e. it's the snapped/dominant one. Direction-independent, unlike
+    // the old "last card to fire wins" which scrolling up picked the exiting
+    // card and left the dot grey.
     const center = window.innerHeight / 2;
     const rect = el.getBoundingClientRect();
     const isActive = rect.top <= center && rect.bottom >= center;
     if (isActive && position?.positionId) {
       setActivePosition(position.positionId);
-      setActivePositionProgress(value);
+      // Fill from the card's LIVE position, not the scroll value: a sticky card's
+      // scrollYProgress freezes while pinned (worst on mobile, where the momentum
+      // snap settles without a fresh event), leaving the fill stale. Deriving it
+      // from rect.top makes the dot fill as the card rises from center to pinned
+      // (top 0 => full) and empty symmetrically — reliable on every device.
+      const progress = Math.min(Math.max(1 - rect.top / center, 0), 1);
+      setActivePositionProgress(progress);
     }
   });
 
