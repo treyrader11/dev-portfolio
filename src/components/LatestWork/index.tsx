@@ -34,11 +34,6 @@ export default function LatestWork({ className, projects }: Props) {
     offset: ["start end", "start start"],
   });
 
-  // Title stays visible until the last card reaches it, then fades out.
-  const titleOpacity = useTransform(lastProjectProgress, [0.7, 0.92], [1, 0]);
-
-  const titleY = useTransform(lastProjectProgress, [0.7, 0.92], [0, -30]);
-
   // "scroll down" hint: fade it in shortly after the section sticks (just after
   // the title), then fade it out as the last work item is reached.
   const { scrollYProgress: sectionProgress } = useScroll({
@@ -51,6 +46,16 @@ export default function LatestWork({ className, projects }: Props) {
     [hintFadeIn, hintFadeOut],
     ([i, o]: number[]) => Math.min(i, o),
   );
+
+  // Fade the title out as the last project starts scrolling upward — i.e. once
+  // the section releases at the bottom and begins leaving the viewport. Stays
+  // fully visible the whole time you're on the last project.
+  const { scrollYProgress: exitProgress } = useScroll({
+    target: container,
+    offset: ["end end", "end start"],
+  });
+  const titleOpacity = useTransform(exitProgress, [0, 0.3], [1, 0]);
+  const titleY = useTransform(exitProgress, [0, 0.3], [0, -40]);
 
   return (
     <motion.section
@@ -70,11 +75,11 @@ export default function LatestWork({ className, projects }: Props) {
         className,
       )}
     >
+      {/* The "Latest Work." title stays pinned and fully visible the whole time
+          you're on the projects; it fades (and drifts up) only once the last
+          project starts scrolling up off the top at the bottom of the page. */}
       <motion.div
-        style={{
-          opacity: titleOpacity,
-          y: titleY,
-        }}
+        style={{ opacity: titleOpacity, y: titleY }}
         className={cn(
           "sticky",
           "top-0",

@@ -18,19 +18,22 @@ export default function Scrollbar({ positions, className }: Props) {
   const { activePosition, activePositionProgress } = positionContext;
 
   return (
-    <motion.div
+    // Out of flow (absolute) so it no longer reserves a full viewport of height
+    // that pushed the first project card down and left a screen of white space
+    // when the title sticks. The inner track sticks to the middle of the
+    // viewport and follows the scroll through the section.
+    <div
       className={cn(
-        "sticky",
-        "min-h-dvh",
-        "inset-0",
-        "flex",
-        "flex-col",
-        "gap-2",
-        "justify-center",
+        "pointer-events-none",
+        "absolute",
+        "inset-y-0",
+        "left-0",
+        "z-30",
         className
       )}
     >
-      {positions.map(({ positionId }) => (
+      <motion.div className="sticky top-1/2 flex -translate-y-1/2 flex-col gap-2">
+        {positions.map(({ positionId }) => (
         <motion.div
           key={positionId}
           layout
@@ -53,7 +56,8 @@ export default function Scrollbar({ positions, className }: Props) {
             />
           )}
         </motion.div>
-      ))}
-    </motion.div>
+        ))}
+      </motion.div>
+    </div>
   );
 }
