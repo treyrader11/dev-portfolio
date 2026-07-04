@@ -45,8 +45,13 @@ export default function LatestWork({ className, projects }: Props) {
     target: container,
     offset: ["end end", "end start"],
   });
-  const titleOpacity = useTransform(exitProgress, [0, 0.3], [1, 0]);
-  const titleY = useTransform(exitProgress, [0, 0.3], [0, -40]);
+  // Tighter [0, 0.2] range so the title starts fading the instant the section
+  // begins exiting, feeling more responsive to the scroll.
+  const titleOpacity = useTransform(exitProgress, [0, 0.2], [1, 0]);
+  const titleY = useTransform(exitProgress, [0, 0.2], [0, -40]);
+
+  // Scrollbar dots fade out on the same exit tracker as the title.
+  const scrollbarOpacity = useTransform(exitProgress, [0, 0.3], [1, 0]);
 
   return (
     <motion.section
@@ -92,7 +97,9 @@ export default function LatestWork({ className, projects }: Props) {
         <ScrollDownIndicator />
       </motion.div>
 
-      <Scrollbar positions={projectPositions} />
+      <motion.div style={{ opacity: scrollbarOpacity }}>
+        <Scrollbar positions={projectPositions} />
+      </motion.div>
 
       {projects.map((project, i) => {
         const isLast = i === projects.length - 1;
