@@ -105,11 +105,6 @@ const Home: NextPage<HomeProps> = ({
       let settleTimer: ReturnType<typeof setTimeout> | null = null;
       let animating = false;
       let currentIndex = -1;
-      // Latched once we release past the last card. While set, the whole
-      // last-card→footer region is free scroll and snapping stays disarmed until
-      // you scroll well back up into the cards — so crossing the last card
-      // boundary can't yank the page up and down.
-      let exitedBottom = false;
 
       const releaseLock = () => {
         (lenis as unknown as { isLocked: boolean }).isLocked = false;
@@ -128,7 +123,6 @@ const Home: NextPage<HomeProps> = ({
         // Exit at the ends — don't re-grab the first/last card when heading out,
         // so the scroll flows on to Description / Freelance.
         if (dir > 0 && near === lastIdx && y >= pos[lastIdx] - 2) {
-          exitedBottom = true;
           currentIndex = -1;
           animating = false;
           releaseLock();
@@ -141,23 +135,8 @@ const Home: NextPage<HomeProps> = ({
           return;
         }
 
-        // Once we've released past the last card, keep snapping disarmed through
-        // the entire last-card→footer region and only re-arm after scrolling back
-        // up at least half a viewport into the cards. This stops the boundary
-        // oscillation (yank up, scroll down, yank up…) that read as glitching.
-        if (exitedBottom) {
-          if (y < pos[lastIdx] - vh * 0.5) {
-            exitedBottom = false;
-          } else {
-            currentIndex = -1;
-            return;
-          }
-        }
-
-        // Outside the projects band → leave scrolling alone. The lower bound is
-        // pinned just past the last card (not half a viewport below it) so the
-        // whole region between the last card and the footer curve is free scroll.
-        if (y < pos[0] - vh * 0.5 || y > pos[lastIdx] + 2) {
+        // Outside the projects band → leave scrolling alone.
+        if (y < pos[0] - vh * 0.5 || y > pos[lastIdx] + vh * 0.5) {
           currentIndex = -1;
           return;
         }
@@ -213,41 +192,30 @@ const Home: NextPage<HomeProps> = ({
         commitSnap(dir);
       };
 
-      // Snapping is a wheel/trackpad affordance. On touch devices the snap's
-      // scrollTo(lock) fights native momentum scrolling and jumps the page —
-      // worst on iOS/WebKit when scrolling back up through the section — so it's
-      // gated to fine-pointer devices only; touch scrolls freely.
-      const isTouch =
-        typeof window !== "undefined" &&
-        window.matchMedia("(pointer: coarse)").matches;
+      // Drive from Lenis's `scroll` output (fires for wheel and native touch, so
+      // it works on mobile too). Direction = sign of the scroll-position delta.
+      let lastScrollY = lenis.scroll;
+      const unsub = lenis.on("scroll", (instance) => {
+        const scroll = instance.scroll;
+        const delta = scroll - lastScrollY;
+        lastScrollY = scroll; // update always, even mid-snap
+        if (animating) return;
+        if (Math.abs(delta) < 1) return;
 
-      let unsub: (() => void) | null = null;
-      if (!isTouch) {
-        // Drive from Lenis's `scroll` output. Direction = sign of the
-        // scroll-position delta.
-        let lastScrollY = lenis.scroll;
-        unsub = lenis.on("scroll", (instance) => {
-          const scroll = instance.scroll;
-          const delta = scroll - lastScrollY;
-          lastScrollY = scroll; // update always, even mid-snap
-          if (animating) return;
-          if (Math.abs(delta) < 1) return;
-
-          accumDelta += delta;
-          if (settleTimer) {
-            clearTimeout(settleTimer);
-            settleTimer = null;
-          }
-          if (Math.abs(accumDelta) >= GESTURE_THRESHOLD) {
-            flushGesture();
-          } else {
-            settleTimer = setTimeout(flushGesture, 140);
-          }
-        });
-      }
+        accumDelta += delta;
+        if (settleTimer) {
+          clearTimeout(settleTimer);
+          settleTimer = null;
+        }
+        if (Math.abs(accumDelta) >= GESTURE_THRESHOLD) {
+          flushGesture();
+        } else {
+          settleTimer = setTimeout(flushGesture, 140);
+        }
+      });
 
       cleanup = () => {
-        unsub?.();
+        unsub();
         if (settleTimer) clearTimeout(settleTimer);
       };
     })();
