@@ -16,11 +16,11 @@ export const emptyProject = {
   tags: [""],
   category: "",
   technologyFeature: [""],
-  packages: { frontend: [], backend: [] },
+  packages: { frontend: [] as string[], backend: [] as string[] },
   env: { frontend: [] as string[], backend: [] as string[] },
   youtubeLink: "",
   githubLink: "",
-  downloadLinks: { frontend: "", backend: "" },
+  downloadLinks: { frontend: "", backend: "", ios: "" },
   projectImage: "",
   projectVideo: "",
   image: {

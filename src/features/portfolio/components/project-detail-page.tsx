@@ -7,6 +7,8 @@ import { RiAddLine, RiCheckLine, RiCloseLine } from "react-icons/ri";
 import AdminLayout from "@/features/admin/components/admin-layout";
 import { AdminFocusScope } from "@/features/admin/components/admin-form";
 import { IconUploadField } from "@/features/admin/components/icon-upload-field";
+import { PasteDropzone } from "@/features/admin/components/paste-dropzone";
+import { PreviewSheet } from "@/features/admin/components/preview-sheet";
 import { TechStackField } from "./tech-stack-field";
 import { TagInputField, type Suggestion } from "./tag-input-field";
 import { CategoryMultiField } from "./category-multi-field";
@@ -16,6 +18,14 @@ import {
   ADMIN_FIELD_CONTROL,
 } from "@/features/admin/components/admin-field";
 import { useFocusExpandContext } from "@/hooks/use-focus-expand";
+import CodeEditor from "@/components/CodeEditor";
+import PackagesCodeBlock from "@/components/CodeBlock/PackagesCodeBlock";
+import {
+  parseEnvKeys,
+  parsePackageDeps,
+  isEnvEmpty,
+  isPackagesEmpty,
+} from "../lib/parse-config";
 import { cn, resolveImageSrc, slugify } from "@/lib/utils";
 import { type ProjectItem, emptyProject } from "../types";
 
@@ -69,6 +79,34 @@ export function ProjectDetailPage({ project }: Props) {
         },
   );
   const [saving, setSaving] = useState(false);
+
+  // Which config preview sheet is open (null when closed).
+  const [preview, setPreview] = useState<"env" | "packages" | null>(null);
+  // Per-side package.json parse errors (invalid JSON), shown under each dropzone.
+  const [pkgError, setPkgError] = useState<{
+    frontend?: boolean;
+    backend?: boolean;
+  }>({});
+
+  // Parse a pasted package.json (or bare deps object) into formatted lines for
+  // the given side; empty input clears it, invalid JSON flags an error.
+  function applyPackages(side: "frontend" | "backend", text: string) {
+    if (!text.trim()) {
+      setForm((f) => ({
+        ...f,
+        packages: { ...f.packages, [side]: [] },
+      }));
+      setPkgError((e) => ({ ...e, [side]: false }));
+      return;
+    }
+    const lines = parsePackageDeps(text);
+    if (lines) {
+      setForm((f) => ({ ...f, packages: { ...f.packages, [side]: lines } }));
+      setPkgError((e) => ({ ...e, [side]: false }));
+    } else {
+      setPkgError((e) => ({ ...e, [side]: true }));
+    }
+  }
 
   // Existing tag + technology-feature values, used to suggest as the user types.
   const [tagOptions, setTagOptions] = useState<Suggestion[]>([]);
@@ -353,25 +391,102 @@ export function ProjectDetailPage({ project }: Props) {
             onChange={(v) => setForm({ ...form, technologyFeature: v })}
           />
 
-          {/* Environment — the "Frontend" / "Backend" tech lists shown under
-              Environment on the public project page. One entry per line. */}
+          {/* Environment — paste a .env to auto-fill the variable names (values
+              are never stored); the list below stays editable. Shown under
+              Environment on the public project page. */}
           <div className="flex flex-col gap-4 rounded-lg border border-dark-600 p-4">
-            <p className="text-sm font-medium text-white">Environment</p>
+            <div className="flex items-center justify-between">
+              <p className="text-sm font-medium text-white">Environment</p>
+              <PreviewButton
+                onClick={() => setPreview("env")}
+                disabled={isEnvEmpty(form.env)}
+              />
+            </div>
+            <p className="text-xs text-light-400">
+              Paste your .env below — only the variable names are saved, never
+              the values.
+            </p>
+
+            <PasteDropzone
+              label="Frontend .env"
+              placeholder={"NEXT_PUBLIC_API_URL=...\nDATABASE_URL=..."}
+              onText={(t) =>
+                setForm((f) => ({
+                  ...f,
+                  env: { ...f.env, frontend: parseEnvKeys(t) },
+                }))
+              }
+              status={`${(form.env.frontend ?? []).filter(Boolean).length} key(s)`}
+            />
             <StringListField
-              label="Frontend"
+              label="Frontend keys"
               value={form.env.frontend ?? []}
-              placeholder="e.g. Next.js"
+              placeholder="KEY_NAME"
               onChange={(v) =>
                 setForm({ ...form, env: { ...form.env, frontend: v } })
               }
             />
+
+            <PasteDropzone
+              label="Backend .env"
+              placeholder={"DATABASE_URL=...\nJWT_SECRET=..."}
+              onText={(t) =>
+                setForm((f) => ({
+                  ...f,
+                  env: { ...f.env, backend: parseEnvKeys(t) },
+                }))
+              }
+              status={`${(form.env.backend ?? []).filter(Boolean).length} key(s)`}
+            />
             <StringListField
-              label="Backend"
+              label="Backend keys"
               value={form.env.backend ?? []}
-              placeholder="e.g. Node.js"
+              placeholder="KEY_NAME"
               onChange={(v) =>
                 setForm({ ...form, env: { ...form.env, backend: v } })
               }
+            />
+          </div>
+
+          {/* Packages — paste a package.json (or a bare dependencies object).
+              Parsed dependencies render as a formatted code block in the public
+              Technology section. */}
+          <div className="flex flex-col gap-4 rounded-lg border border-dark-600 p-4">
+            <div className="flex items-center justify-between">
+              <p className="text-sm font-medium text-white">
+                Packages (package.json)
+              </p>
+              <PreviewButton
+                onClick={() => setPreview("packages")}
+                disabled={isPackagesEmpty(form.packages)}
+              />
+            </div>
+            <p className="text-xs text-light-400">
+              Paste a package.json (or just its dependencies). The parsed
+              dependencies show in the project&apos;s Technology section.
+            </p>
+
+            <PasteDropzone
+              label="Frontend package.json"
+              placeholder={'{ "dependencies": { "react": "^18.2.0" } }'}
+              onText={(t) => applyPackages("frontend", t)}
+              status={
+                pkgError.frontend
+                  ? "Invalid JSON — check the pasted content"
+                  : `${(form.packages.frontend ?? []).filter(Boolean).length} dependency(ies)`
+              }
+              error={pkgError.frontend}
+            />
+            <PasteDropzone
+              label="Backend package.json"
+              placeholder={'{ "dependencies": { "express": "^4.19.0" } }'}
+              onText={(t) => applyPackages("backend", t)}
+              status={
+                pkgError.backend
+                  ? "Invalid JSON — check the pasted content"
+                  : `${(form.packages.backend ?? []).filter(Boolean).length} dependency(ies)`
+              }
+              error={pkgError.backend}
             />
           </div>
 
@@ -396,6 +511,23 @@ export function ProjectDetailPage({ project }: Props) {
                 setForm({
                   ...form,
                   downloadLinks: { ...form.downloadLinks, backend: v },
+                })
+              }
+            />
+          </div>
+
+          {/* App downloads — the Apple App Store link. When set, the public
+              project page renders a black "Download on the App Store" CTA. */}
+          <div className="flex flex-col gap-4 rounded-lg border border-dark-600 p-4">
+            <p className="text-sm font-medium text-white">App Downloads</p>
+            <AdminInput
+              label="Apple App Store Link"
+              value={form.downloadLinks.ios ?? ""}
+              placeholder="https://apps.apple.com/app/..."
+              onChange={(v) =>
+                setForm({
+                  ...form,
+                  downloadLinks: { ...form.downloadLinks, ios: v },
                 })
               }
             />
@@ -459,7 +591,71 @@ export function ProjectDetailPage({ project }: Props) {
           </div>
         </div>
       </motion.div>
+
+      {/* Config previews — exactly how the .env / packages render publicly.
+          Centered modal on desktop, full-screen sheet on mobile. */}
+      <PreviewSheet
+        open={preview === "env"}
+        title="Environment preview"
+        onClose={() => setPreview(null)}
+      >
+        {(form.env.frontend ?? []).filter(Boolean).length > 0 && (
+          <CodeEditor
+            data={(form.env.frontend ?? []).filter(Boolean)}
+            fileType=".env"
+          />
+        )}
+        {(form.env.backend ?? []).filter(Boolean).length > 0 && (
+          <>
+            <p className="mt-4 text-sm font-medium text-white">Backend</p>
+            <CodeEditor
+              data={(form.env.backend ?? []).filter(Boolean)}
+              fileType=".env"
+            />
+          </>
+        )}
+      </PreviewSheet>
+
+      <PreviewSheet
+        open={preview === "packages"}
+        title="Packages preview"
+        onClose={() => setPreview(null)}
+      >
+        {(form.packages.frontend ?? []).filter(Boolean).length > 0 && (
+          <PackagesCodeBlock
+            title="Frontend"
+            lines={(form.packages.frontend ?? []).filter(Boolean)}
+          />
+        )}
+        {(form.packages.backend ?? []).filter(Boolean).length > 0 && (
+          <PackagesCodeBlock
+            title="Backend"
+            lines={(form.packages.backend ?? []).filter(Boolean)}
+          />
+        )}
+      </PreviewSheet>
     </AdminLayout>
+  );
+}
+
+// Small "Preview" pill used by the Environment and Packages sections; disabled
+// until there's something to preview.
+function PreviewButton({
+  onClick,
+  disabled,
+}: {
+  onClick: () => void;
+  disabled?: boolean;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      disabled={disabled}
+      className="rounded-lg border border-dark-600 px-3 py-1.5 text-xs text-white transition-colors hover:border-secondary/60 disabled:cursor-not-allowed disabled:opacity-40"
+    >
+      Preview
+    </button>
   );
 }
 

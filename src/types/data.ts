@@ -81,6 +81,9 @@ export interface ProjectEnv {
 export interface ProjectDownloadLinks {
   frontend?: string;
   backend?: string;
+  // Apple App Store URL. When present, the public project page shows a black
+  // "Download on the App Store" CTA.
+  ios?: string;
 }
 
 export interface ProjectImage {
