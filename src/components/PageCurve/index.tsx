@@ -22,29 +22,30 @@ interface Props {
 // The parent's animated height (50 -> 0) drives the flatten. It sits flush with
 // the content above it (no top margin) so the curve always caps the content
 // directly, regardless of a page's own trailing padding.
-const PageCurve = forwardRef<HTMLDivElement, Props>(
-  function PageCurve({ className, height, bgClass = "bg-white" }, ref) {
-    return (
-      <motion.div
-        ref={ref}
-        style={{ height }}
-        className={cn("relative", bgClass, className)}
-      >
-        <div
-          className={cn(
-            "absolute",
-            "h-[1550%]",
-            "w-[120%]",
-            "-left-[10%]",
-            "rounded-b-[50%]",
-            bgClass,
-            "z-[1]",
-            "shadow-[0px_60px_50px_rgba(0,0,0,0.748)]",
-          )}
-        />
-      </motion.div>
-    );
-  },
-);
+const PageCurve = forwardRef<HTMLDivElement, Props>(function PageCurve(
+  { className, height, bgClass = "bg-white" },
+  ref,
+) {
+  return (
+    <motion.div
+      ref={ref}
+      style={{ height }}
+      className={cn("relative", bgClass, className)}
+    >
+      <div
+        className={cn(
+          "absolute",
+          "h-[1550%]",
+          "w-[120%]",
+          "-left-[10%]",
+          "rounded-b-[50%]",
+          bgClass,
+          "z-[1]",
+          "shadow-[0px_60px_50px_rgba(0,0,0,0.748)]",
+        )}
+      />
+    </motion.div>
+  );
+});
 
 export default PageCurve;

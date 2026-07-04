@@ -48,8 +48,19 @@ export const authOptions: NextAuthOptions = {
   session: { strategy: "jwt" },
   providers,
   callbacks: {
-    async signIn({ user }) {
-      return isAdmin(user.email);
+    async signIn({ user, account }) {
+      const ok = isAdmin(user.email);
+      if (!ok) {
+        // Diagnostic: shows exactly which email was rejected and the allow-list
+        // the running server actually loaded (env is read at server start, so a
+        // stale ADMIN_EMAIL shows up here). Check your dev terminal.
+        console.warn(
+          `[auth] sign-in REJECTED — provider=${account?.provider} email=${
+            user.email ?? "(none returned)"
+          } | ADMIN_EMAIL allow-list=[${ADMIN_EMAILS.join(", ")}]`,
+        );
+      }
+      return ok;
     },
     async jwt({ token, user, account, profile }) {
       if (user) {
