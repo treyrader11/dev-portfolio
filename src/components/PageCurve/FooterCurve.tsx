@@ -34,20 +34,32 @@ export default function FooterCurve({
   useEffect(() => {
     const update = () => baseHeight.set(window.innerWidth * 0.035);
     update();
+    // On iOS the browser chrome (URL bar) collapses after first paint, so the
+    // initial innerWidth can be read before the viewport settles. A delayed
+    // second measurement re-reads the width once the chrome has settled.
+    const timer = setTimeout(update, 300);
     window.addEventListener("resize", update);
-    return () => window.removeEventListener("resize", update);
+    return () => {
+      window.removeEventListener("resize", update);
+      clearTimeout(timer);
+    };
   }, [baseHeight]);
 
+  // "start 120%" fires the trigger before the container reaches the viewport
+  // bottom, so the dome is already forming on iOS/WebKit where a later trigger
+  // left it collapsed off-screen.
   const { scrollYProgress } = useScroll({
     target: container,
-    offset: ["start end", "end start"],
+    offset: ["start 120%", "end start"],
   });
 
   // Full dome as the curve enters from the bottom of the viewport, flattened by
   // the time it has scrolled 90% of the way up. Recomputes on scroll OR resize.
+  // A 4px floor keeps the curve from ever collapsing fully to zero (which read
+  // as "no curve" on iOS/WebKit).
   const height = useTransform(
     [scrollYProgress, baseHeight],
-    ([p, b]: number[]) => b * (1 - Math.min(p / 0.9, 1)),
+    ([p, b]: number[]) => Math.max(b * (1 - Math.min(p / 0.9, 1)), 4),
   );
 
   return (
