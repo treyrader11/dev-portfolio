@@ -4,19 +4,11 @@ import { cn, getUnique } from "@/lib/utils";
 import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import PortfolioItem from "./components/PortfolioItem";
-import {
-  motion,
-  useSpring,
-  useScroll,
-  useMotionValueEvent,
-} from "framer-motion";
-import Image from "next/image";
-import { scaleAnimation } from "./anim";
+import { useScroll, useMotionValueEvent } from "framer-motion";
 import ProjectCategories from "./components/ProjectCategories";
 import Search from "./components/Search";
-import Video from "../Video";
-import MouseoverModal from "../MouseoverModal";
-import Modal from "./components/Modal";
+import CursorModal from "./components/CursorModal";
+import { useCursorModal } from "./useCursorModal";
 import { useIsInView } from "@/hooks/useIsInView";
 import { useIsMobile } from "@/hooks/useWindowDimensions";
 import LatestRepo from "./components/LatestRepo";
@@ -138,22 +130,19 @@ export default function Portfolio({ repositories, projects }: Props) {
     setSearchText(text);
   };
 
-  const spring = {
-    stiffness: 150,
-    damping: 15,
-    mass: 0.1,
-  };
+  // Cursor-following project modal (card + dot + "View" label), only on devices
+  // with a real pointer — never on touch screens, which have no hover.
+  const [canHover, setCanHover] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia("(hover: hover) and (pointer: fine)");
+    const update = () => setCanHover(mq.matches);
+    update();
+    mq.addEventListener("change", update);
+    return () => mq.removeEventListener("change", update);
+  }, []);
 
-  const mousePosition = {
-    x: useSpring(0, spring),
-    y: useSpring(0, spring),
-  };
-
-  const mouseMove = (e: React.MouseEvent) => {
-    // Track the raw cursor position; the follower centers itself on this point.
-    mousePosition.x.set(e.clientX);
-    mousePosition.y.set(e.clientY);
-  };
+  const { modalContainer, cursor, cursorLabel, modal, moveItems, manageModal } =
+    useCursorModal(canHover);
 
   const { scrollYProgress } = useScroll({
     target: container,
@@ -182,7 +171,12 @@ export default function Portfolio({ repositories, projects }: Props) {
   }, []);
 
   return (
-    <section onMouseMove={mouseMove} className="pb-8">
+    <section
+      onMouseMove={(e) => {
+        if (canHover) moveItems(e.clientX, e.clientY);
+      }}
+      className="pb-8"
+    >
       <div className={cn("pt-12 pb-8 mx-0 bg-dark")}>
         <p className="px-6 text-white">
           The following projects showcase my skills and experience through
@@ -251,11 +245,9 @@ export default function Portfolio({ repositories, projects }: Props) {
               index={i}
               projectId={proj.video_key}
               {...proj}
-              isInView={isInView}
-              // isInView={isElementInView}
-              mousePosition={mousePosition}
+              // Hover on a row drives the shared cursor modal (desktop only).
+              manageModal={canHover ? manageModal : undefined}
               key={i}
-              modalRef={modalRef}
             />
           );
         })}
@@ -320,6 +312,20 @@ export default function Portfolio({ repositories, projects }: Props) {
           </div>
         )}
       </div>
+
+      {/* Cursor-following card + dot + "View" label — pointer devices only, so
+          it never renders on touch screens. Shows the hovered project's poster;
+          the modal slider picks the item by `index` from filteredProjects. */}
+      {canHover && (
+        <CursorModal
+          projects={filteredProjects}
+          active={modal.active}
+          index={modal.index}
+          modalContainer={modalContainer}
+          cursor={cursor}
+          cursorLabel={cursorLabel}
+        />
+      )}
     </section>
   );
 }

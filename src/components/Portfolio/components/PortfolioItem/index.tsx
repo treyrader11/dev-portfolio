@@ -1,62 +1,36 @@
 "use client";
 
-import { cn, slugify, resolveImageSrc } from "@/lib/utils";
+import { cn, slugify } from "@/lib/utils";
 import Link from "next/link";
 import Image from "next/image";
-import { RiArrowRightUpLine } from "react-icons/ri";
 import Tags from "./Tags";
-import { motion } from "framer-motion";
-import { useEffect, useState, type RefObject } from "react";
-import type { MotionValue } from "framer-motion";
-
-interface MousePosition {
-  x: MotionValue<number>;
-  y: MotionValue<number>;
-}
 
 interface Props {
   index: number;
   title: string;
-  category: string;
-  projectId: string;
-  project_image: string;
-  project_video: string;
+  category?: string;
+  projectId?: string;
+  project_image?: string;
+  project_video?: string;
   tech_image: string;
   tags: string[];
-  color: string;
-  mousePosition: MousePosition;
-  isInView: boolean;
-  modalRef: RefObject<HTMLDivElement | null>;
+  color?: string;
+  // Hovering the row drives the shared cursor modal (card + dot + "View"),
+  // provided by the Portfolio only on pointer devices — undefined on touch.
   manageModal?: (isActive: boolean, index: number, x: number, y: number) => void;
 }
 
 export default function PortfolioItem({
+  index,
   title,
-  project_image,
   tech_image,
   tags,
-  mousePosition,
+  manageModal,
 }: Props) {
-  const { x, y } = mousePosition;
-  const [isActive, setIsActive] = useState(false);
-
-  // Only enable the cursor-following preview on devices with a real pointer
-  // (a mouse) — never on iOS / touch screens, which have no hover.
-  const [canHover, setCanHover] = useState(false);
-  useEffect(() => {
-    const mq = window.matchMedia("(hover: hover) and (pointer: fine)");
-    const update = () => setCanHover(mq.matches);
-    update();
-    mq.addEventListener("change", update);
-    return () => mq.removeEventListener("change", update);
-  }, []);
-
-  const showPreview = canHover && isActive && !!project_image;
-
   return (
     <li
-      onMouseEnter={() => setIsActive(true)}
-      onMouseLeave={() => setIsActive(false)}
+      onMouseEnter={(e) => manageModal?.(true, index, e.clientX, e.clientY)}
+      onMouseLeave={(e) => manageModal?.(false, index, e.clientX, e.clientY)}
       className={cn("group", "w-full", "border-b", "py-8", "sm:py-10")}
     >
       <Link
@@ -82,8 +56,8 @@ export default function PortfolioItem({
               "truncate",
               "text-[6vw]",
               "m-0",
-              "transition-all",
-              "duration-[800]",
+              "transition-transform",
+              "duration-500",
               "group-hover:-translate-x-2.5",
               "font-pp-acma",
               "text-slate-700",
@@ -95,8 +69,8 @@ export default function PortfolioItem({
           <div
             className={cn(
               "shrink-0",
-              "transition-all",
-              "duration-[400]",
+              "transition-transform",
+              "duration-500",
               "group-hover:translate-x-2.5",
               "relative",
               "h-[100px]",
@@ -118,39 +92,6 @@ export default function PortfolioItem({
           className={cn("absolute bottom-2 left-16 flex-nowrap max-w-none")}
         />
       </Link>
-
-      {/* Cursor-following poster preview — desktop/mouse only (guarded by
-          canHover), so it never appears on iOS/touch. The outer layer follows
-          the cursor (x/y springs from the parent), the middle centers on it, and
-          the inner fades/scales in without fighting those transforms. */}
-      {showPreview && (
-        <motion.div
-          aria-hidden
-          style={{ x, y }}
-          className="pointer-events-none fixed left-0 top-0 z-50"
-        >
-          <div className="-translate-x-1/2 -translate-y-1/2">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.85 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.25, ease: "easeOut" }}
-              className="relative aspect-video w-72 overflow-hidden rounded-xl shadow-2xl"
-            >
-              <Image
-                src={resolveImageSrc(project_image, "/images")}
-                alt=""
-                fill
-                sizes="288px"
-                className="object-cover"
-              />
-              <span className="absolute inset-x-0 bottom-0 flex items-center justify-center gap-1.5 bg-black/50 py-2 font-pp-acma text-xs font-medium text-white backdrop-blur-sm">
-                View project
-                <RiArrowRightUpLine className="size-3.5" />
-              </span>
-            </motion.div>
-          </div>
-        </motion.div>
-      )}
     </li>
   );
 }
