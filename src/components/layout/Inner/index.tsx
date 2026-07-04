@@ -23,7 +23,7 @@ const Inner = forwardRef<HTMLDivElement, Props>(
       >
         <motion.div
           className={cn(
-            "h-screen",
+            "h-dvh",
             "w-full",
             "fixed",
             "z-[6]",

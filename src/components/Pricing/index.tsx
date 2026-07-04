@@ -247,7 +247,7 @@ const addOnCategories: AddOnCategory[] = [
 
 export default function Pricing() {
   return (
-    <section className={cn("bg-neutral-100", "pb-40", "min-h-screen", "overflow-hidden")}>
+    <section className={cn("bg-neutral-100", "pb-40", "min-h-dvh", "overflow-hidden")}>
       {/* Hero */}
       <motion.div
         className="px-6 pt-16 pb-12 max-w-4xl mx-auto text-center"

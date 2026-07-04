@@ -116,7 +116,7 @@
 //         "flex-col",
 //         "items-center",
 //         "justify-center",
-//         "min-h-screen",
+//         "min-h-dvh",
 //         "snap-start",
 //         "sticky",
 //         "top-0",
@@ -133,7 +133,7 @@
 //         onAnimationComplete={() => setIsAnimating(false)}
 //         style={{ transition: "transform 0.6s", backfaceVisibility: "hidden" }}
 //         className={cn(
-//           "h-screen",
+//           "h-dvh",
 //           // absolute (not fixed): the faces still fill the sticky, 100vh card,
 //           // but avoid iOS Safari's broken rendering of fixed elements nested in
 //           // a `perspective` ancestor (which hid the laptop/shots on iPhone).
@@ -162,7 +162,7 @@
 //         style={{ transition: "transform 0.6s", backfaceVisibility: "hidden" }}
 //         onClick={handleFlip}
 //         className={cn(
-//           "h-screen",
+//           "h-dvh",
 //           // absolute (not fixed): the faces still fill the sticky, 100vh card,
 //           // but avoid iOS Safari's broken rendering of fixed elements nested in
 //           // a `perspective` ancestor (which hid the laptop/shots on iPhone).
@@ -292,7 +292,7 @@ export default function LatestWorkFlipCard({
         "flex-col",
         "items-center",
         "justify-center",
-        "min-h-screen",
+        "min-h-dvh",
         "sticky",
         "top-0",
         className,
@@ -306,7 +306,7 @@ export default function LatestWorkFlipCard({
         onAnimationComplete={() => setIsAnimating(false)}
         style={{ transition: "transform 0.6s", backfaceVisibility: "hidden" }}
         className={cn(
-          "h-screen",
+          "h-dvh",
           "absolute",
           "top-0",
           "w-[120%]",
@@ -335,7 +335,7 @@ export default function LatestWorkFlipCard({
         onAnimationComplete={() => setIsAnimating(false)}
         style={{ transition: "transform 0.6s", backfaceVisibility: "hidden" }}
         className={cn(
-          "h-screen",
+          "h-dvh",
           "absolute",
           "top-0",
           "w-[120%]",

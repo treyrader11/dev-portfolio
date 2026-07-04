@@ -71,7 +71,7 @@ export default function Project({
         "flex-col",
         "items-center",
         "justify-center",
-        "min-h-screen",
+        "min-h-dvh",
         "sticky",
         "top-0",
         "cursor-pointer",
@@ -95,7 +95,7 @@ export default function Project({
         }}
         className={cn(
           // "snap-parent-y-mandatory",
-          "h-screen",
+          "h-dvh",
           "fixed", // need to take ele out of page flow for width to work
           "w-[120%]",
           "-left-[calc(20%_-_10%)]" // 10% === 1/2 of 20%
@@ -117,7 +117,7 @@ export default function Project({
         }}
         onClick={handleFlip}
         className={cn(
-          "h-screen",
+          "h-dvh",
           "flex",
           "items-center",
           "flex-col",

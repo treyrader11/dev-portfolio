@@ -239,7 +239,7 @@ const Home: NextPage<HomeProps> = ({
         path="/"
       />
       <Inner ref={container} backgroundColor="#934E00">
-        <Hero className={cn("min-h-screen bg-dark")} />
+        <Hero className={cn("min-h-dvh bg-dark")} />
         <Description className={cn("bg-white")} />
         <PositionProvider>
           <LatestWork

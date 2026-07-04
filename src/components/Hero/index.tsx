@@ -36,7 +36,7 @@ export default function Hero({ className }: Props) {
     <motion.section
       ref={hero}
       className={cn(
-        "h-screen",
+        "h-dvh",
         "bg-transparent",
         "relative",
         "flex",

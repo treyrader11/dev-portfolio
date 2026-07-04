@@ -87,7 +87,7 @@ export default function Info() {
       className={cn(
         "bg-neutral-100",
         "pb-40",
-        "min-h-screen",
+        "min-h-dvh",
         "text-gray-500",
         "mx-auto",
         "overflow-hidden"
