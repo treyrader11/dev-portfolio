@@ -1,7 +1,12 @@
 // "use client";
 
 import Image from "next/image";
-import { useMotionValueEvent, motion, useScroll, type MotionValue } from "framer-motion";
+import {
+  useMotionValueEvent,
+  motion,
+  useScroll,
+  type MotionValue,
+} from "framer-motion";
 import { useRef, useContext, useState } from "react";
 import { cn, resolveImageSrc, slugify } from "@/lib/utils";
 import Rounded from "@/components/Rounded";
@@ -75,7 +80,7 @@ export default function Project({
         "sticky",
         "top-0",
         "cursor-pointer",
-        className
+        className,
       )}
       onClick={handleFlip}
     >
@@ -98,7 +103,7 @@ export default function Project({
           "h-dvh",
           "fixed", // need to take ele out of page flow for width to work
           "w-[120%]",
-          "-left-[calc(20%_-_10%)]" // 10% === 1/2 of 20%
+          "-left-[calc(20%_-_10%)]", // 10% === 1/2 of 20%
         )}
       />
       {/* Back of card */}
@@ -126,7 +131,7 @@ export default function Project({
           "fixed",
           "inset-x-0",
           "w-[120%]",
-          "-left-[10%]" // 10% === 1/2 of 20%
+          "-left-[10%]", // 10% === 1/2 of 20%
         )}
       >
         <Rounded
@@ -147,7 +152,12 @@ interface ShotProps {
   marginRight?: number;
 }
 
-export function Shot({ src, width = 350, height = 350, marginRight = 30 }: ShotProps) {
+export function Shot({
+  src,
+  width = 350,
+  height = 350,
+  marginRight = 30,
+}: ShotProps) {
   return (
     <div className={cn("w-[200px]")}>
       <div
