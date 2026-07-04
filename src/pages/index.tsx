@@ -22,6 +22,7 @@ import {
   resolveAvatarUrl,
 } from "@/features/profile/lib/get-user-data";
 import SocialMeta from "@/components/SocialMeta";
+import { setLenis, isSnapSuppressed } from "@/lib/smooth-scroll";
 import type { ProjectData } from "@/types/data";
 import type Lenis from "lenis";
 // import References from "@/components/References";
@@ -63,6 +64,10 @@ const Home: NextPage<HomeProps> = ({
 
       const lenis = loco.lenisInstance;
       if (!lenis) return;
+
+      // Expose the Lenis instance so the scroll-to-top FAB scrolls through the
+      // smooth-scroll layer instead of fighting it.
+      setLenis(lenis);
 
       // Positions come from the non-sticky [data-snap-anchor] markers before each
       // card. Measuring the sticky cards directly is wrong: once pinned they all
@@ -199,6 +204,12 @@ const Home: NextPage<HomeProps> = ({
         const scroll = instance.scroll;
         const delta = scroll - lastScrollY;
         lastScrollY = scroll; // update always, even mid-snap
+        // Stand down while the scroll-to-top FAB is running, so we don't re-grab
+        // a card and stop the ascent through the stacked cards.
+        if (isSnapSuppressed()) {
+          accumDelta = 0;
+          return;
+        }
         if (animating) return;
         if (Math.abs(delta) < 1) return;
 
@@ -222,6 +233,7 @@ const Home: NextPage<HomeProps> = ({
 
     return () => {
       cleanup?.();
+      setLenis(null);
       if (locomotiveScrollRef.current) {
         locomotiveScrollRef.current.destroy();
       }

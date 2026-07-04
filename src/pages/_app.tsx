@@ -12,6 +12,7 @@ import Notifications from "@/components/Notifications";
 import { NotificationsProvider } from "@/components/providers/NotificationsProvider";
 import Preloader from "@/components/Preloader";
 import AdminFAB from "@/components/AdminFAB";
+import ScrollTopFAB from "@/components/ScrollTopFAB";
 import ResumeCornerBadge from "@/components/ResumeCornerBadge";
 import NextNProgress from "nextjs-progressbar";
 import { cn } from "@/lib/utils";
@@ -72,6 +73,7 @@ export default function App({
               <Notifications />
             </Layout>
             <AdminFAB />
+            <ScrollTopFAB />
             <ResumeCornerBadge />
           </NavProvider>
         )}
