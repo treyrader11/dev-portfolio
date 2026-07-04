@@ -67,11 +67,11 @@ export default function FooterCurve({
       ref={container}
       // -mt-px overlaps the content above by a hair to close the sub-pixel seam
       // between the content and the curve (both share bgClass, so it's invisible).
-      className={cn(
-        "relative z-[1] -mt-px overflow-x-clip",
-        bgClass,
-        className,
-      )}
+      // No overflow clip here: the dome must overflow this short box downward to
+      // cap the footer. iOS/WebKit mishandles `overflow-x: clip` (it clips the
+      // vertical axis too, hiding the dome), and the parent <main> already has
+      // `overflow-clip` to swallow the dome's horizontal overflow.
+      className={cn("relative z-[1] -mt-px", bgClass, className)}
     >
       <PageCurve height={height} bgClass={bgClass} />
     </div>

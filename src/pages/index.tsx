@@ -135,8 +135,12 @@ const Home: NextPage<HomeProps> = ({
           return;
         }
 
-        // Outside the projects band → leave scrolling alone.
-        if (y < pos[0] - vh * 0.5 || y > pos[lastIdx] + vh * 0.5) {
+        // Outside the projects band → leave scrolling alone. The lower bound is
+        // pinned just past the last card (not half a viewport below it) so the
+        // whole region between the last card and the footer curve is free scroll
+        // — otherwise scrolling up through that gap yanked you back onto the last
+        // card, which read as jumping/glitching near the footer.
+        if (y < pos[0] - vh * 0.5 || y > pos[lastIdx] + 2) {
           currentIndex = -1;
           return;
         }
