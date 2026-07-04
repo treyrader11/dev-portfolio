@@ -44,7 +44,7 @@ const PortfolioProjectPage: NextPage<PortfolioProjectPageProps> = ({
           "sm:mt-10",
           "md:mt-5",
           "px-3",
-          "pt-20"
+          "pt-20",
         )}
         containerClass={cn("h-48 z-50")}
       />

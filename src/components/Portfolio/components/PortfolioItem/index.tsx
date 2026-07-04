@@ -1,9 +1,10 @@
 "use client";
 
-import { cn, slugify } from "@/lib/utils";
+import { cn, slugify, resolveImageSrc } from "@/lib/utils";
 import Link from "next/link";
 import Image from "next/image";
 import Tags from "./Tags";
+import type { ProjectImage } from "@/types/data";
 
 interface Props {
   index: number;
@@ -12,7 +13,8 @@ interface Props {
   projectId?: string;
   project_image?: string;
   project_video?: string;
-  tech_image: string;
+  tech_image?: string;
+  image?: ProjectImage;
   tags: string[];
   color?: string;
   // Hovering the row drives the shared cursor modal (card + dot + "View"),
@@ -23,10 +25,12 @@ interface Props {
 export default function PortfolioItem({
   index,
   title,
-  tech_image,
+  image,
   tags,
   manageModal,
 }: Props) {
+  const logo = image?.icon ? resolveImageSrc(image.icon, "/images") : null;
+
   return (
     <li
       onMouseEnter={(e) => manageModal?.(true, index, e.clientX, e.clientY)}
@@ -36,55 +40,64 @@ export default function PortfolioItem({
       <Link
         href={`/portfolio/${slugify(title)}`}
         aria-label={`View ${title} project`}
-        className={cn("relative", "block")}
+        // NOTE: not the `block` utility — it collides with a global
+        // `.block { width:50px }` decoration class in globals.css, which
+        // collapsed the whole row. flex-col gives a full-width block instead.
+        className={cn("relative", "flex", "flex-col")}
       >
         <div
           className={cn(
-            "md:flex",
+            "flex",
             "items-center",
-            "justify-between",
-            "gap-6",
+            "gap-4",
+            "sm:gap-6",
             "py-10",
             "px-16",
             "md:px-24",
           )}
         >
+          {/* Project logo (from the CMS "Logo" field) shown next to the title. */}
+          {logo && (
+            <div
+              className={cn(
+                "relative",
+                "shrink-0",
+                "size-12",
+                "sm:size-16",
+                "md:size-20",
+                "transition-transform",
+                "duration-500",
+                "group-hover:-translate-x-2.5",
+              )}
+            >
+              <Image
+                src={logo}
+                alt=""
+                fill
+                sizes="80px"
+                className="object-contain"
+              />
+            </div>
+          )}
+
           <h2
             className={cn(
+              // flex-1 + min-w-0 so the title takes the space beside the logo
+              // and truncates instead of collapsing to zero width.
+              "flex-1",
               "min-w-0",
-              "max-w-full",
               "truncate",
               "text-[6vw]",
               "m-0",
               "transition-transform",
               "duration-500",
-              "group-hover:-translate-x-2.5",
+              "group-hover:translate-x-2.5",
               "font-pp-acma",
               "text-slate-700",
             )}
           >
             {title}
           </h2>
-
-          <div
-            className={cn(
-              "shrink-0",
-              "transition-transform",
-              "duration-500",
-              "group-hover:translate-x-2.5",
-              "relative",
-              "h-[100px]",
-              "w-[20vw]",
-            )}
-          >
-            <Image
-              className="object-contain size-full"
-              fill
-              src={tech_image}
-              alt="tech stack logo"
-              sizes="20vw"
-            />
-          </div>
         </div>
 
         <Tags
