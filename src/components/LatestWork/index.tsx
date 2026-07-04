@@ -45,13 +45,13 @@ export default function LatestWork({ className, projects }: Props) {
     target: container,
     offset: ["end end", "end start"],
   });
-  // Tighter [0, 0.2] range so the title starts fading the instant the section
-  // begins exiting, feeling more responsive to the scroll.
-  const titleOpacity = useTransform(exitProgress, [0, 0.2], [1, 0]);
-  const titleY = useTransform(exitProgress, [0, 0.2], [0, -40]);
+  // Very tight [0, 0.06] range so the title snaps out almost the instant the
+  // last project starts scrolling up — a fast fade, not a gradual one.
+  const titleOpacity = useTransform(exitProgress, [0, 0.06], [1, 0]);
+  const titleY = useTransform(exitProgress, [0, 0.06], [0, -40]);
 
-  // Scrollbar dots fade out on the same exit tracker as the title.
-  const scrollbarOpacity = useTransform(exitProgress, [0, 0.3], [1, 0]);
+  // Purple position dots fade out on the same fast range as the title.
+  const scrollbarOpacity = useTransform(exitProgress, [0, 0.06], [1, 0]);
 
   return (
     <motion.section
