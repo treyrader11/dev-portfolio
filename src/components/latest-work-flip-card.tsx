@@ -264,13 +264,18 @@ export default function LatestWorkFlipCard({
   });
 
   useMotionValueEvent(scrollYProgress, "change", (value) => {
-    if (
-      value > 0 &&
-      value < 1 &&
-      setActivePosition &&
-      setActivePositionProgress
-    ) {
-      position?.positionId && setActivePosition(position.positionId);
+    const el = container.current;
+    if (!el || !setActivePosition || !setActivePositionProgress) return;
+    // Claim the active indicator only when THIS card occupies the viewport
+    // center — i.e. it's the snapped/dominant one. This is direction-independent:
+    // the previous logic let whichever card fired its scroll event last win,
+    // which scrolling up was the card exiting at the bottom (progress ~0), so it
+    // overwrote the fill to empty (grey) even though a higher card was snapped.
+    const center = window.innerHeight / 2;
+    const rect = el.getBoundingClientRect();
+    const isActive = rect.top <= center && rect.bottom >= center;
+    if (isActive && position?.positionId) {
+      setActivePosition(position.positionId);
       setActivePositionProgress(value);
     }
   });
