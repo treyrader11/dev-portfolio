@@ -24,6 +24,7 @@ export default function ProjectDetails({ data }: Props) {
     env,
     packages,
     download_links,
+    project_image,
     image,
   } = data[0];
 
@@ -31,11 +32,14 @@ export default function ProjectDetails({ data }: Props) {
   const frontendPkgs = packages?.frontend?.filter(Boolean) ?? [];
   const backendPkgs = packages?.backend?.filter(Boolean) ?? [];
 
-  // The admin can pick one of the project's images to sit inside the Safari
-  // frame; when none is chosen we fall back to autoplaying the project video.
+  // What renders inside the Safari frame: an explicitly picked Safari image wins,
+  // otherwise the project poster. Only when neither exists do we fall back to
+  // autoplaying the project video.
   const safariImage = image?.safari?.length
     ? resolveImageSrc(image.safari)
-    : undefined;
+    : project_image
+      ? resolveImageSrc(project_image)
+      : undefined;
 
   const _links = [
     {
