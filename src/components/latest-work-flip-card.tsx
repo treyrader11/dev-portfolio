@@ -368,7 +368,10 @@ export default function LatestWorkFlipCard({
           "pointer-events-none",
           "absolute",
           "inset-x-0",
-          "bottom-[6vh]",
+          // Sit a bit higher on mobile so the caption clears the bottom edge /
+          // browser chrome; back to the tighter offset on larger screens.
+          "bottom-[14vh]",
+          "sm:bottom-[6vh]",
           "z-20",
           // Block layout (NOT flex): each line's overflow-hidden mask box needs
           // to be full width so the text isn't clipped to a narrow column — the
