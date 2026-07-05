@@ -20,12 +20,8 @@ import {
 import { useFocusExpandContext } from "@/hooks/use-focus-expand";
 import CodeEditor from "@/components/CodeEditor";
 import PackagesCodeBlock from "@/components/CodeBlock/PackagesCodeBlock";
-import {
-  parseEnvKeys,
-  parsePackageDeps,
-  isEnvEmpty,
-  isPackagesEmpty,
-} from "../lib/parse-config";
+import { EnvVarsField } from "./env-vars-field";
+import { parsePackageDeps, isEnvEmpty, isPackagesEmpty } from "../lib/parse-config";
 import { cn, resolveImageSrc, slugify } from "@/lib/utils";
 import { type ProjectItem, emptyProject } from "../types";
 
@@ -423,9 +419,10 @@ export function ProjectDetailPage({ project }: Props) {
             onChange={(v) => setForm({ ...form, technologyFeature: v })}
           />
 
-          {/* Environment — paste a .env to auto-fill the variable names (values
-              are never stored); the list below stays editable. Shown under
-              Environment on the public project page. */}
+          {/* Environment — paste a whole .env into any field and it splits into
+              individual variable names (values are never stored). Most apps only
+              need the general field; Frontend/Backend are for projects with
+              separate apps. Empty fields are hidden on the public page. */}
           <div className="flex flex-col gap-4 rounded-lg border border-dark-600 p-4">
             <div className="flex items-center justify-between">
               <p className="text-sm font-medium text-white">Environment</p>
@@ -435,45 +432,27 @@ export function ProjectDetailPage({ project }: Props) {
               />
             </div>
             <p className="text-xs text-light-400">
-              Paste your .env below — only the variable names are saved, never
-              the values.
+              Paste your .env into any field below — it splits into individual
+              variable names (values are never saved).
             </p>
 
-            <PasteDropzone
-              label="Frontend .env"
-              placeholder={"NEXT_PUBLIC_API_URL=...\nDATABASE_URL=..."}
-              onText={(t) =>
-                setForm((f) => ({
-                  ...f,
-                  env: { ...f.env, frontend: parseEnvKeys(t) },
-                }))
+            <EnvVarsField
+              label="Environment Variables"
+              value={form.env.general ?? []}
+              onChange={(v) =>
+                setForm({ ...form, env: { ...form.env, general: v } })
               }
-              status={`${(form.env.frontend ?? []).filter(Boolean).length} key(s)`}
             />
-            <StringListField
-              label="Frontend keys"
+            <EnvVarsField
+              label="Frontend (optional)"
               value={form.env.frontend ?? []}
-              placeholder="KEY_NAME"
               onChange={(v) =>
                 setForm({ ...form, env: { ...form.env, frontend: v } })
               }
             />
-
-            <PasteDropzone
-              label="Backend .env"
-              placeholder={"DATABASE_URL=...\nJWT_SECRET=..."}
-              onText={(t) =>
-                setForm((f) => ({
-                  ...f,
-                  env: { ...f.env, backend: parseEnvKeys(t) },
-                }))
-              }
-              status={`${(form.env.backend ?? []).filter(Boolean).length} key(s)`}
-            />
-            <StringListField
-              label="Backend keys"
+            <EnvVarsField
+              label="Backend (optional)"
               value={form.env.backend ?? []}
-              placeholder="KEY_NAME"
               onChange={(v) =>
                 setForm({ ...form, env: { ...form.env, backend: v } })
               }
@@ -631,11 +610,20 @@ export function ProjectDetailPage({ project }: Props) {
         title="Environment preview"
         onClose={() => setPreview(null)}
       >
-        {(form.env.frontend ?? []).filter(Boolean).length > 0 && (
+        {(form.env.general ?? []).filter(Boolean).length > 0 && (
           <CodeEditor
-            data={(form.env.frontend ?? []).filter(Boolean)}
+            data={(form.env.general ?? []).filter(Boolean)}
             fileType=".env"
           />
+        )}
+        {(form.env.frontend ?? []).filter(Boolean).length > 0 && (
+          <>
+            <p className="mt-4 text-sm font-medium text-white">Frontend</p>
+            <CodeEditor
+              data={(form.env.frontend ?? []).filter(Boolean)}
+              fileType=".env"
+            />
+          </>
         )}
         {(form.env.backend ?? []).filter(Boolean).length > 0 && (
           <>
@@ -691,82 +679,4 @@ function PreviewButton({
   );
 }
 
-// A casing-preserving list editor: one text input per entry with a remove
-// button, plus an "Add" button. Used for the Environment tech lists (unlike
-// TagInputField, which lowercases and #-prefixes values for tags).
-function StringListField({
-  label,
-  value,
-  placeholder,
-  onChange,
-}: {
-  label: string;
-  value: string[];
-  placeholder?: string;
-  onChange: (value: string[]) => void;
-}) {
-  const items = value.length ? value : [];
-  const focus = useFocusExpandContext();
-  const baseId = useId();
-
-  const setAt = (index: number, next: string) =>
-    onChange(items.map((item, i) => (i === index ? next : item)));
-  const removeAt = (index: number) =>
-    onChange(items.filter((_, i) => i !== index));
-  const add = () => onChange([...items, ""]);
-
-  return (
-    <div className="flex flex-col gap-2">
-      <label className="text-sm font-medium text-white">{label}</label>
-      {items.map((item, i) => {
-        // Each entry participates in the shared focus-expand blur: focusing one
-        // lifts its row above the backdrop while the rest dim.
-        const fid = `${baseId}-${i}`;
-        const focused = focus?.isFocused(fid) ?? false;
-        const dimmed = focus?.isDimmed(fid) ?? false;
-        const fp = focus?.getFocusProps(fid);
-        return (
-          <motion.div
-            key={i}
-            animate={{ scale: focused ? 1.02 : 1 }}
-            transition={{ type: "spring", stiffness: 300, damping: 26 }}
-            className={cn(
-              "flex items-center gap-2",
-              focused && "relative z-50",
-              dimmed && "opacity-50 blur-[2px]",
-            )}
-          >
-            <input
-              value={item}
-              placeholder={placeholder}
-              onChange={(e) => setAt(i, e.target.value)}
-              onFocus={fp?.onFocus}
-              onBlur={fp?.onBlur}
-              className={cn(
-                ADMIN_FIELD_CONTROL,
-                focused && "ring-1 ring-secondary/50",
-              )}
-            />
-            <button
-              type="button"
-              aria-label={`Remove ${label} entry ${i + 1}`}
-              onClick={() => removeAt(i)}
-              className="shrink-0 rounded-lg border border-dark-600 p-2 text-light-400 transition-colors hover:border-red-500/60 hover:text-red-500"
-            >
-              <RiCloseLine className="size-4" />
-            </button>
-          </motion.div>
-        );
-      })}
-      <button
-        type="button"
-        onClick={add}
-        className="inline-flex w-fit items-center gap-1.5 rounded-lg border border-dark-600 px-3 py-1.5 text-sm text-white transition-colors hover:border-secondary/60"
-      >
-        <RiAddLine className="size-4" />
-        Add {label.toLowerCase()}
-      </button>
-    </div>
-  );
-}
 

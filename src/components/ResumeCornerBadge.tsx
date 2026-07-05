@@ -3,14 +3,12 @@
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
-import { useIsMobile } from "@/hooks/useWindowDimensions";
 import ResumeModal from "@/components/ResumeModal";
 
 const HIDDEN_ROUTES = ["/admin"];
 
 export default function ResumeCornerBadge() {
   const router = useRouter();
-  const isMobile = useIsMobile();
   const [mounted, setMounted] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
 
@@ -18,9 +16,10 @@ export default function ResumeCornerBadge() {
 
   const shouldHide = HIDDEN_ROUTES.some((r) => router.pathname.startsWith(r));
 
-  // Mobile screens only, and never on admin pages. When the slideout menu opens
-  // it sits at z-[100] and visually covers this badge (z-[99]).
-  if (shouldHide || !mounted || !isMobile) return null;
+  // Shown on all screen sizes (mobile + desktop), never on admin pages. When the
+  // slideout menu opens it sits at z-[100] and visually covers this badge
+  // (z-[99]).
+  if (shouldHide || !mounted) return null;
 
   return (
     <>

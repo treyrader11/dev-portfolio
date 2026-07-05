@@ -38,6 +38,22 @@ export default function ProjectDetails({ data, allProjects = [] }: Props) {
   const frontendPkgs = packages?.frontend?.filter(Boolean) ?? [];
   const backendPkgs = packages?.backend?.filter(Boolean) ?? [];
 
+  // Env sub-lists rendered in order; each only appears when it has vars. The
+  // general list is unlabeled (it's the default); frontend/backend are labeled.
+  const envSections = [
+    { key: "general", title: null, data: env?.general?.filter(Boolean) ?? [] },
+    {
+      key: "frontend",
+      title: "Frontend",
+      data: env?.frontend?.filter(Boolean) ?? [],
+    },
+    {
+      key: "backend",
+      title: "Backend",
+      data: env?.backend?.filter(Boolean) ?? [],
+    },
+  ].filter((s) => s.data.length > 0);
+
   // What renders inside the Safari frame: an explicitly picked Safari image wins,
   // otherwise the project poster. Only when neither exists do we fall back to
   // autoplaying the project video.
@@ -124,16 +140,13 @@ export default function ProjectDetails({ data, allProjects = [] }: Props) {
           )}
         </Block>
 
-        {/* Environment section is hidden entirely when no env vars are set. */}
+        {/* Environment — each sub-list (general / frontend / backend) shows only
+            when it has vars; the whole section hides when all are empty. */}
         {!isEnvEmpty(env) && (
           <Block title="Environment">
-            <Environment
-              title={env?.backend?.length ? "Frontend" : null}
-              data={env.frontend || []}
-            />
-            {env?.backend?.length ? (
-              <Environment title="Backend" data={env.backend} />
-            ) : null}
+            {envSections.map((s) => (
+              <Environment key={s.key} title={s.title} data={s.data} />
+            ))}
           </Block>
         )}
         <Block title="Source code">

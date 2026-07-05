@@ -17,7 +17,11 @@ export const emptyProject = {
   category: "",
   technologyFeature: [""],
   packages: { frontend: [] as string[], backend: [] as string[] },
-  env: { frontend: [] as string[], backend: [] as string[] },
+  env: {
+    general: [] as string[],
+    frontend: [] as string[],
+    backend: [] as string[],
+  },
   youtubeLink: "",
   githubLink: "",
   downloadLinks: { frontend: "", backend: "", ios: "" },

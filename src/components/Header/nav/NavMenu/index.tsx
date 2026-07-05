@@ -7,7 +7,6 @@ import { cn } from "@/lib/utils";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import LinkDecorator from "@/components/LinkDecorator";
-import ResumeModal from "@/components/ResumeModal";
 
 interface Props {
   handleNavMenu: () => void;
@@ -22,7 +21,6 @@ export default function NavMenu({
 }: Props) {
   const pathname = usePathname();
   const [selectedIndicator, setSelectedIndicator] = useState(pathname);
-  const [isResumeOpen, setIsResumeOpen] = useState(false);
 
   return (
     <nav
@@ -64,30 +62,6 @@ export default function NavMenu({
             return null;
           }
         })}
-        <div
-          className={cn(
-            "group",
-            "flex-col",
-            "relative",
-            "z-[1]",
-            "p-[15px]",
-            "hidden",
-            "sm:flex"
-          )}
-        >
-          <Magnetic>
-            <button
-              type="button"
-              onClick={() => setIsResumeOpen(true)}
-              onMouseEnter={() => setSelectedIndicator("resume")}
-              onMouseLeave={() => setSelectedIndicator(pathname)}
-              className="cursor-pointer bg-transparent"
-            >
-              Resume
-              <LinkDecorator isActive={selectedIndicator == "resume"} />
-            </button>
-          </Magnetic>
-        </div>
       </div>
       <Magnetic>
         <div
@@ -112,10 +86,6 @@ export default function NavMenu({
           <p>Menu</p>
         </div>
       </Magnetic>
-      <ResumeModal
-        isOpen={isResumeOpen}
-        onClose={() => setIsResumeOpen(false)}
-      />
     </nav>
   );
 }

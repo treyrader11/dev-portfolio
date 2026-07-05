@@ -57,12 +57,14 @@ export function parsePackageDeps(text: string): string[] | null {
 // True when a project's env has no keys in either list — used to hide the
 // Environment section entirely on the public page.
 export function isEnvEmpty(env?: {
+  general?: string[];
   frontend?: string[];
   backend?: string[];
 }): boolean {
+  const g = env?.general?.filter(Boolean) ?? [];
   const f = env?.frontend?.filter(Boolean) ?? [];
   const b = env?.backend?.filter(Boolean) ?? [];
-  return f.length === 0 && b.length === 0;
+  return g.length === 0 && f.length === 0 && b.length === 0;
 }
 
 // True when a project's packages have no entries in either list.

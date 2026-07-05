@@ -74,6 +74,8 @@ export interface ProjectPackages {
 }
 
 export interface ProjectEnv {
+  // General/shared env vars — the common case (a Next.js app has one .env).
+  general?: string[];
   frontend?: string[];
   backend?: string[];
 }
