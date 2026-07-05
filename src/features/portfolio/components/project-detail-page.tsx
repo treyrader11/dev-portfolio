@@ -108,18 +108,43 @@ export function ProjectDetailPage({ project }: Props) {
     }
   }
 
-  // Existing tag + technology-feature values, used to suggest as the user types.
+  // Existing tag / technology-feature / stack values, used to suggest as the
+  // user types.
   const [tagOptions, setTagOptions] = useState<Suggestion[]>([]);
   const [featureOptions, setFeatureOptions] = useState<Suggestion[]>([]);
+  const [stackOptions, setStackOptions] = useState<Suggestion[]>([]);
   useEffect(() => {
     fetch("/api/admin/projects/meta")
-      .then((r) => (r.ok ? r.json() : { tags: [], features: [] }))
-      .then((data: { tags: Suggestion[]; features: Suggestion[] }) => {
-        setTagOptions(data.tags ?? []);
-        setFeatureOptions(data.features ?? []);
-      })
+      .then((r) => (r.ok ? r.json() : { tags: [], features: [], stacks: [] }))
+      .then(
+        (data: {
+          tags: Suggestion[];
+          features: Suggestion[];
+          stacks?: Suggestion[];
+        }) => {
+          setTagOptions(data.tags ?? []);
+          setFeatureOptions(data.features ?? []);
+          setStackOptions(data.stacks ?? []);
+        },
+      )
       .catch(() => {});
   }, []);
+
+  // `stack` is stored as one comma-separated string; expose it to the multi-
+  // select as a list and join it back on change. addStack appends a value
+  // (used when picking a tech-stack logo).
+  const stackList = form.stack
+    ? form.stack
+        .split(",")
+        .map((s) => s.trim())
+        .filter(Boolean)
+    : [];
+  const setStackList = (list: string[]) =>
+    setForm((f) => ({ ...f, stack: list.join(", ") }));
+  const addStack = (name: string) => {
+    if (!name || stackList.includes(name)) return;
+    setStackList([...stackList, name]);
+  };
 
   // Dirty-tracking: any change reveals the fixed save bar.
   const snapshot = JSON.stringify(form);
@@ -192,12 +217,19 @@ export function ProjectDetailPage({ project }: Props) {
             label="Tech Stack"
             value={form.techImage}
             onChange={(v) => setForm((f) => ({ ...f, techImage: v }))}
-            onSelectName={(name) => setForm((f) => ({ ...f, stack: name }))}
+            onSelectName={(name) => addStack(name)}
           />
-          <AdminInput
-            label="Stack Text"
-            value={form.stack}
-            onChange={(v) => setForm({ ...form, stack: v })}
+          {/* Stack tech: multi-select over every stack value used across
+              projects, with add-new — same UX as Technology Features. Stored as
+              a comma-separated string (no schema change). */}
+          <CategoryMultiField
+            label="Stack Tech"
+            value={stackList}
+            options={stackOptions}
+            onChange={setStackList}
+            placeholder="Select stack tech"
+            searchPlaceholder="Search stack tech..."
+            emptyText="No stack tech found"
           />
 
           <AdminInput

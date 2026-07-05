@@ -16,6 +16,11 @@ interface Props {
   onChange: (value: string[]) => void;
   options?: Suggestion[];
   inline?: boolean;
+  // Copy overrides so the same component reads naturally for different fields
+  // (e.g. technology features vs. stack tech).
+  placeholder?: string;
+  searchPlaceholder?: string;
+  emptyText?: string;
 }
 
 // Multi-select modeled on roux-ui's CategorySelector UX: a trigger opens a
@@ -28,6 +33,9 @@ export function CategoryMultiField({
   onChange,
   options = [],
   inline = false,
+  placeholder = "Select technology features",
+  searchPlaceholder = "Search features...",
+  emptyText = "No features found",
 }: Props) {
   const selected = value.filter(Boolean);
   const [isOpen, setIsOpen] = useState(false);
@@ -95,9 +103,7 @@ export function CategoryMultiField({
           className="flex w-full items-center justify-between rounded-lg border border-dark-600 px-3 py-2 text-left text-sm transition-colors hover:border-secondary/60"
         >
           <span className={selected.length ? "text-white" : "text-light-400"}>
-            {selected.length
-              ? `${selected.length} selected`
-              : "Select technology features"}
+            {selected.length ? `${selected.length} selected` : placeholder}
           </span>
           <RiArrowDownSLine
             className={cn(
@@ -143,7 +149,7 @@ export function CategoryMultiField({
                       addFromSearch();
                     }
                   }}
-                  placeholder="Search features..."
+                  placeholder={searchPlaceholder}
                   className={cn(
                     "w-full rounded-lg border border-dark-600 bg-dark-400 px-3 py-2 text-sm text-white outline-none placeholder:text-light-400",
                     canAdd && "pr-16",
@@ -183,7 +189,7 @@ export function CategoryMultiField({
                 })
               ) : (
                 <div className="py-6 text-center text-sm text-light-400">
-                  No features found
+                  {emptyText}
                 </div>
               )}
             </div>

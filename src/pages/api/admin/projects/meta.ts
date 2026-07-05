@@ -17,8 +17,18 @@ export default async function handler(
   }
 
   const projects = await prisma.project.findMany({
-    select: { tags: true, technologyFeature: true },
+    select: { tags: true, technologyFeature: true, stack: true },
   });
+
+  // `stack` is stored as a single comma-separated string; split it so each tech
+  // can be suggested individually.
+  const splitStack = (stack: string) =>
+    stack
+      ? stack
+          .split(",")
+          .map((s) => s.trim())
+          .filter(Boolean)
+      : [];
 
   const tally = (lists: string[][]) => {
     const counts = new Map<string, number>();
@@ -36,5 +46,6 @@ export default async function handler(
   return res.status(200).json({
     tags: tally(projects.map((p) => p.tags)),
     features: tally(projects.map((p) => p.technologyFeature)),
+    stacks: tally(projects.map((p) => splitStack(p.stack))),
   });
 }
