@@ -3,6 +3,7 @@ import { cn, slugify, resolveImageSrc } from "@/lib/utils";
 import SocialMeta from "@/components/SocialMeta";
 import ProjectDetails from "@/components/Project/components/ProjectDetails";
 import {
+  getAllProjects,
   getProjectBySlug,
   getProjectSlugs,
 } from "@/features/portfolio/lib/projects";
@@ -12,10 +13,13 @@ import type { ProjectData } from "@/types/data";
 
 interface PortfolioProjectPageProps {
   project: ProjectData[];
+  // All projects, used by the "Similar projects" rail.
+  projects: ProjectData[];
 }
 
 const PortfolioProjectPage: NextPage<PortfolioProjectPageProps> = ({
   project,
+  projects,
 }) => {
   const proj = project[0];
   const poster = resolveImageSrc(proj.project_image || "", "/images");
@@ -48,7 +52,7 @@ const PortfolioProjectPage: NextPage<PortfolioProjectPageProps> = ({
         )}
         containerClass={cn("h-48 z-50")}
       />
-      {project && <ProjectDetails data={project} />}
+      {project && <ProjectDetails data={project} allProjects={projects} />}
     </Inner>
   );
 };
@@ -77,14 +81,17 @@ export const getStaticProps: GetStaticProps<
   PortfolioProjectParams
 > = async ({ params }) => {
   const slug = params?.project;
-  const project = slug ? await getProjectBySlug(slug) : null;
+  const [project, projects] = await Promise.all([
+    slug ? getProjectBySlug(slug) : Promise.resolve(null),
+    getAllProjects(),
+  ]);
 
   if (!project) {
     return { notFound: true, revalidate: 60 };
   }
 
   return {
-    props: { project: [project] },
+    props: { project: [project], projects },
     revalidate: 60,
   };
 };

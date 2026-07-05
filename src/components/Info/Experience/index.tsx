@@ -5,12 +5,23 @@ import {
   VerticalTimelineElement,
 } from "react-vertical-timeline-component";
 import "react-vertical-timeline-component/style.min.css";
-import { experiences } from "@/lib/data";
-import { cn } from "@/lib/utils";
+import { cn, resolveImageSrc } from "@/lib/utils";
 import Image from "next/image";
+import type { StaticImageData } from "next/image";
 import PageTitle from "@/components/PageTitle";
 import NoiseBg from "@/components/NoiseBg";
-import type { Experience as ExperienceType } from "@/types/data";
+
+// One experience row. Accepts a string icon URL (from the CMS/DB) or a bundled
+// StaticImageData (the static fallback), so the same card renders both.
+export interface ExperienceEntry {
+  title: string;
+  company_name: string;
+  icon: string | StaticImageData;
+  iconBg: string;
+  date: string;
+  website_url: string;
+  points: string[];
+}
 
 const imageProps = {
   className: "object-contain size-3/5",
@@ -20,7 +31,7 @@ const imageProps = {
 };
 
 interface ExperienceCardProps {
-  experience: ExperienceType;
+  experience: ExperienceEntry;
 }
 
 function ExperienceCard({ experience }: ExperienceCardProps) {
@@ -36,7 +47,11 @@ function ExperienceCard({ experience }: ExperienceCardProps) {
       icon={
         <div className="flex items-center justify-center size-full">
           <Image
-            src={experience.icon}
+            src={
+              typeof experience.icon === "string"
+                ? resolveImageSrc(experience.icon, "/images")
+                : experience.icon
+            }
             alt={experience.company_name}
             {...imageProps}
           />
@@ -90,11 +105,12 @@ function ExperienceCard({ experience }: ExperienceCardProps) {
 }
 
 interface Props {
+  experiences: ExperienceEntry[];
   className?: string;
   scrollYProgress?: unknown;
 }
 
-export default function Experience({ className }: Props) {
+export default function Experience({ experiences, className }: Props) {
   return (
     <section className={cn("relative isolate py-10 bg-dark", className)}>
       <NoiseBg area="infoHeader" className="-z-10" />

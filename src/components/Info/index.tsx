@@ -2,7 +2,7 @@
 
 import { userData } from "@/lib/data";
 import { cn } from "@/lib/utils";
-import Experience from "./Experience";
+import Experience, { type ExperienceEntry } from "./Experience";
 import Link from "next/link";
 import { useScroll, motion, useTransform } from "framer-motion";
 import { useRef } from "react";
@@ -69,7 +69,11 @@ const services = [
   },
 ];
 
-export default function Info() {
+interface InfoProps {
+  experiences: ExperienceEntry[];
+}
+
+export default function Info({ experiences }: InfoProps) {
   const container = useRef<HTMLElement>(null);
 
   const { scrollYProgress } = useScroll({
@@ -344,7 +348,7 @@ export default function Info() {
         </div>
       </div>
 
-      <Experience scrollYProgress={scrollYProgress} />
+      <Experience experiences={experiences} scrollYProgress={scrollYProgress} />
     </section>
   );
 }

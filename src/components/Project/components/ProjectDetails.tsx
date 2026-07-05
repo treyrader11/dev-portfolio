@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { FaApple } from "react-icons/fa";
 import ProjectVideo from "./ProjectVideo";
 import { cn, resolveImageSrc } from "@/lib/utils";
 import Environment from "./Environment";
@@ -8,15 +7,20 @@ import ProjectLinks from "./ProjectLinks";
 import LinkDecorator from "@/components/LinkDecorator";
 import Block from "@/components/Block";
 import Safari from "./Desktop";
+import Rounded from "@/components/Rounded";
+import AppStoreBanner from "@/components/AppStoreBanner";
+import SimilarProjects from "@/components/SimilarProjects";
 import PackagesCodeBlock from "@/components/CodeBlock/PackagesCodeBlock";
 import { isEnvEmpty, isPackagesEmpty } from "@/features/portfolio/lib/parse-config";
 import type { ProjectData } from "@/types/data";
 
 interface Props {
   data: ProjectData[];
+  // All projects, for the "Similar projects" rail at the bottom.
+  allProjects?: ProjectData[];
 }
 
-export default function ProjectDetails({ data }: Props) {
+export default function ProjectDetails({ data, allProjects = [] }: Props) {
   const {
     video_key,
     desc,
@@ -25,10 +29,12 @@ export default function ProjectDetails({ data }: Props) {
     packages,
     download_links,
     project_image,
+    website_url,
     image,
   } = data[0];
 
   const appStoreUrl = download_links?.ios?.trim();
+  const liveUrl = website_url?.trim();
   const frontendPkgs = packages?.frontend?.filter(Boolean) ?? [];
   const backendPkgs = packages?.backend?.filter(Boolean) ?? [];
 
@@ -64,29 +70,28 @@ export default function ProjectDetails({ data }: Props) {
           className="pt-10 size-4/5"
         />
 
-        {/* Apple App Store download CTA — only when an iOS link is set. */}
-        {appStoreUrl && (
-          <div className="mt-8 flex justify-center sm:justify-start">
-            <Magnetic>
-              <a
-                href={appStoreUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="Download on the App Store"
+        {/* App Store banner (with the project's app icon) + a live-demo button.
+            Each only renders when its link is set. */}
+        {(appStoreUrl || liveUrl) && (
+          <div className="mt-8 flex flex-col items-center gap-6 sm:items-start">
+            <AppStoreBanner project={data[0]} className="w-full max-w-md" />
+            {liveUrl && (
+              <Rounded
+                backgroundColor="#934e00"
+                text="See it live"
+                onClick={() =>
+                  window.open(liveUrl, "_blank", "noopener,noreferrer")
+                }
                 className={cn(
-                  "inline-flex items-center gap-3 rounded-xl bg-black px-6 py-3",
-                  "text-white transition-transform hover:scale-[1.03]",
+                  "border-secondary",
+                  "rounded-full",
+                  "w-fit",
+                  "py-6",
+                  "text-black",
+                  "cursor-pointer",
                 )}
-              >
-                <FaApple className="size-8" />
-                <span className="flex flex-col leading-none">
-                  <span className="text-[10px] font-light">
-                    Download on the
-                  </span>
-                  <span className="text-xl font-semibold">App Store</span>
-                </span>
-              </a>
-            </Magnetic>
+              />
+            )}
           </div>
         )}
 
@@ -134,6 +139,14 @@ export default function ProjectDetails({ data }: Props) {
         <Block title="Source code">
           <ProjectLinks links={_links} />
         </Block>
+
+        {allProjects.length > 1 && (
+          <SimilarProjects
+            currentProject={data[0]}
+            projects={allProjects}
+            className="mt-16"
+          />
+        )}
       </div>
       <SeeAll />
     </section>
