@@ -78,6 +78,24 @@ export interface ProjectEnv {
   backend?: string[];
 }
 
+// ---- Appearance (background noise) config -------------------------------
+// Which devices a noise background is enabled on, and whether an area shows the
+// black-noise grain or stays solid black. One entry per configurable area.
+export interface AreaAppearance {
+  bg: "solid" | "noise";
+  devices: { mobile: boolean; desktop: boolean };
+}
+
+export type AppearanceArea =
+  | "hero"
+  | "footer"
+  | "portfolioHeader"
+  | "infoHeader"
+  | "pricingHeader"
+  | "contactHeader";
+
+export type Appearance = Record<AppearanceArea, AreaAppearance>;
+
 export interface ProjectDownloadLinks {
   frontend?: string;
   backend?: string;

@@ -218,9 +218,21 @@ const Search = forwardRef<HTMLInputElement, Props>(function Search(
           </div>
         </motion.div>
 
-        {/* Detached gooey bubble that holds the icon while expanded */}
+        {/* Detached gooey bubble that holds the icon. It's clickable in both
+            states so the icon toggles the search: open when collapsed, close
+            when expanded. */}
         <motion.div
-          className="absolute inset-y-0 left-0 flex w-12 items-center justify-center pointer-events-none"
+          onClick={onClick}
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              onClick();
+            }
+          }}
+          aria-label={isFocused ? "Close search" : "Open search"}
+          className="absolute inset-y-0 left-0 flex w-12 cursor-pointer items-center justify-center"
           variants={iconBubbleVariants}
           initial="collapsed"
           animate={isFocused ? "expanded" : "collapsed"}

@@ -9,6 +9,7 @@ import { experiences } from "@/lib/data";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import PageTitle from "@/components/PageTitle";
+import NoiseBg from "@/components/NoiseBg";
 import type { Experience as ExperienceType } from "@/types/data";
 
 const imageProps = {
@@ -95,7 +96,8 @@ interface Props {
 
 export default function Experience({ className }: Props) {
   return (
-    <section className={cn("py-10 bg-dark", className)}>
+    <section className={cn("relative isolate py-10 bg-dark", className)}>
+      <NoiseBg area="infoHeader" className="-z-10" />
       <PageTitle
         once
         className={cn(

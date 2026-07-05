@@ -4,6 +4,7 @@ import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import Rounded from "@/components/Rounded";
+import NoiseBg from "@/components/NoiseBg";
 import {
   RiCheckLine,
   RiStarFill,
@@ -470,7 +471,8 @@ export default function Pricing() {
         className="px-4 max-w-3xl mx-auto mt-28 text-center"
         {...fadeUp}
       >
-        <div className="bg-dark rounded-2xl p-10 md:p-14">
+        <div className="relative isolate overflow-hidden bg-dark rounded-2xl p-10 md:p-14">
+          <NoiseBg area="pricingHeader" className="-z-10" />
           <RiTimerLine className="text-3xl text-secondary mx-auto mb-4" />
           <h2 className="text-2xl md:text-3xl font-pp-acma text-white mb-3">
             Not sure which tier fits?

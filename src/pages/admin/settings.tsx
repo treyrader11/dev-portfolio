@@ -7,9 +7,26 @@ import {
   metaDescriptions as fallbackMeta,
   ctaTexts as fallbackCta,
   tagColors as fallbackTagColors,
+  portfolioIntro as fallbackPortfolioIntro,
+  appearance as fallbackAppearance,
 } from "@/lib/data";
 import type { GetServerSideProps } from "next";
-import type { MetaDescriptions, CtaTexts, TagColors } from "@/types/data";
+import type {
+  MetaDescriptions,
+  CtaTexts,
+  TagColors,
+  Appearance,
+  AppearanceArea,
+} from "@/types/data";
+
+const APPEARANCE_AREAS: { key: AppearanceArea; label: string }[] = [
+  { key: "hero", label: "Hero Background" },
+  { key: "footer", label: "Footer Background" },
+  { key: "portfolioHeader", label: "Portfolio Header" },
+  { key: "infoHeader", label: "Info Header" },
+  { key: "pricingHeader", label: "Pricing Header" },
+  { key: "contactHeader", label: "Contact Header" },
+];
 
 interface JiraCredentials {
   domain: string;
@@ -22,6 +39,8 @@ interface Props {
   ctaTexts: CtaTexts;
   tagColors: TagColors;
   jiraCredentials: JiraCredentials;
+  portfolioIntro: string;
+  appearance: Appearance;
 }
 
 export default function AdminSettings({
@@ -29,11 +48,29 @@ export default function AdminSettings({
   ctaTexts: initialCta,
   tagColors: initialTags,
   jiraCredentials: initialJira,
+  portfolioIntro: initialIntro,
+  appearance: initialAppearance,
 }: Props) {
   const [meta, setMeta] = useState(initialMeta);
   const [cta, setCta] = useState(initialCta);
   const [tagColors, setTagColors] = useState(initialTags);
   const [jira, setJira] = useState(initialJira);
+  const [portfolioIntro, setPortfolioIntro] = useState(initialIntro);
+  const [appearance, setAppearance] = useState(initialAppearance);
+
+  function setAreaBg(area: AppearanceArea, bg: "solid" | "noise") {
+    setAppearance((a) => ({ ...a, [area]: { ...a[area], bg } }));
+  }
+  function setAreaDevice(
+    area: AppearanceArea,
+    device: "mobile" | "desktop",
+    on: boolean,
+  ) {
+    setAppearance((a) => ({
+      ...a,
+      [area]: { ...a[area], devices: { ...a[area].devices, [device]: on } },
+    }));
+  }
   const [jiraTestResult, setJiraTestResult] = useState("");
   const [saving, setSaving] = useState("");
   const [message, setMessage] = useState("");
@@ -83,6 +120,104 @@ export default function AdminSettings({
             className="mt-4 px-4 py-2 bg-dark-600 text-white text-sm font-medium rounded-lg hover:bg-dark-600 disabled:opacity-50"
           >
             {saving === "metaDescriptions" ? "Saving..." : "Save Meta"}
+          </button>
+        </div>
+
+        {/* Portfolio Intro */}
+        <div className="bg-dark-400 rounded-lg border border-dark-600 p-6">
+          <h2 className="text-lg font-semibold text-white mb-1">
+            Portfolio Intro
+          </h2>
+          <p className="text-sm text-light-400 mb-4">
+            The paragraph shown at the top of the public /portfolio page.
+          </p>
+          <textarea
+            value={portfolioIntro}
+            onChange={(e) => setPortfolioIntro(e.target.value)}
+            rows={4}
+            className="w-full px-3 py-2 border border-dark-600 rounded-lg text-sm"
+          />
+          <button
+            onClick={() => saveConfig("portfolioIntro", portfolioIntro)}
+            disabled={saving === "portfolioIntro"}
+            className="mt-4 px-4 py-2 bg-dark-600 text-white text-sm font-medium rounded-lg hover:bg-dark-600 disabled:opacity-50"
+          >
+            {saving === "portfolioIntro" ? "Saving..." : "Save Intro"}
+          </button>
+        </div>
+
+        {/* Backgrounds — solid black vs animated black-noise grain, per area and
+            per device (mobile/desktop). */}
+        <div className="bg-dark-400 rounded-lg border border-dark-600 p-6">
+          <h2 className="text-lg font-semibold text-white mb-1">Backgrounds</h2>
+          <p className="text-sm text-light-400 mb-4">
+            Choose solid black or the animated black-noise grain for each area,
+            and which devices it shows on.
+          </p>
+          <div className="space-y-5">
+            {APPEARANCE_AREAS.map(({ key, label }) => {
+              const cfg = appearance[key];
+              return (
+                <div
+                  key={key}
+                  className="border-b border-dark-600 pb-4 last:border-b-0 last:pb-0"
+                >
+                  <p className="text-sm font-medium text-white mb-2">{label}</p>
+                  <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
+                    <label className="flex items-center gap-2 text-sm text-white">
+                      <input
+                        type="radio"
+                        name={`bg-${key}`}
+                        checked={cfg.bg === "solid"}
+                        onChange={() => setAreaBg(key, "solid")}
+                        className="accent-secondary"
+                      />
+                      Solid black
+                    </label>
+                    <label className="flex items-center gap-2 text-sm text-white">
+                      <input
+                        type="radio"
+                        name={`bg-${key}`}
+                        checked={cfg.bg === "noise"}
+                        onChange={() => setAreaBg(key, "noise")}
+                        className="accent-secondary"
+                      />
+                      Black noise
+                    </label>
+                    <span className="ml-2 text-xs text-light-400">Show on:</span>
+                    <label className="flex items-center gap-2 text-sm text-white">
+                      <input
+                        type="checkbox"
+                        checked={cfg.devices.mobile}
+                        onChange={(e) =>
+                          setAreaDevice(key, "mobile", e.target.checked)
+                        }
+                        className="size-4 accent-success"
+                      />
+                      Mobile
+                    </label>
+                    <label className="flex items-center gap-2 text-sm text-white">
+                      <input
+                        type="checkbox"
+                        checked={cfg.devices.desktop}
+                        onChange={(e) =>
+                          setAreaDevice(key, "desktop", e.target.checked)
+                        }
+                        className="size-4 accent-success"
+                      />
+                      Desktop
+                    </label>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+          <button
+            onClick={() => saveConfig("appearance", appearance)}
+            disabled={saving === "appearance"}
+            className="mt-4 px-4 py-2 bg-dark-600 text-white text-sm font-medium rounded-lg hover:bg-dark-600 disabled:opacity-50"
+          >
+            {saving === "appearance" ? "Saving..." : "Save Backgrounds"}
           </button>
         </div>
 
@@ -294,11 +429,20 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     return { redirect: { destination: "/admin/signin", permanent: false } };
   }
 
-  const [metaConfig, ctaConfig, tagConfig, jiraConfig] = await Promise.all([
+  const [
+    metaConfig,
+    ctaConfig,
+    tagConfig,
+    jiraConfig,
+    introConfig,
+    appearanceConfig,
+  ] = await Promise.all([
     prisma.siteConfig.findUnique({ where: { key: "metaDescriptions" } }),
     prisma.siteConfig.findUnique({ where: { key: "ctaTexts" } }),
     prisma.siteConfig.findUnique({ where: { key: "tagColors" } }),
     prisma.siteConfig.findUnique({ where: { key: "jiraCredentials" } }),
+    prisma.siteConfig.findUnique({ where: { key: "portfolioIntro" } }),
+    prisma.siteConfig.findUnique({ where: { key: "appearance" } }),
   ]);
 
   return {
@@ -315,6 +459,16 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       jiraCredentials: jiraConfig
         ? (jiraConfig.value as unknown as JiraCredentials)
         : { domain: "", email: "", apiToken: "" },
+      portfolioIntro:
+        typeof introConfig?.value === "string"
+          ? introConfig.value
+          : fallbackPortfolioIntro,
+      appearance: appearanceConfig?.value
+        ? {
+            ...fallbackAppearance,
+            ...(appearanceConfig.value as unknown as Partial<Appearance>),
+          }
+        : fallbackAppearance,
     },
   };
 };

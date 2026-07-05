@@ -27,6 +27,7 @@ import type {
   CtaTexts,
   TagColors,
   Reference,
+  Appearance,
 } from "@/types/data";
 
 // ============================================
@@ -844,6 +845,32 @@ export const metaDescriptions: MetaDescriptions = {
   contact:
     "Get in touch with Trey Rader for React Native development, mobile app architecture consulting, or collaboration opportunities.",
 };
+
+// Default background appearance per area. Mirrors the current site: hero and
+// footer show the grain on desktop only; the public black page headers are
+// solid until turned on. Editable in the admin Settings page (SiteConfig key
+// "appearance").
+const noiseOnDesktop = {
+  bg: "noise" as const,
+  devices: { mobile: false, desktop: true },
+};
+const solidDefault = {
+  bg: "solid" as const,
+  devices: { mobile: false, desktop: true },
+};
+export const appearance: Appearance = {
+  hero: noiseOnDesktop,
+  footer: noiseOnDesktop,
+  portfolioHeader: solidDefault,
+  infoHeader: solidDefault,
+  pricingHeader: solidDefault,
+  contactHeader: solidDefault,
+};
+
+// Intro paragraph shown at the top of the public /portfolio page. Editable in
+// the admin Settings page (SiteConfig key "portfolioIntro").
+export const portfolioIntro =
+  "The following projects showcase my skills and experience through real-world examples of my work. Each project is briefly described with links to code repositories and live demos in it. It reflects my ability to solve complex problems, work with different technologies, and manage projects effectively.";
 
 export const ctaTexts: CtaTexts = {
   viewResume: "View My Resume",

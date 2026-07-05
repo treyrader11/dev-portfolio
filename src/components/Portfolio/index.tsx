@@ -1,6 +1,7 @@
 "use client";
 
 import { cn, getUnique } from "@/lib/utils";
+import NoiseBg from "@/components/NoiseBg";
 import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import PortfolioItem from "./components/PortfolioItem";
@@ -24,9 +25,10 @@ interface Repository {
 interface Props {
   repositories: Repository[];
   projects: ProjectData[];
+  intro: string;
 }
 
-export default function Portfolio({ repositories, projects }: Props) {
+export default function Portfolio({ repositories, projects, intro }: Props) {
   const [latestRepos, setLatestRepos] = useState(repositories);
   const [activeCategory, setActiveCategory] = useState("All");
   const [searchText, setSearchText] = useState("");
@@ -177,14 +179,11 @@ export default function Portfolio({ repositories, projects }: Props) {
       }}
       className="pb-8"
     >
-      <div className={cn("pt-12 pb-8 mx-0 bg-dark")}>
-        <p className="px-6 text-white">
-          The following projects showcase my skills and experience through
-          real-world examples of my work. Each project is briefly described with
-          links to code repositories and live demos in it. It reflects my
-          ability to solve complex problems, work with different technologies,
-          and manage projects effectively.
-        </p>
+      <div
+        className={cn("relative overflow-hidden pt-12 pb-8 mx-0 bg-dark")}
+      >
+        <NoiseBg area="portfolioHeader" className="z-0" />
+        <p className="relative z-10 px-6 text-white">{intro}</p>
       </div>
 
       {/* Sentinel: when it scrolls out of view the bar below is stuck to top */}

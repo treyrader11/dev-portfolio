@@ -18,6 +18,7 @@ import ContactForm from "./components/ContactForm";
 import { FaPhone } from "react-icons/fa6";
 import { IoMdMail } from "react-icons/io";
 import { MdPushPin } from "react-icons/md";
+import NoiseBg from "@/components/NoiseBg";
 
 const { phone, email, address } = userData;
 const phoneDigits = phone.replace(/\D/g, "");
@@ -52,7 +53,8 @@ export default function Contact() {
   const height = useTransform(scrollYProgress, [0, 0.9], [50, 0]);
 
   return (
-    <section ref={container} className="bg-dark">
+    <section ref={container} className="relative isolate bg-dark">
+      <NoiseBg area="contactHeader" className="-z-10" />
       <BlurredIn
         once
         className={cn(

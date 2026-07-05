@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 import { slideUp } from "./anim";
 import Image from "next/image";
 import BlurredIn from "../BlurredIn";
-import FuzzyOverlay from "./FuzzyOverlay";
+import NoiseBg from "@/components/NoiseBg";
 import { userData } from "@/lib/data";
 
 // const phrase =
@@ -47,8 +47,9 @@ export default function Hero({ className }: Props) {
       )}
     >
       {/* Full-bleed grain sitting behind everything (z-0); content is lifted to
-          z-10 so the overlay never covers it. */}
-      <FuzzyOverlay className="z-0" />
+          z-10 so the overlay never covers it. Shown per the CMS appearance
+          config for the hero area + device. */}
+      <NoiseBg area="hero" className="z-0" />
 
       <div
         className={cn(

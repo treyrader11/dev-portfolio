@@ -1,30 +1,18 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
-import { useIsMobile } from "@/hooks/useWindowDimensions";
 
 interface Props {
   className?: string;
 }
 
-// A lo-fi, TV-static "fuzzy" grain that jitters continuously. It's meant to be a
-// full-bleed background layer: oversized (-inset-[100%]) so the tiled noise
-// always covers the parent, which must be `relative overflow-hidden` so only the
-// covered area shows. The animation is transform-only (GPU-composited, no
-// layout/paint) and the layer is pointer-events-none + aria-hidden, so it never
-// blocks or overlaps content and adds no measurable latency.
+// A lo-fi, TV-static "fuzzy" grain that jitters continuously. Pure presentation:
+// oversized (-inset-[100%]) so the tiled noise always covers its parent, which
+// must be `relative overflow-hidden`. Transform-only (GPU-composited) and
+// pointer-events-none + aria-hidden, so it never blocks or overlaps content.
+// Gating (which areas/devices show it) lives in NoiseBg.
 export default function FuzzyOverlay({ className }: Props) {
-  const isMobile = useIsMobile();
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => setMounted(true), []);
-
-  // Desktop only: never mount on mobile so the perpetual grain animation doesn't
-  // run on phones. Rendering nothing until mounted keeps it hydration-safe (the
-  // server and first client render both produce nothing).
-  if (!mounted || isMobile) return null;
-
   return (
     <motion.div
       aria-hidden

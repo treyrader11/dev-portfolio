@@ -8,6 +8,8 @@ import {
   metaDescriptions as fallbackMeta,
   ctaTexts as fallbackCta,
   tagColors as fallbackTagColors,
+  portfolioIntro as fallbackPortfolioIntro,
+  appearance as fallbackAppearance,
 } from "@/lib/data";
 import type {
   UserData,
@@ -16,6 +18,7 @@ import type {
   MetaDescriptions,
   CtaTexts,
   TagColors,
+  Appearance,
 } from "@/types/data";
 
 export async function getUserData(): Promise<UserData> {
@@ -124,6 +127,35 @@ export async function getReferences() {
     console.error("Failed to fetch references from DB:", e);
   }
   return fallbackReferences;
+}
+
+export async function getAppearance(): Promise<Appearance> {
+  try {
+    const config = await prisma.siteConfig.findUnique({
+      where: { key: "appearance" },
+    });
+    if (config?.value) {
+      // Merge saved values over defaults so any area not yet configured still
+      // has a valid entry.
+      const saved = config.value as unknown as Partial<Appearance>;
+      return { ...fallbackAppearance, ...saved };
+    }
+  } catch (e) {
+    console.error("Failed to fetch appearance from DB:", e);
+  }
+  return fallbackAppearance;
+}
+
+export async function getPortfolioIntro(): Promise<string> {
+  try {
+    const config = await prisma.siteConfig.findUnique({
+      where: { key: "portfolioIntro" },
+    });
+    if (typeof config?.value === "string") return config.value;
+  } catch (e) {
+    console.error("Failed to fetch portfolioIntro from DB:", e);
+  }
+  return fallbackPortfolioIntro;
 }
 
 export async function getMetaDescriptions(): Promise<MetaDescriptions> {

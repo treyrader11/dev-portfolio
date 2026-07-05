@@ -8,6 +8,7 @@ import { AnimatePresence } from "framer-motion";
 import { SessionProvider } from "next-auth/react";
 import Layout from "@/components/Layout";
 import { NavProvider } from "@/components/providers/NavProvider";
+import { AppearanceProvider } from "@/components/providers/AppearanceProvider";
 import Notifications from "@/components/Notifications";
 import { NotificationsProvider } from "@/components/providers/NotificationsProvider";
 import Preloader from "@/components/Preloader";
@@ -56,25 +57,27 @@ export default function App({
           </div>
         ) : (
           <NavProvider>
-            {/* Site-wide share card default: profile photo + name + what I do.
-                Individual pages (e.g. a project) override this via SocialMeta. */}
-            <SocialMeta
-              title="Trey Rader's Portfolio"
-              description="Senior mobile architect specializing in React Native. Transforming complex challenges into elegant, performant solutions."
-              image="/images/portraits/headshot.png"
-              card="summary"
-              path={router.asPath.split("?")[0]}
-            />
-            <AnimatePresence mode="wait">
-              <Preloader />
-            </AnimatePresence>
-            <Layout route={router.route}>
-              <Component {...pageProps} router={router} />
-              <Notifications />
-            </Layout>
-            <AdminFAB />
-            <ScrollTopFAB />
-            <ResumeCornerBadge />
+            <AppearanceProvider>
+              {/* Site-wide share card default: profile photo + name + what I do.
+                  Individual pages (e.g. a project) override this via SocialMeta. */}
+              <SocialMeta
+                title="Trey Rader's Portfolio"
+                description="Senior mobile architect specializing in React Native. Transforming complex challenges into elegant, performant solutions."
+                image="/images/portraits/headshot.png"
+                card="summary"
+                path={router.asPath.split("?")[0]}
+              />
+              <AnimatePresence mode="wait">
+                <Preloader />
+              </AnimatePresence>
+              <Layout route={router.route}>
+                <Component {...pageProps} router={router} />
+                <Notifications />
+              </Layout>
+              <AdminFAB />
+              <ScrollTopFAB />
+              <ResumeCornerBadge />
+            </AppearanceProvider>
           </NavProvider>
         )}
       </NotificationsProvider>

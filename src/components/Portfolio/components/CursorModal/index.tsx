@@ -41,7 +41,7 @@ export default function CursorModal({
         initial="initial"
         animate={state}
         className={cn(
-          "pointer-events-none fixed left-1/2 top-1/2 z-[3]",
+          "pointer-events-none fixed left-1/2 top-1/2 z-50",
           "h-[300px] w-[380px] overflow-hidden rounded-lg bg-white shadow-2xl",
         )}
       >
@@ -79,7 +79,7 @@ export default function CursorModal({
         initial="initial"
         animate={state}
         className={cn(
-          "pointer-events-none fixed z-[3] flex size-20 items-center",
+          "pointer-events-none fixed z-50 flex size-20 items-center",
           "justify-center rounded-full bg-secondary",
         )}
       />
@@ -91,7 +91,7 @@ export default function CursorModal({
         initial="initial"
         animate={state}
         className={cn(
-          "pointer-events-none fixed z-[3] flex size-20 items-center",
+          "pointer-events-none fixed z-50 flex size-20 items-center",
           "justify-center rounded-full bg-transparent text-sm font-light",
           "text-white",
         )}
