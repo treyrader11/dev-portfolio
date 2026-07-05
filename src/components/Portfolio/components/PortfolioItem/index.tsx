@@ -25,85 +25,121 @@ interface Props {
 export default function PortfolioItem({
   index,
   title,
+  category,
   image,
   tags,
   manageModal,
 }: Props) {
   const logo = image?.icon ? resolveImageSrc(image.icon, "/images") : null;
+  const hasTags = tags.filter(Boolean).length > 0;
 
   return (
+    // Editorial list row: hover still drives the shared cursor modal. Padding is
+    // inset so the divider below never reaches the screen edges.
     <li
       onMouseEnter={(e) => manageModal?.(true, index, e.clientX, e.clientY)}
       onMouseLeave={(e) => manageModal?.(false, index, e.clientX, e.clientY)}
-      className={cn("group", "w-full", "border-b", "py-8", "sm:py-10")}
+      className={cn(
+        "group",
+        "relative",
+        "w-full",
+        "px-8",
+        "md:px-16",
+        "lg:px-24",
+      )}
     >
+      {/* Project logo — a tiny circle in the top-left corner, at the inset edge.
+          pointer-events-none so the whole row stays clickable via the Link. */}
+      {logo && (
+        <div
+          className={cn(
+            "pointer-events-none",
+            "absolute",
+            "z-[1]",
+            "top-8",
+            "md:top-12",
+            "left-8",
+            "md:left-16",
+            "lg:left-24",
+            "size-8",
+            "overflow-hidden",
+            "rounded-full",
+            "border",
+            "border-gray-200",
+            "bg-white",
+          )}
+        >
+          <Image
+            src={logo}
+            alt={title}
+            width={32}
+            height={32}
+            className="size-full object-contain"
+          />
+        </div>
+      )}
+
       <Link
         href={`/portfolio/${slugify(title)}`}
         aria-label={`View ${title} project`}
         // NOTE: not the `block` utility — it collides with a global
-        // `.block { width:50px }` decoration class in globals.css, which
-        // collapsed the whole row. flex-col gives a full-width block instead.
-        className={cn("relative", "flex", "flex-col")}
+        // `.block { width:50px }` decoration in globals.css. flex-col gives a
+        // full-width block instead.
+        className={cn(
+          "relative",
+          "flex",
+          "flex-col",
+          "border-b",
+          "border-gray-200",
+          "py-8",
+          "md:py-12",
+        )}
       >
-        <div
-          className={cn(
-            "flex",
-            "items-center",
-            "gap-4",
-            "sm:gap-6",
-            "py-10",
-            "px-16",
-            "md:px-24",
-          )}
-        >
-          {/* Project logo (from the CMS "Logo" field) shown next to the title. */}
-          {logo && (
-            <div
-              className={cn(
-                "relative",
-                "shrink-0",
-                "size-12",
-                "sm:size-16",
-                "md:size-20",
-                "transition-transform",
-                "duration-500",
-                "group-hover:-translate-x-2.5",
-              )}
-            >
-              <Image
-                src={logo}
-                alt=""
-                fill
-                sizes="80px"
-                className="object-contain"
-              />
-            </div>
-          )}
-
+        {/* Title large on the left, category right-aligned on the same baseline.
+            pl-12 clears the logo circle. */}
+        <div className={cn("flex", "items-end", "justify-between", "gap-4", "pl-12")}>
           <h2
             className={cn(
-              // flex-1 + min-w-0 so the title takes the space beside the logo
-              // and truncates instead of collapsing to zero width.
-              "flex-1",
+              "m-0",
               "min-w-0",
               "truncate",
-              "text-[6vw]",
-              "m-0",
-              "transition-transform",
-              "duration-500",
-              "group-hover:translate-x-2.5",
-              "font-pp-acma",
-              "text-slate-700",
+              "text-4xl",
+              "md:text-6xl",
+              "font-light",
+              "text-dark",
             )}
           >
             {title}
           </h2>
+          {category && (
+            <span
+              className={cn(
+                "shrink-0",
+                "whitespace-nowrap",
+                "pb-2",
+                "text-sm",
+                "text-gray-400",
+              )}
+            >
+              {category}
+            </span>
+          )}
         </div>
 
-        <Tags
-          data={tags}
-          className={cn("absolute bottom-2 left-16 flex-nowrap max-w-none")}
-        />
+        {/* Tags flush against the bottom divider (bottom-2 = breathes above it). */}
+        {hasTags && (
+          <Tags
+            data={tags}
+            className={cn(
+              "absolute",
+              "bottom-2",
+              "left-12",
+              "gap-2",
+              "flex-nowrap",
+              "max-w-none",
+            )}
+          />
+        )}
       </Link>
     </li>
   );
