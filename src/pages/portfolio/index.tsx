@@ -2,33 +2,16 @@ import type { NextPage, GetStaticProps } from "next";
 import Inner from "@/components/layout/Inner";
 import PageTitle from "@/components/PageTitle";
 import Portfolio from "@/components/Portfolio";
-import { userData } from "@/lib/data";
-import { getLatestRepos } from "@/lib/getLatestRepos";
 import { getAllProjects } from "@/features/portfolio/lib/projects";
 import { getPortfolioIntro } from "@/lib/db/content";
+import { getUserData } from "@/features/profile/lib/get-user-data";
+import { getManagedRepos } from "@/features/github/lib/github";
 import { cn } from "@/lib/utils";
 import type { ProjectData } from "@/types/data";
-
-interface GitHubRepo {
-  id: number;
-  name: string;
-  full_name: string;
-  html_url: string;
-  clone_url: string;
-  description: string | null;
-  fork: boolean;
-  url: string;
-  created_at: string;
-  updated_at: string;
-  pushed_at: string;
-  stargazers_count: number;
-  watchers_count: number;
-  language: string | null;
-  forks_count: number;
-}
+import type { GithubRepoSummary } from "@/features/github/types";
 
 interface PortfolioPageProps {
-  repositories: GitHubRepo[];
+  repositories: GithubRepoSummary[];
   projects: ProjectData[];
   intro: string;
 }
@@ -57,8 +40,9 @@ export default PortfolioPage;
 // and revalidated periodically so admin CMS edits surface without a rebuild.
 export const getStaticProps: GetStaticProps<PortfolioPageProps> = async () => {
   const token = process.env.GITHUB_AUTH_TOKEN;
+  const { githubUsername } = await getUserData();
   const [repositories, projects, intro] = await Promise.all([
-    getLatestRepos(userData, token).then((r) => r ?? []),
+    getManagedRepos(githubUsername, token),
     getAllProjects(),
     getPortfolioIntro(),
   ]);

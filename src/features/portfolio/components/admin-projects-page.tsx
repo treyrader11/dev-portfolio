@@ -8,6 +8,8 @@ import {
   RiImageLine,
   RiImageFill,
   RiCloseLine,
+  RiGithubFill,
+  RiArrowRightLine,
 } from "react-icons/ri";
 import { HiOutlinePencilSquare } from "react-icons/hi2";
 import AdminLayout from "@/features/admin/components/admin-layout";
@@ -175,6 +177,26 @@ export function AdminProjectsPage({ projects: initial }: Props) {
           section, shown in this order; the image icon adds its poster to the
           home &ldquo;Sliding Images&rdquo; strip.
         </p>
+
+        {/* GitHub repositories management */}
+        <Link
+          href="/admin/repos"
+          className="mb-8 flex items-center justify-between gap-3 rounded-lg border border-dark-600 bg-dark-400 p-4 transition-colors hover:border-secondary/60"
+        >
+          <div className="flex items-center gap-3">
+            <RiGithubFill className="size-6 text-white" />
+            <div>
+              <p className="text-sm font-medium text-white">
+                GitHub Repositories
+              </p>
+              <p className="text-xs text-light-400">
+                Reorder, exclude, and set how many fetched repos show on the
+                portfolio.
+              </p>
+            </div>
+          </div>
+          <RiArrowRightLine className="size-5 text-light-400" />
+        </Link>
 
         {sliderItems.length > 0 && (
           <div className="mb-8 rounded-lg border border-dark-600 bg-dark-400/40 p-4">

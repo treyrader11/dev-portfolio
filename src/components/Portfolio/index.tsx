@@ -15,12 +15,9 @@ import { useIsMobile } from "@/hooks/useWindowDimensions";
 import LatestRepo from "./components/LatestRepo";
 import PageTitle from "../PageTitle";
 import type { ProjectData } from "@/types/data";
+import type { GithubRepoSummary } from "@/features/github/types";
 
-interface Repository {
-  name: string;
-  description: string | null;
-  clone_url: string;
-}
+type Repository = GithubRepoSummary;
 
 interface Props {
   repositories: Repository[];
