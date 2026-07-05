@@ -8,7 +8,7 @@ import {
   ctaTexts as fallbackCta,
   tagColors as fallbackTagColors,
   portfolioIntro as fallbackPortfolioIntro,
-  appearance as fallbackAppearance,
+  normalizeAppearance,
 } from "@/lib/data";
 import type { GetServerSideProps } from "next";
 import type {
@@ -463,12 +463,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         typeof introConfig?.value === "string"
           ? introConfig.value
           : fallbackPortfolioIntro,
-      appearance: appearanceConfig?.value
-        ? {
-            ...fallbackAppearance,
-            ...(appearanceConfig.value as unknown as Partial<Appearance>),
-          }
-        : fallbackAppearance,
+      appearance: normalizeAppearance(appearanceConfig?.value),
     },
   };
 };

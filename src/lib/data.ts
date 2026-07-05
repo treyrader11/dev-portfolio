@@ -867,6 +867,42 @@ export const appearance: Appearance = {
   contactHeader: solidDefault,
 };
 
+// Coerce any stored/unknown appearance value into a complete, valid Appearance:
+// every area gets a bg ("solid"|"noise") and both device flags, falling back to
+// the defaults per field. Guards against a partial or malformed saved config
+// (e.g. an area missing `devices`) crashing the Settings page or NoiseBg.
+export function normalizeAppearance(value: unknown): Appearance {
+  const src =
+    value && typeof value === "object"
+      ? (value as Record<string, unknown>)
+      : {};
+  const out = {} as Appearance;
+  for (const key of Object.keys(appearance) as (keyof Appearance)[]) {
+    const def = appearance[key];
+    const raw = src[key];
+    const area =
+      raw && typeof raw === "object" ? (raw as Record<string, unknown>) : {};
+    const devices =
+      area.devices && typeof area.devices === "object"
+        ? (area.devices as Record<string, unknown>)
+        : {};
+    out[key] = {
+      bg: area.bg === "noise" || area.bg === "solid" ? area.bg : def.bg,
+      devices: {
+        mobile:
+          typeof devices.mobile === "boolean"
+            ? devices.mobile
+            : def.devices.mobile,
+        desktop:
+          typeof devices.desktop === "boolean"
+            ? devices.desktop
+            : def.devices.desktop,
+      },
+    };
+  }
+  return out;
+}
+
 // Intro paragraph shown at the top of the public /portfolio page. Editable in
 // the admin Settings page (SiteConfig key "portfolioIntro").
 export const portfolioIntro =

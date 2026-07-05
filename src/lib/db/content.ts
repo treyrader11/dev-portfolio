@@ -10,6 +10,7 @@ import {
   tagColors as fallbackTagColors,
   portfolioIntro as fallbackPortfolioIntro,
   appearance as fallbackAppearance,
+  normalizeAppearance,
 } from "@/lib/data";
 import type {
   UserData,
@@ -135,10 +136,9 @@ export async function getAppearance(): Promise<Appearance> {
       where: { key: "appearance" },
     });
     if (config?.value) {
-      // Merge saved values over defaults so any area not yet configured still
-      // has a valid entry.
-      const saved = config.value as unknown as Partial<Appearance>;
-      return { ...fallbackAppearance, ...saved };
+      // Normalize so every area has a valid bg + device flags, even if the saved
+      // value is partial/malformed.
+      return normalizeAppearance(config.value);
     }
   } catch (e) {
     console.error("Failed to fetch appearance from DB:", e);
