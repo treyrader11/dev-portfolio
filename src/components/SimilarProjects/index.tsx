@@ -84,8 +84,9 @@ export default function SimilarProjects({
         Similar projects
       </h3>
 
-      {/* Horizontal, snap-scrolling rail. */}
-      <div className="mt-4 flex gap-4 overflow-x-auto scroll-smooth px-6 pb-4 [scrollbar-width:none] sm:px-0 [&::-webkit-scrollbar]:hidden">
+      {/* Responsive grid so every card is fully visible and wraps to a new row
+          on smaller screens (no horizontal clipping). */}
+      <div className="mt-4 grid grid-cols-1 gap-4 px-6 sm:grid-cols-2 sm:px-0 lg:grid-cols-3">
         {ordered.map((project) => {
           const slug = slugify(project.title);
           return (
@@ -93,7 +94,7 @@ export default function SimilarProjects({
               key={slug}
               href={`/portfolio/${slug}`}
               scroll
-              className="group w-64 shrink-0 snap-start sm:w-72"
+              className="group"
             >
               <div className="relative aspect-video w-full overflow-hidden rounded-xl bg-black/5 shadow-sm">
                 <Image
