@@ -19,7 +19,9 @@ const BurgerMenu = forwardRef<HTMLDivElement, Props>(
           "transform",
           "scale-0",
           "right-0",
-          "z-[101]",
+          // Above the nav overlay (2147483645) so the burger stays clickable to
+          // close the menu while it's open.
+          "z-[2147483646]",
           "after:top-[-5px]",
           "before:top-[5px]",
           // Sits just below the resume corner badge (fixed top-0, h-20 = 80px):

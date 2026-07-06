@@ -29,7 +29,10 @@ export default function Document(): React.ReactElement {
             position: "fixed",
             bottom: 0,
             left: 0,
-            zIndex: 2147483647,
+            // Just below the public nav overlay (2147483645) and burger
+            // (2147483646) so the open nav menu overlaps the FABs. Both live in
+            // the same root stacking context, so plain z-index ordering wins.
+            zIndex: 2147483644,
             pointerEvents: "none",
           }}
         />

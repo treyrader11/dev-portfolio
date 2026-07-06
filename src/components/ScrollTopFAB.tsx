@@ -6,18 +6,20 @@ import ScrollTrigger from "gsap/dist/ScrollTrigger";
 import { RiArrowUpLine } from "react-icons/ri";
 import useIsomorphicLayoutEffect from "@/hooks/useIsomorphicLayoutEffect";
 import { scrollToTop } from "@/lib/smooth-scroll";
-import { useNav } from "@/components/providers/NavProvider";
 
 // Same routes the AdminFAB hides on, so the pair stays consistent.
 const HIDDEN_ROUTES = ["/admin", "/contact"];
 
+// Off-screen offset (px) it slides in from — comfortably clears the 52px button
+// at right: 28.
+const HIDDEN_X = 120;
+
 // A floating "scroll to top" button mirrored to the bottom-right, horizontally
-// aligned with the AdminFAB (bottom: 28). It scales in exactly like the burger
-// menu — same scroll position (one viewport of scroll), easing, and scale — and
-// scrolls fast to the top on click.
+// aligned with the AdminFAB (bottom: 28). It slides in from the right once a
+// full viewport has scrolled (and back out on the way up), and scrolls fast to
+// the top on click. The open public nav overlaps it (higher z-index).
 export default function ScrollTopFAB() {
   const router = useRouter();
-  const { isNavOpen } = useNav();
   const [hovered, setHovered] = useState(false);
   const [mounted, setMounted] = useState(false);
   const portalRef = useRef<HTMLElement | null>(null);
@@ -30,31 +32,27 @@ export default function ScrollTopFAB() {
 
   const shouldHide = HIDDEN_ROUTES.some((r) => router.pathname.startsWith(r));
 
-  // Reveal on scroll, identical to the burger: hidden (scale 0) until a full
-  // viewport has scrolled, then springs to scale 1; reverses on the way back up.
+  // Slide in from the right: hidden (translated off-screen) until a full
+  // viewport has scrolled, then slides to rest; reverses on the way back up.
   useIsomorphicLayoutEffect(() => {
     if (shouldHide || !button.current) return;
     gsap.registerPlugin(ScrollTrigger);
 
     // gsap owns the transform (not React) so hover re-renders can't reset the
-    // scroll-driven scale. Start hidden.
-    gsap.set(button.current, { scale: 0 });
+    // scroll-driven position. Start hidden off the right edge.
+    gsap.set(button.current, { x: HIDDEN_X });
 
     const trigger = ScrollTrigger.create({
       trigger: document.documentElement,
       start: 0,
       end: window.innerHeight,
       onLeave: () =>
-        gsap.to(button.current, {
-          scale: 1,
-          duration: 0.25,
-          ease: "power1.out",
-        }),
+        gsap.to(button.current, { x: 0, duration: 0.4, ease: "power3.out" }),
       onEnterBack: () =>
         gsap.to(button.current, {
-          scale: 0,
-          duration: 0.25,
-          ease: "power1.out",
+          x: HIDDEN_X,
+          duration: 0.4,
+          ease: "power3.out",
         }),
     });
 
@@ -76,12 +74,7 @@ export default function ScrollTopFAB() {
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        // Hide beneath the open nav overlay (the FAB portal stacks above nav).
-        // gsap owns `transform`; only opacity transitions so the scale is
-        // untouched.
-        pointerEvents: isNavOpen ? "none" : "auto",
-        opacity: isNavOpen ? 0 : 1,
-        transition: "opacity 200ms ease-out",
+        pointerEvents: "auto",
         bottom: 28,
         right: 28,
         width: 52,

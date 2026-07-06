@@ -31,7 +31,9 @@ export default function Nav({ onClose }: NavProps) {
         "fixed",
         "inset-x-0",
         "text-white",
-        "z-[100]",
+        // Above the FAB portal (2147483644) so the open menu overlaps the admin
+        // and scroll-to-top FABs; the burger (2147483646) still sits above this.
+        "z-[2147483645]",
         "md:left-[calc(100vw-414px)]"
       )}
     >

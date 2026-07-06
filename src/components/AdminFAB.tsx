@@ -2,9 +2,14 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useState, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
-import { useNav } from "@/components/providers/NavProvider";
+import gsap from "gsap";
+import ScrollTrigger from "gsap/dist/ScrollTrigger";
+import useIsomorphicLayoutEffect from "@/hooks/useIsomorphicLayoutEffect";
 
 const HIDDEN_ROUTES = ["/admin", "/contact"];
+
+// Off-screen offset (px) it slides in from — clears the 52px button at left: 28.
+const HIDDEN_X = 120;
 
 function AdminIcon() {
   return (
@@ -32,10 +37,10 @@ function AdminIcon() {
 
 export default function AdminFAB() {
   const router = useRouter();
-  const { isNavOpen } = useNav();
   const [hovered, setHovered] = useState(false);
   const [mounted, setMounted] = useState(false);
   const portalRef = useRef<HTMLElement | null>(null);
+  const button = useRef<HTMLAnchorElement>(null);
 
   useEffect(() => {
     portalRef.current = document.getElementById("fab-portal");
@@ -46,10 +51,37 @@ export default function AdminFAB() {
     router.pathname.startsWith(r)
   );
 
+  // Slide in from the left once a full viewport has scrolled (mirrors the
+  // scroll-to-top FAB sliding in from the right); reverses on the way back up.
+  // gsap owns the transform so hover re-renders can't reset it.
+  useIsomorphicLayoutEffect(() => {
+    if (shouldHide || !button.current) return;
+    gsap.registerPlugin(ScrollTrigger);
+
+    gsap.set(button.current, { x: -HIDDEN_X });
+
+    const trigger = ScrollTrigger.create({
+      trigger: document.documentElement,
+      start: 0,
+      end: window.innerHeight,
+      onLeave: () =>
+        gsap.to(button.current, { x: 0, duration: 0.4, ease: "power3.out" }),
+      onEnterBack: () =>
+        gsap.to(button.current, {
+          x: -HIDDEN_X,
+          duration: 0.4,
+          ease: "power3.out",
+        }),
+    });
+
+    return () => trigger.kill();
+  }, [shouldHide, mounted]);
+
   if (shouldHide || !mounted || !portalRef.current) return null;
 
   return createPortal(
     <Link
+      ref={button}
       href="/admin"
       aria-label="Admin dashboard"
       onMouseEnter={() => setHovered(true)}
@@ -60,10 +92,7 @@ export default function AdminFAB() {
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        // Hide beneath the open nav overlay — the FAB portal sits above the nav
-        // in the stacking order, so we drop it out of the way while nav is open.
-        pointerEvents: isNavOpen ? "none" : "auto",
-        opacity: isNavOpen ? 0 : 1,
+        pointerEvents: "auto",
         bottom: 28,
         left: 28,
         width: 52,
@@ -76,8 +105,9 @@ export default function AdminFAB() {
           : "1px solid rgba(255,255,255,0.08)",
         backdropFilter: "blur(12px)",
         WebkitBackdropFilter: "blur(12px)",
-        transition: "all 300ms ease-out",
-        transform: hovered ? "scale(1.08)" : "scale(1)",
+        // Only transition the hover visuals — gsap drives `transform` (x) and a
+        // CSS transition on it would fight the scroll animation.
+        transition: "border-color 300ms ease-out, box-shadow 300ms ease-out",
         boxShadow: hovered
           ? "0 0 20px rgba(192,132,252,0.15)"
           : "none",
