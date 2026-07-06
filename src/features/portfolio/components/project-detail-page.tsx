@@ -21,6 +21,10 @@ import { useFocusExpandContext } from "@/hooks/use-focus-expand";
 import CodeEditor from "@/components/CodeEditor";
 import PackagesCodeBlock from "@/components/CodeBlock/PackagesCodeBlock";
 import { EnvVarsField } from "./env-vars-field";
+import {
+  PackageAiAnalyzer,
+  type PackageAnalysis,
+} from "./package-ai-analyzer";
 import { parsePackageDeps, isEnvEmpty, isPackagesEmpty } from "../lib/parse-config";
 import { cn, resolveImageSrc, slugify } from "@/lib/utils";
 import { type ProjectItem, emptyProject } from "../types";
@@ -102,6 +106,38 @@ export function ProjectDetailPage({ project }: Props) {
     } else {
       setPkgError((e) => ({ ...e, [side]: true }));
     }
+  }
+
+  // Apply an AI package.json analysis: fill Filter Category, merge Tags and
+  // Technology Features (never wiping manual entries), and set the parsed
+  // frontend packages. All values stay editable afterwards.
+  function applyAnalysis(result: PackageAnalysis) {
+    const mergeUnique = (existing: string[], incoming: string[]) => {
+      const seen = new Set(existing.map((s) => s.toLowerCase()));
+      const merged = [...existing];
+      for (const item of incoming) {
+        if (item && !seen.has(item.toLowerCase())) {
+          seen.add(item.toLowerCase());
+          merged.push(item);
+        }
+      }
+      return merged;
+    };
+    setForm((f) => ({
+      ...f,
+      category: result.filterCategory || f.category,
+      tags: mergeUnique(f.tags.filter(Boolean), result.tags),
+      technologyFeature: mergeUnique(
+        f.technologyFeature.filter(Boolean),
+        result.technologyFeatures,
+      ),
+      packages: {
+        ...f.packages,
+        frontend: result.packages.length
+          ? result.packages
+          : f.packages.frontend,
+      },
+    }));
   }
 
   // Existing tag / technology-feature / stack values, used to suggest as the
@@ -188,8 +224,14 @@ export function ProjectDetailPage({ project }: Props) {
             value={form.title}
             onChange={(v) => setForm({ ...form, title: v })}
           />
+
+          {/* Optional AI shortcut: paste a package.json to auto-fill the Filter
+              Category, Tags, Technology Features and Packages below. The manual
+              inputs stay fully editable — this is just a head start. */}
+          <PackageAiAnalyzer onResult={applyAnalysis} />
+
           <AdminInput
-            label="Category"
+            label="Filter Category"
             required
             value={form.category}
             onChange={(v) => setForm({ ...form, category: v })}
@@ -522,6 +564,17 @@ export function ProjectDetailPage({ project }: Props) {
                 setForm({
                   ...form,
                   downloadLinks: { ...form.downloadLinks, backend: v },
+                })
+              }
+            />
+            <AdminInput
+              label="Source Code"
+              placeholder="Single mono-repo or combined codebase URL"
+              value={form.downloadLinks.source ?? ""}
+              onChange={(v) =>
+                setForm({
+                  ...form,
+                  downloadLinks: { ...form.downloadLinks, source: v },
                 })
               }
             />

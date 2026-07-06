@@ -101,6 +101,9 @@ export type Appearance = Record<AppearanceArea, AreaAppearance>;
 export interface ProjectDownloadLinks {
   frontend?: string;
   backend?: string;
+  // A single source-code URL — a mono-repo or combined frontend/backend zip,
+  // for projects that don't split into separate frontend/backend repos.
+  source?: string;
   // Apple App Store URL. When present, the public project page shows a black
   // "Download on the App Store" CTA.
   ios?: string;

@@ -24,7 +24,7 @@ export const emptyProject = {
   },
   youtubeLink: "",
   githubLink: "",
-  downloadLinks: { frontend: "", backend: "", ios: "" },
+  downloadLinks: { frontend: "", backend: "", source: "", ios: "" },
   projectImage: "",
   projectVideo: "",
   image: {

@@ -81,7 +81,15 @@ export default function ProjectDetails({ data, allProjects = [] }: Props) {
       label: "Backend",
       hidden: !download_links?.backend?.length,
     },
+    {
+      // Single mono-repo / combined codebase link.
+      href: download_links?.source,
+      label: "Source Code",
+      hidden: !download_links?.source?.length,
+    },
   ];
+  // Only render the Source code block when at least one link is set; ProjectLinks
+  // itself skips any individual link without an href.
   const hasSourceCode = _links.some((l) => !l.hidden);
 
   return (
