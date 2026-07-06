@@ -1,6 +1,4 @@
 import Link from "next/link";
-import { RiStarLine, RiGitForkLine } from "react-icons/ri";
-import { cn } from "@/lib/utils";
 
 interface Props {
   name: string;
@@ -10,7 +8,7 @@ interface Props {
   forks_count?: number;
 }
 
-// A repo card on /portfolio. The whole card links to the repo's own detail page.
+// A compact repo card. The whole card links to the repo's own detail page.
 export default function LatestRepo({
   name,
   description,
@@ -19,41 +17,26 @@ export default function LatestRepo({
   forks_count,
 }: Props) {
   return (
-    <Link href={`/portfolio/repo/${name}`} scroll className="github-repo group block">
-      <h1
-        className={cn(
-          "text-xl font-semibold text-gray-700 transition-colors group-hover:text-secondary",
-        )}
-      >
-        {name}
-      </h1>
-      <p className="my-4 text-base font-normal text-gray-500">{description}</p>
-      <div className="flex flex-wrap items-center gap-4 text-sm text-gray-500">
+    <Link
+      href={`/portfolio/repo/${name}`}
+      scroll
+      className="group flex flex-col gap-2 rounded-lg border border-gray-200 p-4 transition-colors hover:border-gray-400"
+    >
+      <h3 className="truncate text-sm font-medium text-dark">{name}</h3>
+      <p className="line-clamp-3 flex-1 text-xs text-gray-500">{description}</p>
+      <div className="mt-auto flex items-center gap-3 text-xs text-gray-400">
         {language && (
-          <span className="inline-flex items-center gap-1.5">
-            <span className="inline-block size-2.5 rounded-full bg-secondary" />
+          <span className="flex items-center gap-1">
+            <span className="inline-block size-2 rounded-full bg-secondary" />
             {language}
           </span>
         )}
-        {typeof stargazers_count === "number" && (
-          <span className="inline-flex items-center gap-1">
-            <RiStarLine className="size-4" />
-            {stargazers_count}
-          </span>
-        )}
-        {typeof forks_count === "number" && (
-          <span className="inline-flex items-center gap-1">
-            <RiGitForkLine className="size-4" />
-            {forks_count}
-          </span>
-        )}
-        <span className="ml-auto inline-flex items-center gap-1 font-semibold text-gray-700">
-          View details
-          <span className="transition duration-300 group-hover:translate-x-1">
-            &rarr;
-          </span>
-        </span>
+        {typeof stargazers_count === "number" && <span>☆ {stargazers_count}</span>}
+        {typeof forks_count === "number" && <span>⑂ {forks_count}</span>}
       </div>
+      <span className="mt-1 text-xs text-secondary group-hover:underline">
+        View details →
+      </span>
     </Link>
   );
 }

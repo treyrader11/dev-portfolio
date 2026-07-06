@@ -276,21 +276,14 @@ export default function Portfolio({ repositories, projects, intro }: Props) {
           <div
             ref={reposRef}
             className={cn(
+              "w-full",
+              "overflow-hidden",
               "pt-52",
               "scroll-mt-28",
-              "grid",
-              "max-w-6xl",
-              "grid-cols-1",
-              "gap-8",
-              "px-10",
-              "mx-auto",
-              "md:grid-cols-2",
-              "lg:grid-cols-3",
               "lg:-mt-10",
-              "gap-y-20",
             )}
           >
-            <div className="relative flex flex-col justify-center gap-y-6 md:col-span-2 lg:col-span-3">
+            <div className="relative mx-auto flex max-w-6xl flex-col justify-center gap-y-6 px-8">
               <PageTitle
                 once
                 backgroundColor="transparent"
@@ -301,10 +294,12 @@ export default function Portfolio({ repositories, projects, intro }: Props) {
               <p>A few smaller projects fetched from github</p>
             </div>
 
-            {/* Single github Repo */}
-            {filteredRepos.map((repo) => (
-              <LatestRepo {...repo} key={repo.name} />
-            ))}
+            {/* Repo cards */}
+            <div className="mx-auto mt-10 grid max-w-6xl grid-cols-1 gap-6 px-8 sm:grid-cols-2 lg:grid-cols-3">
+              {filteredRepos.map((repo) => (
+                <LatestRepo {...repo} key={repo.name} />
+              ))}
+            </div>
           </div>
         )}
       </div>
