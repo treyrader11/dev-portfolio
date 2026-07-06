@@ -1,6 +1,8 @@
-import { useState, type DragEvent } from "react";
+import { useId, useState, type DragEvent } from "react";
+import { motion } from "framer-motion";
 import { RiClipboardLine } from "react-icons/ri";
 import { cn } from "@/lib/utils";
+import { useFocusExpandContext } from "@/hooks/use-focus-expand";
 
 interface Props {
   label: string;
@@ -17,7 +19,9 @@ interface Props {
 
 // A paste-or-drop target for config files. Paste directly into the textarea, or
 // drag a file (.env, package.json) onto it — either way the raw text is handed
-// to onText for deterministic parsing. Kept dumb/reusable across features.
+// to onText for deterministic parsing. Participates in the admin focus-expand
+// system so, when focused, it lifts above the blur backdrop and stays fully
+// interactive (otherwise the backdrop sits over it and it reads as disabled).
 export function PasteDropzone({
   label,
   placeholder,
@@ -28,6 +32,12 @@ export function PasteDropzone({
 }: Props) {
   const [value, setValue] = useState("");
   const [dragOver, setDragOver] = useState(false);
+
+  const id = useId();
+  const focus = useFocusExpandContext();
+  const focused = focus?.isFocused(id) ?? false;
+  const dimmed = focus?.isDimmed(id) ?? false;
+  const fp = focus?.getFocusProps(id);
 
   function emit(text: string) {
     setValue(text);
@@ -47,7 +57,15 @@ export function PasteDropzone({
   }
 
   return (
-    <div className="flex flex-col gap-1">
+    <motion.div
+      animate={{ scale: focused ? 1.01 : 1 }}
+      transition={{ type: "spring", stiffness: 300, damping: 26 }}
+      className={cn(
+        "flex flex-col gap-1",
+        focused && "relative z-50",
+        dimmed && "opacity-50 blur-[2px]",
+      )}
+    >
       <label className="text-sm font-medium text-white">{label}</label>
       <div
         onDragOver={(e) => {
@@ -58,7 +76,7 @@ export function PasteDropzone({
         onDrop={handleDrop}
         className={cn(
           "rounded-lg border border-dashed transition-colors",
-          dragOver ? "border-secondary bg-dark-600" : "border-dark-600",
+          dragOver || focused ? "border-secondary bg-dark-600" : "border-dark-600",
         )}
       >
         <div className="flex items-center gap-1.5 px-3 pt-2 text-xs text-light-400">
@@ -69,6 +87,8 @@ export function PasteDropzone({
           value={value}
           placeholder={placeholder}
           onChange={(e) => emit(e.target.value)}
+          onFocus={fp?.onFocus}
+          onBlur={fp?.onBlur}
           rows={4}
           spellCheck={false}
           className="w-full resize-y bg-transparent px-3 pb-3 pt-1 font-mono text-xs text-white outline-none placeholder:text-light-400"
@@ -79,6 +99,6 @@ export function PasteDropzone({
           {status ?? hint}
         </p>
       )}
-    </div>
+    </motion.div>
   );
 }
