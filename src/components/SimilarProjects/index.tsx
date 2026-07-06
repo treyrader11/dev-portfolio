@@ -80,13 +80,13 @@ export default function SimilarProjects({
 
   return (
     <section className={cn("w-full", className)}>
-      <h3 className="px-6 text-2xl font-bold text-dark sm:px-0">
+      <h3 className="px-6 text-2xl font-bold text-dark sm:px-8 md:px-16">
         Similar projects
       </h3>
 
-      {/* Responsive grid so every card is fully visible and wraps to a new row
-          on smaller screens (no horizontal clipping). */}
-      <div className="mt-4 grid grid-cols-1 gap-4 px-6 sm:grid-cols-2 sm:px-0 lg:grid-cols-3">
+      {/* Full-width horizontal carousel — spans the whole screen, a single
+          scrollable row, cards never wrap. Scrollbar hidden. */}
+      <div className="mt-4 flex w-full gap-6 overflow-x-auto scroll-smooth px-6 pb-4 sm:px-8 md:px-16 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         {ordered.map((project) => {
           const slug = slugify(project.title);
           return (
@@ -94,7 +94,7 @@ export default function SimilarProjects({
               key={slug}
               href={`/portfolio/${slug}`}
               scroll
-              className="group"
+              className="group w-[300px] flex-shrink-0 sm:w-[360px]"
             >
               <div className="relative aspect-video w-full overflow-hidden rounded-xl bg-black/5 shadow-sm">
                 <Image

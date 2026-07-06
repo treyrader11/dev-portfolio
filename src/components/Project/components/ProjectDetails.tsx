@@ -152,15 +152,17 @@ export default function ProjectDetails({ data, allProjects = [] }: Props) {
         <Block title="Source code">
           <ProjectLinks links={_links} />
         </Block>
-
-        {allProjects.length > 1 && (
-          <SimilarProjects
-            currentProject={data[0]}
-            projects={allProjects}
-            className="mt-16"
-          />
-        )}
       </div>
+
+      {/* Full-width — rendered outside the constrained content column so the
+          carousel spans the whole screen. */}
+      {allProjects.length > 1 && (
+        <SimilarProjects
+          currentProject={data[0]}
+          projects={allProjects}
+          className="mt-16"
+        />
+      )}
       <SeeAll />
     </section>
   );
