@@ -59,13 +59,14 @@ export default function LatestWork({ className, projects }: Props) {
   const titleOpacity = useTransform(exitProgress, [0, 0.06], [1, 0]);
   const titleY = useTransform(exitProgress, [0, 0.06], [0, -40]);
 
-  // Purple position dots: fade IN as the first project scrolls into view, and
-  // fade OUT on the same fast exit range as the title. On mobile the fade-in
-  // waits noticeably longer (later scroll range) than on desktop.
+  // Purple position dots: fade IN only once the first project reaches the middle
+  // of the screen (firstProjectProgress ~1 = its top at viewport center), and
+  // fade OUT on the same fast exit range as the title. Mobile waits a touch
+  // longer than desktop.
   const isMobile = useIsMobile();
   const dotsFadeIn = useTransform(
     firstProjectProgress,
-    isMobile ? [0.55, 0.9] : [0, 0.35],
+    isMobile ? [0.7, 0.98] : [0.55, 0.85],
     [0, 1],
   );
   const dotsFadeOut = useTransform(exitProgress, [0, 0.06], [1, 0]);
