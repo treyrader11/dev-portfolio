@@ -17,6 +17,7 @@ interface Props {
 
 export default function LatestWork({ className, projects }: Props) {
   const container = useRef<HTMLElement>(null);
+  const firstProjectRef = useRef<HTMLDivElement>(null);
   const lastProjectRef = useRef<HTMLDivElement>(null);
 
   const projectPositions = useMemo(
@@ -28,6 +29,13 @@ export default function LatestWork({ className, projects }: Props) {
   const { scrollYProgress: lastProjectProgress } = useScroll({
     target: hasProjects ? lastProjectRef : container,
     offset: ["start end", "start start"],
+  });
+
+  // Tracks the first project entering the viewport (0 when its top is at the
+  // bottom of the screen, 1 when it reaches the middle) — drives the dot fade-in.
+  const { scrollYProgress: firstProjectProgress } = useScroll({
+    target: hasProjects ? firstProjectRef : container,
+    offset: ["start end", "start center"],
   });
 
   const { scrollYProgress: sectionProgress } = useScroll({
@@ -50,8 +58,14 @@ export default function LatestWork({ className, projects }: Props) {
   const titleOpacity = useTransform(exitProgress, [0, 0.06], [1, 0]);
   const titleY = useTransform(exitProgress, [0, 0.06], [0, -40]);
 
-  // Purple position dots fade out on the same fast range as the title.
-  const scrollbarOpacity = useTransform(exitProgress, [0, 0.06], [1, 0]);
+  // Purple position dots: fade IN as soon as the first project scrolls into view,
+  // and fade OUT on the same fast exit range as the title.
+  const dotsFadeIn = useTransform(firstProjectProgress, [0, 0.35], [0, 1]);
+  const dotsFadeOut = useTransform(exitProgress, [0, 0.06], [1, 0]);
+  const scrollbarOpacity = useTransform(
+    [dotsFadeIn, dotsFadeOut],
+    ([i, o]: number[]) => Math.min(i, o),
+  );
 
   return (
     <motion.section
@@ -97,14 +111,18 @@ export default function LatestWork({ className, projects }: Props) {
         <ScrollDownIndicator />
       </motion.div>
 
-      <motion.div style={{ opacity: scrollbarOpacity }}>
-        <Scrollbar positions={projectPositions} />
-      </motion.div>
+      {/* Fixed, centered, non-scrolling — opacity drives its fade in/out. */}
+      <Scrollbar positions={projectPositions} opacity={scrollbarOpacity} />
 
       {projects.map((project, i) => {
+        const isFirst = i === 0;
         const isLast = i === projects.length - 1;
         return (
           <React.Fragment key={i}>
+            {isFirst && (
+              // Sentinel marking the first project's entry, for the dot fade-in.
+              <div ref={firstProjectRef} aria-hidden className="relative h-0" />
+            )}
             {isLast && (
               <div
                 ref={lastProjectRef}
