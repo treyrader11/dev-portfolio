@@ -27,7 +27,7 @@ function MainLayout({ children, route }: LayoutProps) {
   const curveBgByRoute: Record<string, string> = {
     "/contact": "bg-slate-100", // Contact bottom panel
     "/pricing": "bg-neutral-100", // Pricing section
-    "/info": "bg-dark", // Info page ends on the dark Experience section
+    "/info": "bg-neutral-100", // Info page's bottom is the section's pb-40 (bg-neutral-100)
     "/portfolio/[project]": "bg-[#F1F1F1]", // ProjectDetails section
     "/portfolio/repo/[name]": "bg-[#F1F1F1]", // repo detail (RepoDetail) section
   };
