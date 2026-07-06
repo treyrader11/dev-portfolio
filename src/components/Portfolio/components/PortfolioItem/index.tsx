@@ -91,7 +91,10 @@ export default function PortfolioItem({
           "flex-col",
           "border-b",
           "border-gray-200",
-          "py-8",
+          // Extra bottom room on mobile so the tags (pinned to the divider) sit
+          // clear of the title; desktop keeps the symmetric py-12.
+          "pt-8",
+          "pb-16",
           "md:py-12",
         )}
       >

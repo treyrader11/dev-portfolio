@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { skipNextPageTransition } from "@/lib/page-transition";
 
 interface Props {
   name: string;
@@ -20,6 +21,7 @@ export default function LatestRepo({
     <Link
       href={`/portfolio/repo/${name}`}
       scroll
+      onClick={() => skipNextPageTransition()}
       className="group flex flex-col gap-2 rounded-lg border border-gray-200 p-4 transition-colors hover:border-gray-400"
     >
       <h3 className="truncate text-sm font-medium text-dark">{name}</h3>

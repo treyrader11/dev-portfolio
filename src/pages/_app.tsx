@@ -9,6 +9,7 @@ import { SessionProvider } from "next-auth/react";
 import Layout from "@/components/Layout";
 import { NavProvider } from "@/components/providers/NavProvider";
 import { AppearanceProvider } from "@/components/providers/AppearanceProvider";
+import { clearPageTransitionSkip } from "@/lib/page-transition";
 import Notifications from "@/components/Notifications";
 import { NotificationsProvider } from "@/components/providers/NotificationsProvider";
 import Preloader from "@/components/Preloader";
@@ -34,6 +35,17 @@ export default function App({
       window.history.scrollRestoration = "manual";
     }
   }, []);
+
+  // Clear the "skip page transition" flag once a navigation settles, so the
+  // next (normal) navigation animates again.
+  useEffect(() => {
+    router.events.on("routeChangeComplete", clearPageTransitionSkip);
+    router.events.on("routeChangeError", clearPageTransitionSkip);
+    return () => {
+      router.events.off("routeChangeComplete", clearPageTransitionSkip);
+      router.events.off("routeChangeError", clearPageTransitionSkip);
+    };
+  }, [router.events]);
 
   return (
     <SessionProvider session={session}>
