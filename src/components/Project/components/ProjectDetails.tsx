@@ -132,7 +132,10 @@ export default function ProjectDetails({ data, allProjects = [] }: Props) {
           </div>
         )}
 
-        <Block title="About this project" desc={desc} />
+        {/* Only render the About block (and its title) when a description exists. */}
+        {desc?.trim() ? (
+          <Block title="About this project" desc={desc} />
+        ) : null}
         <Block title="Technology & Features">
           <ul className="list-disc font-pp-acma ml-5 mt-2.5 text-secondary">
             {technology_feature.map((data, index) => (

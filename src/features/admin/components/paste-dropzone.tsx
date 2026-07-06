@@ -1,4 +1,4 @@
-import { useId, useState, type DragEvent } from "react";
+import { useEffect, useId, useState, type DragEvent } from "react";
 import { motion } from "framer-motion";
 import { RiClipboardLine } from "react-icons/ri";
 import { cn } from "@/lib/utils";
@@ -11,6 +11,10 @@ interface Props {
   // Called with the raw pasted/dropped text. The caller parses it (env keys,
   // package.json deps, etc.) and updates its own state.
   onText: (text: string) => void;
+  // Optional external content to reflect in the textarea (e.g. filled in
+  // programmatically by an AI auto-populate). When it changes the box syncs to
+  // it without re-firing onText; manual edits still work normally.
+  value?: string;
   // Optional status line shown under the box, e.g. "12 keys detected".
   status?: string;
   // true renders the status in red (parse error).
@@ -27,11 +31,19 @@ export function PasteDropzone({
   placeholder,
   hint,
   onText,
+  value: externalValue,
   status,
   error,
 }: Props) {
-  const [value, setValue] = useState("");
+  const [value, setValue] = useState(externalValue ?? "");
   const [dragOver, setDragOver] = useState(false);
+
+  // Reflect programmatic content (e.g. AI auto-populate) into the textarea when
+  // the parent pushes a new value. Doesn't call onText — the parent already set
+  // its own state — so there's no double-processing or feedback loop.
+  useEffect(() => {
+    if (externalValue !== undefined) setValue(externalValue);
+  }, [externalValue]);
 
   const id = useId();
   const focus = useFocusExpandContext();

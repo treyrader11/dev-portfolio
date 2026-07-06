@@ -13,6 +13,9 @@ export interface PackageAnalysis {
   tags: string[];
   technologyFeatures: string[];
   packages: string[];
+  // The raw package.json the user pasted, so the form can mirror it into the
+  // Packages field.
+  raw: string;
 }
 
 interface Props {
@@ -56,6 +59,7 @@ export function PackageAiAnalyzer({ onResult }: Props) {
           ? data.technologyFeatures
           : [],
         packages: Array.isArray(data.packages) ? data.packages : [],
+        raw: value,
       });
       setDone(true);
     } catch {

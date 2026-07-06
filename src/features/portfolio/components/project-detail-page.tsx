@@ -82,6 +82,9 @@ export function ProjectDetailPage({ project }: Props) {
 
   // Which config preview sheet is open (null when closed).
   const [preview, setPreview] = useState<"env" | "packages" | null>(null);
+  // Content mirrored into the Frontend package.json box after an AI analyze, so
+  // the pasted package.json visibly shows up there too.
+  const [pkgFrontendSeed, setPkgFrontendSeed] = useState<string>("");
   // Per-side package.json parse errors (invalid JSON), shown under each dropzone.
   const [pkgError, setPkgError] = useState<{
     frontend?: boolean;
@@ -138,6 +141,8 @@ export function ProjectDetailPage({ project }: Props) {
           : f.packages.frontend,
       },
     }));
+    // Mirror the pasted package.json into the Frontend package.json box.
+    if (result.packages.length) setPkgFrontendSeed(result.raw);
   }
 
   // Existing tag / technology-feature / stack values, used to suggest as the
@@ -522,6 +527,7 @@ export function ProjectDetailPage({ project }: Props) {
             <PasteDropzone
               label="Frontend package.json"
               placeholder={'{ "dependencies": { "react": "^18.2.0" } }'}
+              value={pkgFrontendSeed}
               onText={(t) => applyPackages("frontend", t)}
               status={
                 pkgError.frontend
