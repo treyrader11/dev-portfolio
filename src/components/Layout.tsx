@@ -5,6 +5,7 @@ import Footer from "./Footer";
 import FooterCurve from "./PageCurve/FooterCurve";
 import Header from "./Header";
 import GoBack from "./GoBack";
+import { routes } from "./Header/nav/routes";
 import { useNav } from "./providers/NavProvider";
 import { cn } from "@/lib/utils";
 import { fontPP, fontCursive, fontMono } from "@/lib/fonts";
@@ -54,8 +55,9 @@ function MainLayout({ children, route }: LayoutProps) {
         </main>
       </AnimatePresence>
 
-      {/* Back button on every non-root public page (admin bypasses Layout). */}
-      {route !== "/" && <GoBack />}
+      {/* Back button only on nested/detail pages — never on the top-level nav
+          (root) pages (/, /portfolio, /info, /pricing, /contact) or admin. */}
+      {!routes.some((r) => r.href === route) && <GoBack />}
     </>
   );
 }
