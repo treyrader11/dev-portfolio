@@ -75,6 +75,7 @@ export default function ProjectDetails({ data, allProjects = [] }: Props) {
       hidden: !download_links?.backend?.length,
     },
   ];
+  const hasSourceCode = _links.some((l) => !l.hidden);
 
   return (
     <section className="pb-28 bg-[#F1F1F1] w-full">
@@ -149,9 +150,11 @@ export default function ProjectDetails({ data, allProjects = [] }: Props) {
             ))}
           </Block>
         )}
-        <Block title="Source code">
-          <ProjectLinks links={_links} />
-        </Block>
+        {hasSourceCode && (
+          <Block title="Source code">
+            <ProjectLinks links={_links} />
+          </Block>
+        )}
       </div>
 
       {/* Full-width — rendered outside the constrained content column so the
