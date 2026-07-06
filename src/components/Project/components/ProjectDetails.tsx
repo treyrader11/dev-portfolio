@@ -35,6 +35,13 @@ export default function ProjectDetails({ data, allProjects = [] }: Props) {
 
   const appStoreUrl = download_links?.ios?.trim();
   const liveUrl = website_url?.trim();
+  // Ensure an absolute URL so target=_blank opens the external site rather than
+  // a relative path when the admin omitted the protocol.
+  const liveHref = liveUrl
+    ? /^https?:\/\//i.test(liveUrl)
+      ? liveUrl
+      : `https://${liveUrl}`
+    : undefined;
   const frontendPkgs = packages?.frontend?.filter(Boolean) ?? [];
   const backendPkgs = packages?.backend?.filter(Boolean) ?? [];
 
@@ -92,22 +99,27 @@ export default function ProjectDetails({ data, allProjects = [] }: Props) {
         {(appStoreUrl || liveUrl) && (
           <div className="mt-8 flex flex-col items-center gap-6 sm:items-start">
             <AppStoreBanner project={data[0]} className="w-full max-w-md" />
-            {liveUrl && (
-              <Rounded
-                backgroundColor="#934e00"
-                text="See it live"
-                onClick={() =>
-                  window.open(liveUrl, "_blank", "noopener,noreferrer")
-                }
-                className={cn(
-                  "border-secondary",
-                  "rounded-full",
-                  "w-fit",
-                  "py-6",
-                  "text-black",
-                  "cursor-pointer",
-                )}
-              />
+            {liveHref && (
+              <a
+                href={liveHref}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="See the project live in a new tab"
+                className="inline-block w-fit"
+              >
+                <Rounded
+                  backgroundColor="#934e00"
+                  text="See it live"
+                  className={cn(
+                    "border-secondary",
+                    "rounded-full",
+                    "w-fit",
+                    "py-6",
+                    "text-black",
+                    "cursor-pointer",
+                  )}
+                />
+              </a>
             )}
           </div>
         )}
