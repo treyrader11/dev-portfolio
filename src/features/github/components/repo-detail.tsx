@@ -8,7 +8,7 @@ import {
   RiGitRepositoryLine,
   RiScales3Line,
 } from "react-icons/ri";
-import { cn } from "@/lib/utils";
+import { cn, titleCaseFromSlug } from "@/lib/utils";
 import type { GithubRepoDetail } from "../lib/github";
 
 interface Props {
@@ -76,7 +76,7 @@ export default function RepoDetail({ repo }: Props) {
               <span className="truncate text-sm">{repo.full_name}</span>
             </div>
             <h1 className="mt-1 break-words font-pp-acma text-4xl font-bold text-dark">
-              {repo.name}
+              {titleCaseFromSlug(repo.name)}
             </h1>
             {repo.description && (
               <p className="mt-3 max-w-2xl text-lg text-gray-600">

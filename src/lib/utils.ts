@@ -121,3 +121,14 @@ export const validateEmail = (email: string): boolean => {
   const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return re.test(email);
 };
+
+// Turn a repo slug ("dev-portfolio", "my_cool_app") into a readable Title Case
+// name ("Dev Portfolio", "My Cool App") — dashes/underscores become spaces and
+// each word is capitalized.
+export const titleCaseFromSlug = (slug: string): string =>
+  slug
+    .replace(/[-_]+/g, " ")
+    .trim()
+    .split(/\s+/)
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");

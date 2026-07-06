@@ -8,19 +8,22 @@ import {
   getManagedRepos,
   type GithubRepoDetail,
 } from "@/features/github/lib/github";
+import { titleCaseFromSlug } from "@/lib/utils";
 
 interface RepoPageProps {
   repo: GithubRepoDetail;
 }
 
 const RepoPage: NextPage<RepoPageProps> = ({ repo }) => {
+  const repoTitle = titleCaseFromSlug(repo.name);
   return (
     <Inner backgroundColor="#934E00">
       <SocialMeta
-        title={`${repo.name} — GitHub`}
-        description={repo.description ?? `${repo.name} repository by Trey Rader.`}
+        title={`${repoTitle} — GitHub`}
+        description={repo.description ?? `${repoTitle} repository by Trey Rader.`}
         card="summary"
         type="article"
+        // Path stays the raw repo name — it's the URL slug / getStaticPaths key.
         path={`/portfolio/repo/${repo.name}`}
       />
       <RepoDetail repo={repo} />
