@@ -14,6 +14,7 @@ import {
 import { HiOutlinePencilSquare } from "react-icons/hi2";
 import AdminLayout from "@/features/admin/components/admin-layout";
 import { ReorderableList } from "@/features/admin/components/reorderable-list";
+import { ConfirmDialog } from "@/features/admin/components/confirm-dialog";
 import { useNotificationsContext } from "@/components/providers/NotificationsProvider";
 import { cn, slugify } from "@/lib/utils";
 import { type ProjectItem } from "../types";
@@ -342,36 +343,31 @@ export function AdminProjectsPage({ projects: initial }: Props) {
                   {item.isSlider ? "In Sliding Images" : "Add to Sliding Images"}
                 </button>
 
-                {confirmId === item.id ? (
-                  <div className="flex items-center gap-2">
-                    <span className="text-xs text-light-400">Delete?</span>
-                    <button
-                      onClick={() => handleDelete(item.id)}
-                      className="text-xs font-medium text-error hover:text-error-600"
-                    >
-                      Yes
-                    </button>
-                    <button
-                      onClick={() => setConfirmId(null)}
-                      className="text-xs text-light-400 hover:text-white"
-                    >
-                      No
-                    </button>
-                  </div>
-                ) : (
-                  <button
-                    aria-label="Delete project"
-                    onClick={() => setConfirmId(item.id)}
-                    className="text-error transition-colors hover:text-error-600"
-                  >
-                    <RiDeleteBinLine className="size-5" />
-                  </button>
-                )}
+                <button
+                  aria-label="Delete project"
+                  onClick={() => setConfirmId(item.id)}
+                  className="text-error transition-colors hover:text-error-600"
+                >
+                  <RiDeleteBinLine className="size-5" />
+                </button>
               </div>
             </div>
           )}
         />
       </div>
+
+      {/* Delete confirmation — a modal (not an inline tap target that's easy to
+          miss) driven by the pending project id. */}
+      <ConfirmDialog
+        open={confirmId !== null}
+        title="Delete project?"
+        message={`This permanently deletes "${
+          items.find((p) => p.id === confirmId)?.title ?? "this project"
+        }". This can't be undone.`}
+        confirmLabel="Delete"
+        onConfirm={() => confirmId && handleDelete(confirmId)}
+        onCancel={() => setConfirmId(null)}
+      />
     </AdminLayout>
   );
 }
