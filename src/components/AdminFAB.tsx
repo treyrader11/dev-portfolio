@@ -2,6 +2,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useState, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
+import { useNav } from "@/components/providers/NavProvider";
 
 const HIDDEN_ROUTES = ["/admin", "/contact"];
 
@@ -31,6 +32,7 @@ function AdminIcon() {
 
 export default function AdminFAB() {
   const router = useRouter();
+  const { isNavOpen } = useNav();
   const [hovered, setHovered] = useState(false);
   const [mounted, setMounted] = useState(false);
   const portalRef = useRef<HTMLElement | null>(null);
@@ -58,7 +60,10 @@ export default function AdminFAB() {
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        pointerEvents: "auto",
+        // Hide beneath the open nav overlay — the FAB portal sits above the nav
+        // in the stacking order, so we drop it out of the way while nav is open.
+        pointerEvents: isNavOpen ? "none" : "auto",
+        opacity: isNavOpen ? 0 : 1,
         bottom: 28,
         left: 28,
         width: 52,

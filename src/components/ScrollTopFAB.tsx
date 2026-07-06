@@ -6,6 +6,7 @@ import ScrollTrigger from "gsap/dist/ScrollTrigger";
 import { RiArrowUpLine } from "react-icons/ri";
 import useIsomorphicLayoutEffect from "@/hooks/useIsomorphicLayoutEffect";
 import { scrollToTop } from "@/lib/smooth-scroll";
+import { useNav } from "@/components/providers/NavProvider";
 
 // Same routes the AdminFAB hides on, so the pair stays consistent.
 const HIDDEN_ROUTES = ["/admin", "/contact"];
@@ -16,6 +17,7 @@ const HIDDEN_ROUTES = ["/admin", "/contact"];
 // scrolls fast to the top on click.
 export default function ScrollTopFAB() {
   const router = useRouter();
+  const { isNavOpen } = useNav();
   const [hovered, setHovered] = useState(false);
   const [mounted, setMounted] = useState(false);
   const portalRef = useRef<HTMLElement | null>(null);
@@ -74,7 +76,12 @@ export default function ScrollTopFAB() {
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        pointerEvents: "auto",
+        // Hide beneath the open nav overlay (the FAB portal stacks above nav).
+        // gsap owns `transform`; only opacity transitions so the scale is
+        // untouched.
+        pointerEvents: isNavOpen ? "none" : "auto",
+        opacity: isNavOpen ? 0 : 1,
+        transition: "opacity 200ms ease-out",
         bottom: 28,
         right: 28,
         width: 52,
