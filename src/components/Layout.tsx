@@ -29,6 +29,7 @@ function MainLayout({ children, route }: LayoutProps) {
     "/pricing": "bg-neutral-100", // Pricing section
     "/info": "bg-dark", // Info page ends on the dark Experience section
     "/portfolio/[project]": "bg-[#F1F1F1]", // ProjectDetails section
+    "/portfolio/repo/[name]": "bg-[#F1F1F1]", // repo detail (RepoDetail) section
   };
   const curveBg = curveBgByRoute[route] ?? "bg-white";
 

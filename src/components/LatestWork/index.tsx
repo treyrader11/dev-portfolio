@@ -6,6 +6,7 @@ import LatestWorkFlipCard from "@/components/latest-work-flip-card";
 import ScrollDownIndicator from "@/components/scroll-down-indicator";
 import Rounded from "@/components/Rounded";
 import { cn, createScrollPositions } from "@/lib/utils";
+import { useIsMobile } from "@/hooks/useWindowDimensions";
 import PageTitle from "../PageTitle";
 import Scrollbar from "../Scrollbar";
 import type { ProjectData } from "@/types/data";
@@ -58,9 +59,15 @@ export default function LatestWork({ className, projects }: Props) {
   const titleOpacity = useTransform(exitProgress, [0, 0.06], [1, 0]);
   const titleY = useTransform(exitProgress, [0, 0.06], [0, -40]);
 
-  // Purple position dots: fade IN as soon as the first project scrolls into view,
-  // and fade OUT on the same fast exit range as the title.
-  const dotsFadeIn = useTransform(firstProjectProgress, [0, 0.35], [0, 1]);
+  // Purple position dots: fade IN as the first project scrolls into view, and
+  // fade OUT on the same fast exit range as the title. On mobile the fade-in
+  // waits noticeably longer (later scroll range) than on desktop.
+  const isMobile = useIsMobile();
+  const dotsFadeIn = useTransform(
+    firstProjectProgress,
+    isMobile ? [0.55, 0.9] : [0, 0.35],
+    [0, 1],
+  );
   const dotsFadeOut = useTransform(exitProgress, [0, 0.06], [1, 0]);
   const scrollbarOpacity = useTransform(
     [dotsFadeIn, dotsFadeOut],
