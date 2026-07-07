@@ -84,6 +84,19 @@ export const userData: UserData = {
     current_project: "Evolve Media AI",
   },
 
+  // Info page sidebar blocks. Wrap the link text in [brackets] to render an
+  // inline link to /contact.
+  info: {
+    contact: {
+      heading: "Contact",
+      body: "For any sort of help / enquiry, please shoot me an [email] and I'll get back the same day.",
+    },
+    jobOpportunities: {
+      heading: "Job Opportunities",
+      body: "Not actively seeking new roles, but always open to exploring exciting opportunities — whether that's full-time work, contract projects, or creative collaborations. If you think we'd be a good fit, feel free to [reach out].",
+    },
+  },
+
   // Experience Highlights (Resume Format)
   experience_highlights: [
     {

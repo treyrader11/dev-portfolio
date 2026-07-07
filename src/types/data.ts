@@ -18,6 +18,19 @@ export interface AboutData {
   current_project: string;
 }
 
+// An editable sidebar block on the /info page (Contact, Job Opportunities). The
+// body may contain a single [label] token which renders as an inline link to
+// /contact — e.g. "shoot me an [email] and I'll reply".
+export interface InfoSection {
+  heading: string;
+  body: string;
+}
+
+export interface InfoSectionsData {
+  contact: InfoSection;
+  jobOpportunities: InfoSection;
+}
+
 export interface ExperienceHighlight {
   role: string;
   company: string;
@@ -53,6 +66,7 @@ export interface UserData {
   socialLinks: SocialLinks;
   hero: HeroData;
   about: AboutData;
+  info: InfoSectionsData;
   experience_highlights: ExperienceHighlight[];
   technical_expertise: TechnicalExpertise;
   professional_summaries: ProfessionalSummaries;

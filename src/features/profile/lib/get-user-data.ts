@@ -12,7 +12,11 @@ export async function getUserData(): Promise<UserData> {
     const config = await prisma.siteConfig.findUnique({
       where: { key: "userData" },
     });
-    return config ? (config.value as unknown as UserData) : fallbackUserData;
+    // Shallow-merge over the bundled defaults so newly added top-level fields
+    // (e.g. `info`) are present even on configs saved before they existed.
+    return config
+      ? ({ ...fallbackUserData, ...(config.value as object) } as UserData)
+      : fallbackUserData;
   } catch {
     return fallbackUserData;
   }

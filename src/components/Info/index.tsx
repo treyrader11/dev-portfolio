@@ -2,6 +2,7 @@
 
 import { userData } from "@/lib/data";
 import { cn } from "@/lib/utils";
+import type { InfoSectionsData } from "@/types/data";
 import Experience, { type ExperienceEntry } from "./Experience";
 import Link from "next/link";
 import { useScroll, motion, useTransform } from "framer-motion";
@@ -69,11 +70,39 @@ const services = [
   },
 ];
 
-interface InfoProps {
-  experiences: ExperienceEntry[];
+// Link styling shared by the editable Contact / Job Opportunities blocks.
+const INFO_LINK_CLASS = cn(
+  "font-bold",
+  "text-gray-800",
+  "border-b-2",
+  "border-gray-800",
+  "hover:text-gray-600",
+  "transition-colors",
+);
+
+// Render an info-section body, turning a single [label] token into an inline
+// link to /contact (everything before/after the token stays plain text).
+function InfoBody({ body }: { body: string }) {
+  const match = body.match(/^([\s\S]*?)\[([^\]]+)\]([\s\S]*)$/);
+  if (!match) return <>{body}</>;
+  const [, before, label, after] = match;
+  return (
+    <>
+      {before}
+      <Link href="/contact" scroll={false} className={INFO_LINK_CLASS}>
+        {label}
+      </Link>
+      {after}
+    </>
+  );
 }
 
-export default function Info({ experiences }: InfoProps) {
+interface InfoProps {
+  experiences: ExperienceEntry[];
+  info: InfoSectionsData;
+}
+
+export default function Info({ experiences, info }: InfoProps) {
   const container = useRef<HTMLElement>(null);
 
   const { scrollYProgress } = useScroll({
@@ -128,56 +157,23 @@ export default function Info({ experiences }: InfoProps) {
               "items-start"
             )}
           >
-            {/* Sidebar - Contact & Job Opportunities */}
+            {/* Sidebar - Contact & Job Opportunities (editable in /admin/profile) */}
             <div className="space-y-8">
               <div>
                 <h1 className={cn("text-xl", "font-semibold", "text-gray-700")}>
-                  Contact
+                  {info.contact.heading}
                 </h1>
                 <p className={cn("mt-4", "text-lg", "text-gray-500")}>
-                  For any sort of help / enquiry, please shoot me an{" "}
-                  <Link
-                    href="/contact"
-                    scroll={false}
-                    className={cn(
-                      "font-bold",
-                      "text-gray-800",
-                      "border-b-2",
-                      "border-gray-800",
-                      "hover:text-gray-600",
-                      "transition-colors"
-                    )}
-                  >
-                    email
-                  </Link>{" "}
-                  and I&apos;ll get back the same day.
+                  <InfoBody body={info.contact.body} />
                 </p>
               </div>
 
               <div>
                 <h1 className="text-xl font-semibold text-gray-700">
-                  Job Opportunities
+                  {info.jobOpportunities.heading}
                 </h1>
                 <p className="relative mt-4 text-lg text-gray-500">
-                  Not actively seeking new roles, but always open to exploring
-                  exciting opportunities — whether that&apos;s full-time work,
-                  contract projects, or creative collaborations. If you think
-                  we&apos;d be a good fit, feel free to{" "}
-                  <Link
-                    href="/contact"
-                    scroll={false}
-                    className={cn(
-                      "font-bold",
-                      "text-gray-800",
-                      "border-b-2",
-                      "border-gray-800",
-                      "hover:text-gray-600",
-                      "transition-colors"
-                    )}
-                  >
-                    reach out
-                  </Link>
-                  .
+                  <InfoBody body={info.jobOpportunities.body} />
                 </p>
               </div>
             </div>

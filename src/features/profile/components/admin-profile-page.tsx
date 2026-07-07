@@ -5,6 +5,7 @@ import AdminLayout from "@/features/admin/components/admin-layout";
 import { AdminFocusScope } from "@/features/admin/components/admin-form";
 import {
   AdminInput,
+  AdminTextarea,
   ADMIN_FIELD_CONTROL,
 } from "@/features/admin/components/admin-field";
 import { useFocusExpandContext } from "@/hooks/use-focus-expand";
@@ -193,6 +194,42 @@ export function AdminProfilePage({ data }: Props) {
             label="Concise Description"
             value={form.about.description_concise}
             onChange={(v) => update("about.description_concise", v)}
+          />
+        </Section>
+
+        {/* Info page sidebar — the Contact and Job Opportunities blocks shown on
+            the public /info page. */}
+        <Section title="Info Page — Contact & Job Opportunities">
+          <p className="text-xs text-light-400">
+            Shown in the sidebar of your public /info page. In the body, wrap the
+            link text in [brackets] to make it an inline link to your contact
+            page — e.g. “shoot me an [email] and I&apos;ll reply”.
+          </p>
+
+          <AdminInput
+            label="Contact Heading"
+            required
+            value={form.info.contact.heading}
+            onChange={(v) => update("info.contact.heading", v)}
+          />
+          <AdminTextarea
+            label="Contact Body"
+            required
+            value={form.info.contact.body}
+            onChange={(v) => update("info.contact.body", v)}
+          />
+
+          <AdminInput
+            label="Job Opportunities Heading"
+            required
+            value={form.info.jobOpportunities.heading}
+            onChange={(v) => update("info.jobOpportunities.heading", v)}
+          />
+          <AdminTextarea
+            label="Job Opportunities Body"
+            required
+            value={form.info.jobOpportunities.body}
+            onChange={(v) => update("info.jobOpportunities.body", v)}
           />
         </Section>
 

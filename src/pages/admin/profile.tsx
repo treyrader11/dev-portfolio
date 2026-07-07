@@ -22,8 +22,10 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     where: { key: "userData" },
   });
 
+  // Merge over the bundled defaults so newly added fields (e.g. `info`) exist
+  // on configs that were saved before those fields were introduced.
   const data: UserData = config
-    ? { ...(config.value as unknown as UserData) }
+    ? { ...fallbackUserData, ...(config.value as unknown as UserData) }
     : { ...fallbackUserData };
 
   // Auto-fill the GitHub username from the logged-in GitHub account when it
