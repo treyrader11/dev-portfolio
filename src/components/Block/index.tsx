@@ -21,7 +21,9 @@ export default function Block({ className, title, desc, children }: Props) {
       )}
     >
       <h1 className="my-5 text-3xl font-bold font-pp-acma">{title}</h1>
-      {desc && <p>{desc}</p>}
+      {/* Preserve the pasted whitespace/line breaks so paragraph indentation and
+          blank lines survive (HTML would otherwise collapse them). */}
+      {desc && <p className="whitespace-pre-wrap">{desc}</p>}
       {children}
     </div>
   );
