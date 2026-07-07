@@ -3,7 +3,6 @@ import { useRouter } from "next/router";
 import { useState, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import gsap from "gsap";
-import ScrollTrigger from "gsap/dist/ScrollTrigger";
 import useIsomorphicLayoutEffect from "@/hooks/useIsomorphicLayoutEffect";
 
 const HIDDEN_ROUTES = ["/admin", "/contact"];
@@ -51,30 +50,16 @@ export default function AdminFAB() {
     router.pathname.startsWith(r)
   );
 
-  // Slide in from the left once a full viewport has scrolled (mirrors the
-  // scroll-to-top FAB sliding in from the right); reverses on the way back up.
-  // gsap owns the transform so hover re-renders can't reset it.
+  // Always visible (unlike the scroll-gated scroll-to-top FAB): it just slides
+  // in from the left once when the page loads, like a normal element. gsap owns
+  // the transform so hover re-renders can't reset it.
   useIsomorphicLayoutEffect(() => {
     if (shouldHide || !button.current) return;
-    gsap.registerPlugin(ScrollTrigger);
-
-    gsap.set(button.current, { x: -HIDDEN_X });
-
-    const trigger = ScrollTrigger.create({
-      trigger: document.documentElement,
-      start: 0,
-      end: window.innerHeight,
-      onLeave: () =>
-        gsap.to(button.current, { x: 0, duration: 0.4, ease: "power3.out" }),
-      onEnterBack: () =>
-        gsap.to(button.current, {
-          x: -HIDDEN_X,
-          duration: 0.4,
-          ease: "power3.out",
-        }),
-    });
-
-    return () => trigger.kill();
+    gsap.fromTo(
+      button.current,
+      { x: -HIDDEN_X },
+      { x: 0, duration: 0.5, ease: "power3.out" },
+    );
   }, [shouldHide, mounted]);
 
   if (shouldHide || !mounted || !portalRef.current) return null;
