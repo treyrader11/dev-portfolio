@@ -11,9 +11,14 @@ import type { InfoSectionsData } from "@/types/data";
 interface InfoPageProps {
   experiences: ExperienceEntry[];
   info: InfoSectionsData;
+  description: string[];
 }
 
-const InfoPage: NextPage<InfoPageProps> = ({ experiences, info }) => {
+const InfoPage: NextPage<InfoPageProps> = ({
+  experiences,
+  info,
+  description,
+}) => {
   return (
     <Inner backgroundColor="#934E00">
       <PageTitle
@@ -23,20 +28,27 @@ const InfoPage: NextPage<InfoPageProps> = ({ experiences, info }) => {
         className={cn("absolute mt-12 sm:mt-10 md:mt-5")}
         containerClass={cn("py-[90px] sm:py-[100px] z-50")}
       />
-      <Info experiences={experiences} info={info} />
+      <Info experiences={experiences} info={info} description={description} />
     </Inner>
   );
 };
 
 export default InfoPage;
 
-// Pull work experience and the editable sidebar copy (Contact / Job
-// Opportunities) from the CMS/DB (falls back to bundled data) and revalidate so
-// admin edits surface without a rebuild.
+// Pull work experience and the editable copy (description paragraphs + the
+// Contact / Job Opportunities sidebar) from the CMS/DB (falls back to bundled
+// data) and revalidate so admin edits surface without a rebuild.
 export const getStaticProps: GetStaticProps<InfoPageProps> = async () => {
   const [experiences, userData] = await Promise.all([
     getExperiences() as Promise<ExperienceEntry[]>,
     getUserData(),
   ]);
-  return { props: { experiences, info: userData.info }, revalidate: 60 };
+  return {
+    props: {
+      experiences,
+      info: userData.info,
+      description: userData.about.description,
+    },
+    revalidate: 60,
+  };
 };

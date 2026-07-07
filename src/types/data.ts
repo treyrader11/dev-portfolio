@@ -13,7 +13,6 @@ export interface HeroData {
 export interface AboutData {
   title: string;
   description: string[];
-  description_concise: string[];
   current_project_url: string;
   current_project: string;
 }

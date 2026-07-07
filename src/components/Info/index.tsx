@@ -100,9 +100,11 @@ function InfoBody({ body }: { body: string }) {
 interface InfoProps {
   experiences: ExperienceEntry[];
   info: InfoSectionsData;
+  // Editable "About" paragraphs from the CMS (falls back to bundled data).
+  description: string[];
 }
 
-export default function Info({ experiences, info }: InfoProps) {
+export default function Info({ experiences, info, description }: InfoProps) {
   const container = useRef<HTMLElement>(null);
 
   const { scrollYProgress } = useScroll({
@@ -178,9 +180,9 @@ export default function Info({ experiences, info }: InfoProps) {
               </div>
             </div>
 
-            {/* Main Content - Description */}
+            {/* Main Content - Description (editable in /admin/profile) */}
             <div className="space-y-4">
-              {userData.about.description?.map((desc, i) => (
+              {description?.map((desc, i) => (
                 <p key={i} className="text-xl leading-relaxed text-gray-500">
                   {desc}
                 </p>

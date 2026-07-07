@@ -190,11 +190,6 @@ export function AdminProfilePage({ data }: Props) {
             value={form.about.description}
             onChange={(v) => update("about.description", v)}
           />
-          <TextArrayField
-            label="Concise Description"
-            value={form.about.description_concise}
-            onChange={(v) => update("about.description_concise", v)}
-          />
         </Section>
 
         {/* Info page sidebar — the Contact and Job Opportunities blocks shown on

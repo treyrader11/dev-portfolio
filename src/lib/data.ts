@@ -74,12 +74,6 @@ export const userData: UserData = {
       `On the web side, I build custom applications from scratch using Next.js, React, Tailwind CSS, Drizzle ORM, and Vercel — no templates, no shortcuts. I've shipped everything from client-facing marketing sites with rich animations (GSAP, Framer Motion) to internal admin dashboards, invoice systems, and Jira integrations. Whether it's mobile or web, I bring the same attention to architecture, accessibility, and polish.`,
     ],
 
-    description_concise: [
-      `I'm a Senior React Native & Web Developer with 8+ years of experience building cross-platform mobile and full-stack web applications. Currently at Evolve Media AI, I lead frontend development for AI-powered media tools using the Expo stack, TypeScript, and modern architecture patterns.`,
-
-      `I specialize in performance optimization, component architecture, and creating seamless user experiences across mobile and web. My technical toolkit includes React Native, Next.js, TypeScript, PostgreSQL, TanStack Query, and animation libraries like Framer Motion and GSAP. I'm passionate about clean code, accessibility, and shipping polished products.`,
-    ],
-
     current_project_url: "https://www.evolvemedia.ai",
     current_project: "Evolve Media AI",
   },
