@@ -49,6 +49,10 @@ type InputProps = Omit<InputHTMLAttributes<HTMLInputElement>, "onChange"> & {
   value: string;
   onChange: (value: string) => void;
   fieldClassName?: string;
+  // Optional leading icon in the label (e.g. a social platform glyph).
+  icon?: ReactNode;
+  // Optional helper text under the control.
+  hint?: string;
 };
 
 export function AdminInput({
@@ -58,6 +62,8 @@ export function AdminInput({
   onChange,
   fieldClassName,
   className,
+  icon,
+  hint,
   ...rest
 }: InputProps) {
   const id = useId();
@@ -69,6 +75,8 @@ export function AdminInput({
     <FieldFrame
       label={label}
       required={required}
+      icon={icon}
+      hint={hint}
       focused={focused}
       dimmed={dimmed}
       className={fieldClassName}
@@ -162,6 +170,7 @@ interface AdminFieldControlProps {
 function FieldFrame({
   label,
   required,
+  icon,
   hint,
   error,
   focused,
@@ -171,6 +180,7 @@ function FieldFrame({
 }: {
   label: string;
   required?: boolean;
+  icon?: ReactNode;
   hint?: string;
   error?: string;
   focused: boolean;
@@ -191,9 +201,12 @@ function FieldFrame({
         className,
       )}
     >
-      <label className="text-sm font-medium text-white">
-        {label}
-        {required && <span className="ml-0.5 text-red-500">*</span>}
+      <label className="flex items-center gap-1.5 text-sm font-medium text-white">
+        {icon && <span className="text-light-400">{icon}</span>}
+        <span>
+          {label}
+          {required && <span className="ml-0.5 text-red-500">*</span>}
+        </span>
       </label>
       {children}
       {hint && <p className="text-xs text-light-400">{hint}</p>}
