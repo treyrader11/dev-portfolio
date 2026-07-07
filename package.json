@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "lsof -ti:3000 | xargs kill -9 2>/dev/null; next dev -p 3000",
     "push": "git checkout main && git merge develop && git push origin main && git checkout develop",
     "build": "prisma generate && next build",
     "start": "next start",
