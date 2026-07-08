@@ -11,6 +11,7 @@
 ### Links
 
 -  Website URL: (https://trey.dev/)
+-  AI agent development guide: [CLAUDE.md](./CLAUDE.md)
 
 ### Built with
 
