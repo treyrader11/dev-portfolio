@@ -16,16 +16,21 @@ import LatestRepo from "./components/LatestRepo";
 import PageTitle from "../PageTitle";
 import type { ProjectData } from "@/types/data";
 import type { GithubRepoSummary } from "@/features/github/types";
+import type { PortfolioPageProps } from "@/pages/portfolio";
 
 type Repository = GithubRepoSummary;
 
-interface Props {
+type PortfolioProps = {
   repositories: Repository[];
   projects: ProjectData[];
   intro: string;
-}
+};
 
-export default function Portfolio({ repositories, projects, intro }: Props) {
+export default function Portfolio({
+  repositories,
+  projects,
+  intro,
+}: PortfolioPageProps) {
   const [latestRepos, setLatestRepos] = useState(repositories);
   const [activeCategory, setActiveCategory] = useState("All");
   const [searchText, setSearchText] = useState("");
@@ -176,9 +181,7 @@ export default function Portfolio({ repositories, projects, intro }: Props) {
       }}
       className="pb-8"
     >
-      <div
-        className={cn("relative overflow-hidden pt-12 pb-8 mx-0 bg-dark")}
-      >
+      <div className={cn("relative overflow-hidden pt-12 pb-8 mx-0 bg-dark")}>
         <NoiseBg area="portfolioHeader" className="z-0" />
         <p className="relative z-10 px-6 text-white">{intro}</p>
       </div>

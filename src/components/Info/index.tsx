@@ -97,12 +97,12 @@ function InfoBody({ body }: { body: string }) {
   );
 }
 
-interface InfoProps {
+type InfoProps = {
   experiences: ExperienceEntry[];
   info: InfoSectionsData;
   // Editable "About" paragraphs from the CMS (falls back to bundled data).
   description: string[];
-}
+};
 
 export default function Info({ experiences, info, description }: InfoProps) {
   const container = useRef<HTMLElement>(null);
@@ -125,7 +125,7 @@ export default function Info({ experiences, info, description }: InfoProps) {
         "min-h-dvh",
         "text-gray-500",
         "mx-auto",
-        "overflow-hidden"
+        "overflow-hidden",
       )}
     >
       <motion.div className={cn("pt-[10vh]")}>
@@ -137,7 +137,7 @@ export default function Info({ experiences, info, description }: InfoProps) {
               "text-[5vw]",
               "leading-[5vw]",
               "text-gray-700",
-              "font-pp-acma"
+              "font-pp-acma",
             )}
             style={{ y: sm }}
           >
@@ -156,7 +156,7 @@ export default function Info({ experiences, info, description }: InfoProps) {
               "pt-20",
               "gap-10",
               "lg:gap-16",
-              "items-start"
+              "items-start",
             )}
           >
             {/* Sidebar - Contact & Job Opportunities (editable in /admin/profile) */}
@@ -200,7 +200,7 @@ export default function Info({ experiences, info, description }: InfoProps) {
               "md:grid-cols-2",
               "gap-10",
               "mt-[5vh]",
-              "overflow-hidden"
+              "overflow-hidden",
             )}
           >
             <Socials
@@ -227,7 +227,7 @@ export default function Info({ experiences, info, description }: InfoProps) {
             "border-gray-200/80",
             "p-8",
             "md:p-12",
-            "shadow-sm"
+            "shadow-sm",
           )}
         >
           <div className="flex items-center gap-3 mb-2">
@@ -237,9 +237,9 @@ export default function Info({ experiences, info, description }: InfoProps) {
             </h2>
           </div>
           <p className="text-lg text-gray-500 mb-10 max-w-2xl">
-            I build websites and web applications for businesses and
-            individuals — custom-coded, no templates, designed around what you
-            actually need. Here&apos;s how it works.
+            I build websites and web applications for businesses and individuals
+            — custom-coded, no templates, designed around what you actually
+            need. Here&apos;s how it works.
           </p>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -254,7 +254,7 @@ export default function Info({ experiences, info, description }: InfoProps) {
                     "flex",
                     "items-center",
                     "justify-center",
-                    "text-gray-700"
+                    "text-gray-700",
                   )}
                 >
                   <service.icon className="text-xl" />
@@ -308,7 +308,7 @@ export default function Info({ experiences, info, description }: InfoProps) {
                 "px-10",
                 "border-gray-300",
                 "border-[.3px]",
-                "text-gray-800"
+                "text-gray-800",
               )}
             >
               <span
@@ -323,7 +323,7 @@ export default function Info({ experiences, info, description }: InfoProps) {
                   "gap-2",
                   "text-sm",
                   "font-semibold",
-                  "group-hover:text-white"
+                  "group-hover:text-white",
                 )}
               >
                 View Full Pricing & Packages

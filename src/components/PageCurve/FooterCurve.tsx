@@ -5,13 +5,13 @@ import { useMotionValue, useScroll, useTransform } from "framer-motion";
 import PageCurve from "./index";
 import { cn } from "@/lib/utils";
 
-interface Props {
+type FooterCurveProps = {
   className?: string;
   // Fill color of the curve (Tailwind bg-* class), matched to the content it
   // caps. Defaults to white; pass e.g. "bg-slate-100" on pages whose bottom
   // content is a different color.
   bgClass?: string;
-}
+};
 
 // The site-wide bottom curve: a white dome that overlaps the dark footer and
 // flattens to a straight divider as the footer scrolls into view. Self-contained
@@ -21,7 +21,7 @@ interface Props {
 export default function FooterCurve({
   className,
   bgClass = "bg-white",
-}: Props) {
+}: FooterCurveProps) {
   const container = useRef<HTMLDivElement>(null);
 
   // Base curve height, proportional to viewport WIDTH so the dome holds the same

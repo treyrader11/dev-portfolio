@@ -8,11 +8,11 @@ import { cn } from "@/lib/utils";
 import type { ExperienceEntry } from "@/components/Info/Experience";
 import type { InfoSectionsData } from "@/types/data";
 
-interface InfoPageProps {
+type InfoPageProps = {
   experiences: ExperienceEntry[];
   info: InfoSectionsData;
   description: string[];
-}
+};
 
 const InfoPage: NextPage<InfoPageProps> = ({
   experiences,

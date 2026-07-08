@@ -10,11 +10,11 @@ import { cn } from "@/lib/utils";
 import type { ProjectData } from "@/types/data";
 import type { GithubRepoSummary } from "@/features/github/types";
 
-interface PortfolioPageProps {
+export type PortfolioPageProps = {
   repositories: GithubRepoSummary[];
   projects: ProjectData[];
   intro: string;
-}
+};
 
 const PortfolioPage: NextPage<PortfolioPageProps> = ({
   repositories,
@@ -29,7 +29,11 @@ const PortfolioPage: NextPage<PortfolioPageProps> = ({
         className={cn("absolute", "mt-12", "sm:mt-10", "md:mt-5")}
         containerClass={cn("py-[90px]", "sm:py-[100px]", "z-50")}
       />
-      <Portfolio repositories={repositories} projects={projects} intro={intro} />
+      <Portfolio
+        repositories={repositories}
+        projects={projects}
+        intro={intro}
+      />
     </Inner>
   );
 };
