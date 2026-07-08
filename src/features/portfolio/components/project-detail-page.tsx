@@ -226,6 +226,7 @@ export function ProjectDetailPage({ project }: Props) {
           <AdminInput
             label="Title"
             required
+            titleCase
             value={form.title}
             onChange={(v) => setForm({ ...form, title: v })}
           />

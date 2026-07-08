@@ -132,3 +132,10 @@ export const titleCaseFromSlug = (slug: string): string =>
     .split(/\s+/)
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
     .join(" ");
+
+// Capitalize the first letter of each word, leaving everything else exactly as
+// typed. Length-preserving (only changes case), so it's safe to run live on an
+// input's onChange without the caret jumping. Preserves intentional mid-word
+// caps (e.g. "iOS") and existing spacing.
+export const toTitleCase = (text: string): string =>
+  text.replace(/(^|\s)(\p{L})/gu, (_, sep, ch: string) => sep + ch.toUpperCase());

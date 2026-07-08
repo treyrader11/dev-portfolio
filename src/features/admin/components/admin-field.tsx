@@ -8,7 +8,7 @@ import {
 } from "react";
 import { motion } from "framer-motion";
 import { Controller, useFormContext } from "react-hook-form";
-import { cn } from "@/lib/utils";
+import { cn, toTitleCase } from "@/lib/utils";
 import { useFocusExpandContext } from "@/hooks/use-focus-expand";
 
 // Shared control styling for admin form inputs.
@@ -53,6 +53,9 @@ type InputProps = Omit<InputHTMLAttributes<HTMLInputElement>, "onChange"> & {
   icon?: ReactNode;
   // Optional helper text under the control.
   hint?: string;
+  // When true, live-format the value to Title Case as the user types (each
+  // word's first letter capitalized). Use for title/name inputs.
+  titleCase?: boolean;
 };
 
 export function AdminInput({
@@ -64,6 +67,7 @@ export function AdminInput({
   className,
   icon,
   hint,
+  titleCase,
   ...rest
 }: InputProps) {
   const id = useId();
@@ -84,7 +88,9 @@ export function AdminInput({
       <input
         {...rest}
         value={value}
-        onChange={(e) => onChange(e.target.value)}
+        onChange={(e) =>
+          onChange(titleCase ? toTitleCase(e.target.value) : e.target.value)
+        }
         onFocus={fp?.onFocus}
         onBlur={fp?.onBlur}
         className={cn(
