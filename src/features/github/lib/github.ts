@@ -4,6 +4,7 @@ import {
   type GithubRepoSummary,
   type GithubRepoDetail,
   type GithubRepoSettings,
+  type GithubContributionCalendar,
 } from "../types";
 
 // Re-export the types so existing server-side importers can pull them from here.
@@ -12,6 +13,7 @@ export {
   type GithubRepoSummary,
   type GithubRepoDetail,
   type GithubRepoSettings,
+  type GithubContributionCalendar,
 };
 
 // ---- GitHub API ----------------------------------------------------------
@@ -192,4 +194,72 @@ export async function getManagedRepos(
     getRepoSettings(),
   ]);
   return applyRepoSettings(repos, settings);
+}
+
+// ---- Contribution calendar ----------------------------------------------
+
+const CONTRIBUTION_LEVELS: Record<string, number> = {
+  NONE: 0,
+  FIRST_QUARTILE: 1,
+  SECOND_QUARTILE: 2,
+  THIRD_QUARTILE: 3,
+  FOURTH_QUARTILE: 4,
+};
+
+// The contribution calendar isn't in the REST API — it's only on the GraphQL
+// API, which requires a token. Returns the last year of daily contributions
+// (with GitHub's own per-day colors) or null when there's no token / on error.
+export async function fetchContributions(
+  username: string,
+  token?: string,
+): Promise<GithubContributionCalendar | null> {
+  if (!username || !token) return null;
+  const query = `query($login:String!){user(login:$login){contributionsCollection{contributionCalendar{totalContributions weeks{contributionDays{date contributionCount contributionLevel color}}}}}}`;
+  try {
+    const res = await fetch("https://api.github.com/graphql", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ query, variables: { login: username } }),
+    });
+    if (!res.ok) return null;
+    const json = (await res.json()) as {
+      data?: {
+        user?: {
+          contributionsCollection?: {
+            contributionCalendar?: {
+              totalContributions: number;
+              weeks: {
+                contributionDays: {
+                  date: string;
+                  contributionCount: number;
+                  contributionLevel: string;
+                  color: string;
+                }[];
+              }[];
+            };
+          };
+        };
+      };
+    };
+    const cal =
+      json?.data?.user?.contributionsCollection?.contributionCalendar;
+    if (!cal) return null;
+    return {
+      totalContributions: cal.totalContributions,
+      weeks: cal.weeks.map((w) =>
+        w.contributionDays.map((d) => ({
+          date: d.date,
+          count: d.contributionCount,
+          level: CONTRIBUTION_LEVELS[d.contributionLevel] ?? 0,
+          color: d.color,
+        })),
+      ),
+    };
+  } catch (e) {
+    console.error("fetchContributions failed:", e);
+    return null;
+  }
 }

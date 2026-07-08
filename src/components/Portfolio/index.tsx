@@ -13,23 +13,16 @@ import { useCursorModal } from "./useCursorModal";
 import { useIsInView } from "@/hooks/useIsInView";
 import { useIsMobile } from "@/hooks/useWindowDimensions";
 import LatestRepo from "./components/LatestRepo";
+import GithubContributions from "@/features/github/components/GithubContributions";
 import PageTitle from "../PageTitle";
-import type { ProjectData } from "@/types/data";
-import type { GithubRepoSummary } from "@/features/github/types";
 import type { PortfolioPageProps } from "@/pages/portfolio";
-
-type Repository = GithubRepoSummary;
-
-type PortfolioProps = {
-  repositories: Repository[];
-  projects: ProjectData[];
-  intro: string;
-};
 
 export default function Portfolio({
   repositories,
   projects,
   intro,
+  contributions,
+  githubUsername,
 }: PortfolioPageProps) {
   const [latestRepos, setLatestRepos] = useState(repositories);
   const [activeCategory, setActiveCategory] = useState("All");
@@ -306,6 +299,13 @@ export default function Portfolio({
           </div>
         )}
       </div>
+
+      {/* GitHub contributions heatmap — the last section on the page. Renders
+          nothing when there's no contribution data (e.g. no token). */}
+      <GithubContributions
+        data={contributions}
+        username={githubUsername}
+      />
 
       {/* Cursor-following card + dot + "View" label — pointer devices only, so
           it never renders on touch screens. Shows the hovered project's poster;

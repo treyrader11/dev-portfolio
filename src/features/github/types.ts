@@ -43,3 +43,20 @@ export const DEFAULT_REPO_SETTINGS: GithubRepoSettings = {
   order: [],
   excluded: [],
 };
+
+// ---- Contribution calendar (GitHub GraphQL) ------------------------------
+
+// One day cell in the contribution graph. `color` is the exact hex GitHub uses
+// for that day; `level` (0-4) is the intensity bucket for the legend.
+export interface ContributionDay {
+  date: string;
+  count: number;
+  level: number;
+  color: string;
+}
+
+// The full year calendar: weeks (columns) of day cells, plus the yearly total.
+export interface GithubContributionCalendar {
+  totalContributions: number;
+  weeks: ContributionDay[][];
+}

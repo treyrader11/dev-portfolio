@@ -5,21 +5,31 @@ import Portfolio from "@/components/Portfolio";
 import { getAllProjects } from "@/features/portfolio/lib/projects";
 import { getPortfolioIntro } from "@/lib/db/content";
 import { getUserData } from "@/features/profile/lib/get-user-data";
-import { getManagedRepos } from "@/features/github/lib/github";
+import {
+  getManagedRepos,
+  fetchContributions,
+} from "@/features/github/lib/github";
 import { cn } from "@/lib/utils";
 import type { ProjectData } from "@/types/data";
-import type { GithubRepoSummary } from "@/features/github/types";
+import type {
+  GithubRepoSummary,
+  GithubContributionCalendar,
+} from "@/features/github/types";
 
 export type PortfolioPageProps = {
   repositories: GithubRepoSummary[];
   projects: ProjectData[];
   intro: string;
+  contributions: GithubContributionCalendar | null;
+  githubUsername: string;
 };
 
 const PortfolioPage: NextPage<PortfolioPageProps> = ({
   repositories,
   projects,
   intro,
+  contributions,
+  githubUsername,
 }) => {
   return (
     <Inner backgroundColor="#934E00">
@@ -33,6 +43,8 @@ const PortfolioPage: NextPage<PortfolioPageProps> = ({
         repositories={repositories}
         projects={projects}
         intro={intro}
+        contributions={contributions}
+        githubUsername={githubUsername}
       />
     </Inner>
   );
@@ -45,13 +57,14 @@ export default PortfolioPage;
 export const getStaticProps: GetStaticProps<PortfolioPageProps> = async () => {
   const token = process.env.GITHUB_AUTH_TOKEN;
   const { githubUsername } = await getUserData();
-  const [repositories, projects, intro] = await Promise.all([
+  const [repositories, projects, intro, contributions] = await Promise.all([
     getManagedRepos(githubUsername, token),
     getAllProjects(),
     getPortfolioIntro(),
+    fetchContributions(githubUsername, token),
   ]);
   return {
-    props: { repositories, projects, intro },
+    props: { repositories, projects, intro, contributions, githubUsername },
     revalidate: 60,
   };
 };
