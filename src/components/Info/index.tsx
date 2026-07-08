@@ -2,6 +2,7 @@
 
 import { userData } from "@/lib/data";
 import { cn } from "@/lib/utils";
+import Magnetic from "@/components/Magnetic";
 import type { InfoSectionsData } from "@/types/data";
 import Experience, { type ExperienceEntry } from "./Experience";
 import Link from "next/link";
@@ -70,18 +71,30 @@ const services = [
   },
 ];
 
-// Link styling shared by the editable Contact / Job Opportunities blocks.
+// Link styling for the editable Contact / Job Opportunities blocks: secondary
+// color, no static underline, and the footer's expanding hover underline.
+// inline-block so the magnetic transform (below) can move it.
 const INFO_LINK_CLASS = cn(
+  "relative",
+  "inline-block",
   "font-bold",
-  "text-gray-800",
-  "border-b-2",
-  "border-gray-800",
-  "hover:text-gray-600",
-  "transition-colors",
+  "text-secondary",
+  "cursor-pointer",
+  // Expanding underline on hover — same pattern as the footer StyledLink.
+  "after:block",
+  "after:h-px",
+  "after:w-0",
+  "after:bg-secondary",
+  "after:mt-[2px]",
+  "after:transition-[width]",
+  "after:duration-200",
+  "after:ease-linear",
+  "hover:after:w-full",
 );
 
 // Render an info-section body, turning a single [label] token into an inline
-// link to /contact (everything before/after the token stays plain text).
+// magnetic link to /contact (everything before/after the token stays plain
+// text).
 function InfoBody({ body }: { body: string }) {
   const match = body.match(/^([\s\S]*?)\[([^\]]+)\]([\s\S]*)$/);
   if (!match) return <>{body}</>;
@@ -89,9 +102,11 @@ function InfoBody({ body }: { body: string }) {
   return (
     <>
       {before}
-      <Link href="/contact" scroll={false} className={INFO_LINK_CLASS}>
-        {label}
-      </Link>
+      <Magnetic>
+        <Link href="/contact" scroll={false} className={INFO_LINK_CLASS}>
+          {label}
+        </Link>
+      </Magnetic>
       {after}
     </>
   );
