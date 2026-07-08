@@ -1,12 +1,13 @@
 import { useRef, useState } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
+import Image from "next/image";
 import { RiDeleteBinLine } from "react-icons/ri";
 import { HiOutlinePencilSquare } from "react-icons/hi2";
 import AdminLayout from "@/features/admin/components/admin-layout";
 import { ReorderableList } from "@/features/admin/components/reorderable-list";
 import { useNotificationsContext } from "@/components/providers/NotificationsProvider";
-import { slugify } from "@/lib/utils";
+import { slugify, resolveImageSrc } from "@/lib/utils";
 import { type ExperienceItem } from "../types";
 
 interface Props {
@@ -85,16 +86,35 @@ export function AdminExperiencesPage({ experiences: initial }: Props) {
             <div className="flex items-start justify-between gap-3">
               {/* Reveal an edit affordance in the card's bottom-right on hover. */}
               <HiOutlinePencilSquare className="pointer-events-none absolute bottom-3 right-3 size-4 text-light-400 opacity-0 transition-opacity group-hover:opacity-100" />
-              <div className="min-w-0">
-                <h3 className="font-medium text-secondary truncate">
-                  {item.title}
-                </h3>
-                <p className="text-sm text-light-400">
-                  {item.company} &middot; {item.date}
-                </p>
-                <p className="text-xs text-light-400 mt-1">
-                  {item.points.length} points
-                </p>
+              <div className="flex min-w-0 items-start gap-3">
+                {/* Small circular company logo, top-aligned with the title. */}
+                <span
+                  className="flex size-9 shrink-0 items-center justify-center overflow-hidden rounded-full border border-dark-600 text-xs font-semibold text-dark"
+                  style={{ backgroundColor: item.iconBg || "#ffffff" }}
+                >
+                  {item.iconUrl ? (
+                    <Image
+                      src={resolveImageSrc(item.iconUrl)}
+                      alt={`${item.company} logo`}
+                      width={36}
+                      height={36}
+                      className="size-full object-contain"
+                    />
+                  ) : (
+                    item.company.charAt(0).toUpperCase()
+                  )}
+                </span>
+                <div className="min-w-0">
+                  <h3 className="font-medium text-secondary truncate">
+                    {item.title}
+                  </h3>
+                  <p className="text-sm text-light-400">
+                    {item.company} &middot; {item.date}
+                  </p>
+                  <p className="text-xs text-light-400 mt-1">
+                    {item.points.length} points
+                  </p>
+                </div>
               </div>
 
               {/* Delete with inline confirm. data-no-drag + stopPropagation so
