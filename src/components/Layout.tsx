@@ -1,6 +1,7 @@
 "use client";
 
 import { AnimatePresence } from "framer-motion";
+import { useRouter } from "next/router";
 import Footer from "./Footer";
 import FooterCurve from "./PageCurve/FooterCurve";
 import Header from "./Header";
@@ -18,6 +19,12 @@ interface LayoutProps {
 
 function MainLayout({ children, route }: LayoutProps) {
   const { isNavOpen } = useNav();
+  const router = useRouter();
+  // Key the transition by the actual path (not the route pattern) so navigating
+  // between two pages that share a dynamic route — e.g. project → project via
+  // "Similar projects", or repo → repo — still runs the exit/enter transition
+  // (and the onExitComplete scroll reset). Strip query/hash so those don't remount.
+  const transitionKey = router.asPath.split(/[?#]/)[0];
 
   // The curve should match the color of the content it caps so it reads as that
   // content doming over the footer. Each page whose bottom section isn't plain
@@ -37,7 +44,7 @@ function MainLayout({ children, route }: LayoutProps) {
     <>
       <AnimatePresence mode="wait" onExitComplete={() => window.scrollTo(0, 0)}>
         <main
-          key={route}
+          key={transitionKey}
           className={cn(
             fontPP.variable,
             fontCursive.variable,
