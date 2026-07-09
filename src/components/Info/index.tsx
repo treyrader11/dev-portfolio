@@ -230,7 +230,13 @@ export default function Info({
               links={socials}
               className="w-full relative z-[1]"
             />
-            <Portrait style={{ top: lg }} src={portraitUrl} />
+            {/* Extra top margin on mobile (stacked layout) so the upward scroll
+                parallax doesn't pull the portrait up over the Socials. */}
+            <Portrait
+              style={{ top: lg }}
+              src={portraitUrl}
+              className="mt-16 md:mt-0"
+            />
           </div>
         </div>
 
