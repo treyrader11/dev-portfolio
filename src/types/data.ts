@@ -57,6 +57,8 @@ export interface UserData {
   name: string;
   designation: string;
   avatarUrl: string;
+  // Full-body parallax portrait shown on the /info page.
+  portraitUrl: string;
   email: string;
   phone: string;
   address: string;

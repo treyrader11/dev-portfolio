@@ -12,12 +12,14 @@ type InfoPageProps = {
   experiences: ExperienceEntry[];
   info: InfoSectionsData;
   description: string[];
+  portraitUrl: string;
 };
 
 const InfoPage: NextPage<InfoPageProps> = ({
   experiences,
   info,
   description,
+  portraitUrl,
 }) => {
   return (
     <Inner backgroundColor="#934E00">
@@ -28,7 +30,12 @@ const InfoPage: NextPage<InfoPageProps> = ({
         className={cn("absolute mt-12 sm:mt-10 md:mt-5")}
         containerClass={cn("py-[90px] sm:py-[100px] z-50")}
       />
-      <Info experiences={experiences} info={info} description={description} />
+      <Info
+        experiences={experiences}
+        info={info}
+        description={description}
+        portraitUrl={portraitUrl}
+      />
     </Inner>
   );
 };
@@ -48,6 +55,7 @@ export const getStaticProps: GetStaticProps<InfoPageProps> = async () => {
       experiences,
       info: userData.info,
       description: userData.about.description,
+      portraitUrl: userData.portraitUrl,
     },
     revalidate: 60,
   };

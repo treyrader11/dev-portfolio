@@ -9,6 +9,8 @@ import {
   ADMIN_FIELD_CONTROL,
 } from "@/features/admin/components/admin-field";
 import { useFocusExpandContext } from "@/hooks/use-focus-expand";
+import { IconUploadField } from "@/features/admin/components/icon-upload-field";
+import { MediaLibraryPicker } from "@/features/admin/components/media-library-picker";
 import { ProfileAvatarField } from "./profile-avatar-field";
 import { cn } from "@/lib/utils";
 import type { UserData } from "@/types/data";
@@ -93,6 +95,25 @@ export function AdminProfilePage({ data }: Props) {
             Shown as the site header avatar and in link share previews. Upload or
             pick an existing image, optionally remove the background and set a
             theme-color backdrop. If left empty, the default headshot is used.
+          </p>
+        </Section>
+
+        {/* Parallax portrait shown on the public /info page. Crop on upload, or
+            pick from previously uploaded images. */}
+        <Section title="Info Page Portrait">
+          <IconUploadField
+            label="Parallax Portrait"
+            value={form.portraitUrl ?? ""}
+            previewBg="#141516"
+            aspect={3 / 4}
+            folder="portraits"
+            onChange={(url) => update("portraitUrl", url)}
+          />
+          <MediaLibraryPicker onSelect={(url) => update("portraitUrl", url)} />
+          <p className="text-xs text-light-400">
+            The full-body image in the parallax on your public /info page. Upload
+            and crop a new one, or choose a previously uploaded image. If left
+            empty, the bundled default portrait is used.
           </p>
         </Section>
 

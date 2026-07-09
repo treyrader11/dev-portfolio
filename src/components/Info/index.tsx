@@ -117,9 +117,16 @@ type InfoProps = {
   info: InfoSectionsData;
   // Editable "About" paragraphs from the CMS (falls back to bundled data).
   description: string[];
+  // CMS-editable parallax portrait image (falls back to the bundled default).
+  portraitUrl?: string;
 };
 
-export default function Info({ experiences, info, description }: InfoProps) {
+export default function Info({
+  experiences,
+  info,
+  description,
+  portraitUrl,
+}: InfoProps) {
   const container = useRef<HTMLElement>(null);
 
   const { scrollYProgress } = useScroll({
@@ -223,7 +230,7 @@ export default function Info({ experiences, info, description }: InfoProps) {
               links={socials}
               className="w-full relative z-[1]"
             />
-            <Portrait style={{ top: lg }} />
+            <Portrait style={{ top: lg }} src={portraitUrl} />
           </div>
         </div>
 

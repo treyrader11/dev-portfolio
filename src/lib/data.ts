@@ -40,6 +40,8 @@ export const userData: UserData = {
   name: "Trey Rader",
   designation: "Senior React Native & Web Developer",
   avatarUrl: "/avatar.png",
+  // Full-body parallax portrait on the /info page (default: bundled image).
+  portraitUrl: "/images/portraits/profile.png",
   email: "trey@treyrader.dev",
   phone: "504.756.4538",
   address: "Metairie, Louisiana",

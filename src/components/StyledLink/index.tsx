@@ -2,13 +2,13 @@ import { cn } from "@/lib/utils";
 import Link from "next/link";
 import type { ReactNode } from "react";
 
-interface Props {
+type StyledLinkProps = {
   className?: string;
   children?: ReactNode;
   href?: string;
   target?: string;
   onColor?: boolean;
-}
+};
 
 export default function StyledLink({
   className,
@@ -16,7 +16,7 @@ export default function StyledLink({
   href,
   target = "#",
   onColor = false,
-}: Props) {
+}: StyledLinkProps) {
   return (
     <Link
       href={href || "#"}
@@ -39,7 +39,7 @@ export default function StyledLink({
         "after:duration-200",
         "after:ease-linear",
         "hover:after:w-full",
-        className
+        className,
       )}
     >
       {children}
