@@ -20,7 +20,7 @@ export default function LatestRepo({
   return (
     <Link
       href={`/portfolio/repo/${name}`}
-      scroll
+      scroll={false}
       onClick={() => skipNextPageTransition()}
       className="group flex flex-col gap-2 rounded-lg border border-gray-200 p-4 transition-colors hover:border-gray-400"
     >

@@ -81,6 +81,7 @@ export default function PortfolioItem({
 
       <Link
         href={`/portfolio/${slugify(title)}`}
+        scroll={false}
         aria-label={`View ${title} project`}
         // NOTE: not the `block` utility — it collides with a global
         // `.block { width:50px }` decoration in globals.css. flex-col gives a

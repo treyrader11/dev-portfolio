@@ -34,7 +34,9 @@ const Rounded = forwardRef<HTMLDivElement, Props>(
     const router = useRouter();
 
     const handleClick = useCallback(
-      () => href && router.push(`${href}`),
+      // scroll:false so the page-exit transition plays from the current scroll
+      // position instead of Next jumping to the top of the page first.
+      () => href && router.push(`${href}`, undefined, { scroll: false }),
       [href, router]
     );
 

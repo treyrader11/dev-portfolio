@@ -93,7 +93,7 @@ export default function SimilarProjects({
             <Link
               key={slug}
               href={`/portfolio/${slug}`}
-              scroll
+              scroll={false}
               className="group w-[300px] flex-shrink-0 sm:w-[360px]"
             >
               <div className="relative aspect-video w-full overflow-hidden rounded-xl bg-black/5 shadow-sm">

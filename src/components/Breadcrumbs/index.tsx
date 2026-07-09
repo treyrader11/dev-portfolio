@@ -35,6 +35,7 @@ export default function Breadcrumbs({ items, className }: Props) {
             {item.href && !isLast ? (
               <Link
                 href={item.href}
+                scroll={false}
                 className="transition-colors hover:text-white"
               >
                 {item.label}
