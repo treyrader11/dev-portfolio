@@ -154,6 +154,23 @@ Before ending any response that changed code:
 - Use `next/head` for per-page metadata (title, description, og tags)
 - Use `next/dynamic` for heavy client components: `dynamic(() => import('...'), { ssr: false })`
 
+### Page Transitions (MANDATORY for every public page)
+
+Public pages animate in/out via a shared `AnimatePresence` in `src/components/Layout.tsx`. For the transition to work correctly — **especially on dynamic routes** (`pages/portfolio/[project].tsx`, `pages/portfolio/repo/[name].tsx`, etc.) — every new page and every navigation into it MUST follow these rules:
+
+1. **Wrap the page's content in `<Inner>`** (`@/components/layout/Inner`). `Inner` provides the slide/perspective/opacity exit + enter animation. A page that doesn't render inside `Inner` has no transition. Admin pages are the only exception (they bypass `Layout`).
+
+2. **The transition is keyed by `router.asPath`, NOT `router.route`.** This is what makes navigating between two pages that share a dynamic route (e.g. project → project via "Similar projects", or repo → repo) actually re-run the exit/enter animation and the `onExitComplete` scroll reset. **Do not** change the `AnimatePresence` child `key` back to the route pattern (`router.route`) — that silently kills transitions for same-dynamic-route navigation. Keep `router.route` only for pattern-based lookups (the footer-curve color map, the GoBack visibility check).
+
+3. **Every internal navigation must opt out of Next's auto scroll-to-top** so the exit animation plays from the current scroll position instead of the page flashing to the top first:
+   - `<Link href="..." scroll={false}>` on all internal links.
+   - `router.push(href, undefined, { scroll: false })` for programmatic navigation (e.g. the `Rounded` button).
+   - The Layout's `onExitComplete` already resets scroll to the top of the new page — do not also rely on Next's default scroll.
+
+4. **To skip the transition on purpose** (instant navigation, e.g. opening a fetched repo detail page), call `skipNextPageTransition()` from `@/lib/page-transition` right before navigating; still pass `scroll={false}`.
+
+When adding a new dynamic page or a new component that links between pages, verify a scrolled-down navigation both animates and lands at the top of the destination.
+
 ---
 
 ## Feature Breakdown & Patterns
