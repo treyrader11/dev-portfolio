@@ -22,6 +22,10 @@ interface Props {
 
 export function Portrait({ className, style, src }: Props) {
   const [hovered, setHovered] = useState(false);
+  // The photo's own aspect ratio, measured once it loads, so the frame matches
+  // the image's dimensions and nothing is cropped. Defaults to a 3:4 portrait
+  // until known.
+  const [ratio, setRatio] = useState(3 / 4);
 
   return (
     // Outer element keeps the scroll parallax (the `top` MotionValue in `style`)
@@ -30,23 +34,16 @@ export function Portrait({ className, style, src }: Props) {
       style={style}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
-      className={cn(
-        "relative",
-        "mx-auto",
-        "w-full",
-        "max-w-[25vh]",
-        "md:max-w-full",
-        "h-[60vh]",
-        "mr-4",
-        className
-      )}
+      className={cn("relative", "mx-auto", "w-full", "mr-4", className)}
     >
-      {/* em-corporate hover: the frame gently shrinks (0.96) while the image
-          zooms in (1.09) behind the clip, on mismatched slow eases. */}
+      {/* Frame width follows the column; its height is derived from the photo's
+          own aspect ratio, so object-cover fills it with no cropping. em-corporate
+          hover: frame shrinks (0.96) while the image zooms in (1.09) behind the
+          clip, on mismatched slow eases. */}
       <div
+        style={{ aspectRatio: ratio }}
         className={cn(
           "relative",
-          "h-full",
           "w-full",
           "overflow-hidden",
           "rounded-2xl",
@@ -62,6 +59,12 @@ export function Portrait({ className, style, src }: Props) {
           alt="Full profile picture"
           src={resolveImageSrc(src || DEFAULT_PORTRAIT, "/images/portraits")}
           sizes="100vw"
+          onLoad={(e) => {
+            const img = e.currentTarget;
+            if (img.naturalHeight > 0) {
+              setRatio(img.naturalWidth / img.naturalHeight);
+            }
+          }}
           className={cn(
             "object-cover",
             "z-[1]",

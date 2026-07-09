@@ -106,6 +106,7 @@ export function AdminProfilePage({ data }: Props) {
             value={form.portraitUrl ?? ""}
             previewBg="#141516"
             aspect={3 / 4}
+            freeCrop
             folder="portraits"
             onChange={(url) => update("portraitUrl", url)}
           />

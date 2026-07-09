@@ -24,6 +24,12 @@ interface Props {
   folder?: string;
   /** Crop aspect ratio: 1 = square icon (default), e.g. 16/9 for wide shots. */
   aspect?: number;
+  /**
+   * Free crop: default the crop box to the uploaded photo's own aspect ratio so
+   * the full image is kept (nothing chopped). The `aspect` prop is used only as
+   * a fallback until the image's dimensions are known.
+   */
+  freeCrop?: boolean;
   /** Render the label inline (to the left) instead of stacked above. */
   inline?: boolean;
 }
@@ -39,6 +45,7 @@ export function IconUploadField({
   previewBg = "#ffffff",
   folder,
   aspect = 1,
+  freeCrop = false,
   inline = false,
 }: Props) {
   const [open, setOpen] = useState(false);
@@ -48,16 +55,37 @@ export function IconUploadField({
   const [pixels, setPixels] = useState<Area | null>(null);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  // The uploaded photo's own aspect ratio (freeCrop mode), measured on load.
+  const [naturalAspect, setNaturalAspect] = useState<number | null>(null);
+
+  // In freeCrop mode, crop to the photo's own aspect (whole image) once known;
+  // otherwise use the fixed `aspect`.
+  const effectiveAspect = freeCrop && naturalAspect ? naturalAspect : aspect;
 
   // Read the dropped/selected file into a local object URL for the cropper.
-  const onDrop = useCallback((files: File[]) => {
-    const file = files[0];
-    if (!file) return;
-    setError(null);
-    setRawSrc(URL.createObjectURL(file));
-    setCrop({ x: 0, y: 0 });
-    setZoom(1);
-  }, []);
+  const onDrop = useCallback(
+    (files: File[]) => {
+      const file = files[0];
+      if (!file) return;
+      setError(null);
+      const url = URL.createObjectURL(file);
+      setRawSrc(url);
+      setCrop({ x: 0, y: 0 });
+      setZoom(1);
+      setNaturalAspect(null);
+      // Measure the image so freeCrop can default to its full-frame aspect.
+      if (freeCrop) {
+        const img = new window.Image();
+        img.onload = () => {
+          if (img.naturalHeight > 0) {
+            setNaturalAspect(img.naturalWidth / img.naturalHeight);
+          }
+        };
+        img.src = url;
+      }
+    },
+    [freeCrop],
+  );
 
   const { getRootProps, getInputProps, isDragActive, open: openFileDialog } =
     useDropzone({
@@ -77,6 +105,7 @@ export function IconUploadField({
   function closeModal() {
     setRawSrc(null);
     setError(null);
+    setNaturalAspect(null);
     setOpen(false);
   }
 
@@ -211,7 +240,7 @@ export function IconUploadField({
                       image={rawSrc}
                       crop={crop}
                       zoom={zoom}
-                      aspect={aspect}
+                      aspect={effectiveAspect}
                       showGrid={false}
                       onCropChange={setCrop}
                       onZoomChange={setZoom}
