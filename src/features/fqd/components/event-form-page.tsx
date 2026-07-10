@@ -1,5 +1,6 @@
 import { useRef, useState } from "react";
 import { useRouter } from "next/router";
+import Link from "next/link";
 import { motion } from "framer-motion";
 import AdminLayout from "@/features/admin/components/admin-layout";
 import { ConfirmDialog } from "@/features/admin/components/confirm-dialog";
@@ -166,14 +167,22 @@ export function EventFormPage({ mode, event }: Props) {
           isNew={isNew}
         />
 
-        {!isNew && (
-          <button
-            type="button"
-            onClick={() => setConfirmDelete(true)}
-            className="mt-4 text-sm text-error transition-colors hover:text-error-600"
-          >
-            Delete event
-          </button>
+        {!isNew && event && (
+          <div className="mt-4 flex items-center gap-4">
+            <Link
+              href={`/admin/french-quarter-direct/event/${event.slug}`}
+              className="text-sm text-secondary transition-colors hover:underline"
+            >
+              View page
+            </Link>
+            <button
+              type="button"
+              onClick={() => setConfirmDelete(true)}
+              className="text-sm text-error transition-colors hover:text-error-600"
+            >
+              Delete event
+            </button>
+          </div>
         )}
       </div>
 

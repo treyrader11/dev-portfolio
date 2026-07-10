@@ -2,6 +2,7 @@ import Link from "next/link";
 import {
   RiDeleteBinLine,
   RiPencilLine,
+  RiEyeLine,
   RiMapPin2Line,
   RiCalendarLine,
 } from "react-icons/ri";
@@ -73,6 +74,13 @@ export function EventCard({ event, onDelete }: Props) {
       </Link>
 
       <div className="flex shrink-0 items-center gap-2">
+        <Link
+          href={`/admin/french-quarter-direct/event/${event.slug}`}
+          aria-label="View event"
+          className="text-light-400 transition-colors hover:text-white"
+        >
+          <RiEyeLine className="size-5" />
+        </Link>
         <Link
           href={href}
           aria-label="Edit event"
