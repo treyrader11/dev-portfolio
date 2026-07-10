@@ -1,13 +1,13 @@
 import { useState } from "react";
-import type { EventResearch } from "../types/fqd-types";
+import type { FqdResearchResponse } from "../types/fqd-types";
 
-export interface ResearchResult {
-  fields: EventResearch;
-  raw: string;
-}
+// The successful { data, provider, providerLabel, searchEngine, raw } shape
+// returned by both AI endpoints.
+export type ResearchResult = FqdResearchResponse;
 
-// Wraps the two AI endpoints (web-search research + raw-text parse). Both return
-// the same { fields, raw } shape, so the panel treats them identically.
+// Wraps the two AI endpoints (web-search research + raw-text parse). Both run
+// the provider fallback chain server-side and return the same shape, so the
+// panel treats them identically.
 export function useEventResearch() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);

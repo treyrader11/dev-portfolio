@@ -91,6 +91,26 @@ export const eventResearchSchema = z.object({
 
 export type EventResearch = z.infer<typeof eventResearchSchema>;
 
+// ---- AI providers (research fallback chain) ------------------------------
+
+export type FqdProvider = "anthropic" | "gemini" | "openai";
+
+// Dot color per provider for the "researched via …" status line.
+export const FQD_PROVIDER_DOT: Record<FqdProvider, string> = {
+  anthropic: "bg-amber-400",
+  gemini: "bg-blue-400",
+  openai: "bg-emerald-400",
+};
+
+// The successful research/parse response returned by the API routes.
+export interface FqdResearchResponse {
+  data: EventResearch;
+  provider: FqdProvider;
+  providerLabel: string;
+  searchEngine: string;
+  raw: string;
+}
+
 // ---- Client-side shapes --------------------------------------------------
 
 export interface FqdEventImageInput {

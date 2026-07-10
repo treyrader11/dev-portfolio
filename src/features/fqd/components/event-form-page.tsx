@@ -72,7 +72,7 @@ export function EventFormPage({ mode, event }: Props) {
 
   // Apply an AI research/parse result: fill blank/updated fields, keep the slug
   // linked, mark researched, and stash the raw response for audit.
-  function applyResearch({ fields, raw }: ResearchResult) {
+  function applyResearch({ data: fields, raw }: ResearchResult) {
     setForm((prev) => {
       const next = { ...prev };
       const pick = (v: string | null | undefined, cur: string) =>

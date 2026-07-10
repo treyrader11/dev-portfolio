@@ -1,6 +1,10 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { requireAdmin } from "@/features/admin/lib/admin-auth";
-import { researchByQuery } from "@/features/fqd/lib/research";
+import {
+  researchEventWithFallback,
+  PROVIDER_META,
+  FqdAllProvidersError,
+} from "@/features/fqd/lib/fqd-research";
 
 export default async function handler(
   req: NextApiRequest,
@@ -18,11 +22,24 @@ export default async function handler(
   }
 
   try {
-    const { fields, raw } = await researchByQuery(query.trim());
-    return res.status(200).json({ fields, raw });
+    const { data, provider, raw } = await researchEventWithFallback(query.trim());
+    const meta = PROVIDER_META[provider];
+    return res.status(200).json({
+      data,
+      provider,
+      providerLabel: meta.providerLabel,
+      searchEngine: meta.searchEngine,
+      raw,
+    });
   } catch (err) {
-    const message =
-      err instanceof Error ? err.message : "Research failed";
-    return res.status(502).json({ error: message });
+    if (err instanceof FqdAllProvidersError) {
+      return res.status(503).json({
+        error: "All AI providers failed to research this event.",
+        attempts: err.attempts,
+      });
+    }
+    return res.status(502).json({
+      error: err instanceof Error ? err.message : "Research failed",
+    });
   }
 }

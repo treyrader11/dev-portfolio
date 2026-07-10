@@ -8,6 +8,7 @@ import {
   RiFileTextLine,
 } from "react-icons/ri";
 import { cn } from "@/lib/utils";
+import { FQD_PROVIDER_DOT } from "../types/fqd-types";
 import { useEventResearch, type ResearchResult } from "../hooks/use-event-research";
 
 interface Props {
@@ -27,19 +28,24 @@ export function AiResearchPanel({ onApply, defaultOpen = false }: Props) {
   const [query, setQuery] = useState("");
   const [text, setText] = useState("");
   const [dragOver, setDragOver] = useState(false);
+  const [lastResult, setLastResult] = useState<ResearchResult | null>(null);
   const { research, parse, loading, error } = useEventResearch();
+
+  function handleResult(result: ResearchResult | null) {
+    if (!result) return;
+    onApply(result);
+    setLastResult(result);
+  }
 
   async function runSearch() {
     if (!query.trim() || loading) return;
-    const result = await research(query.trim());
-    if (result) onApply(result);
+    handleResult(await research(query.trim()));
   }
 
   async function runParse(raw?: string) {
     const content = (raw ?? text).trim();
     if (!content || loading) return;
-    const result = await parse(content);
-    if (result) onApply(result);
+    handleResult(await parse(content));
   }
 
   async function handleDrop(e: DragEvent<HTMLDivElement>) {
@@ -183,6 +189,26 @@ export function AiResearchPanel({ onApply, defaultOpen = false }: Props) {
               )}
 
               {error && <p className="text-xs text-red-400">{error}</p>}
+
+              {/* Which provider actually answered (after the fallback chain). */}
+              {lastResult && (
+                <div className="flex items-center gap-2 text-xs text-light-300">
+                  <span
+                    className={cn(
+                      "size-2 shrink-0 rounded-full",
+                      FQD_PROVIDER_DOT[lastResult.provider],
+                    )}
+                  />
+                  <span>
+                    Researched via{" "}
+                    <span className="font-medium text-white">
+                      {lastResult.providerLabel}
+                    </span>{" "}
+                    · {lastResult.searchEngine}
+                  </span>
+                </div>
+              )}
+
               <p className="text-xs text-light-400">
                 Results auto-fill the form below — every field stays editable.
               </p>
