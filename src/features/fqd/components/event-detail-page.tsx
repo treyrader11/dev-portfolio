@@ -7,6 +7,7 @@ import {
   RiExternalLinkLine,
 } from "react-icons/ri";
 import AdminLayout from "@/features/admin/components/admin-layout";
+import { EventExport } from "./event-export";
 import { cn, resolveImageSrc } from "@/lib/utils";
 import {
   FQD_STATUS_BADGE,
@@ -90,13 +91,16 @@ export function EventDetailPage({ event }: Props) {
           >
             {status}
           </span>
-          <Link
-            href={`/admin/french-quarter-direct/create-event/${event.id}`}
-            className="inline-flex items-center gap-1.5 rounded-lg border border-dark-600 px-3 py-2 text-sm text-white transition-colors hover:border-secondary/60"
-          >
-            <RiPencilLine className="size-4" />
-            Edit
-          </Link>
+          <div className="flex items-center gap-2">
+            <EventExport eventId={event.id} />
+            <Link
+              href={`/admin/french-quarter-direct/create-event/${event.id}`}
+              className="inline-flex items-center gap-1.5 rounded-lg border border-dark-600 px-3 py-2 text-sm text-white transition-colors hover:border-secondary/60"
+            >
+              <RiPencilLine className="size-4" />
+              Edit
+            </Link>
+          </div>
         </div>
 
         {/* Image carousel — same horizontal rail as the public "Similar
