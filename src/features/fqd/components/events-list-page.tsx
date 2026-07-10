@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Link from "next/link";
+import { RiSearchLine } from "react-icons/ri";
 import AdminLayout from "@/features/admin/components/admin-layout";
 import { ConfirmDialog } from "@/features/admin/components/confirm-dialog";
 import { useNotificationsContext } from "@/components/providers/NotificationsProvider";
@@ -22,6 +23,18 @@ export function EventsListPage({ data }: Props) {
   const { addNotification } = useNotificationsContext();
   const { events, removeEvent } = useFqdEvents(data.events);
   const [target, setTarget] = useState<FqdEventListItem | null>(null);
+  const [filter, setFilter] = useState("");
+
+  // Client-side filter of the loaded page by title / location.
+  const q = filter.trim().toLowerCase();
+  const visible = q
+    ? events.filter(
+        (e) =>
+          e.title.toLowerCase().includes(q) ||
+          (e.locationName ?? "").toLowerCase().includes(q) ||
+          (e.address ?? "").toLowerCase().includes(q),
+      )
+    : events;
 
   async function doDelete() {
     if (!target) return;
@@ -48,6 +61,19 @@ export function EventsListPage({ data }: Props) {
           </Link>
         </div>
 
+        {/* Filter (client-side, over the current page). */}
+        {events.length > 0 && (
+          <div className="mb-4 flex items-center gap-2 rounded-lg border border-dark-600 bg-dark-600 px-3 py-2">
+            <RiSearchLine className="size-4 shrink-0 text-light-400" />
+            <input
+              value={filter}
+              onChange={(e) => setFilter(e.target.value)}
+              placeholder="Filter events by title or location…"
+              className="w-full bg-transparent text-sm text-white outline-none placeholder:text-light-400"
+            />
+          </div>
+        )}
+
         {events.length === 0 ? (
           <div className="rounded-lg border border-dashed border-dark-600 p-10 text-center">
             <p className="text-white">No events yet.</p>
@@ -62,9 +88,13 @@ export function EventsListPage({ data }: Props) {
               Add Event
             </Link>
           </div>
+        ) : visible.length === 0 ? (
+          <div className="rounded-lg border border-dashed border-dark-600 p-8 text-center text-sm text-light-400">
+            No events on this page match &ldquo;{filter}&rdquo;.
+          </div>
         ) : (
           <div className="space-y-3">
-            {events.map((e) => (
+            {visible.map((e) => (
               <EventCard key={e.id} event={e} onDelete={setTarget} />
             ))}
           </div>
