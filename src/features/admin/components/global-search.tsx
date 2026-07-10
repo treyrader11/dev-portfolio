@@ -1,32 +1,81 @@
 "use client";
 
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { AnimatePresence, motion } from "framer-motion";
-import { RiSearchLine, RiLoader4Line } from "react-icons/ri";
+import { RiSearchLine, RiLoader4Line, RiTimeLine } from "react-icons/ri";
 import { useDebounce } from "@/hooks/useDebounce";
+import {
+  useRecentSearches,
+  type RecentSearchItem,
+} from "@/hooks/useRecentSearches";
 import { cn } from "@/lib/utils";
 import type { GlobalSearchResults } from "@/pages/api/admin/search";
 
+interface Group {
+  title: string;
+  items: RecentSearchItem[];
+}
+
+// Flatten the API results into labeled groups of a common item shape.
+function toGroups(results: GlobalSearchResults): Group[] {
+  return [
+    {
+      title: "Events",
+      items: results.events.map((e) => ({
+        title: e.title,
+        subtitle: e.subtitle,
+        href: e.href,
+        group: "Events",
+      })),
+    },
+    {
+      title: "Projects",
+      items: results.projects.map((p) => ({
+        title: p.title,
+        subtitle: p.subtitle,
+        href: p.href,
+        group: "Projects",
+      })),
+    },
+    {
+      title: "GitHub repos",
+      items: results.repos.map((r) => ({
+        title: r.name,
+        subtitle: r.subtitle,
+        href: r.href,
+        group: "GitHub repos",
+      })),
+    },
+  ];
+}
+
 export function GlobalSearch() {
   const [value, setValue] = useState("");
-  const debounced = useDebounce(value, 300);
+  // 400ms debounce so a burst of keystrokes fires a single request.
+  const debounced = useDebounce(value, 400);
   const [results, setResults] = useState<GlobalSearchResults | null>(null);
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
+  const lastFetched = useRef<string>("");
   const router = useRouter();
+  const { recent, addRecent, clearRecent } = useRecentSearches();
 
   const ready = debounced.trim().length >= 2;
 
-  // Fetch on the debounced query.
+  // Fetch on the debounced query — and skip if it matches the last query we
+  // already fetched (e.g. typing then deleting back to the same term).
   useEffect(() => {
     const q = debounced.trim();
     if (q.length < 2) {
       setResults(null);
       return;
     }
+    if (q === lastFetched.current) return;
+    lastFetched.current = q;
+
     let active = true;
     setLoading(true);
     fetch(`/api/admin/search?q=${encodeURIComponent(q)}`)
@@ -70,9 +119,9 @@ export function GlobalSearch() {
     return () => router.events.off("routeChangeStart", close);
   }, [router.events]);
 
-  const total = results
-    ? results.events.length + results.projects.length + results.repos.length
-    : 0;
+  const groups = results ? toGroups(results) : [];
+  const total = groups.reduce((n, g) => n + g.items.length, 0);
+  const showRecent = !ready && recent.length > 0;
 
   return (
     <div ref={containerRef} className="relative w-full max-w-xs sm:max-w-sm">
@@ -81,7 +130,7 @@ export function GlobalSearch() {
         <input
           value={value}
           onChange={(e) => setValue(e.target.value)}
-          onFocus={() => ready && setOpen(true)}
+          onFocus={() => setOpen(true)}
           onKeyDown={(e) => e.key === "Escape" && setOpen(false)}
           placeholder="Search events, projects, repos…"
           className="w-full bg-transparent text-sm text-white outline-none placeholder:text-light-400"
@@ -91,9 +140,10 @@ export function GlobalSearch() {
         )}
       </div>
 
-      {/* Results slide down (same logic as vouzot's landing search list). */}
+      {/* Slides down (vouzot per-item animation). Shows live results while
+          typing, or recent searches when the box is focused and empty. */}
       <AnimatePresence>
-        {open && ready && (
+        {open && (ready || showRecent) && (
           <motion.div
             initial={{ opacity: 0, y: -8 }}
             animate={{ opacity: 1, y: 0 }}
@@ -101,45 +151,37 @@ export function GlobalSearch() {
             transition={{ duration: 0.18, ease: "easeOut" }}
             className="absolute inset-x-0 z-50 mt-2 max-h-[70vh] overflow-auto rounded-lg border border-dark-600 bg-dark-500 p-2 shadow-2xl"
           >
-            {total === 0 ? (
-              <p className="px-2 py-3 text-sm text-light-400">
-                {loading ? "Searching…" : "No matches."}
-              </p>
+            {ready ? (
+              total === 0 ? (
+                <p className="px-2 py-3 text-sm text-light-400">
+                  {loading ? "Searching…" : "No matches."}
+                </p>
+              ) : (
+                <ResultList groups={groups} onSelect={addRecent} />
+              )
             ) : (
-              <div className="space-y-1">
-                <Group title="Events" items={results!.events}>
-                  {(e, i) => (
-                    <Row
-                      key={e.id}
-                      i={i}
-                      href={e.href}
-                      title={e.title}
-                      subtitle={e.subtitle}
-                    />
-                  )}
-                </Group>
-                <Group title="Projects" items={results!.projects}>
-                  {(p, i) => (
-                    <Row
-                      key={p.href}
-                      i={i}
-                      href={p.href}
-                      title={p.title}
-                      subtitle={p.subtitle}
-                    />
-                  )}
-                </Group>
-                <Group title="GitHub repos" items={results!.repos}>
-                  {(r, i) => (
-                    <Row
-                      key={r.name}
-                      i={i}
-                      href={r.href}
-                      title={r.name}
-                      subtitle={r.subtitle}
-                    />
-                  )}
-                </Group>
+              <div>
+                <div className="flex items-center justify-between px-2 pb-1 pt-2">
+                  <p className="flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-wide text-light-400">
+                    <RiTimeLine className="size-3" />
+                    Recent searches
+                  </p>
+                  <button
+                    type="button"
+                    onClick={clearRecent}
+                    className="text-[10px] uppercase tracking-wide text-light-400 hover:text-white"
+                  >
+                    Clear
+                  </button>
+                </div>
+                {recent.map((item, i) => (
+                  <Row
+                    key={item.href}
+                    i={i}
+                    item={item}
+                    onSelect={addRecent}
+                  />
+                ))}
               </div>
             )}
           </motion.div>
@@ -149,38 +191,48 @@ export function GlobalSearch() {
   );
 }
 
-function Group<T>({
-  title,
-  items,
-  children,
+function ResultList({
+  groups,
+  onSelect,
 }: {
-  title: string;
-  items: T[];
-  children: (item: T, i: number) => ReactNode;
+  groups: Group[];
+  onSelect: (item: RecentSearchItem) => void;
 }) {
-  if (!items.length) return null;
+  // Running index so the stagger cascades across all groups, not per-group.
+  let index = 0;
   return (
-    <div>
-      <p className="px-2 pb-1 pt-2 text-[10px] font-semibold uppercase tracking-wide text-light-400">
-        {title}
-      </p>
-      {items.map((item, i) => children(item, i))}
+    <div className="space-y-1">
+      {groups.map((g) =>
+        g.items.length === 0 ? null : (
+          <div key={g.title}>
+            <p className="px-2 pb-1 pt-2 text-[10px] font-semibold uppercase tracking-wide text-light-400">
+              {g.title}
+            </p>
+            {g.items.map((item) => (
+              <Row
+                key={item.href}
+                i={index++}
+                item={item}
+                onSelect={onSelect}
+              />
+            ))}
+          </div>
+        ),
+      )}
     </div>
   );
 }
 
-// Each result slides down + fades in — vouzot's exact per-item animation, with a
-// small stagger so the list cascades.
+// Each result slides down + fades in (vouzot's exact per-item animation), with a
+// small stagger. Selecting it records it as a recent search.
 function Row({
   i,
-  href,
-  title,
-  subtitle,
+  item,
+  onSelect,
 }: {
   i: number;
-  href: string;
-  title: string;
-  subtitle?: string;
+  item: RecentSearchItem;
+  onSelect: (item: RecentSearchItem) => void;
 }) {
   return (
     <motion.div
@@ -189,16 +241,17 @@ function Row({
       transition={{ delay: i * 0.04, duration: 0.25 }}
     >
       <Link
-        href={href}
+        href={item.href}
+        onClick={() => onSelect(item)}
         className={cn(
           "flex items-center justify-between gap-3 rounded-md px-2 py-2",
           "transition-colors hover:bg-dark-600",
         )}
       >
-        <span className="truncate text-sm text-white">{title}</span>
-        {subtitle && (
+        <span className="truncate text-sm text-white">{item.title}</span>
+        {item.subtitle && (
           <span className="shrink-0 truncate text-xs text-light-400">
-            {subtitle}
+            {item.subtitle}
           </span>
         )}
       </Link>
