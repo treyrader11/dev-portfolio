@@ -66,6 +66,7 @@ export default function NavMenu({
       <Magnetic>
         <div
           onClick={handleNavMenu}
+          data-nav-toggle
           className={cn(
             "group",
             "flex",

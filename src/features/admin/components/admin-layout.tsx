@@ -3,7 +3,7 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import { signOut, useSession } from "next-auth/react";
 import { cn } from "@/lib/utils";
-import { useState, useEffect, type ReactNode } from "react";
+import { useState, useEffect, useRef, type ReactNode } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import type { Variants } from "framer-motion";
 import {
@@ -18,6 +18,7 @@ import {
   RiExternalLinkLine,
   RiLogoutBoxLine,
   RiSuitcaseLine,
+  RiCalendarEventLine,
 } from "react-icons/ri";
 import { SiJira } from "react-icons/si";
 import Notifications from "@/components/Notifications";
@@ -35,6 +36,11 @@ const navItems = [
   { label: "Jira", href: "/admin/jira", icon: "jira" as const },
   { label: "Invoices", href: "/admin/invoices", icon: RiFileTextLine },
   { label: "Jobs", href: "/admin/jobs", icon: RiSuitcaseLine },
+  {
+    label: "French Quarter Direct",
+    href: "/admin/french-quarter-direct",
+    icon: RiCalendarEventLine,
+  },
   { label: "Settings", href: "/admin/settings", icon: RiSettings3Line },
 ];
 
@@ -134,6 +140,8 @@ export default function AdminLayout({
   const router = useRouter();
   const { data: session } = useSession();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const sidebarRef = useRef<HTMLElement>(null);
+  const toggleRef = useRef<HTMLButtonElement>(null);
 
   // Close sidebar on route change
   useEffect(() => {
@@ -141,6 +149,23 @@ export default function AdminLayout({
     router.events.on("routeChangeStart", handleRouteChange);
     return () => router.events.off("routeChangeStart", handleRouteChange);
   }, [router.events]);
+
+  // Close the sidebar when clicking outside it (ignoring the toggle button,
+  // which manages its own open/close).
+  useEffect(() => {
+    if (!sidebarOpen) return;
+    const onPointerDown = (e: MouseEvent) => {
+      const target = e.target as Node;
+      if (
+        !sidebarRef.current?.contains(target) &&
+        !toggleRef.current?.contains(target)
+      ) {
+        setSidebarOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", onPointerDown);
+    return () => document.removeEventListener("mousedown", onPointerDown);
+  }, [sidebarOpen]);
 
   function renderIcon(item: (typeof navItems)[number]) {
     if (item.icon === "jira") {
@@ -210,6 +235,7 @@ export default function AdminLayout({
           fold into an X). Stays on top of the drawer so it also closes it.
           Mobile: top-right; desktop: top-left. */}
         <button
+          ref={toggleRef}
           onClick={() => setSidebarOpen(!sidebarOpen)}
           aria-label={sidebarOpen ? "Close menu" : "Open menu"}
           className={cn(
@@ -261,6 +287,7 @@ export default function AdminLayout({
         <AnimatePresence mode="wait">
           {sidebarOpen && (
             <motion.aside
+              ref={sidebarRef}
               variants={menuSlide}
               initial="initial"
               animate="enter"

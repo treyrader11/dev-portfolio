@@ -14,6 +14,7 @@ const BurgerMenu = forwardRef<HTMLDivElement, Props>(
     return (
       <div
         ref={ref}
+        data-nav-toggle
         className={cn(
           "fixed",
           "transform",

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { usePathname } from "next/navigation";
 import { menuSlide, slide } from "../motion";
@@ -18,9 +18,29 @@ interface NavProps {
 export default function Nav({ onClose }: NavProps) {
   const pathname = usePathname();
   const [selectedIndicator, setSelectedIndicator] = useState(pathname);
+  const panelRef = useRef<HTMLDivElement>(null);
+
+  // Close when clicking outside the menu panel (ignoring the burger toggle,
+  // which manages open/close itself). The panel covers the full screen on
+  // mobile, so this mainly applies to the desktop side panel.
+  useEffect(() => {
+    function onPointerDown(e: MouseEvent) {
+      const target = e.target as HTMLElement;
+      if (
+        panelRef.current &&
+        !panelRef.current.contains(target) &&
+        !target.closest("[data-nav-toggle]")
+      ) {
+        onClose();
+      }
+    }
+    document.addEventListener("mousedown", onPointerDown);
+    return () => document.removeEventListener("mousedown", onPointerDown);
+  }, [onClose]);
 
   return (
     <motion.div
+      ref={panelRef}
       variants={menuSlide}
       initial="initial"
       animate="enter"
