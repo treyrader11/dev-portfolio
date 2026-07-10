@@ -30,7 +30,7 @@ interface Props {
 }
 
 export function EventCard({ event, onDelete }: Props) {
-  const href = `/admin/french-quarter-direct/events/${event.id}`;
+  const href = `/admin/french-quarter-direct/create-event/${event.id}`;
   const status = event.status as FqdStatus;
   const sameDay =
     !event.endDate || event.endDate.slice(0, 10) === event.startDate.slice(0, 10);

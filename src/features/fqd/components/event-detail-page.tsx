@@ -91,7 +91,7 @@ export function EventDetailPage({ event }: Props) {
             {status}
           </span>
           <Link
-            href={`/admin/french-quarter-direct/events/${event.id}`}
+            href={`/admin/french-quarter-direct/create-event/${event.id}`}
             className="inline-flex items-center gap-1.5 rounded-lg border border-dark-600 px-3 py-2 text-sm text-white transition-colors hover:border-secondary/60"
           >
             <RiPencilLine className="size-4" />

@@ -45,14 +45,15 @@ export default async function handler(
       },
       orderBy: { startDate: "asc" },
       take: LIMIT,
-      select: { id: true, title: true, locationName: true },
+      select: { id: true, slug: true, title: true, locationName: true },
     })
     .then((rows) =>
       rows.map((e) => ({
         id: e.id,
         title: e.title,
         subtitle: e.locationName ?? "",
-        href: `/admin/french-quarter-direct/events/${e.id}`,
+        // Clicking a search result opens the event details page.
+        href: `/admin/french-quarter-direct/event/${e.slug}`,
       })),
     );
 

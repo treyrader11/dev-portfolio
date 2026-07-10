@@ -54,7 +54,7 @@ export function EventsListPage({ data }: Props) {
             {data.total} event{data.total === 1 ? "" : "s"}
           </p>
           <Link
-            href="/admin/french-quarter-direct/events/new"
+            href="/admin/french-quarter-direct/create-event/new"
             className="rounded-lg bg-secondary px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-secondary/80"
           >
             Add Event
@@ -82,7 +82,7 @@ export function EventsListPage({ data }: Props) {
               pull one in.
             </p>
             <Link
-              href="/admin/french-quarter-direct/events/new"
+              href="/admin/french-quarter-direct/create-event/new"
               className="mt-4 inline-block rounded-lg bg-secondary px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-secondary/80"
             >
               Add Event
