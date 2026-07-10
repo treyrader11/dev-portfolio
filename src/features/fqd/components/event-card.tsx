@@ -1,12 +1,13 @@
 import Link from "next/link";
+import Image from "next/image";
 import {
   RiDeleteBinLine,
   RiPencilLine,
-  RiEyeLine,
+  RiImageLine,
   RiMapPin2Line,
   RiCalendarLine,
 } from "react-icons/ri";
-import { cn } from "@/lib/utils";
+import { cn, resolveImageSrc } from "@/lib/utils";
 import {
   FQD_STATUS_BADGE,
   type FqdEventListItem,
@@ -30,7 +31,10 @@ interface Props {
 }
 
 export function EventCard({ event, onDelete }: Props) {
-  const href = `/admin/french-quarter-direct/create-event/${event.id}`;
+  // The card opens the details page; the pencil opens the edit form.
+  const detailHref = `/admin/french-quarter-direct/event/${event.slug}`;
+  const editHref = `/admin/french-quarter-direct/create-event/${event.id}`;
+  const thumbnail = event.images[0]?.url;
   const status = event.status as FqdStatus;
   const sameDay =
     !event.endDate || event.endDate.slice(0, 10) === event.startDate.slice(0, 10);
@@ -40,49 +44,61 @@ export function EventCard({ event, onDelete }: Props) {
 
   return (
     <div className="flex items-start justify-between gap-3 rounded-lg border border-dark-600 bg-dark-400 p-4">
-      <Link href={href} className="min-w-0 flex-1">
-        <div className="flex items-center gap-2">
-          <h3 className="truncate font-medium text-white">{event.title}</h3>
-          <span
-            className={cn(
-              "shrink-0 rounded-full px-2 py-0.5 text-xs font-medium capitalize",
-              FQD_STATUS_BADGE[status] ?? FQD_STATUS_BADGE.draft,
-            )}
-          >
-            {status}
-          </span>
+      <Link href={detailHref} className="flex min-w-0 flex-1 items-center gap-3">
+        {/* First image as a thumbnail so events are easy to identify. */}
+        <div className="relative h-14 w-20 shrink-0 overflow-hidden rounded border border-dark-600 bg-dark-600">
+          {thumbnail ? (
+            <Image
+              src={resolveImageSrc(thumbnail)}
+              alt=""
+              fill
+              sizes="80px"
+              className="object-cover"
+            />
+          ) : (
+            <span className="flex h-full items-center justify-center text-light-400">
+              <RiImageLine className="size-5" />
+            </span>
+          )}
         </div>
-        <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-light-400">
-          <span className="inline-flex items-center gap-1">
-            <RiCalendarLine className="size-3.5" />
-            {dateLabel}
-            {event.startTime ? ` · ${event.startTime}` : ""}
-          </span>
-          {event.locationName && (
+
+        <div className="min-w-0">
+          <div className="flex items-center gap-2">
+            <h3 className="truncate font-medium text-white">{event.title}</h3>
+            <span
+              className={cn(
+                "shrink-0 rounded-full px-2 py-0.5 text-xs font-medium capitalize",
+                FQD_STATUS_BADGE[status] ?? FQD_STATUS_BADGE.draft,
+              )}
+            >
+              {status}
+            </span>
+          </div>
+          <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-light-400">
             <span className="inline-flex items-center gap-1">
-              <RiMapPin2Line className="size-3.5" />
-              {event.locationName}
+              <RiCalendarLine className="size-3.5" />
+              {dateLabel}
+              {event.startTime ? ` · ${event.startTime}` : ""}
             </span>
-          )}
-          {event.category && (
-            <span>
-              {event.category}
-              {event.subcategory ? ` / ${event.subcategory}` : ""}
-            </span>
-          )}
+            {event.locationName && (
+              <span className="inline-flex items-center gap-1">
+                <RiMapPin2Line className="size-3.5" />
+                {event.locationName}
+              </span>
+            )}
+            {event.category && (
+              <span>
+                {event.category}
+                {event.subcategory ? ` / ${event.subcategory}` : ""}
+              </span>
+            )}
+          </div>
         </div>
       </Link>
 
       <div className="flex shrink-0 items-center gap-2">
         <Link
-          href={`/admin/french-quarter-direct/event/${event.slug}`}
-          aria-label="View event"
-          className="text-light-400 transition-colors hover:text-white"
-        >
-          <RiEyeLine className="size-5" />
-        </Link>
-        <Link
-          href={href}
+          href={editHref}
           aria-label="Edit event"
           className="text-light-400 transition-colors hover:text-white"
         >
