@@ -44,6 +44,11 @@ const sections = [
     description: "Generate and manage invoices from tracked time",
   },
   {
+    title: "French Quarter Direct",
+    href: "/admin/french-quarter-direct",
+    description: "Manage New Orleans event listings for frenchquarterdirect.com",
+  },
+  {
     title: "Settings",
     href: "/admin/settings",
     description: "SEO meta descriptions, CTA text, tag colors, Jira config",

@@ -205,3 +205,44 @@ model InvoiceLineItem {
 
   @@index([invoiceId])
 }
+
+// French Quarter Direct — internal tool for managing New Orleans event listings
+// (frenchquarterdirect.com). Additive models; existing data is untouched.
+model FqdEvent {
+  id                 String          @id @default(cuid())
+  title              String
+  slug               String          @unique
+  startDate          DateTime
+  endDate            DateTime?
+  startTime          String?
+  locationName       String?
+  address            String?
+  description        String?         @db.Text
+  admission          String?
+  website            String?
+  category           String?
+  subcategory        String?
+  ticketUrl          String?
+  organizer          String?
+  expectedAttendance String?
+  ageRequirement     String?
+  notes              String?         @db.Text
+  status             String          @default("draft") // draft | researched | approved | exported
+  rawResearch        Json?
+  images             FqdEventImage[]
+  createdAt          DateTime        @default(now())
+  updatedAt          DateTime        @updatedAt
+}
+
+model FqdEventImage {
+  id           String   @id @default(cuid())
+  eventId      String
+  event        FqdEvent @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  url          String
+  cloudinaryId String?
+  alt          String?
+  order        Int      @default(0)
+  createdAt    DateTime @default(now())
+
+  @@index([eventId])
+}

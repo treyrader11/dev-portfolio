@@ -1,0 +1,35 @@
+import type { NextApiRequest, NextApiResponse } from "next";
+import { requireAdmin } from "@/features/admin/lib/admin-auth";
+import { getFqdEvents } from "@/features/fqd/actions/get-events";
+import { createFqdEvent } from "@/features/fqd/actions/create-event";
+import type { FqdEventFormValues } from "@/features/fqd/types/fqd-types";
+
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse,
+) {
+  if (!(await requireAdmin(req, res))) return;
+
+  if (req.method === "GET") {
+    const page = Number(req.query.page ?? 1) || 1;
+    const pageSize = Number(req.query.pageSize ?? 20) || 20;
+    const data = await getFqdEvents(page, pageSize);
+    return res.status(200).json(data);
+  }
+
+  if (req.method === "POST") {
+    const { rawResearch, ...values } = req.body as FqdEventFormValues & {
+      rawResearch?: unknown;
+    };
+    if (!values.title?.trim() || !values.startDate) {
+      return res
+        .status(400)
+        .json({ error: "Title and start date are required" });
+    }
+    const event = await createFqdEvent(values, rawResearch);
+    return res.status(201).json(event);
+  }
+
+  res.setHeader("Allow", ["GET", "POST"]);
+  return res.status(405).json({ error: "Method not allowed" });
+}

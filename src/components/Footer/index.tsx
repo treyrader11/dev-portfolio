@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useScroll, motion, useTransform, useSpring } from "framer-motion";
 import { cn, getLocalTime } from "@/lib/utils";
 import Brand from "@/components/Brand";
@@ -12,6 +12,18 @@ const springConfig = { stiffness: 100, damping: 30, restDelta: 0.001 };
 
 export default function Footer() {
   const container = useRef<HTMLDivElement>(null);
+
+  // The local time is client-only: rendering it during SSR then hydrating a
+  // moment later produces a mismatch. Start empty (matches the server), then
+  // fill in and refresh on the client.
+  const [localTime, setLocalTime] = useState("");
+  useEffect(() => {
+    const update = () => setLocalTime(getLocalTime());
+    update();
+    const id = setInterval(update, 30_000);
+    return () => clearInterval(id);
+  }, []);
+
   const { scrollYProgress } = useScroll({
     target: container,
     offset: ["start end", "end end"],
@@ -87,7 +99,8 @@ export default function Footer() {
               <h5 className="text-[10px] uppercase text-light-100">
                 local time
               </h5>
-              {getLocalTime()}
+              {/* Reserve height while it's empty pre-mount to avoid a layout shift. */}
+              <span suppressHydrationWarning>{localTime || " "}</span>
             </div>
           </span>
         </div>
