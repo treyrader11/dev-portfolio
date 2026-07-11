@@ -9,6 +9,7 @@ import type { FqdNotificationSettings as Settings } from "../lib/notification-se
 interface Props {
   initial: Settings;
   currentUserEmail: string;
+  emailOptions: string[];
 }
 
 function Toggle({
@@ -52,7 +53,11 @@ function Toggle({
 
 // Admin settings for the two event emails. Defaults are on; changes persist to
 // SiteConfig so the scheduled cron can read them.
-export function FqdNotificationSettings({ initial, currentUserEmail }: Props) {
+export function FqdNotificationSettings({
+  initial,
+  currentUserEmail,
+  emailOptions,
+}: Props) {
   const { addNotification } = useNotificationsContext();
   const [emailOnStart, setEmailOnStart] = useState(initial.emailOnStart);
   const [emailOnEnd, setEmailOnEnd] = useState(initial.emailOnEnd);
@@ -110,15 +115,34 @@ export function FqdNotificationSettings({ initial, currentUserEmail }: Props) {
 
         <div className="flex flex-col gap-1 border-t border-dark-600 pt-5">
           <label className="text-sm font-medium text-white">Send to</label>
-          <input
-            type="email"
-            value={recipient}
-            onChange={(e) => setRecipient(e.target.value)}
-            placeholder="you@example.com"
-            className="w-full rounded-lg border border-dark-600 bg-dark-600 px-3 py-2.5 text-sm text-white transition-all focus:outline-none focus:ring-1 focus:ring-secondary"
-          />
+          <div className="flex flex-col gap-2 sm:flex-row">
+            {emailOptions.length > 0 && (
+              <select
+                value={emailOptions.includes(recipient) ? recipient : ""}
+                onChange={(e) =>
+                  e.target.value && setRecipient(e.target.value)
+                }
+                className="w-full rounded-lg border border-dark-600 bg-dark-600 px-3 py-2.5 text-sm text-white [color-scheme:dark] transition-all focus:outline-none focus:ring-1 focus:ring-secondary sm:w-1/2"
+              >
+                <option value="">Choose an account…</option>
+                {emailOptions.map((email) => (
+                  <option key={email} value={email}>
+                    {email}
+                  </option>
+                ))}
+              </select>
+            )}
+            <input
+              type="email"
+              value={recipient}
+              onChange={(e) => setRecipient(e.target.value)}
+              placeholder="or type an email…"
+              className="w-full rounded-lg border border-dark-600 bg-dark-600 px-3 py-2.5 text-sm text-white transition-all focus:outline-none focus:ring-1 focus:ring-secondary sm:w-1/2"
+            />
+          </div>
           <p className="text-xs text-light-400">
-            Defaults to your account email.
+            Pick an account email or type any address. Defaults to your account
+            email.
           </p>
         </div>
       </div>

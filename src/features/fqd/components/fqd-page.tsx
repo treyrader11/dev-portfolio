@@ -7,9 +7,15 @@ interface Props {
   settings: Settings;
   currentUserEmail: string;
   eventCount: number;
+  emailOptions: string[];
 }
 
-export function FqdPage({ settings, currentUserEmail, eventCount }: Props) {
+export function FqdPage({
+  settings,
+  currentUserEmail,
+  eventCount,
+  emailOptions,
+}: Props) {
   return (
     <AdminLayout
       title="French Quarter Direct"
@@ -38,6 +44,7 @@ export function FqdPage({ settings, currentUserEmail, eventCount }: Props) {
       <FqdNotificationSettings
         initial={settings}
         currentUserEmail={currentUserEmail}
+        emailOptions={emailOptions}
       />
     </AdminLayout>
   );
