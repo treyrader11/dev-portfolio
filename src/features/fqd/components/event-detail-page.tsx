@@ -5,6 +5,8 @@ import {
   RiMapPin2Line,
   RiCalendarLine,
   RiExternalLinkLine,
+  RiDownloadLine,
+  RiFolderZipLine,
 } from "react-icons/ri";
 import AdminLayout from "@/features/admin/components/admin-layout";
 import { EventExport } from "./event-export";
@@ -108,11 +110,20 @@ export function EventDetailPage({ event }: Props) {
             projects" section, adapted to the dark admin theme. */}
         {event.images.length > 0 && (
           <section>
-            <h2 className="mb-3 text-lg font-semibold text-white">
-              Images ({event.images.length})
-            </h2>
+            <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
+              <h2 className="text-lg font-semibold text-white">
+                Images ({event.images.length})
+              </h2>
+              <a
+                href={`/api/fqd/events/${event.id}?download=zip`}
+                className="inline-flex items-center gap-1.5 rounded-lg border border-dark-600 px-3 py-1.5 text-sm text-white transition-colors hover:border-secondary/60"
+              >
+                <RiFolderZipLine className="size-4" />
+                Download all (.zip)
+              </a>
+            </div>
             <div className="-mx-4 flex gap-6 overflow-x-auto scroll-smooth px-4 pb-4 sm:mx-0 sm:px-0 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-              {event.images.map((img) => (
+              {event.images.map((img, i) => (
                 <div
                   key={img.id}
                   className="group w-[300px] flex-shrink-0 sm:w-[360px]"
@@ -125,6 +136,14 @@ export function EventDetailPage({ event }: Props) {
                       sizes="(max-width: 640px) 300px, 360px"
                       className="object-cover transition-transform duration-500 group-hover:scale-105"
                     />
+                    <a
+                      href={`/api/fqd/events/${event.id}?download=image&index=${i}`}
+                      aria-label="Download image as PNG"
+                      className="absolute right-2 top-2 inline-flex items-center gap-1 rounded-lg bg-black/60 px-2.5 py-1.5 text-xs font-medium text-white opacity-0 backdrop-blur-sm transition-opacity hover:bg-black/80 group-hover:opacity-100"
+                    >
+                      <RiDownloadLine className="size-3.5" />
+                      PNG
+                    </a>
                   </div>
                   {img.alt && (
                     <p className="mt-2 truncate text-sm text-light-400">
