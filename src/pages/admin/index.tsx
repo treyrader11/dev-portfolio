@@ -104,7 +104,7 @@ export default function AdminDashboard({ counts }: Props) {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {sections.map((section) => (
           <Link key={section.href} href={section.href}>
-            <div className="bg-dark-400 rounded-lg border border-dark-600 p-6 hover:shadow-md transition-shadow h-full">
+            <div className="bg-dark-400 rounded-lg border border-dark-600 p-6 transition-colors hover:border-secondary hover:bg-dark-600 h-full">
               <h2 className="text-lg font-semibold text-white">
                 {section.title}
               </h2>
