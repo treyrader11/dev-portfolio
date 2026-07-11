@@ -315,7 +315,7 @@ export default function AdminLayout({
                   Mobile: big, bold, centered items with no icons, vertically
                   centered in the drawer. Desktop (md+): compact icon rows. */}
               <nav className="min-h-0 flex-1 overflow-y-auto">
-                <div className="flex min-h-full flex-col justify-center gap-6 py-8 md:block md:min-h-0 md:gap-0 md:py-4">
+                <div className="flex min-h-full flex-col justify-center gap-1 py-8 md:block md:min-h-0 md:gap-0 md:py-4">
                   {navItems.map((item, i) => {
                     const isActive = router.pathname === item.href;
                     return (
@@ -332,15 +332,14 @@ export default function AdminLayout({
                           className={cn(
                             "flex",
                             "items-center",
-                            "justify-center",
+                            "justify-start",
                             "gap-3",
                             "px-6",
-                            "py-3",
+                            "py-1.5",
                             "text-4xl",
                             "font-bold",
                             "transition-colors",
-                            "md:justify-start",
-                            "md:py-2.5",
+                            "md:py-1.5",
                             "md:text-sm",
                             "md:font-normal",
                             isActive
