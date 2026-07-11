@@ -5,7 +5,9 @@ import {
 } from "@/features/admin/components/admin-field";
 import { AdminFocusScope } from "@/features/admin/components/admin-form";
 import { cn, slugify } from "@/lib/utils";
-import { RiLoader4Line } from "react-icons/ri";
+import { useState } from "react";
+import { RiLoader4Line, RiSparkling2Line } from "react-icons/ri";
+import { useNotificationsContext } from "@/components/providers/NotificationsProvider";
 import { CategorySelect } from "./category-select";
 import { ImageManager } from "./image-manager";
 import { AiResearchPanel } from "./ai-research-panel";
@@ -60,8 +62,59 @@ export function EventForm({
   const set = (patch: Partial<FqdEventFormValues>) =>
     onChange({ ...values, ...patch });
 
+  const { addNotification } = useNotificationsContext();
+  const [genDesc, setGenDesc] = useState(false);
+
   // Keep the slug auto-linked to the title until the user edits it by hand.
   const slugAuto = values.slug === "" || values.slug === slugify(values.title);
+
+  // AI web-search for a description from the event's current details.
+  async function generateDescription() {
+    if (genDesc) return;
+    if (!values.title.trim()) {
+      addNotification({
+        text: "Add a title first so the search has something to go on",
+        variant: "error",
+      });
+      return;
+    }
+    setGenDesc(true);
+    try {
+      const res = await fetch("/api/fqd/generate-description", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          title: values.title,
+          locationName: values.locationName,
+          address: values.address,
+          startDate: values.startDate,
+          category: values.category,
+          subcategory: values.subcategory,
+          website: values.website,
+        }),
+      });
+      const data = await res.json();
+      if (res.ok && data.description) {
+        set({ description: data.description });
+        addNotification({
+          text: "Description generated from the web",
+          variant: "success",
+        });
+      } else {
+        addNotification({
+          text: data.error ?? "Couldn't generate a description",
+          variant: "error",
+        });
+      }
+    } catch {
+      addNotification({
+        text: "Couldn't generate a description — request failed",
+        variant: "error",
+      });
+    } finally {
+      setGenDesc(false);
+    }
+  }
 
   return (
     <div className="space-y-4">
@@ -147,11 +200,26 @@ export function EventForm({
         />
 
         <SectionHeading>Details</SectionHeading>
-        <AdminTextarea
-          label="Description"
-          value={values.description}
-          onChange={(v) => set({ description: v })}
-        />
+        <div className="relative">
+          <button
+            type="button"
+            onClick={generateDescription}
+            disabled={genDesc}
+            className="absolute right-0 top-0 z-10 inline-flex items-center gap-1 text-xs font-medium text-secondary transition-colors hover:text-secondary/80 disabled:opacity-50"
+          >
+            {genDesc ? (
+              <RiLoader4Line className="size-3.5 animate-spin" />
+            ) : (
+              <RiSparkling2Line className="size-3.5" />
+            )}
+            {genDesc ? "Searching…" : "AI web search"}
+          </button>
+          <AdminTextarea
+            label="Description"
+            value={values.description}
+            onChange={(v) => set({ description: v })}
+          />
+        </div>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <AdminInput
             label="Admission / ticket info"

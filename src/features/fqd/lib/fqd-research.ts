@@ -248,6 +248,26 @@ export async function generateClassificationsWithFallback(
   return { values: data, provider };
 }
 
+// The model replies with a plain description; trim and sanity-check length.
+const cleanDescription = (text: string): string => {
+  const d = text.trim().replace(/^["']|["']$/g, "").trim();
+  if (d.length < 20) throw new Error("no usable description in response");
+  return d;
+};
+
+// Mode 5: web-search for a factual description of an event.
+export function researchEventDescriptionWithFallback(
+  query: string,
+): Promise<{ data: string; provider: FqdProvider; raw: string }> {
+  const system = `You are a New Orleans event researcher. Search the web for the given event and write a concise, factual description of 2 to 4 sentences suitable for an event listing — what the event is, its key highlights, and what attendees can expect. Return ONLY the description text: no title, no markdown, no preamble, no quotes.`;
+  return withFallback(
+    system,
+    `Write a description for this New Orleans event. Search the web for accurate, current details.\n${query}`,
+    true,
+    cleanDescription,
+  );
+}
+
 // Mode 4: web-search for image SOURCES for an event (official page, ticketing,
 // news, socials). Returns a list of URLs — direct image URLs or pages to scrape.
 export function researchEventImageSourcesWithFallback(
