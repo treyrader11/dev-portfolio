@@ -6,6 +6,7 @@ import { ConfirmDialog } from "@/features/admin/components/confirm-dialog";
 import { useNotificationsContext } from "@/components/providers/NotificationsProvider";
 import { EventCard } from "./event-card";
 import { EventImport } from "./event-import";
+import { EventExportAll } from "./event-export-all";
 import { useFqdEvents } from "../hooks/use-fqd-events";
 import type { GetFqdEventsResult } from "../actions/get-events";
 import type { FqdEventListItem } from "../types/fqd-types";
@@ -55,6 +56,7 @@ export function EventsListPage({ data }: Props) {
             {data.total} event{data.total === 1 ? "" : "s"}
           </p>
           <div className="flex items-center gap-2">
+            <EventExportAll />
             <EventImport />
             <Link
               href="/admin/french-quarter-direct/create-event/new"
