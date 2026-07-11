@@ -229,6 +229,8 @@ model FqdEvent {
   notes              String?         @db.Text
   status             String          @default("draft") // draft | researched | approved | exported
   rawResearch        Json?
+  // Set when the "event started" email has been sent, so it fires only once.
+  startNotifiedAt    DateTime?
   images             FqdEventImage[]
   createdAt          DateTime        @default(now())
   updatedAt          DateTime        @updatedAt

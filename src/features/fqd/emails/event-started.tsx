@@ -37,12 +37,10 @@ function dateLabel(event: FqdEventListItem): string {
 
 interface Props {
   event: FqdEventListItem;
-  // The event row is deleted on expiry, so this links to the events dashboard
-  // rather than the (now-gone) detail page.
   adminUrl: string;
 }
 
-export function EventExpiredEmail({
+export function EventStartedEmail({
   event,
   adminUrl,
 }: Props): React.ReactElement {
@@ -68,24 +66,21 @@ export function EventExpiredEmail({
   return (
     <Html>
       <Head />
-      <Preview>{event.title} has expired and was removed from the database</Preview>
+      <Preview>{event.title} is starting</Preview>
       <Body style={main}>
         <Container style={container}>
           <Section style={header}>
             <Text style={eyebrow}>FRENCH QUARTER DIRECT</Text>
-            <Heading style={h1}>Event expired &amp; removed</Heading>
+            <Heading style={h1}>An event is starting</Heading>
           </Section>
 
           <Section style={card}>
             <Text style={intro}>
-              This event has passed its end date and was automatically removed
-              from the database — including its {event.images.length} image
-              {event.images.length === 1 ? "" : "s"} on Cloudinary. Its details
-              are preserved below for your records.
+              This event is starting now. Its full details are below.
             </Text>
 
             <Heading style={h2}>{event.title}</Heading>
-            <span style={badge}>Expired · Removed</span>
+            <span style={badge}>Starting now</span>
 
             <Hr style={hr} />
 
@@ -106,7 +101,7 @@ export function EventExpiredEmail({
 
             <Section style={{ textAlign: "center", marginTop: "24px" }}>
               <Button href={adminUrl} style={button}>
-                View events dashboard →
+                View in admin →
               </Button>
             </Section>
 
@@ -121,7 +116,7 @@ export function EventExpiredEmail({
   );
 }
 
-export default EventExpiredEmail;
+export default EventStartedEmail;
 
 const main: React.CSSProperties = {
   backgroundColor: "#0f0f0f",
@@ -180,8 +175,8 @@ const h2: React.CSSProperties = {
 
 const badge: React.CSSProperties = {
   display: "inline-block",
-  backgroundColor: "#f3e8ff",
-  color: "#7e22ce",
+  backgroundColor: "#dcfce7",
+  color: "#15803d",
   fontSize: "11px",
   fontWeight: 700,
   textTransform: "uppercase",

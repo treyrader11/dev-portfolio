@@ -1,8 +1,8 @@
 {
   "crons": [
     {
-      "path": "/api/fqd/expire-events",
-      "schedule": "0 8 * * *"
+      "path": "/api/fqd/process-events",
+      "schedule": "*/15 * * * *"
     }
   ]
 }

@@ -1,11 +1,12 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { requireAdmin } from "@/features/admin/lib/admin-auth";
-import { runExpiration } from "@/features/fqd/lib/event-notifications";
+import {
+  runStartNotifications,
+  runExpiration,
+} from "@/features/fqd/lib/event-notifications";
 
 export const config = { maxDuration: 60 };
 
-// Authorize either a Vercel Cron invocation (Bearer CRON_SECRET) or a signed-in
-// admin (so it can also be triggered manually from the CMS).
 async function authorize(
   req: NextApiRequest,
   res: NextApiResponse,
@@ -15,9 +16,9 @@ async function authorize(
   return requireAdmin(req, res);
 }
 
-// Expire ended events: email the details (when enabled), delete Cloudinary
-// images, and remove the rows. Retained for manual/legacy triggering; the
-// scheduled cron uses /api/fqd/process-events (start + expire).
+// Scheduled cron entry point: send "event starting" emails for events whose
+// start time has arrived, then expire (email + remove) events past their end
+// date. Both passes respect the admin notification settings and are idempotent.
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse,
@@ -26,6 +27,7 @@ export default async function handler(
     if (!res.writableEnded) res.status(401).json({ error: "Unauthorized" });
     return;
   }
-  const result = await runExpiration();
-  return res.status(200).json(result);
+  const started = await runStartNotifications();
+  const expired = await runExpiration();
+  return res.status(200).json({ started, expired });
 }

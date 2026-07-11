@@ -1,7 +1,14 @@
 import Link from "next/link";
 import AdminLayout from "@/features/admin/components/admin-layout";
+import { FqdNotificationSettings } from "./fqd-notification-settings";
+import type { FqdNotificationSettings as Settings } from "../lib/notification-settings";
 
-export function FqdPage() {
+interface Props {
+  settings: Settings;
+  currentUserEmail: string;
+}
+
+export function FqdPage({ settings, currentUserEmail }: Props) {
   return (
     <AdminLayout
       title="French Quarter Direct"
@@ -21,6 +28,11 @@ export function FqdPage() {
           </div>
         </Link>
       </div>
+
+      <FqdNotificationSettings
+        initial={settings}
+        currentUserEmail={currentUserEmail}
+      />
     </AdminLayout>
   );
 }

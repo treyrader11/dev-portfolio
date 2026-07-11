@@ -12,8 +12,11 @@ type EventWithImages = FqdEvent & { images: FqdEventImage[] };
 // Serialize a Prisma event (Date fields → ISO strings) so it's safe to pass
 // through getServerSideProps / API JSON.
 export function serializeFqdEvent(row: EventWithImages): FqdEventListItem {
+  // startNotifiedAt is an internal Date (cron bookkeeping) — strip it so it
+  // never leaks a non-serializable value into getServerSideProps props.
+  const { startNotifiedAt: _startNotifiedAt, ...rest } = row;
   return {
-    ...row,
+    ...rest,
     startDate: row.startDate.toISOString(),
     endDate: row.endDate ? row.endDate.toISOString() : null,
     createdAt: row.createdAt.toISOString(),

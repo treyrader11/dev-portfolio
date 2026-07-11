@@ -179,7 +179,12 @@ export const emptyFqdEvent: FqdEventFormValues = {
 // An event row serialized for the client (Dates → ISO strings, images included).
 export type FqdEventListItem = Omit<
   FqdEvent,
-  "startDate" | "endDate" | "createdAt" | "updatedAt" | "rawResearch"
+  | "startDate"
+  | "endDate"
+  | "createdAt"
+  | "updatedAt"
+  | "rawResearch"
+  | "startNotifiedAt"
 > & {
   startDate: string;
   endDate: string | null;
