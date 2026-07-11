@@ -6,25 +6,7 @@ import {
   HeadingLevel,
 } from "docx";
 import type { FqdEventListItem } from "../types/fqd-types";
-
-const MONTHS = [
-  "Jan", "Feb", "Mar", "Apr", "May", "Jun",
-  "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
-];
-
-function fmt(iso: string): string {
-  const d = new Date(iso);
-  return `${MONTHS[d.getUTCMonth()]} ${d.getUTCDate()}, ${d.getUTCFullYear()}`;
-}
-
-function dateLabel(event: FqdEventListItem): string {
-  const sameDay =
-    !event.endDate || event.endDate.slice(0, 10) === event.startDate.slice(0, 10);
-  const base = sameDay
-    ? fmt(event.startDate)
-    : `${fmt(event.startDate)} – ${fmt(event.endDate as string)}`;
-  return event.startTime ? `${base} · ${event.startTime}` : base;
-}
+import { eventDateLabel } from "./format";
 
 // A labeled field: a small purple label paragraph + the value, or nothing when
 // the value is empty.
@@ -75,7 +57,7 @@ export async function buildEventDocx(
               }),
             ],
           }),
-          ...field("When", dateLabel(event)),
+          ...field("When", eventDateLabel(event)),
           ...field("Location", location),
           ...field("Category", category),
           ...field("Description", event.description),

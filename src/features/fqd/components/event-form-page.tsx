@@ -7,6 +7,7 @@ import { ConfirmDialog } from "@/features/admin/components/confirm-dialog";
 import { useNotificationsContext } from "@/components/providers/NotificationsProvider";
 import { slugify } from "@/lib/utils";
 import { EventForm } from "./event-form";
+import { fmtEventDate } from "../lib/format";
 import type { ResearchResult } from "../hooks/use-event-research";
 import {
   emptyFqdEvent,
@@ -14,17 +15,6 @@ import {
   type FqdEventFormValues,
   type FqdEventListItem,
 } from "../types/fqd-types";
-
-const MONTHS = [
-  "Jan", "Feb", "Mar", "Apr", "May", "Jun",
-  "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
-];
-
-// ISO date → "Jan 5, 2026" without pulling timezone into play.
-function fmtDay(iso: string): string {
-  const [y, m, d] = iso.slice(0, 10).split("-");
-  return `${MONTHS[Number(m) - 1] ?? m} ${Number(d)}, ${y}`;
-}
 
 interface Props {
   mode: "create" | "edit";
@@ -363,7 +353,7 @@ export function EventFormPage({ event }: Props) {
         title="Event already exists"
         message={
           duplicate
-            ? `"${duplicate.title}" on ${fmtDay(duplicate.startDate)} already exists. Replace it? This deletes the existing event and its images, then saves this one.`
+            ? `"${duplicate.title}" on ${fmtEventDate(duplicate.startDate)} already exists. Replace it? This deletes the existing event and its images, then saves this one.`
             : ""
         }
         confirmLabel={replacing ? "Replacing…" : "Replace"}

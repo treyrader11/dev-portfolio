@@ -36,6 +36,9 @@ export const resolveImageSrc = (src: string, base = "/shots"): string => {
   return `${base}/${src}`;
 };
 
+// True when a string value is present and not just whitespace.
+export const hasText = (v?: string | null): boolean => !!(v && v.trim());
+
 // URL-safe slug from a name, e.g. "Roux UI" -> "roux-ui", "Vouzot" -> "vouzot".
 export const slugify = (str: string): string =>
   str

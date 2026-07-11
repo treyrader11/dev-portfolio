@@ -15,25 +15,7 @@ import {
 } from "@react-email/components";
 import * as React from "react";
 import type { FqdEventListItem } from "../types/fqd-types";
-
-const MONTHS = [
-  "Jan", "Feb", "Mar", "Apr", "May", "Jun",
-  "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
-];
-
-function fmt(iso: string): string {
-  const d = new Date(iso);
-  return `${MONTHS[d.getUTCMonth()]} ${d.getUTCDate()}, ${d.getUTCFullYear()}`;
-}
-
-function dateLabel(event: FqdEventListItem): string {
-  const sameDay =
-    !event.endDate || event.endDate.slice(0, 10) === event.startDate.slice(0, 10);
-  const base = sameDay
-    ? fmt(event.startDate)
-    : `${fmt(event.startDate)} – ${fmt(event.endDate as string)}`;
-  return event.startTime ? `${base} · ${event.startTime}` : base;
-}
+import { eventDateLabel } from "../lib/format";
 
 interface Props {
   event: FqdEventListItem;
@@ -50,7 +32,7 @@ export function EventStartedEmail({
     : "";
 
   const rows: { label: string; value?: string | null; href?: boolean }[] = [
-    { label: "When", value: dateLabel(event) },
+    { label: "When", value: eventDateLabel(event) },
     { label: "Location", value: location || null },
     { label: "Category", value: category || null },
     { label: "Description", value: event.description },

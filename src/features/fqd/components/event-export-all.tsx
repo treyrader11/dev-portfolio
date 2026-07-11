@@ -10,17 +10,8 @@ import {
 } from "react-icons/ri";
 import { useNotificationsContext } from "@/components/providers/NotificationsProvider";
 import { cn } from "@/lib/utils";
+import { fmtEventDate } from "../lib/format";
 import type { FqdEventBrief } from "../actions/get-events-brief";
-
-const MONTHS = [
-  "Jan", "Feb", "Mar", "Apr", "May", "Jun",
-  "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
-];
-
-function fmt(iso: string): string {
-  const d = new Date(iso);
-  return `${MONTHS[d.getUTCMonth()]} ${d.getUTCDate()}, ${d.getUTCFullYear()}`;
-}
 
 // Export events to a .zip (one folder per event slug, each with the listing
 // .docx + image PNGs). Opens a modal listing every event with checkboxes —
@@ -217,7 +208,7 @@ export function EventExportAll() {
                             {e.title}
                           </p>
                           <p className="mt-0.5 flex flex-wrap items-center gap-x-3 text-xs text-light-400">
-                            <span>{fmt(e.startDate)}</span>
+                            <span>{fmtEventDate(e.startDate)}</span>
                             <span className="inline-flex items-center gap-1">
                               <RiImageLine className="size-3.5" />
                               {e.imageCount} image

@@ -16,25 +16,13 @@ import {
   RiCheckboxCircleFill,
   RiCheckboxBlankCircleLine,
 } from "react-icons/ri";
-import { cn, resolveImageSrc } from "@/lib/utils";
+import { cn, hasText, resolveImageSrc } from "@/lib/utils";
+import { eventDateRange } from "../lib/format";
 import {
   FQD_STATUS_BADGE,
   type FqdEventListItem,
   type FqdStatus,
 } from "../types/fqd-types";
-
-const MONTHS = [
-  "Jan", "Feb", "Mar", "Apr", "May", "Jun",
-  "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
-];
-
-// Deterministic (UTC) date format so server and client render identically.
-function fmt(iso: string): string {
-  const d = new Date(iso);
-  return `${MONTHS[d.getUTCMonth()]} ${d.getUTCDate()}, ${d.getUTCFullYear()}`;
-}
-
-const has = (v?: string | null): boolean => !!(v && v.trim());
 
 interface Props {
   event: FqdEventListItem;
@@ -57,31 +45,27 @@ export function EventCard({
   const editHref = `/admin/french-quarter-direct/create-event/${event.id}`;
   const thumbnail = event.images[0]?.url;
   const status = event.status as FqdStatus;
-  const sameDay =
-    !event.endDate || event.endDate.slice(0, 10) === event.startDate.slice(0, 10);
-  const dateLabel = sameDay
-    ? fmt(event.startDate)
-    : `${fmt(event.startDate)} – ${fmt(event.endDate as string)}`;
+  const dateLabel = eventDateRange(event.startDate, event.endDate);
 
   // Field-completeness checklist shown in the accordion.
   const fields: { label: string; ok: boolean }[] = [
-    { label: "Title", ok: has(event.title) },
-    { label: "Slug", ok: has(event.slug) },
-    { label: "Start date", ok: has(event.startDate) },
-    { label: "End date", ok: has(event.endDate) },
-    { label: "Start time", ok: has(event.startTime) },
-    { label: "Location", ok: has(event.locationName) },
-    { label: "Address", ok: has(event.address) },
-    { label: "Description", ok: has(event.description) },
-    { label: "Category", ok: has(event.category) },
-    { label: "Subcategory", ok: has(event.subcategory) },
-    { label: "Admission", ok: has(event.admission) },
-    { label: "Ticket URL", ok: has(event.ticketUrl) },
-    { label: "Organizer", ok: has(event.organizer) },
-    { label: "Expected attendance", ok: has(event.expectedAttendance) },
-    { label: "Age requirement", ok: has(event.ageRequirement) },
-    { label: "Website", ok: has(event.website) },
-    { label: "Notes", ok: has(event.notes) },
+    { label: "Title", ok: hasText(event.title) },
+    { label: "Slug", ok: hasText(event.slug) },
+    { label: "Start date", ok: hasText(event.startDate) },
+    { label: "End date", ok: hasText(event.endDate) },
+    { label: "Start time", ok: hasText(event.startTime) },
+    { label: "Location", ok: hasText(event.locationName) },
+    { label: "Address", ok: hasText(event.address) },
+    { label: "Description", ok: hasText(event.description) },
+    { label: "Category", ok: hasText(event.category) },
+    { label: "Subcategory", ok: hasText(event.subcategory) },
+    { label: "Admission", ok: hasText(event.admission) },
+    { label: "Ticket URL", ok: hasText(event.ticketUrl) },
+    { label: "Organizer", ok: hasText(event.organizer) },
+    { label: "Expected attendance", ok: hasText(event.expectedAttendance) },
+    { label: "Age requirement", ok: hasText(event.ageRequirement) },
+    { label: "Website", ok: hasText(event.website) },
+    { label: "Notes", ok: hasText(event.notes) },
     { label: "Images", ok: event.images.length > 0 },
   ];
   const filled = fields.filter((f) => f.ok).length;
@@ -191,10 +175,11 @@ export function EventCard({
             : "border-dark-600",
       )}
     >
-      {/* ── Mobile: poster tile ── */}
+      {/* ── Mobile: image on top, content below ── */}
       <div className="relative sm:hidden">
+        {/* Image */}
         <Link href={detailHref} className="block">
-          <div className="relative h-[190px] w-full overflow-hidden bg-dark-600">
+          <div className="relative h-48 w-full overflow-hidden bg-dark-600">
             {thumbnail ? (
               <Image
                 src={resolveImageSrc(thumbnail)}
@@ -208,21 +193,10 @@ export function EventCard({
                 <RiImageLine className="size-12 opacity-60" />
               </span>
             )}
-            {/* Gradient scrim for title legibility. */}
-            <div className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-black/80 via-black/35 to-transparent" />
-            {/* Status + title overlay. */}
-            <div className="absolute inset-x-0 bottom-0 space-y-1.5 p-4">
-              <span className="inline-block rounded-full bg-black/50 px-2.5 py-1 text-xs font-medium capitalize text-white/90 backdrop-blur-sm">
-                {status}
-              </span>
-              <h3 className="line-clamp-2 text-2xl font-bold leading-tight text-white [text-shadow:0_1px_4px_rgba(0,0,0,0.6)]">
-                {event.title}
-              </h3>
-            </div>
           </div>
         </Link>
 
-        {/* Selection checkbox — outside the link. */}
+        {/* Selection checkbox — over the image, outside the link. */}
         {onToggleSelect && (
           <button
             type="button"
@@ -238,17 +212,34 @@ export function EventCard({
           </button>
         )}
 
-        {/* Added badge — bright, top-right. */}
+        {/* Added badge — bright, over the image, top-right. */}
         {event.addedToJoomla && (
           <span className="absolute right-3 top-3 rounded-full bg-lime-400 px-2.5 py-1 text-xs font-bold uppercase tracking-wide text-black shadow-lg">
             Added
           </span>
         )}
 
-        {/* Info section. */}
-        <div className="px-4 pb-4 pt-3">
-          {metaRow}
-          <div className="mt-3 flex items-center justify-between">
+        {/* Content */}
+        <div className="p-4">
+          <div className="flex items-start justify-between gap-2">
+            <Link href={detailHref} className="min-w-0">
+              <h3 className="text-lg font-semibold text-white">
+                {event.title}
+              </h3>
+            </Link>
+            <span
+              className={cn(
+                "shrink-0 rounded-full px-2 py-0.5 text-xs font-medium capitalize",
+                FQD_STATUS_BADGE[status] ?? FQD_STATUS_BADGE.draft,
+              )}
+            >
+              {status}
+            </span>
+          </div>
+
+          <div className="mt-2">{metaRow}</div>
+
+          <div className="mt-4 flex items-center justify-between border-t border-dark-600 pt-3">
             <div className="flex items-center gap-4">
               {addedToggle}
               {editLink}
@@ -336,10 +327,7 @@ export function EventCard({
               </p>
               <ul className="grid grid-cols-1 gap-x-6 gap-y-1.5 sm:grid-cols-2">
                 {fields.map((f) => (
-                  <li
-                    key={f.label}
-                    className="flex items-center gap-2 text-sm"
-                  >
+                  <li key={f.label} className="flex items-center gap-2 text-sm">
                     {f.ok ? (
                       <RiCheckLine className="size-4 shrink-0 text-success" />
                     ) : (

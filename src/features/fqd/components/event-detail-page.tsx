@@ -13,21 +13,12 @@ import { EventExport } from "./event-export";
 import { EventLocationMap } from "./event-location-map";
 import { EventImageAlt } from "./event-image-alt";
 import { cn, resolveImageSrc } from "@/lib/utils";
+import { eventDateRange } from "../lib/format";
 import {
   FQD_STATUS_BADGE,
   type FqdEventListItem,
   type FqdStatus,
 } from "../types/fqd-types";
-
-const MONTHS = [
-  "Jan", "Feb", "Mar", "Apr", "May", "Jun",
-  "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
-];
-
-function fmt(iso: string): string {
-  const d = new Date(iso);
-  return `${MONTHS[d.getUTCMonth()]} ${d.getUTCDate()}, ${d.getUTCFullYear()}`;
-}
 
 // A labeled detail row that renders only when it has a value.
 function Detail({
@@ -68,11 +59,7 @@ interface Props {
 
 export function EventDetailPage({ event }: Props) {
   const status = event.status as FqdStatus;
-  const sameDay =
-    !event.endDate || event.endDate.slice(0, 10) === event.startDate.slice(0, 10);
-  const dateLabel = sameDay
-    ? fmt(event.startDate)
-    : `${fmt(event.startDate)} – ${fmt(event.endDate as string)}`;
+  const dateLabel = eventDateRange(event.startDate, event.endDate);
 
   return (
     <AdminLayout
