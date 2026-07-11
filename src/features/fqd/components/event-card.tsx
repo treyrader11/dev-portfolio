@@ -53,7 +53,6 @@ export function EventCard({
 }: Props) {
   const [expanded, setExpanded] = useState(false);
 
-  // The card opens the details page; the pencil opens the edit form.
   const detailHref = `/admin/french-quarter-direct/event/${event.slug}`;
   const editHref = `/admin/french-quarter-direct/create-event/${event.id}`;
   const thumbnail = event.images[0]?.url;
@@ -87,10 +86,104 @@ export function EventCard({
   ];
   const filled = fields.filter((f) => f.ok).length;
 
+  const metaRow = (
+    <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-light-400">
+      <span className="inline-flex items-center gap-1">
+        <RiCalendarLine className="size-3.5" />
+        {dateLabel}
+        {event.startTime ? ` · ${event.startTime}` : ""}
+      </span>
+      {event.locationName && (
+        <span className="inline-flex items-center gap-1">
+          <RiMapPin2Line className="size-3.5" />
+          {event.locationName}
+        </span>
+      )}
+      {event.category && (
+        <span>
+          {event.category}
+          {event.subcategory ? ` / ${event.subcategory}` : ""}
+        </span>
+      )}
+      <span className="inline-flex items-center gap-1 text-secondary">
+        <RiImageLine className="size-3.5" />
+        {event.images.length} image{event.images.length === 1 ? "" : "s"}
+      </span>
+    </div>
+  );
+
+  const chevron = (
+    <button
+      type="button"
+      aria-label={expanded ? "Hide fields" : "Show fields"}
+      aria-expanded={expanded}
+      onClick={() => setExpanded((e) => !e)}
+      className="text-light-400 transition-colors hover:text-white"
+    >
+      <motion.span
+        animate={{ rotate: expanded ? 180 : 0 }}
+        transition={{ duration: 0.2 }}
+        className="inline-flex"
+      >
+        <RiArrowDownSLine className="size-5" />
+      </motion.span>
+    </button>
+  );
+
+  const addedToggle = onToggleAdded && (
+    <button
+      type="button"
+      aria-label={
+        event.addedToJoomla
+          ? "Mark as not added to French Quarter Direct"
+          : "Mark as added to French Quarter Direct"
+      }
+      title={
+        event.addedToJoomla
+          ? "Added to French Quarter Direct — click to unmark"
+          : "Mark as added to French Quarter Direct"
+      }
+      onClick={() => onToggleAdded(event)}
+      className={cn(
+        "transition-colors",
+        event.addedToJoomla
+          ? "text-lime-400 hover:text-lime-300"
+          : "text-light-400 hover:text-white",
+      )}
+    >
+      {event.addedToJoomla ? (
+        <RiCheckboxCircleFill className="size-5" />
+      ) : (
+        <RiCheckboxBlankCircleLine className="size-5" />
+      )}
+    </button>
+  );
+
+  const editLink = (
+    <Link
+      href={editHref}
+      aria-label="Edit event"
+      className="text-light-400 transition-colors hover:text-white"
+    >
+      <RiPencilLine className="size-5" />
+    </Link>
+  );
+
+  const deleteButton = (
+    <button
+      type="button"
+      aria-label="Delete event"
+      onClick={() => onDelete(event)}
+      className="text-error transition-colors hover:text-error-600"
+    >
+      <RiDeleteBinLine className="size-5" />
+    </button>
+  );
+
   return (
     <div
       className={cn(
-        "rounded-lg border bg-dark-400 transition-colors",
+        "overflow-hidden rounded-2xl border bg-dark-400 transition-colors sm:rounded-lg",
         selected
           ? "border-secondary/60"
           : event.addedToJoomla
@@ -98,7 +191,76 @@ export function EventCard({
             : "border-dark-600",
       )}
     >
-      <div className="flex items-start justify-between gap-3 p-4">
+      {/* ── Mobile: poster tile ── */}
+      <div className="relative sm:hidden">
+        <Link href={detailHref} className="block">
+          <div className="relative h-[190px] w-full overflow-hidden bg-dark-600">
+            {thumbnail ? (
+              <Image
+                src={resolveImageSrc(thumbnail)}
+                alt=""
+                fill
+                sizes="100vw"
+                className="object-cover"
+              />
+            ) : (
+              <span className="flex h-full items-center justify-center text-light-400">
+                <RiImageLine className="size-12 opacity-60" />
+              </span>
+            )}
+            {/* Gradient scrim for title legibility. */}
+            <div className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-black/80 via-black/35 to-transparent" />
+            {/* Status + title overlay. */}
+            <div className="absolute inset-x-0 bottom-0 space-y-1.5 p-4">
+              <span className="inline-block rounded-full bg-black/50 px-2.5 py-1 text-xs font-medium capitalize text-white/90 backdrop-blur-sm">
+                {status}
+              </span>
+              <h3 className="line-clamp-2 text-2xl font-bold leading-tight text-white [text-shadow:0_1px_4px_rgba(0,0,0,0.6)]">
+                {event.title}
+              </h3>
+            </div>
+          </div>
+        </Link>
+
+        {/* Selection checkbox — outside the link. */}
+        {onToggleSelect && (
+          <button
+            type="button"
+            onClick={() => onToggleSelect(event.id)}
+            aria-label={`Select ${event.title}`}
+            className="absolute left-3 top-3 rounded-full bg-black/50 p-1 backdrop-blur-sm"
+          >
+            {selected ? (
+              <RiCheckboxCircleFill className="size-5 text-secondary" />
+            ) : (
+              <RiCheckboxBlankCircleLine className="size-5 text-white" />
+            )}
+          </button>
+        )}
+
+        {/* Added badge — bright, top-right. */}
+        {event.addedToJoomla && (
+          <span className="absolute right-3 top-3 rounded-full bg-lime-400 px-2.5 py-1 text-xs font-bold uppercase tracking-wide text-black shadow-lg">
+            Added
+          </span>
+        )}
+
+        {/* Info section. */}
+        <div className="px-4 pb-4 pt-3">
+          {metaRow}
+          <div className="mt-3 flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              {addedToggle}
+              {editLink}
+              {deleteButton}
+            </div>
+            {chevron}
+          </div>
+        </div>
+      </div>
+
+      {/* ── Desktop: compact row ── */}
+      <div className="hidden items-start justify-between gap-3 p-4 sm:flex">
         {onToggleSelect && (
           <input
             type="checkbox"
@@ -112,7 +274,6 @@ export function EventCard({
           href={detailHref}
           className="flex min-w-0 flex-1 items-center gap-3"
         >
-          {/* First image as a thumbnail so events are easy to identify. */}
           <div className="relative h-14 w-20 shrink-0 overflow-hidden rounded border border-dark-600 bg-dark-600">
             {thumbnail ? (
               <Image
@@ -146,96 +307,19 @@ export function EventCard({
                 </span>
               )}
             </div>
-            <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-light-400">
-              <span className="inline-flex items-center gap-1">
-                <RiCalendarLine className="size-3.5" />
-                {dateLabel}
-                {event.startTime ? ` · ${event.startTime}` : ""}
-              </span>
-              {event.locationName && (
-                <span className="inline-flex items-center gap-1">
-                  <RiMapPin2Line className="size-3.5" />
-                  {event.locationName}
-                </span>
-              )}
-              {event.category && (
-                <span>
-                  {event.category}
-                  {event.subcategory ? ` / ${event.subcategory}` : ""}
-                </span>
-              )}
-              <span className="inline-flex items-center gap-1 text-secondary">
-                <RiImageLine className="size-3.5" />
-                {event.images.length} image
-                {event.images.length === 1 ? "" : "s"}
-              </span>
-            </div>
+            <div className="mt-1">{metaRow}</div>
           </div>
         </Link>
 
         <div className="flex shrink-0 items-center gap-2">
-          {onToggleAdded && (
-            <button
-              type="button"
-              aria-label={
-                event.addedToJoomla
-                  ? "Mark as not added to French Quarter Direct"
-                  : "Mark as added to French Quarter Direct"
-              }
-              title={
-                event.addedToJoomla
-                  ? "Added to French Quarter Direct — click to unmark"
-                  : "Mark as added to French Quarter Direct"
-              }
-              onClick={() => onToggleAdded(event)}
-              className={cn(
-                "transition-colors",
-                event.addedToJoomla
-                  ? "text-lime-400 hover:text-lime-300"
-                  : "text-light-400 hover:text-white",
-              )}
-            >
-              {event.addedToJoomla ? (
-                <RiCheckboxCircleFill className="size-5" />
-              ) : (
-                <RiCheckboxBlankCircleLine className="size-5" />
-              )}
-            </button>
-          )}
-          <button
-            type="button"
-            aria-label={expanded ? "Hide fields" : "Show fields"}
-            aria-expanded={expanded}
-            onClick={() => setExpanded((e) => !e)}
-            className="text-light-400 transition-colors hover:text-white"
-          >
-            <motion.span
-              animate={{ rotate: expanded ? 180 : 0 }}
-              transition={{ duration: 0.2 }}
-              className="inline-flex"
-            >
-              <RiArrowDownSLine className="size-5" />
-            </motion.span>
-          </button>
-          <Link
-            href={editHref}
-            aria-label="Edit event"
-            className="text-light-400 transition-colors hover:text-white"
-          >
-            <RiPencilLine className="size-5" />
-          </Link>
-          <button
-            type="button"
-            aria-label="Delete event"
-            onClick={() => onDelete(event)}
-            className="text-error transition-colors hover:text-error-600"
-          >
-            <RiDeleteBinLine className="size-5" />
-          </button>
+          {addedToggle}
+          {chevron}
+          {editLink}
+          {deleteButton}
         </div>
       </div>
 
-      {/* Accordion — field completeness checklist. */}
+      {/* ── Accordion (shared) — field completeness checklist. ── */}
       <AnimatePresence initial={false}>
         {expanded && (
           <motion.div
