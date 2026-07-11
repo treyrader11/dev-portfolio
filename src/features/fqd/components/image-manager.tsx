@@ -11,6 +11,7 @@ import {
   RiFileCopyLine,
   RiCheckLine,
   RiSparkling2Line,
+  RiDraggable,
 } from "react-icons/ri";
 import { MediaLibraryPicker } from "@/features/admin/components/media-library-picker";
 import { ReorderableList } from "@/features/admin/components/reorderable-list";
@@ -328,53 +329,77 @@ export function ImageManager({
           onReorder={(next) => onChange(applyConvention(next, slug))}
           itemClassName="group"
           renderItem={(img) => (
-            <div className="flex items-center gap-3">
+            <div className="flex items-start gap-3">
+              {/* Drag handle — press and drag to reorder. */}
+              <button
+                type="button"
+                data-drag-handle
+                aria-label="Drag to reorder"
+                className="mt-1.5 shrink-0 cursor-grab touch-none text-light-400 transition-colors hover:text-white active:cursor-grabbing"
+              >
+                <RiDraggable className="size-5" />
+              </button>
+
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={img.url}
                 alt=""
-                className="h-14 w-20 shrink-0 rounded object-cover"
+                className="h-16 w-24 shrink-0 rounded object-cover"
               />
+
               <div
                 data-no-drag
-                className="flex min-w-0 flex-1 items-center gap-2"
+                className="min-w-0 flex-1 space-y-2"
                 onClick={(e) => e.stopPropagation()}
                 onPointerDown={(e) => e.stopPropagation()}
               >
-                <input
-                  value={img.alt ?? ""}
-                  onChange={(e) => update(img.url, { alt: e.target.value })}
-                  placeholder="Alt text"
-                  className="min-w-0 flex-1 rounded-lg border border-dark-600 bg-dark-600 px-3 py-2 text-sm text-white focus:outline-none focus:ring-1 focus:ring-secondary"
-                />
-                <button
-                  type="button"
-                  aria-label="Copy alt text"
-                  onClick={() => copyAlt(img.url, img.alt ?? "")}
-                  className="text-light-400 transition-colors hover:text-white"
-                >
-                  {copiedUrl === img.url ? (
-                    <RiCheckLine className="size-5 text-success" />
-                  ) : (
-                    <RiFileCopyLine className="size-5" />
-                  )}
-                </button>
-                <button
-                  type="button"
-                  aria-label="Crop image"
-                  onClick={() => openCrop(img.url)}
-                  className="text-light-400 transition-colors hover:text-white"
-                >
-                  <RiCrop2Line className="size-5" />
-                </button>
-                <button
-                  type="button"
-                  aria-label="Remove image"
-                  onClick={() => remove(img.url)}
-                  className="text-error transition-colors hover:text-error-600"
-                >
-                  <RiDeleteBinLine className="size-5" />
-                </button>
+                <label className="block text-[10px] font-semibold uppercase tracking-wide text-light-400">
+                  Alt text
+                </label>
+                <div className="flex items-center gap-2">
+                  <input
+                    value={img.alt ?? ""}
+                    onChange={(e) => update(img.url, { alt: e.target.value })}
+                    placeholder={`${slug || "event"}_01_descriptor`}
+                    className="min-w-0 flex-1 rounded-lg border border-dark-600 bg-dark-600 px-3 py-2 text-sm text-white focus:outline-none focus:ring-1 focus:ring-secondary"
+                  />
+                  <button
+                    type="button"
+                    aria-label="Copy alt text"
+                    title="Copy alt text"
+                    onClick={() => copyAlt(img.url, img.alt ?? "")}
+                    className={cn(
+                      "shrink-0 rounded-lg border border-dark-600 p-2 transition-colors",
+                      copiedUrl === img.url
+                        ? "text-success"
+                        : "text-light-400 hover:text-white",
+                    )}
+                  >
+                    {copiedUrl === img.url ? (
+                      <RiCheckLine className="size-4" />
+                    ) : (
+                      <RiFileCopyLine className="size-4" />
+                    )}
+                  </button>
+                </div>
+                <div className="flex items-center gap-4 text-xs">
+                  <button
+                    type="button"
+                    onClick={() => openCrop(img.url)}
+                    className="inline-flex items-center gap-1 text-light-400 transition-colors hover:text-white"
+                  >
+                    <RiCrop2Line className="size-4" />
+                    Crop
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => remove(img.url)}
+                    className="inline-flex items-center gap-1 text-error transition-colors hover:text-error-600"
+                  >
+                    <RiDeleteBinLine className="size-4" />
+                    Remove
+                  </button>
+                </div>
               </div>
             </div>
           )}

@@ -1,4 +1,5 @@
 import { Document, Packer, Paragraph, TextRun } from "docx";
+import { eventImageFilename } from "./image-filenames";
 import type { FqdEventListItem } from "../types/fqd-types";
 
 const MONTHS = [
@@ -99,10 +100,39 @@ export async function buildEventListingDocx(
           ...line("Website", event.website),
           ...line("Category", category),
           ...line("Notes", event.notes),
+          ...imagesSection(event),
         ],
       },
     ],
   });
 
   return Packer.toBuffer(doc);
+}
+
+// A section listing each image's PNG filename and its alt text, so the alt text
+// travels with the exported zip.
+function imagesSection(event: FqdEventListItem): Paragraph[] {
+  const total = event.images.length;
+  if (total === 0) return [];
+  const heading = new Paragraph({
+    spacing: { before: 160, after: 40 },
+    children: [
+      new TextRun({ text: "Images", bold: true, size: 24 }),
+    ],
+  });
+  const rows = event.images.map((img, i) => {
+    const filename = eventImageFilename(event.slug, i, total);
+    const alt = img.alt?.trim();
+    return new Paragraph({
+      spacing: { after: 40 },
+      children: [
+        new TextRun({ text: `${filename}`, bold: true, size: 20 }),
+        new TextRun({
+          text: alt ? ` — alt: ${alt}` : " — alt: (none)",
+          size: 20,
+        }),
+      ],
+    });
+  });
+  return [heading, ...rows];
 }

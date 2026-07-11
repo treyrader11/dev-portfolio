@@ -182,10 +182,19 @@ function ReorderableRow({
   }
 
   function handlePointerDown(e: ReactPointerEvent<HTMLDivElement>) {
+    const targetEl = e.target as HTMLElement;
     // Let interactive children (trash, confirm buttons) handle their own events.
-    if ((e.target as HTMLElement).closest("[data-no-drag]")) return;
+    if (targetEl.closest("[data-no-drag]")) return;
     draggedRef.current = false;
     startPos.current = { x: e.clientX, y: e.clientY };
+    // A dedicated drag handle picks the card up immediately (no long-press) —
+    // the natural affordance for a mouse. Other areas keep the press-and-hold
+    // behavior so touch scrolling still works.
+    if (targetEl.closest("[data-drag-handle]")) {
+      lockScroll();
+      controls.start(e);
+      return;
+    }
     pressTimer.current = setTimeout(() => {
       // Lock scrolling BEFORE the drag begins so the very first touch move
       // reorders instead of scrolling the page away on mobile.
