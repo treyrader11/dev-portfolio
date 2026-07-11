@@ -42,6 +42,32 @@ function missingWhere(field?: string): Prisma.FqdEventWhereInput | undefined {
   return undefined;
 }
 
+// A where-clause matching a free-text query against title / location / address.
+function searchWhere(search?: string): Prisma.FqdEventWhereInput | undefined {
+  const q = search?.trim();
+  if (!q) return undefined;
+  return {
+    OR: [
+      { title: { contains: q, mode: "insensitive" } },
+      { locationName: { contains: q, mode: "insensitive" } },
+      { address: { contains: q, mode: "insensitive" } },
+    ],
+  };
+}
+
+// Combine the optional missing-field and search filters.
+function buildWhere(
+  missing?: string,
+  search?: string,
+): Prisma.FqdEventWhereInput | undefined {
+  const clauses = [missingWhere(missing), searchWhere(search)].filter(
+    (c): c is Prisma.FqdEventWhereInput => !!c,
+  );
+  if (clauses.length === 0) return undefined;
+  if (clauses.length === 1) return clauses[0];
+  return { AND: clauses };
+}
+
 // Total number of events in the database. The admin manages every event it
 // holds — past events are removed by the expiry cron, not hidden here.
 export async function getFqdEventCount(): Promise<number> {
@@ -49,15 +75,16 @@ export async function getFqdEventCount(): Promise<number> {
 }
 
 // Paginated list of events, soonest first. `missing` filters to events lacking
-// a given field.
+// a given field; `search` matches title / location / address.
 export async function getFqdEvents(
   page = 1,
   pageSize = 20,
   missing?: string,
+  search?: string,
 ): Promise<GetFqdEventsResult> {
   const safePage = Math.max(1, page);
   const skip = (safePage - 1) * pageSize;
-  const where = missingWhere(missing);
+  const where = buildWhere(missing, search);
   const [rows, total] = await Promise.all([
     prisma.fqdEvent.findMany({
       where,

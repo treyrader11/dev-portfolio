@@ -17,7 +17,9 @@ export default async function handler(
     const pageSize = Number(req.query.pageSize ?? 20) || 20;
     const missing =
       typeof req.query.missing === "string" ? req.query.missing : undefined;
-    const data = await getFqdEvents(page, pageSize, missing);
+    const search =
+      typeof req.query.search === "string" ? req.query.search : undefined;
+    const data = await getFqdEvents(page, pageSize, missing, search);
     return res.status(200).json(data);
   }
 

@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { RiSearchLine, RiLoader4Line, RiDeleteBinLine } from "react-icons/ri";
 import AdminLayout from "@/features/admin/components/admin-layout";
 import { ConfirmDialog } from "@/features/admin/components/confirm-dialog";
+import { useDebounce } from "@/hooks/useDebounce";
 import { useNotificationsContext } from "@/components/providers/NotificationsProvider";
 import { EventCard } from "./event-card";
 import { EventImport } from "./event-import";
@@ -53,26 +54,23 @@ export function EventsListPage({ data }: Props) {
   const [bulkConfirm, setBulkConfirm] = useState(false);
   const [deleting, setDeleting] = useState(false);
 
-  // Client-side filter of the loaded events by title / location.
-  const q = filter.trim().toLowerCase();
-  const visible = q
-    ? events.filter(
-        (e) =>
-          e.title.toLowerCase().includes(q) ||
-          (e.locationName ?? "").toLowerCase().includes(q) ||
-          (e.address ?? "").toLowerCase().includes(q),
-      )
-    : events;
+  // The title/location search runs server-side (debounced) so it also finds
+  // events that haven't been paginated into the list yet.
+  const debouncedSearch = useDebounce(filter, 400);
+  const searching = !!debouncedSearch.trim();
+  const filtering = searching || !!missing;
 
+  const visible = events;
   const hasMore = events.length < total;
   const allVisibleSelected =
     visible.length > 0 && visible.every((e) => selected.has(e.id));
 
-  // Fetch a page of events, optionally filtered by a missing field. `append`
-  // adds to the list (load more); otherwise it replaces it (filter change).
+  // Fetch a page of events with the current filters. `append` adds to the list
+  // (load more); otherwise it replaces it (a filter/search change).
   async function fetchEvents(
     nextPage: number,
     missingFilter: string,
+    searchQuery: string,
     append: boolean,
   ) {
     setLoadingMore(true);
@@ -82,6 +80,7 @@ export function EventsListPage({ data }: Props) {
         pageSize: String(data.pageSize),
       });
       if (missingFilter) params.set("missing", missingFilter);
+      if (searchQuery.trim()) params.set("search", searchQuery.trim());
       const res = await fetch(`/api/fqd/events?${params.toString()}`);
       if (res.ok) {
         const result: GetFqdEventsResult = await res.json();
@@ -102,15 +101,22 @@ export function EventsListPage({ data }: Props) {
     }
   }
 
+  // Refetch page 1 whenever the search or missing filter changes (skip the very
+  // first render — the initial page is already loaded from SSR).
+  const firstRun = useRef(true);
+  useEffect(() => {
+    if (firstRun.current) {
+      firstRun.current = false;
+      return;
+    }
+    setSelected(new Set());
+    fetchEvents(1, missing, debouncedSearch, false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [debouncedSearch, missing]);
+
   function loadMore() {
     if (loadingMore || !hasMore) return;
-    fetchEvents(page + 1, missing, true);
-  }
-
-  function changeMissing(value: string) {
-    setMissing(value);
-    setSelected(new Set());
-    fetchEvents(1, value, false);
+    fetchEvents(page + 1, missing, debouncedSearch, true);
   }
 
   function toggleSelect(id: string) {
@@ -208,21 +214,24 @@ export function EventsListPage({ data }: Props) {
           </div>
         </div>
 
-        {/* Filters: free-text (over loaded events) + missing-field (server-side
-            over all events). */}
+        {/* Filters: free-text search + missing-field — both server-side, so
+            they match across all events, not just the loaded ones. */}
         <div className="mb-4 flex flex-col gap-2 sm:flex-row">
           <div className="flex flex-1 items-center gap-2 rounded-lg border border-dark-600 bg-dark-600 px-3 py-2">
             <RiSearchLine className="size-4 shrink-0 text-light-400" />
             <input
               value={filter}
               onChange={(e) => setFilter(e.target.value)}
-              placeholder="Filter events by title or location…"
+              placeholder="Search events by title or location…"
               className="w-full bg-transparent text-sm text-white outline-none placeholder:text-light-400"
             />
+            {loadingMore && searching && (
+              <RiLoader4Line className="size-4 shrink-0 animate-spin text-light-400" />
+            )}
           </div>
           <select
             value={missing}
-            onChange={(e) => changeMissing(e.target.value)}
+            onChange={(e) => setMissing(e.target.value)}
             className="rounded-lg border border-dark-600 bg-dark-600 px-3 py-2 text-sm text-white [color-scheme:dark] outline-none focus:ring-1 focus:ring-secondary sm:w-56"
           >
             {MISSING_FILTERS.map((f) => (
@@ -260,13 +269,19 @@ export function EventsListPage({ data }: Props) {
           </div>
         )}
 
-        {events.length === 0 && missing ? (
+        {events.length === 0 && filtering ? (
           <div className="rounded-lg border border-dashed border-dark-600 p-8 text-center text-sm text-light-400">
-            No events{" "}
-            {MISSING_FILTERS.find((f) => f.value === missing)
-              ?.label.toLowerCase()
-              .replace(/^without/, "are missing") ?? "match this filter"}
-            .
+            {searching ? (
+              <>No events match &ldquo;{debouncedSearch.trim()}&rdquo;.</>
+            ) : (
+              <>
+                No events{" "}
+                {MISSING_FILTERS.find((f) => f.value === missing)
+                  ?.label.toLowerCase()
+                  .replace(/^without/, "are missing") ?? "match this filter"}
+                .
+              </>
+            )}
           </div>
         ) : events.length === 0 ? (
           <div className="rounded-lg border border-dashed border-dark-600 p-10 text-center">
@@ -282,10 +297,6 @@ export function EventsListPage({ data }: Props) {
               Add Event
             </Link>
           </div>
-        ) : visible.length === 0 ? (
-          <div className="rounded-lg border border-dashed border-dark-600 p-8 text-center text-sm text-light-400">
-            No loaded events match &ldquo;{filter}&rdquo;.
-          </div>
         ) : (
           <div className="space-y-3">
             {visible.map((e) => (
@@ -300,8 +311,8 @@ export function EventsListPage({ data }: Props) {
           </div>
         )}
 
-        {/* Load more — only when not filtering (filter is over loaded events). */}
-        {hasMore && !q && (
+        {/* Load more paginates within the current filters. */}
+        {hasMore && (
           <div className="mt-6 flex justify-center">
             <button
               type="button"
