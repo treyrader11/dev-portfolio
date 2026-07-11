@@ -11,6 +11,7 @@ import {
 import AdminLayout from "@/features/admin/components/admin-layout";
 import { EventExport } from "./event-export";
 import { EventLocationMap } from "./event-location-map";
+import { EventImageAlt } from "./event-image-alt";
 import { cn, resolveImageSrc } from "@/lib/utils";
 import {
   FQD_STATUS_BADGE,
@@ -151,11 +152,12 @@ export function EventDetailPage({ event }: Props) {
                       PNG
                     </a>
                   </div>
-                  {img.alt && (
-                    <p className="mt-2 truncate text-sm text-light-400">
-                      {img.alt}
-                    </p>
-                  )}
+                  <EventImageAlt
+                    alt={
+                      img.alt ||
+                      `${event.slug}_${String(i + 1).padStart(2, "0")}`
+                    }
+                  />
                 </div>
               ))}
             </div>
