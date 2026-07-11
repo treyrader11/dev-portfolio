@@ -56,7 +56,8 @@
     "resend": "^3.4.0",
     "tailwind-merge": "^2.3.0",
     "three-globe": "^2.31.0",
-    "zod": "^4.4.3"
+    "zod": "^4.4.3",
+    "zustand": "^5.0.14"
   },
   "devDependencies": {
     "@types/node": "20.19.35",

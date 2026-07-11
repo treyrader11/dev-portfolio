@@ -1,8 +1,16 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { RiSearchLine, RiLoader4Line, RiDeleteBinLine } from "react-icons/ri";
+import {
+  RiSearchLine,
+  RiLoader4Line,
+  RiDeleteBinLine,
+  RiArrowDownSLine,
+  RiCheckLine,
+  RiFilter3Line,
+} from "react-icons/ri";
 import AdminLayout from "@/features/admin/components/admin-layout";
 import { ConfirmDialog } from "@/features/admin/components/confirm-dialog";
+import { Popover } from "@/components/ui/popover";
 import { useDebounce } from "@/hooks/useDebounce";
 import { useNotificationsContext } from "@/components/providers/NotificationsProvider";
 import { cn } from "@/lib/utils";
@@ -25,6 +33,7 @@ const CRUMBS = [
 // "Missing field" filters — each shows only events lacking that field.
 const MISSING_FILTERS: { value: string; label: string }[] = [
   { value: "", label: "All events" },
+  { value: "incomplete", label: "Incomplete (any missing field)" },
   { value: "description", label: "Without description" },
   { value: "images", label: "Without images" },
   { value: "locationName", label: "Without location" },
@@ -294,17 +303,63 @@ export function EventsListPage({ data }: Props) {
               <RiLoader4Line className="size-4 shrink-0 animate-spin text-light-400" />
             )}
           </div>
-          <select
-            value={missing}
-            onChange={(e) => setMissing(e.target.value)}
-            className="rounded-lg border border-dark-600 bg-dark-600 px-3 py-2 text-sm text-white [color-scheme:dark] outline-none focus:ring-1 focus:ring-secondary sm:w-56"
+          <Popover
+            align="end"
+            rootClassName="w-full sm:w-64"
+            trigger={({ open, toggle }) => (
+              <button
+                type="button"
+                onClick={toggle}
+                className={cn(
+                  "flex w-full items-center justify-between gap-2 rounded-lg border bg-dark-600 px-3 py-2 text-sm text-white transition-colors",
+                  missing ? "border-secondary/60" : "border-dark-600",
+                )}
+              >
+                <span className="flex min-w-0 items-center gap-2">
+                  <RiFilter3Line className="size-4 shrink-0 text-light-400" />
+                  <span className="truncate">
+                    {MISSING_FILTERS.find((f) => f.value === missing)?.label ??
+                      "All events"}
+                  </span>
+                </span>
+                <RiArrowDownSLine
+                  className={cn(
+                    "size-4 shrink-0 text-light-400 transition-transform",
+                    open && "rotate-180",
+                  )}
+                />
+              </button>
+            )}
           >
-            {MISSING_FILTERS.map((f) => (
-              <option key={f.value} value={f.value}>
-                {f.label}
-              </option>
-            ))}
-          </select>
+            {(close) => (
+              <div className="max-h-72 overflow-auto">
+                {MISSING_FILTERS.map((f) => (
+                  <button
+                    key={f.value}
+                    type="button"
+                    onClick={() => {
+                      setMissing(f.value);
+                      close();
+                    }}
+                    className={cn(
+                      "flex w-full items-center gap-2 rounded-md px-3 py-2 text-left text-sm transition-colors",
+                      missing === f.value
+                        ? "bg-secondary/20 text-white"
+                        : "text-light-400 hover:bg-dark-600 hover:text-white",
+                    )}
+                  >
+                    <RiCheckLine
+                      className={cn(
+                        "size-4 shrink-0",
+                        missing === f.value ? "text-secondary" : "opacity-0",
+                      )}
+                    />
+                    {f.label}
+                  </button>
+                ))}
+              </div>
+            )}
+          </Popover>
         </div>
 
         {/* Bulk-select toolbar. */}
@@ -338,6 +393,8 @@ export function EventsListPage({ data }: Props) {
           <div className="rounded-lg border border-dashed border-dark-600 p-8 text-center text-sm text-light-400">
             {searching ? (
               <>No events match &ldquo;{debouncedSearch.trim()}&rdquo;.</>
+            ) : missing === "incomplete" ? (
+              <>Every event has all its fields filled. 🎉</>
             ) : missing ? (
               <>
                 No events{" "}

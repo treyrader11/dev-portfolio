@@ -32,6 +32,19 @@ const MISSING_STRING_FIELDS = new Set([
 // means no images; "endDate" means no end date; the rest are string columns.
 function missingWhere(field?: string): Prisma.FqdEventWhereInput | undefined {
   if (!field) return undefined;
+  // "incomplete" = missing ANY tracked field (matches the card's checklist).
+  if (field === "incomplete") {
+    return {
+      OR: [
+        { images: { none: {} } },
+        { endDate: null },
+        ...Array.from(MISSING_STRING_FIELDS).map(
+          (f) =>
+            ({ OR: [{ [f]: null }, { [f]: "" }] }) as Prisma.FqdEventWhereInput,
+        ),
+      ],
+    };
+  }
   if (field === "images") return { images: { none: {} } };
   if (field === "endDate") return { endDate: null };
   if (MISSING_STRING_FIELDS.has(field)) {
