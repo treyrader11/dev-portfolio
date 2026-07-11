@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { RiSparkling2Line, RiLoader4Line } from "react-icons/ri";
 import { useNotificationsContext } from "@/components/providers/NotificationsProvider";
+import { TagsInput } from "./tags-input";
 import {
   FQD_CATEGORIES,
   FQD_CATEGORY_NAMES,
@@ -10,20 +10,40 @@ import {
 } from "../types/fqd-types";
 
 interface Props {
+  // Category / subcategory are stored comma-joined so each can hold multiple.
   category: string;
   subcategory: string;
   onCategoryChange: (value: string) => void;
   onSubcategoryChange: (value: string) => void;
-  // The event description, used as the source for AI subcategory generation.
+  // Source for AI generation.
   description?: string;
   title?: string;
 }
 
-const SELECT =
-  "w-full rounded-lg border border-dark-600 bg-dark-600 px-3 py-2.5 text-sm text-white transition-all focus:outline-none focus:ring-1 focus:ring-secondary disabled:opacity-50";
+const parseTags = (s: string): string[] =>
+  s
+    .split(",")
+    .map((x) => x.trim())
+    .filter(Boolean);
 
-// Category dropdown + a free-text Subcategory that can be typed, picked from the
-// category's suggestions, or auto-generated from the description by AI.
+const joinTags = (a: string[]): string => a.join(", ");
+
+// Merge new values into existing ones, case-insensitively de-duped.
+function mergeUnique(existing: string[], incoming: string[]): string[] {
+  const out = [...existing];
+  const seen = new Set(existing.map((x) => x.toLowerCase()));
+  for (const v of incoming) {
+    const key = v.toLowerCase();
+    if (v && !seen.has(key)) {
+      seen.add(key);
+      out.push(v);
+    }
+  }
+  return out;
+}
+
+// Category + Subcategory as multi-value pill inputs. Each can be typed, picked
+// from suggestions, or generated from the description by AI.
 export function CategorySelect({
   category,
   subcategory,
@@ -33,100 +53,87 @@ export function CategorySelect({
   title,
 }: Props) {
   const { addNotification } = useNotificationsContext();
-  const [generating, setGenerating] = useState(false);
+  const [genCat, setGenCat] = useState(false);
+  const [genSub, setGenSub] = useState(false);
 
-  const subs =
-    category && category in FQD_CATEGORIES
-      ? FQD_CATEGORIES[category as FqdCategory]
-      : [];
+  const categories = parseTags(category);
+  const subcategories = parseTags(subcategory);
 
-  async function generate() {
-    if (generating) return;
+  // Subcategory suggestions: the subs for any selected categories, else all.
+  const picked = categories.filter(
+    (c): c is FqdCategory => c in FQD_CATEGORIES,
+  );
+  const subSuggestions = Array.from(
+    new Set(
+      (picked.length ? picked : FQD_CATEGORY_NAMES).flatMap(
+        (c) => FQD_CATEGORIES[c] as readonly string[],
+      ),
+    ),
+  );
+
+  async function generate(field: "category" | "subcategory") {
     if (!description?.trim()) {
       addNotification({
-        text: "Add a description first — the AI generates the subcategory from it",
+        text: "Add a description first — the AI generates from it",
         variant: "error",
       });
       return;
     }
-    setGenerating(true);
+    const setLoading = field === "category" ? setGenCat : setGenSub;
+    setLoading(true);
     try {
-      const res = await fetch("/api/fqd/generate-subcategory", {
+      const res = await fetch("/api/fqd/generate-classification", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ description, title, category }),
+        body: JSON.stringify({ field, description, title, category }),
       });
       const data = await res.json();
-      if (res.ok && data.subcategory) {
-        onSubcategoryChange(data.subcategory);
+      if (res.ok && Array.isArray(data.values) && data.values.length) {
+        if (field === "category") {
+          onCategoryChange(joinTags(mergeUnique(categories, data.values)));
+        } else {
+          onSubcategoryChange(joinTags(mergeUnique(subcategories, data.values)));
+        }
         addNotification({
-          text: `Subcategory set to “${data.subcategory}”`,
+          text: `Added ${data.values.length} ${field}${data.values.length === 1 ? "" : "s"}`,
           variant: "success",
         });
       } else {
         addNotification({
-          text: data.error ?? "Couldn't generate a subcategory",
+          text: data.error ?? `Couldn't generate a ${field}`,
           variant: "error",
         });
       }
     } catch {
       addNotification({
-        text: "Couldn't generate a subcategory — request failed",
+        text: `Couldn't generate a ${field} — request failed`,
         variant: "error",
       });
     } finally {
-      setGenerating(false);
+      setLoading(false);
     }
   }
 
   return (
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-      <div className="flex flex-col gap-1">
-        <label className="text-sm font-medium text-white">Category</label>
-        <select
-          className={SELECT}
-          value={category}
-          onChange={(e) => onCategoryChange(e.target.value)}
-        >
-          <option value="">Select category</option>
-          {FQD_CATEGORY_NAMES.map((c) => (
-            <option key={c} value={c}>
-              {c}
-            </option>
-          ))}
-        </select>
-      </div>
-
-      <div className="flex flex-col gap-1">
-        <div className="flex items-center justify-between">
-          <label className="text-sm font-medium text-white">Subcategory</label>
-          <button
-            type="button"
-            onClick={generate}
-            disabled={generating}
-            className="inline-flex items-center gap-1 text-xs font-medium text-secondary transition-colors hover:text-secondary/80 disabled:opacity-50"
-          >
-            {generating ? (
-              <RiLoader4Line className="size-3.5 animate-spin" />
-            ) : (
-              <RiSparkling2Line className="size-3.5" />
-            )}
-            {generating ? "Generating…" : "AI from description"}
-          </button>
-        </div>
-        <input
-          list="fqd-subcategory-suggestions"
-          className={SELECT}
-          value={subcategory}
-          onChange={(e) => onSubcategoryChange(e.target.value)}
-          placeholder="Type, pick a suggestion, or generate with AI"
-        />
-        <datalist id="fqd-subcategory-suggestions">
-          {subs.map((s) => (
-            <option key={s} value={s} />
-          ))}
-        </datalist>
-      </div>
+      <TagsInput
+        label="Category"
+        values={categories}
+        onChange={(v) => onCategoryChange(joinTags(v))}
+        suggestions={FQD_CATEGORY_NAMES as unknown as string[]}
+        placeholder="Add a category…"
+        onAi={() => generate("category")}
+        aiLoading={genCat}
+      />
+      <TagsInput
+        label="Subcategory"
+        values={subcategories}
+        onChange={(v) => onSubcategoryChange(joinTags(v))}
+        suggestions={subSuggestions}
+        placeholder="Add a subcategory…"
+        onAi={() => generate("subcategory")}
+        aiLoading={genSub}
+      />
     </div>
   );
 }

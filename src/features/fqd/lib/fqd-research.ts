@@ -85,16 +85,24 @@ const validateUrlList = (text: string): string[] => {
   return urls.slice(0, 8);
 };
 
-// The model should reply with just a short label; take the first line and strip
-// stray quotes/punctuation. Reject anything empty or implausibly long.
-const cleanSubcategory = (text: string): string => {
-  const line = (text.split("\n").find((l) => l.trim()) ?? "")
-    .replace(/^["'\s]+|["'\s.]+$/g, "")
-    .trim();
-  if (!line || line.length > 60) {
-    throw new Error("no usable subcategory in response");
+// A JSON array of short classification labels (category / subcategory).
+const cleanLabelList = (text: string): string[] => {
+  const arr = extractJson(text, "[", "]");
+  if (!Array.isArray(arr)) throw new Error("response was not a JSON array");
+  const seen = new Set<string>();
+  const labels: string[] = [];
+  for (const raw of arr) {
+    const label = String(raw)
+      .replace(/^["'\s]+|["'\s.]+$/g, "")
+      .trim();
+    const key = label.toLowerCase();
+    if (label && label.length <= 60 && !seen.has(key)) {
+      seen.add(key);
+      labels.push(label);
+    }
   }
-  return line;
+  if (labels.length === 0) throw new Error("no usable labels in response");
+  return labels.slice(0, 4);
 };
 
 function requireKey(name: string): string {
@@ -210,19 +218,24 @@ export function parseEventWithFallback(text: string): Promise<FallbackResult> {
   );
 }
 
-// Mode 3: generate a concise subcategory label from an event's description
-// (plus optional title/category for context). No web search.
-export async function generateSubcategoryWithFallback(input: {
-  description: string;
-  title?: string | null;
-  category?: string | null;
-}): Promise<{ subcategory: string; provider: FqdProvider }> {
-  const system = `You label New Orleans events with a concise subcategory. Given an event's description (and optional title/category), respond with ONLY a short subcategory label of 2 to 5 words, e.g. "Spirits Industry Conference", "Second Line Parade", "Jazz Concert", "Food Festival". No quotes, no trailing punctuation, no preamble — just the label.`;
+// Mode 3: generate concise category or subcategory labels from an event's
+// description (plus optional title/category for context). No web search.
+export async function generateClassificationsWithFallback(
+  field: "category" | "subcategory",
+  ctx: { description: string; title?: string | null; category?: string | null },
+): Promise<{ values: string[]; provider: FqdProvider }> {
+  const kind = field === "category" ? "top-level category" : "subcategory";
+  const count = field === "category" ? "1 to 2" : "1 to 3";
+  const examples =
+    field === "category"
+      ? '"Food & Drink", "Nightlife", "Festival"'
+      : '"Spirits Industry Conference", "Second Line Parade", "Jazz Concert"';
+  const system = `You classify New Orleans events. Given an event's description (and optional title/category), respond with ONLY a JSON array of ${count} concise ${kind} labels of 2 to 4 words each, e.g. ${examples}. No markdown, no preamble — just the JSON array of strings.`;
   const prompt = [
-    input.title ? `Title: ${input.title}` : null,
-    input.category ? `Category: ${input.category}` : null,
-    `Description: ${input.description}`,
-    `\nSubcategory:`,
+    ctx.title ? `Title: ${ctx.title}` : null,
+    field === "subcategory" && ctx.category ? `Category: ${ctx.category}` : null,
+    `Description: ${ctx.description}`,
+    `\n${kind} labels:`,
   ]
     .filter(Boolean)
     .join("\n");
@@ -230,9 +243,9 @@ export async function generateSubcategoryWithFallback(input: {
     system,
     prompt,
     false,
-    cleanSubcategory,
+    cleanLabelList,
   );
-  return { subcategory: data, provider };
+  return { values: data, provider };
 }
 
 // Mode 4: web-search for image SOURCES for an event (official page, ticketing,
