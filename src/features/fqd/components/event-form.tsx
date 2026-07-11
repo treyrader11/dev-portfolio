@@ -28,6 +28,25 @@ interface Props {
 
 const CONTROL = cn(ADMIN_FIELD_CONTROL, "[color-scheme:dark]");
 
+// Fields that support single-field AI web search, with display labels.
+const AI_FIELD_LABELS = {
+  startDate: "Start date",
+  endDate: "End date",
+  startTime: "Start time",
+  locationName: "Location",
+  address: "Address",
+  description: "Description",
+  admission: "Admission",
+  website: "Website",
+  ticketUrl: "Ticket URL",
+  organizer: "Organizer",
+  expectedAttendance: "Expected attendance",
+  ageRequirement: "Age requirement",
+  notes: "Notes",
+} as const;
+
+type AiField = keyof typeof AI_FIELD_LABELS;
+
 function SectionHeading({ children }: { children: string }) {
   return (
     <h3 className="border-b border-dark-600 pb-1 pt-2 text-xs font-semibold uppercase tracking-wide text-light-400">
@@ -63,14 +82,15 @@ export function EventForm({
     onChange({ ...values, ...patch });
 
   const { addNotification } = useNotificationsContext();
-  const [genDesc, setGenDesc] = useState(false);
+  // Which single field is currently being web-searched (null = none).
+  const [genField, setGenField] = useState<AiField | null>(null);
 
   // Keep the slug auto-linked to the title until the user edits it by hand.
   const slugAuto = values.slug === "" || values.slug === slugify(values.title);
 
-  // AI web-search for a description from the event's current details.
-  async function generateDescription() {
-    if (genDesc) return;
+  // AI web-search a single field's value from the event's current details.
+  async function generateField(field: AiField) {
+    if (genField) return;
     if (!values.title.trim()) {
       addNotification({
         text: "Add a title first so the search has something to go on",
@@ -78,42 +98,71 @@ export function EventForm({
       });
       return;
     }
-    setGenDesc(true);
+    setGenField(field);
     try {
-      const res = await fetch("/api/fqd/generate-description", {
+      const res = await fetch("/api/fqd/generate-field", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          field,
           title: values.title,
+          startDate: values.startDate,
           locationName: values.locationName,
           address: values.address,
-          startDate: values.startDate,
           category: values.category,
           subcategory: values.subcategory,
           website: values.website,
         }),
       });
       const data = await res.json();
-      if (res.ok && data.description) {
-        set({ description: data.description });
-        addNotification({
-          text: "Description generated from the web",
-          variant: "success",
-        });
+      if (res.ok) {
+        if (data.value) {
+          set({ [field]: data.value } as Partial<FqdEventFormValues>);
+          addNotification({
+            text: `${AI_FIELD_LABELS[field]} filled from the web`,
+            variant: "success",
+          });
+        } else {
+          addNotification({
+            text: `Couldn't find ${AI_FIELD_LABELS[field].toLowerCase()} — try adding more details or enter it manually`,
+            variant: "success",
+          });
+        }
       } else {
         addNotification({
-          text: data.error ?? "Couldn't generate a description",
+          text: data.error ?? "Search failed",
           variant: "error",
         });
       }
     } catch {
-      addNotification({
-        text: "Couldn't generate a description — request failed",
-        variant: "error",
-      });
+      addNotification({ text: "Search failed — request error", variant: "error" });
     } finally {
-      setGenDesc(false);
+      setGenField(null);
     }
+  }
+
+  // Wrap a field with an "AI" web-search button pinned to its top-right.
+  function aiWrap(field: AiField, node: React.ReactNode) {
+    const busy = genField === field;
+    return (
+      <div className="relative">
+        <button
+          type="button"
+          onClick={() => generateField(field)}
+          disabled={!!genField}
+          title={`AI web search for ${AI_FIELD_LABELS[field].toLowerCase()}`}
+          className="absolute right-0 top-0 z-10 inline-flex items-center gap-1 text-xs font-medium text-secondary transition-colors hover:text-secondary/80 disabled:opacity-50"
+        >
+          {busy ? (
+            <RiLoader4Line className="size-3.5 animate-spin" />
+          ) : (
+            <RiSparkling2Line className="size-3.5" />
+          )}
+          {busy ? "Searching…" : "AI"}
+        </button>
+        {node}
+      </div>
+    );
   }
 
   return (
@@ -153,41 +202,56 @@ export function EventForm({
 
         <SectionHeading>Dates &amp; time</SectionHeading>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-          <Field label="Start date *">
-            <input
-              type="date"
-              className={CONTROL}
-              value={values.startDate}
-              onChange={(e) => set({ startDate: e.target.value })}
-            />
-          </Field>
-          <Field label="End date">
-            <input
-              type="date"
-              className={CONTROL}
-              value={values.endDate}
-              onChange={(e) => set({ endDate: e.target.value })}
-            />
-          </Field>
-          <AdminInput
-            label="Start time"
-            value={values.startTime}
-            placeholder="6:30 AM"
-            onChange={(v) => set({ startTime: v })}
-          />
+          {aiWrap(
+            "startDate",
+            <Field label="Start date *">
+              <input
+                type="date"
+                className={CONTROL}
+                value={values.startDate}
+                onChange={(e) => set({ startDate: e.target.value })}
+              />
+            </Field>,
+          )}
+          {aiWrap(
+            "endDate",
+            <Field label="End date">
+              <input
+                type="date"
+                className={CONTROL}
+                value={values.endDate}
+                onChange={(e) => set({ endDate: e.target.value })}
+              />
+            </Field>,
+          )}
+          {aiWrap(
+            "startTime",
+            <AdminInput
+              label="Start time"
+              value={values.startTime}
+              placeholder="6:30 AM"
+              onChange={(v) => set({ startTime: v })}
+            />,
+          )}
         </div>
 
         <SectionHeading>Location</SectionHeading>
-        <AdminInput
-          label="Location / venue name"
-          value={values.locationName}
-          onChange={(v) => set({ locationName: v })}
-        />
-        <AdminInput
-          label="Address"
-          value={values.address}
-          onChange={(v) => set({ address: v })}
-        />
+        {aiWrap(
+          "locationName",
+          <AdminInput
+            label="Location / venue name"
+            value={values.locationName}
+            onChange={(v) => set({ locationName: v })}
+          />,
+        )}
+        {aiWrap(
+          "address",
+          <AdminInput
+            label="Address"
+            value={values.address}
+            onChange={(v) => set({ address: v })}
+          />,
+        )}
 
         <SectionHeading>Classification</SectionHeading>
         <CategorySelect
@@ -200,63 +264,72 @@ export function EventForm({
         />
 
         <SectionHeading>Details</SectionHeading>
-        <div className="relative">
-          <button
-            type="button"
-            onClick={generateDescription}
-            disabled={genDesc}
-            className="absolute right-0 top-0 z-10 inline-flex items-center gap-1 text-xs font-medium text-secondary transition-colors hover:text-secondary/80 disabled:opacity-50"
-          >
-            {genDesc ? (
-              <RiLoader4Line className="size-3.5 animate-spin" />
-            ) : (
-              <RiSparkling2Line className="size-3.5" />
-            )}
-            {genDesc ? "Searching…" : "AI web search"}
-          </button>
+        {aiWrap(
+          "description",
           <AdminTextarea
             label="Description"
             value={values.description}
             onChange={(v) => set({ description: v })}
-          />
-        </div>
+          />,
+        )}
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          <AdminInput
-            label="Admission / ticket info"
-            value={values.admission}
-            onChange={(v) => set({ admission: v })}
-          />
-          <AdminInput
-            label="Ticket URL"
-            value={values.ticketUrl}
-            onChange={(v) => set({ ticketUrl: v })}
-          />
-          <AdminInput
-            label="Organizer"
-            value={values.organizer}
-            onChange={(v) => set({ organizer: v })}
-          />
-          <AdminInput
-            label="Expected attendance"
-            value={values.expectedAttendance}
-            onChange={(v) => set({ expectedAttendance: v })}
-          />
-          <AdminInput
-            label="Age requirement"
-            value={values.ageRequirement}
-            onChange={(v) => set({ ageRequirement: v })}
-          />
-          <AdminInput
-            label="Website"
-            value={values.website}
-            onChange={(v) => set({ website: v })}
-          />
+          {aiWrap(
+            "admission",
+            <AdminInput
+              label="Admission / ticket info"
+              value={values.admission}
+              onChange={(v) => set({ admission: v })}
+            />,
+          )}
+          {aiWrap(
+            "ticketUrl",
+            <AdminInput
+              label="Ticket URL"
+              value={values.ticketUrl}
+              onChange={(v) => set({ ticketUrl: v })}
+            />,
+          )}
+          {aiWrap(
+            "organizer",
+            <AdminInput
+              label="Organizer"
+              value={values.organizer}
+              onChange={(v) => set({ organizer: v })}
+            />,
+          )}
+          {aiWrap(
+            "expectedAttendance",
+            <AdminInput
+              label="Expected attendance"
+              value={values.expectedAttendance}
+              onChange={(v) => set({ expectedAttendance: v })}
+            />,
+          )}
+          {aiWrap(
+            "ageRequirement",
+            <AdminInput
+              label="Age requirement"
+              value={values.ageRequirement}
+              onChange={(v) => set({ ageRequirement: v })}
+            />,
+          )}
+          {aiWrap(
+            "website",
+            <AdminInput
+              label="Website"
+              value={values.website}
+              onChange={(v) => set({ website: v })}
+            />,
+          )}
         </div>
-        <AdminTextarea
-          label="Notes"
-          value={values.notes}
-          onChange={(v) => set({ notes: v })}
-        />
+        {aiWrap(
+          "notes",
+          <AdminTextarea
+            label="Notes"
+            value={values.notes}
+            onChange={(v) => set({ notes: v })}
+          />,
+        )}
 
         <SectionHeading>Event Images</SectionHeading>
         {imagesLoading && (

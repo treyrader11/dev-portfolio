@@ -268,6 +268,52 @@ export function researchEventDescriptionWithFallback(
   );
 }
 
+// What to look for per field, used by the single-field web search.
+export const FIELD_INSTRUCTIONS: Record<string, string> = {
+  startDate: "the start date in YYYY-MM-DD format",
+  endDate:
+    "the end date in YYYY-MM-DD format, or exactly NONE if it's a single-day event",
+  startTime: "the start time of day, e.g. '6:30 PM'",
+  locationName: "the venue or location name",
+  address: "the full street address",
+  admission: "the admission or ticket pricing details",
+  website: "the official website URL",
+  ticketUrl: "the ticket purchase URL",
+  organizer: "the organizing person or entity",
+  expectedAttendance: "the expected attendance (a number or range)",
+  ageRequirement: "the age requirement, e.g. '21+' or 'All ages'",
+  notes: "any additional noteworthy details worth listing",
+};
+
+// The model replies with a single value on its own; take the first non-empty
+// line and strip stray quotes.
+const cleanFieldValue = (text: string): string => {
+  const line =
+    text
+      .split("\n")
+      .map((l) => l.trim())
+      .find(Boolean) ?? "";
+  const v = line.replace(/^["']+|["']+$/g, "").trim();
+  if (!v) throw new Error("empty field value in response");
+  return v;
+};
+
+// Mode 6: web-search for a single event field's value. The model returns the
+// bare value, or "NONE" when it can't be found.
+export function researchEventFieldWithFallback(
+  field: string,
+  query: string,
+): Promise<{ data: string; provider: FqdProvider; raw: string }> {
+  const instruction = FIELD_INSTRUCTIONS[field] ?? `the event's ${field}`;
+  const system = `You are a New Orleans event researcher. Search the web for the given event and determine ${instruction}. Respond with ONLY that value — no label, no preamble, no markdown, no surrounding quotes. If you genuinely cannot determine it, respond with exactly: NONE`;
+  return withFallback(
+    system,
+    `Find ${instruction} for this New Orleans event. Search the web for accurate, current details.\n${query}`,
+    true,
+    cleanFieldValue,
+  );
+}
+
 // Mode 4: web-search for image SOURCES for an event (official page, ticketing,
 // news, socials). Returns a list of URLs — direct image URLs or pages to scrape.
 export function researchEventImageSourcesWithFallback(

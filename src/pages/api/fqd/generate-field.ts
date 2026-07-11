@@ -1,17 +1,36 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { requireAdmin } from "@/features/admin/lib/admin-auth";
 import {
+  researchEventFieldWithFallback,
   researchEventDescriptionWithFallback,
   FqdAllProvidersError,
 } from "@/features/fqd/lib/fqd-research";
 
 export const config = { maxDuration: 60 };
 
+// Fields that can be individually web-searched.
+const ALLOWED = new Set([
+  "startDate",
+  "endDate",
+  "startTime",
+  "locationName",
+  "address",
+  "description",
+  "admission",
+  "website",
+  "ticketUrl",
+  "organizer",
+  "expectedAttendance",
+  "ageRequirement",
+  "notes",
+]);
+
 interface Body {
+  field?: string;
   title?: string;
+  startDate?: string;
   locationName?: string;
   address?: string;
-  startDate?: string;
   category?: string;
   subcategory?: string;
   website?: string;
@@ -32,8 +51,7 @@ function buildQuery(b: Body): string {
     .join(" ");
 }
 
-// AI web-search for a factual event description from the event's current
-// details.
+// AI web-search for a single event field, returning its value (or notFound).
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse,
@@ -45,23 +63,40 @@ export default async function handler(
   }
 
   const body = req.body as Body;
+  const field = body.field ?? "";
+  if (!ALLOWED.has(field)) {
+    return res.status(400).json({ error: "Unsupported field" });
+  }
   if (!body.title?.trim()) {
     return res
       .status(400)
       .json({ error: "Add a title first so the search has something to go on" });
   }
 
+  const query = buildQuery(body);
   try {
-    const { data, provider } = await researchEventDescriptionWithFallback(
-      buildQuery(body),
-    );
-    return res.status(200).json({ description: data, provider });
+    const raw =
+      field === "description"
+        ? (await researchEventDescriptionWithFallback(query)).data
+        : (await researchEventFieldWithFallback(field, query)).data;
+
+    const value = raw.trim();
+    if (/^none$/i.test(value)) {
+      return res.status(200).json({ value: null, notFound: true });
+    }
+    // Dates must be a real YYYY-MM-DD; otherwise treat as not found.
+    if (field === "startDate" || field === "endDate") {
+      const m = value.match(/\d{4}-\d{2}-\d{2}/);
+      if (!m) return res.status(200).json({ value: null, notFound: true });
+      return res.status(200).json({ value: m[0] });
+    }
+    return res.status(200).json({ value });
   } catch (err) {
     if (err instanceof FqdAllProvidersError) {
       return res
         .status(502)
         .json({ error: "AI providers unavailable", attempts: err.attempts });
     }
-    return res.status(500).json({ error: "Couldn't generate a description" });
+    return res.status(500).json({ error: `Couldn't search for ${field}` });
   }
 }
