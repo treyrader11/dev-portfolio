@@ -20,15 +20,22 @@ export default async function handler(
     const body = req.body as {
       emailOnStart?: boolean;
       emailOnEnd?: boolean;
-      recipientEmail?: string;
+      recipientEmails?: unknown;
     };
+    const recipientEmails = Array.isArray(body.recipientEmails)
+      ? Array.from(
+          new Set(
+            body.recipientEmails
+              .filter((e): e is string => typeof e === "string")
+              .map((e) => e.trim())
+              .filter(Boolean),
+          ),
+        )
+      : [];
     const saved = await saveFqdNotificationSettings({
       emailOnStart: body.emailOnStart ?? true,
       emailOnEnd: body.emailOnEnd ?? true,
-      recipientEmail:
-        typeof body.recipientEmail === "string"
-          ? body.recipientEmail.trim()
-          : "",
+      recipientEmails,
     });
     return res.status(200).json(saved);
   }

@@ -6,7 +6,7 @@ import { expiredCutoff, expiredEventsWhere } from "./expiry";
 import { eventStartAt } from "./event-start-at";
 import {
   getFqdNotificationSettings,
-  resolveRecipient,
+  resolveRecipients,
 } from "./notification-settings";
 import { EventStartedEmail } from "../emails/event-started";
 import { EventExpiredEmail } from "../emails/event-expired";
@@ -38,7 +38,7 @@ export async function runStartNotifications(now: Date = new Date()) {
   const settings = await getFqdNotificationSettings();
   if (!settings.emailOnStart) return { sent: 0, disabled: true };
 
-  const to = resolveRecipient(settings);
+  const to = resolveRecipients(settings);
   const candidates = await prisma.fqdEvent.findMany({
     where: {
       startNotifiedAt: null,
@@ -54,7 +54,7 @@ export async function runStartNotifications(now: Date = new Date()) {
     try {
       await resend.emails.send({
         from: FROM,
-        to: [to],
+        to,
         subject: `Event starting: ${event.title}`,
         react: EventStartedEmail({
           event,
@@ -77,7 +77,7 @@ export async function runStartNotifications(now: Date = new Date()) {
 // its Cloudinary images, then remove it from the database. Idempotent.
 export async function runExpiration(now: Date = new Date()) {
   const settings = await getFqdNotificationSettings();
-  const to = resolveRecipient(settings);
+  const to = resolveRecipients(settings);
 
   const cutoff = expiredCutoff(now);
   const expired = await prisma.fqdEvent.findMany({
@@ -97,7 +97,7 @@ export async function runExpiration(now: Date = new Date()) {
       try {
         await resend.emails.send({
           from: FROM,
-          to: [to],
+          to,
           subject: `Event expired & removed: ${event.title}`,
           react: EventExpiredEmail({ event, adminUrl: eventsDashboardUrl() }),
         });
