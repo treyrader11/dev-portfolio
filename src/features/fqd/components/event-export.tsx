@@ -6,6 +6,7 @@ import {
   RiDownloadLine,
   RiFilePdf2Line,
   RiFileWord2Line,
+  RiFolderZipLine,
 } from "react-icons/ri";
 
 interface Props {
@@ -19,6 +20,7 @@ export function EventExport({ eventId }: Props) {
   const [open, setOpen] = useState(false);
   const url = (format: "pdf" | "docx") =>
     `/api/fqd/events/${eventId}?export=${format}`;
+  const listingUrl = `/api/fqd/events/${eventId}?download=listing`;
 
   return (
     <>
@@ -54,12 +56,29 @@ export function EventExport({ eventId }: Props) {
               <p className="mt-1 text-sm text-light-400">
                 Choose a format to download.
               </p>
-              <div className="mt-5 flex flex-col gap-3 sm:flex-row">
+
+              {/* Primary: the formatted listing bundled with its images. */}
+              <a
+                href={listingUrl}
+                download
+                onClick={() => setOpen(false)}
+                className="mt-5 flex items-center gap-3 rounded-lg bg-secondary px-4 py-3 text-sm font-medium text-white transition-colors hover:bg-secondary/90"
+              >
+                <RiFolderZipLine className="size-5 shrink-0" />
+                <span className="flex flex-col text-left">
+                  Listing + images (.zip)
+                  <span className="text-xs font-normal text-white/80">
+                    Formatted .docx with all images as PNGs
+                  </span>
+                </span>
+              </a>
+
+              <div className="mt-3 flex flex-col gap-3 sm:flex-row">
                 <a
                   href={url("pdf")}
                   download
                   onClick={() => setOpen(false)}
-                  className="flex flex-1 items-center justify-center gap-2 rounded-lg bg-secondary px-4 py-3 text-sm font-medium text-white transition-colors hover:bg-secondary/90"
+                  className="flex flex-1 items-center justify-center gap-2 rounded-lg border border-dark-600 px-4 py-3 text-sm font-medium text-white transition-colors hover:bg-dark-600"
                 >
                   <RiFilePdf2Line className="size-4" />
                   PDF

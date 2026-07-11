@@ -142,6 +142,8 @@ export function EventForm({
           subcategory={values.subcategory}
           onCategoryChange={(v) => set({ category: v })}
           onSubcategoryChange={(v) => set({ subcategory: v })}
+          description={values.description}
+          title={values.title}
         />
 
         <SectionHeading>Details</SectionHeading>

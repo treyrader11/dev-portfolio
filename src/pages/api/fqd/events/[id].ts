@@ -38,6 +38,38 @@ export default async function handler(
     const event = await getFqdEvent(id);
     if (!event) return res.status(404).json({ error: "Not found" });
     const total = event.images.length;
+
+    // Listing export: a .zip containing the formatted listing .docx plus every
+    // image as a PNG. Allowed even when the event has no images.
+    if (req.query.download === "listing") {
+      const JSZip = (await import("jszip")).default;
+      const { buildEventListingDocx } = await import(
+        "@/features/fqd/lib/event-listing-docx"
+      );
+      const zip = new JSZip();
+      const base = event.slug || "event";
+
+      const docx = await buildEventListingDocx(event);
+      zip.file(`${base}.docx`, docx);
+
+      const buffers = await Promise.all(
+        event.images.map((img) => fetchPngBuffer(img.url, img.cloudinaryId)),
+      );
+      buffers.forEach((buffer, i) => {
+        if (buffer) {
+          zip.file(eventImageFilename(event.slug, i, total), buffer);
+        }
+      });
+
+      const content = await zip.generateAsync({ type: "nodebuffer" });
+      res.setHeader("Content-Type", "application/zip");
+      res.setHeader(
+        "Content-Disposition",
+        `attachment; filename="${base}.zip"`,
+      );
+      return res.send(content);
+    }
+
     if (total === 0) return res.status(404).json({ error: "No images" });
 
     if (req.query.download === "image") {

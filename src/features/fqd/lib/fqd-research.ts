@@ -74,6 +74,18 @@ const validateOne = (text: string): EventResearch =>
 const validateMany = (text: string): EventResearch[] =>
   z.array(eventResearchSchema).parse(extractJson(text, "[", "]"));
 
+// The model should reply with just a short label; take the first line and strip
+// stray quotes/punctuation. Reject anything empty or implausibly long.
+const cleanSubcategory = (text: string): string => {
+  const line = (text.split("\n").find((l) => l.trim()) ?? "")
+    .replace(/^["'\s]+|["'\s.]+$/g, "")
+    .trim();
+  if (!line || line.length > 60) {
+    throw new Error("no usable subcategory in response");
+  }
+  return line;
+};
+
 function requireKey(name: string): string {
   const key = process.env[name];
   if (!key) throw new Error(`${name} not configured`);
@@ -185,6 +197,31 @@ export function parseEventWithFallback(text: string): Promise<FallbackResult> {
     false,
     validateOne,
   );
+}
+
+// Mode 3: generate a concise subcategory label from an event's description
+// (plus optional title/category for context). No web search.
+export async function generateSubcategoryWithFallback(input: {
+  description: string;
+  title?: string | null;
+  category?: string | null;
+}): Promise<{ subcategory: string; provider: FqdProvider }> {
+  const system = `You label New Orleans events with a concise subcategory. Given an event's description (and optional title/category), respond with ONLY a short subcategory label of 2 to 5 words, e.g. "Spirits Industry Conference", "Second Line Parade", "Jazz Concert", "Food Festival". No quotes, no trailing punctuation, no preamble — just the label.`;
+  const prompt = [
+    input.title ? `Title: ${input.title}` : null,
+    input.category ? `Category: ${input.category}` : null,
+    `Description: ${input.description}`,
+    `\nSubcategory:`,
+  ]
+    .filter(Boolean)
+    .join("\n");
+  const { data, provider } = await withFallback(
+    system,
+    prompt,
+    false,
+    cleanSubcategory,
+  );
+  return { subcategory: data, provider };
 }
 
 // ---- Bulk parse ----------------------------------------------------------
