@@ -1,6 +1,5 @@
 import { prisma } from "@/lib/prisma";
 import { serializeFqdEvent } from "../lib/serialize";
-import { expiredCutoff, expiredEventsWhere } from "../lib/expiry";
 import type { FqdEventListItem } from "../types/fqd-types";
 
 export interface GetFqdEventsResult {
@@ -11,11 +10,10 @@ export interface GetFqdEventsResult {
   totalPages: number;
 }
 
-// Count of active (non-expired) events.
+// Total number of events in the database. The admin manages every event it
+// holds — past events are removed by the expiry cron, not hidden here.
 export async function getFqdEventCount(): Promise<number> {
-  return prisma.fqdEvent.count({
-    where: { NOT: expiredEventsWhere(expiredCutoff()) },
-  });
+  return prisma.fqdEvent.count();
 }
 
 // Paginated list of all events, soonest first.
@@ -25,17 +23,14 @@ export async function getFqdEvents(
 ): Promise<GetFqdEventsResult> {
   const safePage = Math.max(1, page);
   const skip = (safePage - 1) * pageSize;
-  // Hide events whose end date has passed (they're pending cleanup / removed).
-  const active = { NOT: expiredEventsWhere(expiredCutoff()) };
   const [rows, total] = await Promise.all([
     prisma.fqdEvent.findMany({
-      where: active,
       orderBy: [{ startDate: "asc" }, { createdAt: "desc" }],
       include: { images: { orderBy: { order: "asc" } } },
       skip,
       take: pageSize,
     }),
-    prisma.fqdEvent.count({ where: active }),
+    prisma.fqdEvent.count(),
   ]);
   return {
     events: rows.map(serializeFqdEvent),

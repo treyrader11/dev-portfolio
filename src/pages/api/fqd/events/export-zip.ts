@@ -2,7 +2,6 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { requireAdmin } from "@/features/admin/lib/admin-auth";
 import { prisma } from "@/lib/prisma";
 import { serializeFqdEvent } from "@/features/fqd/lib/serialize";
-import { expiredCutoff, expiredEventsWhere } from "@/features/fqd/lib/expiry";
 import { buildEventsZip } from "@/features/fqd/lib/event-zip";
 
 export const config = { maxDuration: 60 };
@@ -21,11 +20,8 @@ export default async function handler(
   }
 
   const { ids } = req.body as { ids?: string[] };
-  const active = { NOT: expiredEventsWhere(expiredCutoff()) };
   const where =
-    Array.isArray(ids) && ids.length
-      ? { AND: [active, { id: { in: ids } }] }
-      : active;
+    Array.isArray(ids) && ids.length ? { id: { in: ids } } : undefined;
 
   const rows = await prisma.fqdEvent.findMany({
     where,

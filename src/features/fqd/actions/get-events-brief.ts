@@ -1,5 +1,4 @@
 import { prisma } from "@/lib/prisma";
-import { expiredCutoff, expiredEventsWhere } from "../lib/expiry";
 
 export interface FqdEventBrief {
   id: string;
@@ -9,12 +8,10 @@ export interface FqdEventBrief {
   imageCount: number;
 }
 
-// Lightweight list of all active events (for the export-selection modal) —
-// enough to identify and pick each event without loading images/details.
+// Lightweight list of every event (for the export-selection modal) — enough to
+// identify and pick each event without loading images/details.
 export async function getAllFqdEventsBrief(): Promise<FqdEventBrief[]> {
-  const active = { NOT: expiredEventsWhere(expiredCutoff()) };
   const rows = await prisma.fqdEvent.findMany({
-    where: active,
     orderBy: [{ startDate: "asc" }, { createdAt: "desc" }],
     select: {
       id: true,
