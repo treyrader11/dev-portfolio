@@ -111,6 +111,50 @@ export function EventFormPage({ mode, event }: Props) {
       text: `Research complete — populated ${filled} field${filled === 1 ? "" : "s"}`,
       variant: "success",
     });
+
+    // Bonus: pull representative images off the event's website (if any) and add
+    // them to the images field so the admin gets an instant preview.
+    const website = fields.website?.trim();
+    if (website) void fetchWebsiteImages(website);
+  }
+
+  const [fetchingImages, setFetchingImages] = useState(false);
+
+  async function fetchWebsiteImages(website: string) {
+    setFetchingImages(true);
+    try {
+      const res = await fetch("/api/fqd/website-images", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ url: website }),
+      });
+      const data = await res.json();
+      const found: { url: string; cloudinaryId?: string | null }[] =
+        res.ok && Array.isArray(data.images) ? data.images : [];
+      if (found.length === 0) return;
+      setForm((prev) => {
+        const existing = new Set(prev.images.map((i) => i.url));
+        const added = found
+          .filter((img) => img.url && !existing.has(img.url))
+          .map((img, i) => ({
+            url: img.url,
+            cloudinaryId: img.cloudinaryId ?? null,
+            alt: "",
+            order: prev.images.length + i,
+          }));
+        return added.length
+          ? { ...prev, images: [...prev.images, ...added] }
+          : prev;
+      });
+      addNotification({
+        text: `Added ${found.length} image${found.length === 1 ? "" : "s"} from the event website`,
+        variant: "success",
+      });
+    } catch {
+      /* images are a bonus — stay quiet on failure */
+    } finally {
+      setFetchingImages(false);
+    }
   }
 
   async function handleSave() {
@@ -165,6 +209,7 @@ export function EventFormPage({ mode, event }: Props) {
           onChange={setForm}
           onApplyResearch={applyResearch}
           isNew={isNew}
+          imagesLoading={fetchingImages}
         />
 
         {!isNew && event && (

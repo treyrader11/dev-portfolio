@@ -5,6 +5,7 @@ import {
 } from "@/features/admin/components/admin-field";
 import { AdminFocusScope } from "@/features/admin/components/admin-form";
 import { cn, slugify } from "@/lib/utils";
+import { RiLoader4Line } from "react-icons/ri";
 import { CategorySelect } from "./category-select";
 import { ImageManager } from "./image-manager";
 import { AiResearchPanel } from "./ai-research-panel";
@@ -20,6 +21,7 @@ interface Props {
   onChange: (values: FqdEventFormValues) => void;
   onApplyResearch: (result: ResearchResult) => void;
   isNew: boolean;
+  imagesLoading?: boolean;
 }
 
 const CONTROL = cn(ADMIN_FIELD_CONTROL, "[color-scheme:dark]");
@@ -48,7 +50,13 @@ function Field({
   );
 }
 
-export function EventForm({ values, onChange, onApplyResearch, isNew }: Props) {
+export function EventForm({
+  values,
+  onChange,
+  onApplyResearch,
+  isNew,
+  imagesLoading = false,
+}: Props) {
   const set = (patch: Partial<FqdEventFormValues>) =>
     onChange({ ...values, ...patch });
 
@@ -181,6 +189,12 @@ export function EventForm({ values, onChange, onApplyResearch, isNew }: Props) {
         />
 
         <SectionHeading>Event Images</SectionHeading>
+        {imagesLoading && (
+          <p className="flex items-center gap-1.5 text-xs text-secondary">
+            <RiLoader4Line className="size-3.5 animate-spin" />
+            Pulling images from the event website…
+          </p>
+        )}
         <ImageManager
           images={values.images}
           onChange={(images) => set({ images })}
