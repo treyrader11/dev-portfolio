@@ -12,7 +12,7 @@ import {
 import { useNotificationsContext } from "@/components/providers/NotificationsProvider";
 import { cn } from "@/lib/utils";
 import { splitListings, chunk } from "../lib/split-listings";
-import type { EventResearch } from "../types/fqd-types";
+import type { EventResearch, FqdDuplicateInfo } from "../types/fqd-types";
 
 const BATCH = 5;
 
@@ -32,6 +32,7 @@ export function EventImport() {
   const [parsing, setParsing] = useState(false);
   const [creating, setCreating] = useState(false);
   const [parsed, setParsed] = useState<EventResearch[] | null>(null);
+  const [duplicates, setDuplicates] = useState<(FqdDuplicateInfo | null)[]>([]);
   const [selected, setSelected] = useState<Set<number>>(new Set());
   const [progress, setProgress] = useState<{ done: number; total: number } | null>(
     null,
@@ -43,6 +44,7 @@ export function EventImport() {
     setOpen(false);
     setText("");
     setParsed(null);
+    setDuplicates([]);
     setSelected(new Set());
     setProgress(null);
     setErrors([]);
@@ -153,19 +155,56 @@ export function EventImport() {
       });
       return;
     }
+    // Flag which parsed events already exist so the reviewer can skip or
+    // replace them instead of silently creating duplicates.
+    let dups: (FqdDuplicateInfo | null)[] = all.map(() => null);
+    try {
+      const dupRes = await fetch("/api/fqd/events/check-duplicates", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          events: all.map((e) => ({ title: e.title, startDate: e.startDate })),
+        }),
+      });
+      if (dupRes.ok) {
+        const d = await dupRes.json();
+        if (Array.isArray(d.duplicates)) dups = d.duplicates;
+      }
+    } catch {
+      /* non-fatal — treat as no duplicates */
+    }
+
+    setDuplicates(dups);
     setParsed(all);
-    setSelected(new Set(all.map((_, i) => i)));
+    // Default: select the new events; leave existing ones unchecked (they'll be
+    // skipped) until the user explicitly opts to replace them.
+    setSelected(new Set(all.map((_, i) => i).filter((i) => !dups[i])));
+
+    const dupCount = dups.filter(Boolean).length;
     if (batchErrors.length) {
       addNotification({
         text: `Parsed ${all.length} events, but ${batchErrors.length} batch(es) failed — see details`,
         variant: "error",
+      });
+    } else if (dupCount > 0) {
+      addNotification({
+        text: `${dupCount} of ${all.length} already exist — check them to replace`,
+        variant: "success",
       });
     }
   }
 
   async function create() {
     if (!parsed || creating) return;
-    const events = parsed.filter((_, i) => selected.has(i));
+    // Selected duplicates carry a replaceId (delete-then-recreate); selected new
+    // events are created as-is.
+    const events = parsed
+      .map((f, i) => ({ f, i }))
+      .filter(({ i }) => selected.has(i))
+      .map(({ f, i }) => {
+        const dup = duplicates[i];
+        return dup ? { ...f, replaceId: dup.id } : f;
+      });
     if (!events.length) return;
     setCreating(true);
     try {
@@ -176,8 +215,14 @@ export function EventImport() {
       });
       if (res.ok) {
         const data = await res.json();
+        const parts: string[] = [];
+        if (data.created) parts.push(`created ${data.created}`);
+        if (data.replaced) parts.push(`replaced ${data.replaced}`);
+        if (data.skipped) parts.push(`skipped ${data.skipped}`);
         addNotification({
-          text: `Created ${data.created} event${data.created === 1 ? "" : "s"}`,
+          text: parts.length
+            ? parts.join(", ").replace(/^./, (c) => c.toUpperCase())
+            : "Nothing to create",
           variant: "success",
         });
         close();
@@ -206,6 +251,9 @@ export function EventImport() {
       return n;
     });
   }
+
+  // How many of the checked items are replacements vs brand-new creates.
+  const selectedReplace = [...selected].filter((i) => duplicates[i]).length;
 
   return (
     <>
@@ -329,34 +377,50 @@ export function EventImport() {
                           : "Select all"}
                       </button>
                     </div>
-                    {parsed.map((f, i) => (
-                      <label
-                        key={i}
-                        className={cn(
-                          "flex cursor-pointer items-start gap-3 rounded-lg border p-3 transition-colors",
-                          selected.has(i)
-                            ? "border-secondary/50 bg-dark-400"
-                            : "border-dark-600 opacity-60",
-                        )}
-                      >
-                        <input
-                          type="checkbox"
-                          checked={selected.has(i)}
-                          onChange={() => toggle(i)}
-                          className="mt-1 size-4 shrink-0 accent-secondary"
-                        />
-                        <div className="min-w-0">
-                          <p className="truncate font-medium text-white">
-                            {f.title || "(untitled)"}
-                          </p>
-                          <p className="mt-0.5 flex flex-wrap gap-x-3 text-xs text-light-400">
-                            <span>{previewDate(f)}</span>
-                            {f.locationName && <span>{f.locationName}</span>}
-                            {f.category && <span>{f.category}</span>}
-                          </p>
-                        </div>
-                      </label>
-                    ))}
+                    {parsed.map((f, i) => {
+                      const dup = duplicates[i];
+                      const on = selected.has(i);
+                      return (
+                        <label
+                          key={i}
+                          className={cn(
+                            "flex cursor-pointer items-start gap-3 rounded-lg border p-3 transition-colors",
+                            on
+                              ? dup
+                                ? "border-amber-500/50 bg-amber-500/5"
+                                : "border-secondary/50 bg-dark-400"
+                              : "border-dark-600 opacity-60",
+                          )}
+                        >
+                          <input
+                            type="checkbox"
+                            checked={on}
+                            onChange={() => toggle(i)}
+                            className={cn(
+                              "mt-1 size-4 shrink-0",
+                              dup ? "accent-amber-500" : "accent-secondary",
+                            )}
+                          />
+                          <div className="min-w-0">
+                            <p className="flex items-center gap-2 truncate font-medium text-white">
+                              <span className="truncate">
+                                {f.title || "(untitled)"}
+                              </span>
+                              {dup && (
+                                <span className="shrink-0 rounded-full border border-amber-500/40 bg-amber-500/10 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide text-amber-300">
+                                  {on ? "Will replace" : "Already exists"}
+                                </span>
+                              )}
+                            </p>
+                            <p className="mt-0.5 flex flex-wrap gap-x-3 text-xs text-light-400">
+                              <span>{previewDate(f)}</span>
+                              {f.locationName && <span>{f.locationName}</span>}
+                              {f.category && <span>{f.category}</span>}
+                            </p>
+                          </div>
+                        </label>
+                      );
+                    })}
                   </div>
                 )}
               </div>
@@ -386,6 +450,7 @@ export function EventImport() {
                       type="button"
                       onClick={() => {
                         setParsed(null);
+                        setDuplicates([]);
                         setSelected(new Set());
                       }}
                       className="px-3 py-2 text-sm text-light-400 hover:text-white"
@@ -401,8 +466,11 @@ export function EventImport() {
                       {creating ? (
                         <RiLoader4Line className="size-4 animate-spin" />
                       ) : null}
-                      Create {selected.size} event
+                      Save {selected.size} event
                       {selected.size === 1 ? "" : "s"}
+                      {selectedReplace > 0
+                        ? ` (${selectedReplace} replace)`
+                        : ""}
                     </button>
                   </>
                 )}

@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { requireAdmin } from "@/features/admin/lib/admin-auth";
 import { getFqdEvent } from "@/features/fqd/actions/get-event";
 import { updateFqdEvent } from "@/features/fqd/actions/update-event";
-import { deleteFqdEvent } from "@/features/fqd/actions/delete-event";
+import { deleteFqdEventWithImages } from "@/features/fqd/lib/delete-with-images";
 import {
   eventImageFilename,
   pngDeliveryUrl,
@@ -136,7 +136,7 @@ export default async function handler(
   }
 
   if (req.method === "DELETE") {
-    await deleteFqdEvent(id);
+    await deleteFqdEventWithImages(id);
     return res.status(200).json({ success: true });
   }
 

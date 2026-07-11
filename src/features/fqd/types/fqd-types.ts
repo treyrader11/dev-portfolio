@@ -111,6 +111,15 @@ export interface FqdResearchResponse {
   raw: string;
 }
 
+// A minimal description of an already-existing event, returned when a create
+// would collide with one, so the UI can offer to replace it.
+export interface FqdDuplicateInfo {
+  id: string;
+  title: string;
+  slug: string;
+  startDate: string; // ISO
+}
+
 // ---- Client-side shapes --------------------------------------------------
 
 export interface FqdEventImageInput {

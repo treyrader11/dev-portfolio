@@ -10,9 +10,21 @@ import { EventForm } from "./event-form";
 import type { ResearchResult } from "../hooks/use-event-research";
 import {
   emptyFqdEvent,
+  type FqdDuplicateInfo,
   type FqdEventFormValues,
   type FqdEventListItem,
 } from "../types/fqd-types";
+
+const MONTHS = [
+  "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+  "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
+];
+
+// ISO date → "Jan 5, 2026" without pulling timezone into play.
+function fmtDay(iso: string): string {
+  const [y, m, d] = iso.slice(0, 10).split("-");
+  return `${MONTHS[Number(m) - 1] ?? m} ${Number(d)}, ${y}`;
+}
 
 interface Props {
   mode: "create" | "edit";
@@ -67,6 +79,8 @@ export function EventFormPage({ mode, event }: Props) {
   const [rawResearch, setRawResearch] = useState<unknown>(undefined);
   const [saving, setSaving] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(false);
+  const [duplicate, setDuplicate] = useState<FqdDuplicateInfo | null>(null);
+  const [replacing, setReplacing] = useState(false);
 
   const initial = useRef(JSON.stringify(form));
   const dirty = JSON.stringify(form) !== initial.current;
@@ -157,6 +171,41 @@ export function EventFormPage({ mode, event }: Props) {
     }
   }
 
+  // Core submit. On create, the server replies 409 with the existing event when
+  // one already exists; passing its id as replaceId deletes it (and its images)
+  // and creates this one in its place.
+  async function submit(replaceId?: string): Promise<boolean> {
+    const res = await fetch(
+      isNew ? "/api/fqd/events" : `/api/fqd/events/${event?.id}`,
+      {
+        method: isNew ? "POST" : "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ...form,
+          rawResearch,
+          ...(replaceId ? { replaceId } : {}),
+        }),
+      },
+    );
+    if (res.status === 409) {
+      const data = await res.json().catch(() => ({}));
+      if (data?.duplicate) {
+        setDuplicate(data.duplicate as FqdDuplicateInfo);
+        return false;
+      }
+    }
+    if (res.ok) {
+      addNotification({
+        text: replaceId ? "Event replaced" : "Event saved",
+        variant: "success",
+      });
+      router.push("/admin/french-quarter-direct/events");
+      return true;
+    }
+    addNotification({ text: "Couldn't save event", variant: "error" });
+    return false;
+  }
+
   async function handleSave() {
     if (!form.title.trim() || !form.startDate) {
       addNotification({
@@ -166,21 +215,16 @@ export function EventFormPage({ mode, event }: Props) {
       return;
     }
     setSaving(true);
-    const res = await fetch(
-      isNew ? "/api/fqd/events" : `/api/fqd/events/${event?.id}`,
-      {
-        method: isNew ? "POST" : "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...form, rawResearch }),
-      },
-    );
+    await submit();
     setSaving(false);
-    if (res.ok) {
-      addNotification({ text: "Event saved", variant: "success" });
-      router.push("/admin/french-quarter-direct/events");
-    } else {
-      addNotification({ text: "Couldn't save event", variant: "error" });
-    }
+  }
+
+  async function handleReplace() {
+    if (!duplicate) return;
+    setReplacing(true);
+    await submit(duplicate.id);
+    setReplacing(false);
+    setDuplicate(null);
   }
 
   async function handleDelete() {
@@ -271,6 +315,20 @@ export function EventFormPage({ mode, event }: Props) {
         confirmLabel="Delete"
         onConfirm={handleDelete}
         onCancel={() => setConfirmDelete(false)}
+      />
+
+      <ConfirmDialog
+        open={!!duplicate}
+        title="Event already exists"
+        message={
+          duplicate
+            ? `"${duplicate.title}" on ${fmtDay(duplicate.startDate)} already exists. Replace it? This deletes the existing event and its images, then saves this one.`
+            : ""
+        }
+        confirmLabel={replacing ? "Replacing…" : "Replace"}
+        cancelLabel="Keep existing"
+        onConfirm={handleReplace}
+        onCancel={() => setDuplicate(null)}
       />
     </AdminLayout>
   );

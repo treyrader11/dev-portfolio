@@ -2,6 +2,8 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { requireAdmin } from "@/features/admin/lib/admin-auth";
 import { getFqdEvents } from "@/features/fqd/actions/get-events";
 import { createFqdEvent } from "@/features/fqd/actions/create-event";
+import { findDuplicateEvent } from "@/features/fqd/lib/duplicates";
+import { deleteFqdEventWithImages } from "@/features/fqd/lib/delete-with-images";
 import type { FqdEventFormValues } from "@/features/fqd/types/fqd-types";
 
 export default async function handler(
@@ -18,13 +20,22 @@ export default async function handler(
   }
 
   if (req.method === "POST") {
-    const { rawResearch, ...values } = req.body as FqdEventFormValues & {
+    const { rawResearch, replaceId, ...values } = req.body as FqdEventFormValues & {
       rawResearch?: unknown;
+      replaceId?: string;
     };
     if (!values.title?.trim() || !values.startDate) {
       return res
         .status(400)
         .json({ error: "Title and start date are required" });
+    }
+    // Replacing an existing event: delete it (and its Cloudinary images) first,
+    // freeing its slug, then create the new one in its place.
+    if (replaceId) {
+      await deleteFqdEventWithImages(replaceId);
+    } else {
+      const duplicate = await findDuplicateEvent(values.title, values.startDate);
+      if (duplicate) return res.status(409).json({ duplicate });
     }
     const event = await createFqdEvent(values, rawResearch);
     return res.status(201).json(event);
