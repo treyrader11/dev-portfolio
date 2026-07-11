@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import { motion } from "framer-motion";
@@ -68,10 +68,16 @@ function toFormValues(event: FqdEventListItem): FqdEventFormValues {
   };
 }
 
-export function EventFormPage({ mode, event }: Props) {
+export function EventFormPage({ event }: Props) {
   const router = useRouter();
   const { addNotification } = useNotificationsContext();
-  const isNew = mode === "create";
+
+  // The persisted event: the prop for edit mode, or set after the first save of
+  // a new event (so re-saves become updates, not new inserts).
+  const [savedEvent, setSavedEvent] = useState<FqdEventListItem | undefined>(
+    event,
+  );
+  const isNew = !savedEvent;
 
   const [form, setForm] = useState<FqdEventFormValues>(() =>
     event ? toFormValues(event) : { ...emptyFqdEvent },
@@ -84,6 +90,23 @@ export function EventFormPage({ mode, event }: Props) {
 
   const initial = useRef(JSON.stringify(form));
   const dirty = JSON.stringify(form) !== initial.current;
+
+  // Cmd+S (mac) / Ctrl+S (windows) saves — only when there are changes. A ref
+  // holds the latest handler so the mount-only listener never goes stale.
+  const saveShortcut = useRef<() => void>(() => {});
+  saveShortcut.current = () => {
+    if (dirty && !saving) handleSave();
+  };
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "s") {
+        e.preventDefault();
+        saveShortcut.current();
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
 
   // Apply an AI research/parse result: fill blank/updated fields, keep the slug
   // linked, mark researched, and stash the raw response for audit.
@@ -176,9 +199,9 @@ export function EventFormPage({ mode, event }: Props) {
   // and creates this one in its place.
   async function submit(replaceId?: string): Promise<boolean> {
     const res = await fetch(
-      isNew ? "/api/fqd/events" : `/api/fqd/events/${event?.id}`,
+      savedEvent ? `/api/fqd/events/${savedEvent.id}` : "/api/fqd/events",
       {
-        method: isNew ? "POST" : "PUT",
+        method: savedEvent ? "PUT" : "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           ...form,
@@ -195,11 +218,25 @@ export function EventFormPage({ mode, event }: Props) {
       }
     }
     if (res.ok) {
+      // Sync from the saved row (ids, unique slug, persisted alts) and reset the
+      // dirty baseline so the save bar hides. No redirect — the footer has a
+      // "View events" button when you're ready to leave.
+      const saved = (await res
+        .json()
+        .catch(() => null)) as FqdEventListItem | null;
+      if (saved) {
+        const nextForm = toFormValues(saved);
+        setSavedEvent(saved);
+        setForm(nextForm);
+        initial.current = JSON.stringify(nextForm);
+      } else {
+        initial.current = JSON.stringify(form);
+      }
+      setRawResearch(undefined);
       addNotification({
         text: replaceId ? "Event replaced" : "Event saved",
         variant: "success",
       });
-      router.push("/admin/french-quarter-direct/events");
       return true;
     }
     addNotification({ text: "Couldn't save event", variant: "error" });
@@ -228,8 +265,10 @@ export function EventFormPage({ mode, event }: Props) {
   }
 
   async function handleDelete() {
-    if (!event) return;
-    const res = await fetch(`/api/fqd/events/${event.id}`, { method: "DELETE" });
+    if (!savedEvent) return;
+    const res = await fetch(`/api/fqd/events/${savedEvent.id}`, {
+      method: "DELETE",
+    });
     if (res.ok) {
       addNotification({ text: "Event deleted", variant: "success" });
       router.push("/admin/french-quarter-direct/events");
@@ -241,10 +280,10 @@ export function EventFormPage({ mode, event }: Props) {
 
   return (
     <AdminLayout
-      title={isNew ? "New Event" : event?.title || "Event"}
+      title={isNew ? "New Event" : savedEvent?.title || "Event"}
       breadcrumbs={[
         ...CRUMBS,
-        { label: isNew ? "New" : event?.title || "Edit" },
+        { label: isNew ? "New" : savedEvent?.title || "Edit" },
       ]}
     >
       <div className="w-full max-w-3xl pb-24">
@@ -256,50 +295,52 @@ export function EventFormPage({ mode, event }: Props) {
           imagesLoading={fetchingImages}
         />
 
-        {!isNew && event && (
-          <div className="mt-4 flex items-center gap-4">
-            <Link
-              href={`/admin/french-quarter-direct/event/${event.slug}`}
-              className="text-sm text-secondary transition-colors hover:underline"
-            >
-              View page
-            </Link>
-            <button
-              type="button"
-              onClick={() => setConfirmDelete(true)}
-              className="text-sm text-error transition-colors hover:text-error-600"
-            >
-              Delete event
-            </button>
-          </div>
-        )}
+        {/* Page footer actions — always offers a way back to the events list. */}
+        <div className="mt-6 flex flex-wrap items-center gap-4">
+          <Link
+            href="/admin/french-quarter-direct/events"
+            className="text-sm text-secondary transition-colors hover:underline"
+          >
+            ← View events
+          </Link>
+          {savedEvent && (
+            <>
+              <Link
+                href={`/admin/french-quarter-direct/event/${savedEvent.slug}`}
+                className="text-sm text-secondary transition-colors hover:underline"
+              >
+                View page
+              </Link>
+              <button
+                type="button"
+                onClick={() => setConfirmDelete(true)}
+                className="text-sm text-error transition-colors hover:text-error-600"
+              >
+                Delete event
+              </button>
+            </>
+          )}
+        </div>
       </div>
 
-      {/* Save bar */}
+      {/* Save bar — only shown when there are unsaved changes. */}
       <motion.div
         initial={false}
-        animate={{ y: dirty || isNew ? "0%" : "110%" }}
+        animate={{ y: dirty ? "0%" : "110%" }}
         transition={{ type: "spring", stiffness: 320, damping: 32 }}
         className="fixed inset-x-0 bottom-0 z-30 border-t border-dark-600 bg-dark-500/95 backdrop-blur"
       >
         <div className="mx-auto flex max-w-3xl items-center justify-between gap-3 px-4 py-4">
-          <span className="text-sm text-light-400">
-            {isNew ? "New event" : "Unsaved changes"}
-          </span>
-          <div className="flex gap-3">
-            <button
-              type="button"
-              onClick={() =>
-                router.push("/admin/french-quarter-direct/events")
-              }
-              className="px-4 py-2 text-sm text-light-400 hover:text-white"
-            >
-              Cancel
-            </button>
+          <span className="text-sm text-light-400">Unsaved changes</span>
+          <div className="flex items-center gap-3">
+            <span className="hidden text-xs text-light-400 sm:inline">
+              ⌘/Ctrl+S
+            </span>
             <button
               type="button"
               onClick={handleSave}
               disabled={saving}
+              title="Save (⌘/Ctrl+S)"
               className="rounded-lg bg-success px-4 py-2 text-sm font-medium text-white hover:bg-success-600 disabled:opacity-50"
             >
               {saving ? "Saving…" : isNew ? "Create" : "Save"}
@@ -311,7 +352,7 @@ export function EventFormPage({ mode, event }: Props) {
       <ConfirmDialog
         open={confirmDelete}
         title="Delete event?"
-        message={`This permanently deletes "${event?.title ?? "this event"}" and its images. This can't be undone.`}
+        message={`This permanently deletes "${savedEvent?.title ?? "this event"}" and its images. This can't be undone.`}
         confirmLabel="Delete"
         onConfirm={handleDelete}
         onCancel={() => setConfirmDelete(false)}
