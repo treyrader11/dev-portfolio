@@ -200,6 +200,7 @@ export function EventForm({
         <ImageManager
           images={values.images}
           onChange={(images) => set({ images })}
+          slug={values.slug || slugify(values.title) || "event"}
         />
       </AdminFocusScope>
     </div>

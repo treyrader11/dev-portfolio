@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import Cropper, { type Area } from "react-easy-crop";
 import {
@@ -8,6 +8,8 @@ import {
   RiUploadCloud2Line,
   RiCrop2Line,
   RiLoader4Line,
+  RiFileCopyLine,
+  RiCheckLine,
 } from "react-icons/ri";
 import { MediaLibraryPicker } from "@/features/admin/components/media-library-picker";
 import { ReorderableList } from "@/features/admin/components/reorderable-list";
@@ -22,6 +24,8 @@ const CROP_ASPECT = 16 / 9;
 interface Props {
   images: FqdEventImageInput[];
   onChange: (images: FqdEventImageInput[]) => void;
+  // Event slug — drives the alt-text naming convention <slug>_<index>.
+  slug: string;
 }
 
 // Best-effort Cloudinary public_id from a delivery URL.
@@ -30,13 +34,74 @@ function cloudinaryIdFromUrl(url: string): string | null {
   return m ? m[1] : null;
 }
 
-const reindex = (list: FqdEventImageInput[]) =>
-  list.map((img, i) => ({ ...img, order: i }));
+const padIndex = (n: number) => String(n).padStart(2, "0");
+
+// The descriptor portion of an alt already in <slug>_<index>[_<descriptor>]
+// form, or null when the alt doesn't follow the convention (a fully custom alt
+// the admin typed). Slugs are hyphenated, so "_" reliably splits the parts.
+function altDescriptor(alt: string): string | null {
+  const parts = alt.split("_");
+  if (parts.length < 2 || !/^\d+$/.test(parts[1])) return null;
+  return parts.slice(2).join("_");
+}
+
+// The conventional alt for an image at a position: "<slug>_<NN>" with any
+// existing descriptor preserved. Blank alts get the bare prefix (never blank);
+// fully custom alts are left untouched.
+function conventionalAlt(
+  slug: string,
+  order: number,
+  prevAlt: string | null | undefined,
+): string {
+  const prefix = `${slug}_${padIndex(order + 1)}`;
+  const prev = (prevAlt ?? "").trim();
+  if (!prev) return prefix;
+  const desc = altDescriptor(prev);
+  if (desc === null) return prev;
+  return desc ? `${prefix}_${desc}` : prefix;
+}
+
+// Reindex order + apply the alt naming convention across the whole list.
+function applyConvention(
+  list: FqdEventImageInput[],
+  slug: string,
+): FqdEventImageInput[] {
+  return list.map((img, i) => ({
+    ...img,
+    order: i,
+    alt: conventionalAlt(slug, i, img.alt),
+  }));
+}
 
 // Multi-image manager for an event: drag & drop (or browse) as many photos as
 // you want at once, reorder by drag, crop any one, edit alt text, delete.
-export function ImageManager({ images, onChange }: Props) {
+export function ImageManager({ images, onChange, slug }: Props) {
   const [uploading, setUploading] = useState(0);
+  const [copiedUrl, setCopiedUrl] = useState<string | null>(null);
+
+  // Keep every alt following the <slug>_<index>[_descriptor] convention as
+  // images are added (incl. from research/website), reordered, or the slug
+  // changes. Idempotent, so it settles in one pass without looping.
+  useEffect(() => {
+    const next = applyConvention(images, slug);
+    const differs =
+      next.length !== images.length ||
+      next.some(
+        (n, i) => n.alt !== images[i].alt || n.order !== images[i].order,
+      );
+    if (differs) onChange(next);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [images, slug]);
+
+  async function copyAlt(url: string, alt: string) {
+    try {
+      await navigator.clipboard.writeText(alt);
+      setCopiedUrl(url);
+      setTimeout(() => setCopiedUrl((c) => (c === url ? null : c)), 1500);
+    } catch {
+      /* clipboard unavailable */
+    }
+  }
 
   // Which image (by url) is being cropped, plus the cropper state.
   const [cropUrl, setCropUrl] = useState<string | null>(null);
@@ -56,7 +121,7 @@ export function ImageManager({ images, onChange }: Props) {
         alt: "",
         order: 0,
       }));
-    onChange(reindex([...images, ...added]));
+    onChange(applyConvention([...images, ...added], slug));
   }
 
   // Batch upload: every dropped/selected file uploads in parallel, then all get
@@ -94,7 +159,7 @@ export function ImageManager({ images, onChange }: Props) {
   }
 
   function remove(url: string) {
-    onChange(reindex(images.filter((img) => img.url !== url)));
+    onChange(applyConvention(images.filter((img) => img.url !== url), slug));
   }
 
   function openCrop(url: string) {
@@ -157,10 +222,24 @@ export function ImageManager({ images, onChange }: Props) {
       <MediaLibraryPicker onSelect={(url) => appendUrls([url])} />
 
       {images.length > 0 && (
+        <p className="text-xs text-light-400">
+          Alt text auto-fills as{" "}
+          <code className="rounded bg-dark-600 px-1 text-white">
+            {slug || "event"}_01
+          </code>{" "}
+          — append a short descriptor (e.g.{" "}
+          <code className="rounded bg-dark-600 px-1 text-white">
+            _spirited-awards-ceremony
+          </code>
+          ) for SEO.
+        </p>
+      )}
+
+      {images.length > 0 && (
         <ReorderableList
           items={images}
           getId={(img) => img.url}
-          onReorder={(next) => onChange(reindex(next))}
+          onReorder={(next) => onChange(applyConvention(next, slug))}
           itemClassName="group"
           renderItem={(img) => (
             <div className="flex items-center gap-3">
@@ -182,6 +261,18 @@ export function ImageManager({ images, onChange }: Props) {
                   placeholder="Alt text"
                   className="min-w-0 flex-1 rounded-lg border border-dark-600 bg-dark-600 px-3 py-2 text-sm text-white focus:outline-none focus:ring-1 focus:ring-secondary"
                 />
+                <button
+                  type="button"
+                  aria-label="Copy alt text"
+                  onClick={() => copyAlt(img.url, img.alt ?? "")}
+                  className="text-light-400 transition-colors hover:text-white"
+                >
+                  {copiedUrl === img.url ? (
+                    <RiCheckLine className="size-5 text-success" />
+                  ) : (
+                    <RiFileCopyLine className="size-5" />
+                  )}
+                </button>
                 <button
                   type="button"
                   aria-label="Crop image"
