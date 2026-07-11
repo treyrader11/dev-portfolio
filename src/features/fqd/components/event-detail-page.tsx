@@ -8,6 +8,7 @@ import {
 } from "react-icons/ri";
 import AdminLayout from "@/features/admin/components/admin-layout";
 import { EventExport } from "./event-export";
+import { EventLocationMap } from "./event-location-map";
 import { cn, resolveImageSrc } from "@/lib/utils";
 import {
   FQD_STATUS_BADGE,
@@ -183,6 +184,12 @@ export function EventDetailPage({ event }: Props) {
             ) : null}
           </Detail>
         </dl>
+
+        {/* Location map + directions — iPhone only. */}
+        <EventLocationMap
+          locationName={event.locationName}
+          address={event.address}
+        />
       </div>
     </AdminLayout>
   );
