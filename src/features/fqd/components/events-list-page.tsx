@@ -20,6 +20,26 @@ const CRUMBS = [
   { label: "Events" },
 ];
 
+// "Missing field" filters — each shows only events lacking that field.
+const MISSING_FILTERS: { value: string; label: string }[] = [
+  { value: "", label: "All events" },
+  { value: "description", label: "Without description" },
+  { value: "images", label: "Without images" },
+  { value: "locationName", label: "Without location" },
+  { value: "address", label: "Without address" },
+  { value: "startTime", label: "Without start time" },
+  { value: "endDate", label: "Without end date" },
+  { value: "category", label: "Without category" },
+  { value: "subcategory", label: "Without subcategory" },
+  { value: "admission", label: "Without admission" },
+  { value: "ticketUrl", label: "Without ticket URL" },
+  { value: "organizer", label: "Without organizer" },
+  { value: "expectedAttendance", label: "Without expected attendance" },
+  { value: "ageRequirement", label: "Without age requirement" },
+  { value: "website", label: "Without website" },
+  { value: "notes", label: "Without notes" },
+];
+
 export function EventsListPage({ data }: Props) {
   const { addNotification } = useNotificationsContext();
   const [events, setEvents] = useState<FqdEventListItem[]>(data.events);
@@ -27,6 +47,7 @@ export function EventsListPage({ data }: Props) {
   const [page, setPage] = useState(data.page);
   const [loadingMore, setLoadingMore] = useState(false);
   const [filter, setFilter] = useState("");
+  const [missing, setMissing] = useState("");
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [target, setTarget] = useState<FqdEventListItem | null>(null);
   const [bulkConfirm, setBulkConfirm] = useState(false);
@@ -47,29 +68,49 @@ export function EventsListPage({ data }: Props) {
   const allVisibleSelected =
     visible.length > 0 && visible.every((e) => selected.has(e.id));
 
-  async function loadMore() {
-    if (loadingMore || !hasMore) return;
+  // Fetch a page of events, optionally filtered by a missing field. `append`
+  // adds to the list (load more); otherwise it replaces it (filter change).
+  async function fetchEvents(
+    nextPage: number,
+    missingFilter: string,
+    append: boolean,
+  ) {
     setLoadingMore(true);
     try {
-      const res = await fetch(
-        `/api/fqd/events?page=${page + 1}&pageSize=${data.pageSize}`,
-      );
+      const params = new URLSearchParams({
+        page: String(nextPage),
+        pageSize: String(data.pageSize),
+      });
+      if (missingFilter) params.set("missing", missingFilter);
+      const res = await fetch(`/api/fqd/events?${params.toString()}`);
       if (res.ok) {
-        const more: GetFqdEventsResult = await res.json();
+        const result: GetFqdEventsResult = await res.json();
         setEvents((prev) => {
+          if (!append) return result.events;
           const seen = new Set(prev.map((e) => e.id));
-          return [...prev, ...more.events.filter((e) => !seen.has(e.id))];
+          return [...prev, ...result.events.filter((e) => !seen.has(e.id))];
         });
-        setPage(more.page);
-        setTotal(more.total);
+        setPage(result.page);
+        setTotal(result.total);
       } else {
-        addNotification({ text: "Couldn't load more events", variant: "error" });
+        addNotification({ text: "Couldn't load events", variant: "error" });
       }
     } catch {
-      addNotification({ text: "Couldn't load more events", variant: "error" });
+      addNotification({ text: "Couldn't load events", variant: "error" });
     } finally {
       setLoadingMore(false);
     }
+  }
+
+  function loadMore() {
+    if (loadingMore || !hasMore) return;
+    fetchEvents(page + 1, missing, true);
+  }
+
+  function changeMissing(value: string) {
+    setMissing(value);
+    setSelected(new Set());
+    fetchEvents(1, value, false);
   }
 
   function toggleSelect(id: string) {
@@ -167,9 +208,10 @@ export function EventsListPage({ data }: Props) {
           </div>
         </div>
 
-        {/* Filter (client-side, over the loaded events). */}
-        {events.length > 0 && (
-          <div className="mb-4 flex items-center gap-2 rounded-lg border border-dark-600 bg-dark-600 px-3 py-2">
+        {/* Filters: free-text (over loaded events) + missing-field (server-side
+            over all events). */}
+        <div className="mb-4 flex flex-col gap-2 sm:flex-row">
+          <div className="flex flex-1 items-center gap-2 rounded-lg border border-dark-600 bg-dark-600 px-3 py-2">
             <RiSearchLine className="size-4 shrink-0 text-light-400" />
             <input
               value={filter}
@@ -178,7 +220,18 @@ export function EventsListPage({ data }: Props) {
               className="w-full bg-transparent text-sm text-white outline-none placeholder:text-light-400"
             />
           </div>
-        )}
+          <select
+            value={missing}
+            onChange={(e) => changeMissing(e.target.value)}
+            className="rounded-lg border border-dark-600 bg-dark-600 px-3 py-2 text-sm text-white [color-scheme:dark] outline-none focus:ring-1 focus:ring-secondary sm:w-56"
+          >
+            {MISSING_FILTERS.map((f) => (
+              <option key={f.value} value={f.value}>
+                {f.label}
+              </option>
+            ))}
+          </select>
+        </div>
 
         {/* Bulk-select toolbar. */}
         {visible.length > 0 && (
@@ -207,7 +260,15 @@ export function EventsListPage({ data }: Props) {
           </div>
         )}
 
-        {events.length === 0 ? (
+        {events.length === 0 && missing ? (
+          <div className="rounded-lg border border-dashed border-dark-600 p-8 text-center text-sm text-light-400">
+            No events{" "}
+            {MISSING_FILTERS.find((f) => f.value === missing)
+              ?.label.toLowerCase()
+              .replace(/^without/, "are missing") ?? "match this filter"}
+            .
+          </div>
+        ) : events.length === 0 ? (
           <div className="rounded-lg border border-dashed border-dark-600 p-10 text-center">
             <p className="text-white">No events yet.</p>
             <p className="mt-1 text-sm text-light-400">

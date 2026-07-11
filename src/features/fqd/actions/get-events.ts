@@ -1,3 +1,4 @@
+import type { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import { serializeFqdEvent } from "../lib/serialize";
 import type { FqdEventListItem } from "../types/fqd-types";
@@ -10,27 +11,62 @@ export interface GetFqdEventsResult {
   totalPages: number;
 }
 
+// String columns that can be filtered for "missing" (null or empty).
+const MISSING_STRING_FIELDS = new Set([
+  "description",
+  "startTime",
+  "locationName",
+  "address",
+  "category",
+  "subcategory",
+  "admission",
+  "ticketUrl",
+  "organizer",
+  "expectedAttendance",
+  "ageRequirement",
+  "website",
+  "notes",
+]);
+
+// A where-clause matching events that are MISSING the given field. "images"
+// means no images; "endDate" means no end date; the rest are string columns.
+function missingWhere(field?: string): Prisma.FqdEventWhereInput | undefined {
+  if (!field) return undefined;
+  if (field === "images") return { images: { none: {} } };
+  if (field === "endDate") return { endDate: null };
+  if (MISSING_STRING_FIELDS.has(field)) {
+    return {
+      OR: [{ [field]: null }, { [field]: "" }],
+    } as Prisma.FqdEventWhereInput;
+  }
+  return undefined;
+}
+
 // Total number of events in the database. The admin manages every event it
 // holds — past events are removed by the expiry cron, not hidden here.
 export async function getFqdEventCount(): Promise<number> {
   return prisma.fqdEvent.count();
 }
 
-// Paginated list of all events, soonest first.
+// Paginated list of events, soonest first. `missing` filters to events lacking
+// a given field.
 export async function getFqdEvents(
   page = 1,
   pageSize = 20,
+  missing?: string,
 ): Promise<GetFqdEventsResult> {
   const safePage = Math.max(1, page);
   const skip = (safePage - 1) * pageSize;
+  const where = missingWhere(missing);
   const [rows, total] = await Promise.all([
     prisma.fqdEvent.findMany({
+      where,
       orderBy: [{ startDate: "asc" }, { createdAt: "desc" }],
       include: { images: { orderBy: { order: "asc" } } },
       skip,
       take: pageSize,
     }),
-    prisma.fqdEvent.count(),
+    prisma.fqdEvent.count({ where }),
   ]);
   return {
     events: rows.map(serializeFqdEvent),
