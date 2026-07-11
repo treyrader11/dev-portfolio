@@ -231,6 +231,8 @@ model FqdEvent {
   rawResearch        Json?
   // Set when the "event started" email has been sent, so it fires only once.
   startNotifiedAt    DateTime?
+  // Marked true once the event has been published to French Quarter Direct (Joomla).
+  addedToJoomla      Boolean         @default(false)
   images             FqdEventImage[]
   createdAt          DateTime        @default(now())
   updatedAt          DateTime        @updatedAt

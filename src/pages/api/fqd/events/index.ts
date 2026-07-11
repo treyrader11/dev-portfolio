@@ -19,7 +19,9 @@ export default async function handler(
       typeof req.query.missing === "string" ? req.query.missing : undefined;
     const search =
       typeof req.query.search === "string" ? req.query.search : undefined;
-    const data = await getFqdEvents(page, pageSize, missing, search);
+    const added =
+      typeof req.query.added === "string" ? req.query.added : undefined;
+    const data = await getFqdEvents(page, pageSize, missing, search, added);
     return res.status(200).json(data);
   }
 

@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { requireAdmin } from "@/features/admin/lib/admin-auth";
 import { getFqdEvent } from "@/features/fqd/actions/get-event";
 import { updateFqdEvent } from "@/features/fqd/actions/update-event";
+import { setFqdEventAdded } from "@/features/fqd/actions/set-event-added";
 import { deleteFqdEventWithImages } from "@/features/fqd/lib/delete-with-images";
 import {
   eventImageFilename,
@@ -167,11 +168,22 @@ export default async function handler(
     return res.status(200).json(event);
   }
 
+  if (req.method === "PATCH") {
+    const { addedToJoomla } = req.body as { addedToJoomla?: boolean };
+    if (typeof addedToJoomla !== "boolean") {
+      return res
+        .status(400)
+        .json({ error: "addedToJoomla (boolean) is required" });
+    }
+    const event = await setFqdEventAdded(id, addedToJoomla);
+    return res.status(200).json(event);
+  }
+
   if (req.method === "DELETE") {
     await deleteFqdEventWithImages(id);
     return res.status(200).json({ success: true });
   }
 
-  res.setHeader("Allow", ["GET", "PUT", "DELETE"]);
+  res.setHeader("Allow", ["GET", "PUT", "PATCH", "DELETE"]);
   return res.status(405).json({ error: "Method not allowed" });
 }

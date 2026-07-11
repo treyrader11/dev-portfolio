@@ -13,6 +13,8 @@ import {
   RiArrowDownSLine,
   RiCheckLine,
   RiCloseLine,
+  RiCheckboxCircleFill,
+  RiCheckboxBlankCircleLine,
 } from "react-icons/ri";
 import { cn, resolveImageSrc } from "@/lib/utils";
 import {
@@ -39,6 +41,7 @@ interface Props {
   onDelete: (event: FqdEventListItem) => void;
   selected?: boolean;
   onToggleSelect?: (id: string) => void;
+  onToggleAdded?: (event: FqdEventListItem) => void;
 }
 
 export function EventCard({
@@ -46,6 +49,7 @@ export function EventCard({
   onDelete,
   selected,
   onToggleSelect,
+  onToggleAdded,
 }: Props) {
   const [expanded, setExpanded] = useState(false);
 
@@ -87,7 +91,11 @@ export function EventCard({
     <div
       className={cn(
         "rounded-lg border bg-dark-400 transition-colors",
-        selected ? "border-secondary/60" : "border-dark-600",
+        selected
+          ? "border-secondary/60"
+          : event.addedToJoomla
+            ? "border-lime-400/40"
+            : "border-dark-600",
       )}
     >
       <div className="flex items-start justify-between gap-3 p-4">
@@ -132,6 +140,11 @@ export function EventCard({
               >
                 {status}
               </span>
+              {event.addedToJoomla && (
+                <span className="shrink-0 rounded-full bg-lime-400 px-2 py-0.5 text-xs font-bold uppercase tracking-wide text-black">
+                  Added
+                </span>
+              )}
             </div>
             <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-light-400">
               <span className="inline-flex items-center gap-1">
@@ -161,6 +174,34 @@ export function EventCard({
         </Link>
 
         <div className="flex shrink-0 items-center gap-2">
+          {onToggleAdded && (
+            <button
+              type="button"
+              aria-label={
+                event.addedToJoomla
+                  ? "Mark as not added to French Quarter Direct"
+                  : "Mark as added to French Quarter Direct"
+              }
+              title={
+                event.addedToJoomla
+                  ? "Added to French Quarter Direct — click to unmark"
+                  : "Mark as added to French Quarter Direct"
+              }
+              onClick={() => onToggleAdded(event)}
+              className={cn(
+                "transition-colors",
+                event.addedToJoomla
+                  ? "text-lime-400 hover:text-lime-300"
+                  : "text-light-400 hover:text-white",
+              )}
+            >
+              {event.addedToJoomla ? (
+                <RiCheckboxCircleFill className="size-5" />
+              ) : (
+                <RiCheckboxBlankCircleLine className="size-5" />
+              )}
+            </button>
+          )}
           <button
             type="button"
             aria-label={expanded ? "Hide fields" : "Show fields"}

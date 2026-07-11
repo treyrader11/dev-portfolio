@@ -55,14 +55,24 @@ function searchWhere(search?: string): Prisma.FqdEventWhereInput | undefined {
   };
 }
 
-// Combine the optional missing-field and search filters.
+// A where-clause for the "added to Joomla" pill filter.
+function addedWhere(added?: string): Prisma.FqdEventWhereInput | undefined {
+  if (added === "true") return { addedToJoomla: true };
+  if (added === "false") return { addedToJoomla: false };
+  return undefined;
+}
+
+// Combine the optional missing-field, search, and added filters.
 function buildWhere(
   missing?: string,
   search?: string,
+  added?: string,
 ): Prisma.FqdEventWhereInput | undefined {
-  const clauses = [missingWhere(missing), searchWhere(search)].filter(
-    (c): c is Prisma.FqdEventWhereInput => !!c,
-  );
+  const clauses = [
+    missingWhere(missing),
+    searchWhere(search),
+    addedWhere(added),
+  ].filter((c): c is Prisma.FqdEventWhereInput => !!c);
   if (clauses.length === 0) return undefined;
   if (clauses.length === 1) return clauses[0];
   return { AND: clauses };
@@ -81,10 +91,11 @@ export async function getFqdEvents(
   pageSize = 20,
   missing?: string,
   search?: string,
+  added?: string,
 ): Promise<GetFqdEventsResult> {
   const safePage = Math.max(1, page);
   const skip = (safePage - 1) * pageSize;
-  const where = buildWhere(missing, search);
+  const where = buildWhere(missing, search, added);
   const [rows, total] = await Promise.all([
     prisma.fqdEvent.findMany({
       where,

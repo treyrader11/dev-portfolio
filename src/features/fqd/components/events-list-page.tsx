@@ -5,6 +5,7 @@ import AdminLayout from "@/features/admin/components/admin-layout";
 import { ConfirmDialog } from "@/features/admin/components/confirm-dialog";
 import { useDebounce } from "@/hooks/useDebounce";
 import { useNotificationsContext } from "@/components/providers/NotificationsProvider";
+import { cn } from "@/lib/utils";
 import { EventCard } from "./event-card";
 import { EventImport } from "./event-import";
 import { EventExportAll } from "./event-export-all";
@@ -41,6 +42,13 @@ const MISSING_FILTERS: { value: string; label: string }[] = [
   { value: "notes", label: "Without notes" },
 ];
 
+// "Added to French Quarter Direct" pill filter.
+const ADDED_PILLS: { value: string; label: string }[] = [
+  { value: "", label: "All" },
+  { value: "true", label: "Added" },
+  { value: "false", label: "Not added" },
+];
+
 export function EventsListPage({ data }: Props) {
   const { addNotification } = useNotificationsContext();
   const [events, setEvents] = useState<FqdEventListItem[]>(data.events);
@@ -49,6 +57,7 @@ export function EventsListPage({ data }: Props) {
   const [loadingMore, setLoadingMore] = useState(false);
   const [filter, setFilter] = useState("");
   const [missing, setMissing] = useState("");
+  const [added, setAdded] = useState("");
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [target, setTarget] = useState<FqdEventListItem | null>(null);
   const [bulkConfirm, setBulkConfirm] = useState(false);
@@ -58,7 +67,7 @@ export function EventsListPage({ data }: Props) {
   // events that haven't been paginated into the list yet.
   const debouncedSearch = useDebounce(filter, 400);
   const searching = !!debouncedSearch.trim();
-  const filtering = searching || !!missing;
+  const filtering = searching || !!missing || !!added;
 
   const visible = events;
   const hasMore = events.length < total;
@@ -71,6 +80,7 @@ export function EventsListPage({ data }: Props) {
     nextPage: number,
     missingFilter: string,
     searchQuery: string,
+    addedFilter: string,
     append: boolean,
   ) {
     setLoadingMore(true);
@@ -81,6 +91,7 @@ export function EventsListPage({ data }: Props) {
       });
       if (missingFilter) params.set("missing", missingFilter);
       if (searchQuery.trim()) params.set("search", searchQuery.trim());
+      if (addedFilter) params.set("added", addedFilter);
       const res = await fetch(`/api/fqd/events?${params.toString()}`);
       if (res.ok) {
         const result: GetFqdEventsResult = await res.json();
@@ -101,8 +112,8 @@ export function EventsListPage({ data }: Props) {
     }
   }
 
-  // Refetch page 1 whenever the search or missing filter changes (skip the very
-  // first render — the initial page is already loaded from SSR).
+  // Refetch page 1 whenever a filter/search changes (skip the very first render
+  // — the initial page is already loaded from SSR).
   const firstRun = useRef(true);
   useEffect(() => {
     if (firstRun.current) {
@@ -110,13 +121,48 @@ export function EventsListPage({ data }: Props) {
       return;
     }
     setSelected(new Set());
-    fetchEvents(1, missing, debouncedSearch, false);
+    fetchEvents(1, missing, debouncedSearch, added, false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [debouncedSearch, missing]);
+  }, [debouncedSearch, missing, added]);
 
   function loadMore() {
     if (loadingMore || !hasMore) return;
-    fetchEvents(page + 1, missing, debouncedSearch, true);
+    fetchEvents(page + 1, missing, debouncedSearch, added, true);
+  }
+
+  // Toggle an event's "added to Joomla" flag.
+  async function toggleAdded(event: FqdEventListItem) {
+    const next = !event.addedToJoomla;
+    try {
+      const res = await fetch(`/api/fqd/events/${event.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ addedToJoomla: next }),
+      });
+      if (!res.ok) {
+        addNotification({ text: "Couldn't update event", variant: "error" });
+        return;
+      }
+      const updated = (await res.json()) as FqdEventListItem;
+      // If the active filter no longer matches, drop it from the list.
+      const dropsOut =
+        (added === "true" && !updated.addedToJoomla) ||
+        (added === "false" && updated.addedToJoomla);
+      if (dropsOut) {
+        setEvents((prev) => prev.filter((e) => e.id !== event.id));
+        setTotal((t) => Math.max(0, t - 1));
+      } else {
+        setEvents((prev) =>
+          prev.map((e) => (e.id === event.id ? updated : e)),
+        );
+      }
+      addNotification({
+        text: next ? "Marked as added" : "Marked as not added",
+        variant: "success",
+      });
+    } catch {
+      addNotification({ text: "Couldn't update event", variant: "error" });
+    }
   }
 
   function toggleSelect(id: string) {
@@ -214,6 +260,25 @@ export function EventsListPage({ data }: Props) {
           </div>
         </div>
 
+        {/* Added-to-Joomla pill filter. */}
+        <div className="mb-3 flex flex-wrap gap-2">
+          {ADDED_PILLS.map((p) => (
+            <button
+              key={p.value}
+              type="button"
+              onClick={() => setAdded(p.value)}
+              className={cn(
+                "rounded-full border px-3 py-1 text-sm font-medium transition-colors",
+                added === p.value
+                  ? "border-secondary bg-secondary/20 text-white"
+                  : "border-dark-600 text-light-400 hover:border-secondary/60 hover:text-white",
+              )}
+            >
+              {p.label}
+            </button>
+          ))}
+        </div>
+
         {/* Filters: free-text search + missing-field — both server-side, so
             they match across all events, not just the loaded ones. */}
         <div className="mb-4 flex flex-col gap-2 sm:flex-row">
@@ -273,7 +338,7 @@ export function EventsListPage({ data }: Props) {
           <div className="rounded-lg border border-dashed border-dark-600 p-8 text-center text-sm text-light-400">
             {searching ? (
               <>No events match &ldquo;{debouncedSearch.trim()}&rdquo;.</>
-            ) : (
+            ) : missing ? (
               <>
                 No events{" "}
                 {MISSING_FILTERS.find((f) => f.value === missing)
@@ -281,6 +346,12 @@ export function EventsListPage({ data }: Props) {
                   .replace(/^without/, "are missing") ?? "match this filter"}
                 .
               </>
+            ) : added === "true" ? (
+              <>No events are marked as added yet.</>
+            ) : added === "false" ? (
+              <>All events are marked as added.</>
+            ) : (
+              <>No events match this filter.</>
             )}
           </div>
         ) : events.length === 0 ? (
@@ -306,6 +377,7 @@ export function EventsListPage({ data }: Props) {
                 onDelete={setTarget}
                 selected={selected.has(e.id)}
                 onToggleSelect={toggleSelect}
+                onToggleAdded={toggleAdded}
               />
             ))}
           </div>
