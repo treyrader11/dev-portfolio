@@ -11,8 +11,8 @@ import {
   RiMapPin2Line,
   RiCalendarLine,
   RiArrowDownSLine,
-  RiCheckboxCircleFill,
-  RiCloseCircleFill,
+  RiCheckLine,
+  RiCloseLine,
 } from "react-icons/ri";
 import { cn, resolveImageSrc } from "@/lib/utils";
 import {
@@ -216,9 +216,9 @@ export function EventCard({
                     className="flex items-center gap-2 text-sm"
                   >
                     {f.ok ? (
-                      <RiCheckboxCircleFill className="size-4 shrink-0 text-success" />
+                      <RiCheckLine className="size-4 shrink-0 text-success" />
                     ) : (
-                      <RiCloseCircleFill className="size-4 shrink-0 text-error" />
+                      <RiCloseLine className="size-4 shrink-0 text-error" />
                     )}
                     <span className={f.ok ? "text-white" : "text-light-400"}>
                       {f.label}
