@@ -5,6 +5,7 @@ import { researchToFormValues } from "@/features/fqd/lib/research-to-form";
 import type { EventResearch } from "@/features/fqd/types/fqd-types";
 
 export const config = {
+  maxDuration: 60,
   api: { bodyParser: { sizeLimit: "4mb" } },
 };
 

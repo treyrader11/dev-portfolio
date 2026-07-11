@@ -7,7 +7,9 @@ import {
 } from "@/features/fqd/lib/fqd-research";
 
 export const config = {
-  // Large pasted documents — allow a bigger body.
+  // Large pasted documents — allow a bigger body. The client sends small
+  // batches, but give the function headroom for the AI calls anyway.
+  maxDuration: 60,
   api: { bodyParser: { sizeLimit: "4mb" } },
 };
 

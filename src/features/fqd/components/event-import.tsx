@@ -11,7 +11,10 @@ import {
 } from "react-icons/ri";
 import { useNotificationsContext } from "@/components/providers/NotificationsProvider";
 import { cn } from "@/lib/utils";
+import { splitListings, chunk } from "../lib/split-listings";
 import type { EventResearch } from "../types/fqd-types";
+
+const BATCH = 5;
 
 function previewDate(f: EventResearch): string {
   if (!f.startDate) return "no date";
@@ -30,6 +33,10 @@ export function EventImport() {
   const [creating, setCreating] = useState(false);
   const [parsed, setParsed] = useState<EventResearch[] | null>(null);
   const [selected, setSelected] = useState<Set<number>>(new Set());
+  const [progress, setProgress] = useState<{ done: number; total: number } | null>(
+    null,
+  );
+  const [errors, setErrors] = useState<string[]>([]);
   const fileRef = useRef<HTMLInputElement>(null);
 
   function close() {
@@ -37,6 +44,8 @@ export function EventImport() {
     setText("");
     setParsed(null);
     setSelected(new Set());
+    setProgress(null);
+    setErrors([]);
   }
 
   // Read a .docx to text via the server (mammoth) and drop it into the box.
@@ -72,30 +81,85 @@ export function EventImport() {
     }
   }
 
+  // Turn a failed response into a specific, human message.
+  async function describeFailure(res: Response): Promise<string> {
+    if (res.status === 504 || res.status === 502)
+      return "the server timed out (batch too large or the AI was slow)";
+    if (res.status === 401) return "not authorized — sign in again";
+    try {
+      const d = await res.json();
+      let msg = d.error ?? `HTTP ${res.status}`;
+      if (Array.isArray(d.attempts) && d.attempts.length)
+        msg += ` — ${d.attempts.join("; ")}`;
+      return msg;
+    } catch {
+      return `HTTP ${res.status}`;
+    }
+  }
+
+  // Split client-side and parse in small batches (each request stays short, so
+  // a big document can't time out the whole thing). Progress + per-batch errors
+  // are surfaced to the user.
   async function parse() {
     if (!text.trim() || parsing) return;
+    const blocks = splitListings(text);
+    if (blocks.length === 0) {
+      addNotification({ text: "No listings found in that text", variant: "error" });
+      return;
+    }
+
+    const batches = chunk(blocks, BATCH);
     setParsing(true);
-    try {
-      const res = await fetch("/api/fqd/bulk-parse", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ text }),
+    setErrors([]);
+    setProgress({ done: 0, total: blocks.length });
+
+    const all: EventResearch[] = [];
+    const batchErrors: string[] = [];
+
+    for (let bi = 0; bi < batches.length; bi++) {
+      const batch = batches[bi];
+      const range = `Listings ${bi * BATCH + 1}–${bi * BATCH + batch.length}`;
+      try {
+        const res = await fetch("/api/fqd/bulk-parse", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ text: batch.join("\n\n") }),
+        });
+        if (!res.ok) {
+          batchErrors.push(`${range}: ${await describeFailure(res)}`);
+        } else {
+          const data = await res.json();
+          all.push(...((data.events as EventResearch[]) ?? []));
+        }
+      } catch {
+        batchErrors.push(`${range}: request failed (network or connection dropped)`);
+      }
+      setProgress({
+        done: Math.min((bi + 1) * BATCH, blocks.length),
+        total: blocks.length,
       });
-      const data = await res.json();
-      if (!res.ok) {
-        addNotification({ text: data.error ?? "Parse failed", variant: "error" });
-        return;
-      }
-      const events: EventResearch[] = data.events ?? [];
-      setParsed(events);
-      setSelected(new Set(events.map((_, i) => i)));
-      if (events.length === 0) {
-        addNotification({ text: "No events found in that text", variant: "error" });
-      }
-    } catch {
-      addNotification({ text: "Network error", variant: "error" });
-    } finally {
-      setParsing(false);
+    }
+
+    setParsing(false);
+    setProgress(null);
+    setErrors(batchErrors);
+
+    if (all.length === 0) {
+      addNotification({
+        text: batchErrors[0]
+          ? `Import failed — ${batchErrors[0]}`
+          : "No events could be parsed from that text",
+        variant: "error",
+      });
+      return;
+    }
+    setParsed(all);
+    setSelected(new Set(all.map((_, i) => i)));
+    if (batchErrors.length) {
+      addNotification({
+        text: `Parsed ${all.length} events, but ${batchErrors.length} batch(es) failed — see details`,
+        variant: "error",
+      });
     }
   }
 
@@ -110,8 +174,8 @@ export function EventImport() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ events }),
       });
-      const data = await res.json();
       if (res.ok) {
+        const data = await res.json();
         addNotification({
           text: `Created ${data.created} event${data.created === 1 ? "" : "s"}`,
           variant: "success",
@@ -119,10 +183,16 @@ export function EventImport() {
         close();
         router.replace(router.asPath); // refresh the list
       } else {
-        addNotification({ text: data.error ?? "Create failed", variant: "error" });
+        addNotification({
+          text: `Couldn't create events — ${await describeFailure(res)}`,
+          variant: "error",
+        });
       }
     } catch {
-      addNotification({ text: "Network error", variant: "error" });
+      addNotification({
+        text: "Couldn't create events — request failed (network or timeout)",
+        variant: "error",
+      });
     } finally {
       setCreating(false);
     }
@@ -181,6 +251,21 @@ export function EventImport() {
               </div>
 
               <div className="min-h-0 flex-1 overflow-auto p-5">
+                {/* Specific per-batch failure details. */}
+                {errors.length > 0 && (
+                  <div className="mb-4 rounded-lg border border-red-500/40 bg-red-500/10 p-3 text-xs text-red-300">
+                    <p className="font-medium text-red-200">
+                      {errors.length} batch{errors.length === 1 ? "" : "es"}{" "}
+                      failed:
+                    </p>
+                    <ul className="mt-1 list-disc space-y-0.5 pl-4">
+                      {errors.map((e, i) => (
+                        <li key={i}>{e}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+
                 {!parsed ? (
                   <div className="space-y-3">
                     <p className="text-sm text-light-400">
@@ -289,7 +374,11 @@ export function EventImport() {
                     ) : (
                       <RiSparkling2Line className="size-4" />
                     )}
-                    {parsing ? "Parsing…" : "Parse with AI"}
+                    {parsing
+                      ? progress
+                        ? `Parsing ${progress.done}/${progress.total}…`
+                        : "Parsing…"
+                      : "Parse with AI"}
                   </button>
                 ) : (
                   <>
