@@ -129,6 +129,9 @@ interface AdminLayoutProps {
   // Override the auto-generated breadcrumbs (e.g. for nested detail routes
   // that aren't in navItems, like /admin/experience/[slug]).
   breadcrumbs?: { label: string; href?: string }[];
+  // Hide the title in the header (pages that render their own title in content,
+  // e.g. the event details page).
+  hideHeaderTitle?: boolean;
 }
 
 export default function AdminLayout({
@@ -136,6 +139,7 @@ export default function AdminLayout({
   title,
   className,
   breadcrumbs,
+  hideHeaderTitle,
 }: AdminLayoutProps) {
   const router = useRouter();
   const { data: session } = useSession();
@@ -204,7 +208,7 @@ export default function AdminLayout({
     >
       {/* Main content — centered horizontally to a max width */}
       <main className="min-h-screen">
-        <AdminHeader title={title} />
+        <AdminHeader title={title} hideTitle={hideHeaderTitle} />
         {/* Single shared content column. Every admin page's content and the
             header above align to the same max-width + horizontal padding, so
             pages never need their own max-w-* overrides. */}

@@ -76,6 +76,7 @@ export function EventDetailPage({ event }: Props) {
   return (
     <AdminLayout
       title={event.title}
+      hideHeaderTitle
       breadcrumbs={[
         { label: "Dashboard", href: "/admin" },
         { label: "French Quarter Direct", href: "/admin/french-quarter-direct" },
@@ -84,25 +85,30 @@ export function EventDetailPage({ event }: Props) {
       ]}
     >
       <div className="max-w-4xl space-y-8">
-        {/* Header row: status + edit. */}
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <span
-            className={cn(
-              "rounded-full px-3 py-1 text-xs font-medium capitalize",
-              FQD_STATUS_BADGE[status] ?? FQD_STATUS_BADGE.draft,
-            )}
-          >
-            {status}
-          </span>
-          <div className="flex items-center gap-2">
-            <EventExport eventId={event.id} />
-            <Link
-              href={`/admin/french-quarter-direct/create-event/${event.id}`}
-              className="inline-flex items-center gap-1.5 rounded-lg border border-dark-600 px-3 py-2 text-sm text-white transition-colors hover:border-secondary/60"
+        {/* Page title (moved here from the header) + status + actions. */}
+        <div className="space-y-4">
+          <h1 className="text-2xl font-bold text-white font-pp-acma sm:text-3xl">
+            {event.title}
+          </h1>
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <span
+              className={cn(
+                "rounded-full px-3 py-1 text-xs font-medium capitalize",
+                FQD_STATUS_BADGE[status] ?? FQD_STATUS_BADGE.draft,
+              )}
             >
-              <RiPencilLine className="size-4" />
-              Edit
-            </Link>
+              {status}
+            </span>
+            <div className="flex items-center gap-2">
+              <EventExport eventId={event.id} />
+              <Link
+                href={`/admin/french-quarter-direct/create-event/${event.id}`}
+                className="inline-flex items-center gap-1.5 rounded-lg border border-dark-600 px-3 py-2 text-sm text-white transition-colors hover:border-secondary/60"
+              >
+                <RiPencilLine className="size-4" />
+                Edit
+              </Link>
+            </div>
           </div>
         </div>
 
