@@ -113,6 +113,10 @@ export function EventCard({
                 {event.subcategory ? ` / ${event.subcategory}` : ""}
               </span>
             )}
+            <span className="inline-flex items-center gap-1 text-secondary">
+              <RiImageLine className="size-3.5" />
+              {event.images.length} image{event.images.length === 1 ? "" : "s"}
+            </span>
           </div>
         </div>
       </Link>
