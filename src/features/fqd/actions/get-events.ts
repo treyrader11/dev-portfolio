@@ -11,6 +11,13 @@ export interface GetFqdEventsResult {
   totalPages: number;
 }
 
+// Count of active (non-expired) events.
+export async function getFqdEventCount(): Promise<number> {
+  return prisma.fqdEvent.count({
+    where: { NOT: expiredEventsWhere(expiredCutoff()) },
+  });
+}
+
 // Paginated list of all events, soonest first.
 export async function getFqdEvents(
   page = 1,

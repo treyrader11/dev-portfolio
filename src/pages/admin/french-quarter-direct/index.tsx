@@ -2,6 +2,7 @@ import type { GetServerSideProps } from "next";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/pages/api/auth/[...nextauth]";
 import { FqdPage } from "@/features/fqd/components/fqd-page";
+import { getFqdEventCount } from "@/features/fqd/actions/get-events";
 import {
   getFqdNotificationSettings,
   type FqdNotificationSettings,
@@ -10,10 +11,17 @@ import {
 interface Props {
   settings: FqdNotificationSettings;
   currentUserEmail: string;
+  eventCount: number;
 }
 
-export default function Page({ settings, currentUserEmail }: Props) {
-  return <FqdPage settings={settings} currentUserEmail={currentUserEmail} />;
+export default function Page({ settings, currentUserEmail, eventCount }: Props) {
+  return (
+    <FqdPage
+      settings={settings}
+      currentUserEmail={currentUserEmail}
+      eventCount={eventCount}
+    />
+  );
 }
 
 export const getServerSideProps: GetServerSideProps<Props> = async (ctx) => {
@@ -21,8 +29,11 @@ export const getServerSideProps: GetServerSideProps<Props> = async (ctx) => {
   if (!session?.user?.isAdmin) {
     return { redirect: { destination: "/admin/signin", permanent: false } };
   }
-  const settings = await getFqdNotificationSettings();
+  const [settings, eventCount] = await Promise.all([
+    getFqdNotificationSettings(),
+    getFqdEventCount(),
+  ]);
   return {
-    props: { settings, currentUserEmail: session.user.email ?? "" },
+    props: { settings, currentUserEmail: session.user.email ?? "", eventCount },
   };
 };
