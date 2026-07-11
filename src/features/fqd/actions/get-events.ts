@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { serializeFqdEvent } from "../lib/serialize";
+import { expiredCutoff, expiredEventsWhere } from "../lib/expiry";
 import type { FqdEventListItem } from "../types/fqd-types";
 
 export interface GetFqdEventsResult {
@@ -17,14 +18,17 @@ export async function getFqdEvents(
 ): Promise<GetFqdEventsResult> {
   const safePage = Math.max(1, page);
   const skip = (safePage - 1) * pageSize;
+  // Hide events whose end date has passed (they're pending cleanup / removed).
+  const active = { NOT: expiredEventsWhere(expiredCutoff()) };
   const [rows, total] = await Promise.all([
     prisma.fqdEvent.findMany({
+      where: active,
       orderBy: [{ startDate: "asc" }, { createdAt: "desc" }],
       include: { images: { orderBy: { order: "asc" } } },
       skip,
       take: pageSize,
     }),
-    prisma.fqdEvent.count(),
+    prisma.fqdEvent.count({ where: active }),
   ]);
   return {
     events: rows.map(serializeFqdEvent),
