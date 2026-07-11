@@ -1,13 +1,12 @@
 import { useState } from "react";
 import Link from "next/link";
-import { RiSearchLine } from "react-icons/ri";
+import { RiSearchLine, RiLoader4Line, RiDeleteBinLine } from "react-icons/ri";
 import AdminLayout from "@/features/admin/components/admin-layout";
 import { ConfirmDialog } from "@/features/admin/components/confirm-dialog";
 import { useNotificationsContext } from "@/components/providers/NotificationsProvider";
 import { EventCard } from "./event-card";
 import { EventImport } from "./event-import";
 import { EventExportAll } from "./event-export-all";
-import { useFqdEvents } from "../hooks/use-fqd-events";
 import type { GetFqdEventsResult } from "../actions/get-events";
 import type { FqdEventListItem } from "../types/fqd-types";
 
@@ -23,11 +22,17 @@ const CRUMBS = [
 
 export function EventsListPage({ data }: Props) {
   const { addNotification } = useNotificationsContext();
-  const { events, removeEvent } = useFqdEvents(data.events);
-  const [target, setTarget] = useState<FqdEventListItem | null>(null);
+  const [events, setEvents] = useState<FqdEventListItem[]>(data.events);
+  const [total, setTotal] = useState(data.total);
+  const [page, setPage] = useState(data.page);
+  const [loadingMore, setLoadingMore] = useState(false);
   const [filter, setFilter] = useState("");
+  const [selected, setSelected] = useState<Set<string>>(new Set());
+  const [target, setTarget] = useState<FqdEventListItem | null>(null);
+  const [bulkConfirm, setBulkConfirm] = useState(false);
+  const [deleting, setDeleting] = useState(false);
 
-  // Client-side filter of the loaded page by title / location.
+  // Client-side filter of the loaded events by title / location.
   const q = filter.trim().toLowerCase();
   const visible = q
     ? events.filter(
@@ -38,14 +43,109 @@ export function EventsListPage({ data }: Props) {
       )
     : events;
 
+  const hasMore = events.length < total;
+  const allVisibleSelected =
+    visible.length > 0 && visible.every((e) => selected.has(e.id));
+
+  async function loadMore() {
+    if (loadingMore || !hasMore) return;
+    setLoadingMore(true);
+    try {
+      const res = await fetch(
+        `/api/fqd/events?page=${page + 1}&pageSize=${data.pageSize}`,
+      );
+      if (res.ok) {
+        const more: GetFqdEventsResult = await res.json();
+        setEvents((prev) => {
+          const seen = new Set(prev.map((e) => e.id));
+          return [...prev, ...more.events.filter((e) => !seen.has(e.id))];
+        });
+        setPage(more.page);
+        setTotal(more.total);
+      } else {
+        addNotification({ text: "Couldn't load more events", variant: "error" });
+      }
+    } catch {
+      addNotification({ text: "Couldn't load more events", variant: "error" });
+    } finally {
+      setLoadingMore(false);
+    }
+  }
+
+  function toggleSelect(id: string) {
+    setSelected((prev) => {
+      const n = new Set(prev);
+      if (n.has(id)) n.delete(id);
+      else n.add(id);
+      return n;
+    });
+  }
+
+  function toggleSelectAll() {
+    setSelected((prev) => {
+      if (allVisibleSelected) {
+        const n = new Set(prev);
+        visible.forEach((e) => n.delete(e.id));
+        return n;
+      }
+      const n = new Set(prev);
+      visible.forEach((e) => n.add(e.id));
+      return n;
+    });
+  }
+
+  function removeFromState(ids: Set<string>, removedCount: number) {
+    setEvents((prev) => prev.filter((e) => !ids.has(e.id)));
+    setTotal((t) => Math.max(0, t - removedCount));
+    setSelected((prev) => {
+      const n = new Set(prev);
+      ids.forEach((id) => n.delete(id));
+      return n;
+    });
+  }
+
   async function doDelete() {
     if (!target) return;
-    const ok = await removeEvent(target.id);
-    addNotification({
-      text: ok ? "Event deleted" : "Couldn't delete event",
-      variant: ok ? "success" : "error",
+    setDeleting(true);
+    const res = await fetch(`/api/fqd/events/${target.id}`, {
+      method: "DELETE",
     });
+    setDeleting(false);
+    if (res.ok) {
+      removeFromState(new Set([target.id]), 1);
+      addNotification({ text: "Event deleted", variant: "success" });
+    } else {
+      addNotification({ text: "Couldn't delete event", variant: "error" });
+    }
     setTarget(null);
+  }
+
+  async function doBulkDelete() {
+    const ids = [...selected];
+    if (ids.length === 0) return;
+    setDeleting(true);
+    try {
+      const res = await fetch("/api/fqd/events/bulk-delete", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ids }),
+      });
+      if (res.ok) {
+        const { deleted } = await res.json();
+        removeFromState(new Set(ids), deleted);
+        addNotification({
+          text: `Deleted ${deleted} event${deleted === 1 ? "" : "s"}`,
+          variant: "success",
+        });
+      } else {
+        addNotification({ text: "Couldn't delete events", variant: "error" });
+      }
+    } catch {
+      addNotification({ text: "Couldn't delete events", variant: "error" });
+    } finally {
+      setDeleting(false);
+      setBulkConfirm(false);
+    }
   }
 
   return (
@@ -53,7 +153,7 @@ export function EventsListPage({ data }: Props) {
       <div className="max-w-4xl">
         <div className="mb-6 flex items-center justify-between">
           <p className="text-sm text-light-400">
-            {data.total} event{data.total === 1 ? "" : "s"}
+            Showing {events.length} of {total} event{total === 1 ? "" : "s"}
           </p>
           <div className="flex items-center gap-2">
             <EventExportAll />
@@ -67,7 +167,7 @@ export function EventsListPage({ data }: Props) {
           </div>
         </div>
 
-        {/* Filter (client-side, over the current page). */}
+        {/* Filter (client-side, over the loaded events). */}
         {events.length > 0 && (
           <div className="mb-4 flex items-center gap-2 rounded-lg border border-dark-600 bg-dark-600 px-3 py-2">
             <RiSearchLine className="size-4 shrink-0 text-light-400" />
@@ -77,6 +177,33 @@ export function EventsListPage({ data }: Props) {
               placeholder="Filter events by title or location…"
               className="w-full bg-transparent text-sm text-white outline-none placeholder:text-light-400"
             />
+          </div>
+        )}
+
+        {/* Bulk-select toolbar. */}
+        {visible.length > 0 && (
+          <div className="mb-3 flex items-center justify-between gap-3">
+            <label className="inline-flex cursor-pointer items-center gap-2 text-sm text-light-400">
+              <input
+                type="checkbox"
+                checked={allVisibleSelected}
+                onChange={toggleSelectAll}
+                className="size-4 accent-secondary"
+              />
+              {selected.size > 0
+                ? `${selected.size} selected`
+                : "Select all"}
+            </label>
+            {selected.size > 0 && (
+              <button
+                type="button"
+                onClick={() => setBulkConfirm(true)}
+                className="inline-flex items-center gap-1.5 rounded-lg border border-error/50 px-3 py-1.5 text-sm font-medium text-error transition-colors hover:bg-error/10"
+              >
+                <RiDeleteBinLine className="size-4" />
+                Delete selected ({selected.size})
+              </button>
+            )}
           </div>
         )}
 
@@ -96,41 +223,36 @@ export function EventsListPage({ data }: Props) {
           </div>
         ) : visible.length === 0 ? (
           <div className="rounded-lg border border-dashed border-dark-600 p-8 text-center text-sm text-light-400">
-            No events on this page match &ldquo;{filter}&rdquo;.
+            No loaded events match &ldquo;{filter}&rdquo;.
           </div>
         ) : (
           <div className="space-y-3">
             {visible.map((e) => (
-              <EventCard key={e.id} event={e} onDelete={setTarget} />
+              <EventCard
+                key={e.id}
+                event={e}
+                onDelete={setTarget}
+                selected={selected.has(e.id)}
+                onToggleSelect={toggleSelect}
+              />
             ))}
           </div>
         )}
 
-        {data.totalPages > 1 && (
-          <div className="mt-6 flex items-center justify-between text-sm">
-            {data.page > 1 ? (
-              <Link
-                href={`?page=${data.page - 1}`}
-                className="text-secondary hover:underline"
-              >
-                ← Previous
-              </Link>
-            ) : (
-              <span />
-            )}
-            <span className="text-light-400">
-              Page {data.page} of {data.totalPages}
-            </span>
-            {data.page < data.totalPages ? (
-              <Link
-                href={`?page=${data.page + 1}`}
-                className="text-secondary hover:underline"
-              >
-                Next →
-              </Link>
-            ) : (
-              <span />
-            )}
+        {/* Load more — only when not filtering (filter is over loaded events). */}
+        {hasMore && !q && (
+          <div className="mt-6 flex justify-center">
+            <button
+              type="button"
+              onClick={loadMore}
+              disabled={loadingMore}
+              className="inline-flex items-center gap-2 rounded-lg border border-dark-600 px-5 py-2.5 text-sm font-medium text-white transition-colors hover:border-secondary/60 disabled:opacity-50"
+            >
+              {loadingMore && <RiLoader4Line className="size-4 animate-spin" />}
+              {loadingMore
+                ? "Loading…"
+                : `Load more (${total - events.length} remaining)`}
+            </button>
           </div>
         )}
       </div>
@@ -139,9 +261,18 @@ export function EventsListPage({ data }: Props) {
         open={target !== null}
         title="Delete event?"
         message={`This permanently deletes "${target?.title ?? "this event"}" and its images. This can't be undone.`}
-        confirmLabel="Delete"
+        confirmLabel={deleting ? "Deleting…" : "Delete"}
         onConfirm={doDelete}
         onCancel={() => setTarget(null)}
+      />
+
+      <ConfirmDialog
+        open={bulkConfirm}
+        title={`Delete ${selected.size} event${selected.size === 1 ? "" : "s"}?`}
+        message={`This permanently deletes ${selected.size} event${selected.size === 1 ? "" : "s"} and all their images. This can't be undone.`}
+        confirmLabel={deleting ? "Deleting…" : `Delete ${selected.size}`}
+        onConfirm={doBulkDelete}
+        onCancel={() => setBulkConfirm(false)}
       />
     </AdminLayout>
   );

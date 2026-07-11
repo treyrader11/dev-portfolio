@@ -1,53 +1,12 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { cloudinary } from "@/lib/cloudinary";
 import { requireAdmin } from "@/features/admin/lib/admin-auth";
+import {
+  normalizeUrl,
+  extractImageUrls,
+} from "@/features/fqd/lib/scrape-images";
 
 export const config = { maxDuration: 30 };
-
-// Normalize a possibly-protocol-less URL and reject anything that isn't public
-// http(s) (basic SSRF guard for this admin-only tool).
-function normalizeUrl(input: string): URL | null {
-  try {
-    const url = new URL(/^https?:\/\//i.test(input) ? input : `https://${input}`);
-    if (url.protocol !== "http:" && url.protocol !== "https:") return null;
-    const host = url.hostname;
-    if (
-      host === "localhost" ||
-      host === "127.0.0.1" ||
-      host.endsWith(".local") ||
-      /^(10\.|192\.168\.|169\.254\.)/.test(host)
-    ) {
-      return null;
-    }
-    return url;
-  } catch {
-    return null;
-  }
-}
-
-// Pull the representative social-share images (og:image / twitter:image) out of
-// a page's HTML, resolved to absolute URLs.
-function extractImageUrls(html: string, base: URL): string[] {
-  const patterns = [
-    /<meta[^>]+property=["']og:image(?::secure_url|:url)?["'][^>]+content=["']([^"']+)["']/gi,
-    /<meta[^>]+content=["']([^"']+)["'][^>]+property=["']og:image(?::secure_url|:url)?["']/gi,
-    /<meta[^>]+name=["']twitter:image(?::src)?["'][^>]+content=["']([^"']+)["']/gi,
-    /<meta[^>]+content=["']([^"']+)["'][^>]+name=["']twitter:image(?::src)?["']/gi,
-  ];
-  const found: string[] = [];
-  for (const re of patterns) {
-    let m: RegExpExecArray | null;
-    while ((m = re.exec(html)) !== null) {
-      try {
-        const abs = new URL(m[1], base).href;
-        if (/^https?:\/\//i.test(abs)) found.push(abs);
-      } catch {
-        /* skip bad url */
-      }
-    }
-  }
-  return [...new Set(found)].slice(0, 3);
-}
 
 export default async function handler(
   req: NextApiRequest,

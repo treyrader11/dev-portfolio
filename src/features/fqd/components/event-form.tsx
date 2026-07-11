@@ -201,6 +201,16 @@ export function EventForm({
           images={values.images}
           onChange={(images) => set({ images })}
           slug={values.slug || slugify(values.title) || "event"}
+          searchDetails={{
+            title: values.title,
+            locationName: values.locationName,
+            address: values.address,
+            startDate: values.startDate,
+            category: values.category,
+            subcategory: values.subcategory,
+            website: values.website,
+            description: values.description,
+          }}
         />
       </AdminFocusScope>
     </div>

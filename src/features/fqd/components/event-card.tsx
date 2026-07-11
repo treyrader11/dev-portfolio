@@ -28,9 +28,16 @@ function fmt(iso: string): string {
 interface Props {
   event: FqdEventListItem;
   onDelete: (event: FqdEventListItem) => void;
+  selected?: boolean;
+  onToggleSelect?: (id: string) => void;
 }
 
-export function EventCard({ event, onDelete }: Props) {
+export function EventCard({
+  event,
+  onDelete,
+  selected,
+  onToggleSelect,
+}: Props) {
   // The card opens the details page; the pencil opens the edit form.
   const detailHref = `/admin/french-quarter-direct/event/${event.slug}`;
   const editHref = `/admin/french-quarter-direct/create-event/${event.id}`;
@@ -43,7 +50,21 @@ export function EventCard({ event, onDelete }: Props) {
     : `${fmt(event.startDate)} – ${fmt(event.endDate as string)}`;
 
   return (
-    <div className="flex items-start justify-between gap-3 rounded-lg border border-dark-600 bg-dark-400 p-4">
+    <div
+      className={cn(
+        "flex items-start justify-between gap-3 rounded-lg border bg-dark-400 p-4 transition-colors",
+        selected ? "border-secondary/60" : "border-dark-600",
+      )}
+    >
+      {onToggleSelect && (
+        <input
+          type="checkbox"
+          checked={!!selected}
+          onChange={() => onToggleSelect(event.id)}
+          aria-label={`Select ${event.title}`}
+          className="mt-4 size-4 shrink-0 accent-secondary"
+        />
+      )}
       <Link href={detailHref} className="flex min-w-0 flex-1 items-center gap-3">
         {/* First image as a thumbnail so events are easy to identify. */}
         <div className="relative h-14 w-20 shrink-0 overflow-hidden rounded border border-dark-600 bg-dark-600">

@@ -74,6 +74,17 @@ const validateOne = (text: string): EventResearch =>
 const validateMany = (text: string): EventResearch[] =>
   z.array(eventResearchSchema).parse(extractJson(text, "[", "]"));
 
+// A JSON array of http(s) URL strings (used by image-source research).
+const validateUrlList = (text: string): string[] => {
+  const arr = extractJson(text, "[", "]");
+  if (!Array.isArray(arr)) throw new Error("response was not a JSON array");
+  const urls = arr.filter(
+    (u): u is string => typeof u === "string" && /^https?:\/\//i.test(u),
+  );
+  if (urls.length === 0) throw new Error("no usable URLs in response");
+  return urls.slice(0, 8);
+};
+
 // The model should reply with just a short label; take the first line and strip
 // stray quotes/punctuation. Reject anything empty or implausibly long.
 const cleanSubcategory = (text: string): string => {
@@ -222,6 +233,20 @@ export async function generateSubcategoryWithFallback(input: {
     cleanSubcategory,
   );
   return { subcategory: data, provider };
+}
+
+// Mode 4: web-search for image SOURCES for an event (official page, ticketing,
+// news, socials). Returns a list of URLs — direct image URLs or pages to scrape.
+export function researchEventImageSourcesWithFallback(
+  query: string,
+): Promise<{ data: string[]; provider: FqdProvider; raw: string }> {
+  const system = `You are an event image researcher. Given event details, search the web and return ONLY a JSON array (no markdown, no preamble) of up to 8 URLs most likely to contain photos of THIS specific event. Prefer the official event page, ticketing pages, reputable news articles, and the event's own social posts. Include direct image URLs (ending in .jpg/.jpeg/.png/.webp) when you find them; otherwise include the page URL. Return only the JSON array of URL strings.`;
+  return withFallback(
+    system,
+    `Find image sources for this New Orleans event:\n${query}`,
+    true,
+    validateUrlList,
+  );
 }
 
 // ---- Bulk parse ----------------------------------------------------------

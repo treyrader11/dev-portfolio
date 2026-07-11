@@ -18,6 +18,6 @@ export const getServerSideProps: GetServerSideProps<Props> = async (ctx) => {
     return { redirect: { destination: "/admin/signin", permanent: false } };
   }
   const page = Number(ctx.query.page ?? 1) || 1;
-  const data = await getFqdEvents(page, 20);
+  const data = await getFqdEvents(page, 50);
   return { props: { data } };
 };

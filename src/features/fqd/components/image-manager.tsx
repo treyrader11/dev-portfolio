@@ -10,22 +10,38 @@ import {
   RiLoader4Line,
   RiFileCopyLine,
   RiCheckLine,
+  RiSparkling2Line,
 } from "react-icons/ri";
 import { MediaLibraryPicker } from "@/features/admin/components/media-library-picker";
 import { ReorderableList } from "@/features/admin/components/reorderable-list";
 import { getCroppedBlob } from "@/features/admin/lib/crop-image";
 import { uploadCroppedImage } from "@/features/admin/lib/upload-cropped-image";
+import { useNotificationsContext } from "@/components/providers/NotificationsProvider";
 import { cn } from "@/lib/utils";
 import type { FqdEventImageInput } from "../types/fqd-types";
 
 const FOLDER = "fqd/events";
 const CROP_ASPECT = 16 / 9;
 
+// Event details the AI image search uses to build its query.
+export interface ImageSearchDetails {
+  title: string;
+  locationName?: string;
+  address?: string;
+  startDate?: string;
+  category?: string;
+  subcategory?: string;
+  website?: string;
+  description?: string;
+}
+
 interface Props {
   images: FqdEventImageInput[];
   onChange: (images: FqdEventImageInput[]) => void;
   // Event slug — drives the alt-text naming convention <slug>_<index>.
   slug: string;
+  // When provided, enables the "AI web search for images" button.
+  searchDetails?: ImageSearchDetails;
 }
 
 // Best-effort Cloudinary public_id from a delivery URL.
@@ -75,8 +91,15 @@ function applyConvention(
 
 // Multi-image manager for an event: drag & drop (or browse) as many photos as
 // you want at once, reorder by drag, crop any one, edit alt text, delete.
-export function ImageManager({ images, onChange, slug }: Props) {
+export function ImageManager({
+  images,
+  onChange,
+  slug,
+  searchDetails,
+}: Props) {
+  const { addNotification } = useNotificationsContext();
   const [uploading, setUploading] = useState(0);
+  const [searching, setSearching] = useState(false);
   const [copiedUrl, setCopiedUrl] = useState<string | null>(null);
 
   // Keep every alt following the <slug>_<index>[_descriptor] convention as
@@ -100,6 +123,51 @@ export function ImageManager({ images, onChange, slug }: Props) {
       setTimeout(() => setCopiedUrl((c) => (c === url ? null : c)), 1500);
     } catch {
       /* clipboard unavailable */
+    }
+  }
+
+  // AI web-search for images of this event using its current details, then
+  // append any found images (already uploaded to Cloudinary) to the list.
+  async function searchImages() {
+    if (searching || !searchDetails) return;
+    if (!searchDetails.title?.trim()) {
+      addNotification({
+        text: "Add a title first so the search has something to go on",
+        variant: "error",
+      });
+      return;
+    }
+    setSearching(true);
+    try {
+      const res = await fetch("/api/fqd/search-images", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(searchDetails),
+      });
+      const data = await res.json();
+      const found: { url: string }[] =
+        res.ok && Array.isArray(data.images) ? data.images : [];
+      if (found.length === 0) {
+        addNotification({
+          text: res.ok
+            ? "No images found for this event — try adding more details"
+            : (data.error ?? "Image search failed"),
+          variant: res.ok ? "success" : "error",
+        });
+        return;
+      }
+      appendUrls(found.map((i) => i.url));
+      addNotification({
+        text: `Found ${found.length} image${found.length === 1 ? "" : "s"} — crop and reorder as needed`,
+        variant: "success",
+      });
+    } catch {
+      addNotification({
+        text: "Image search failed — request error",
+        variant: "error",
+      });
+    } finally {
+      setSearching(false);
     }
   }
 
@@ -218,6 +286,24 @@ export function ImageManager({ images, onChange, slug }: Props) {
           </p>
         )}
       </div>
+
+      {searchDetails && (
+        <button
+          type="button"
+          onClick={searchImages}
+          disabled={searching}
+          className="flex w-full items-center justify-center gap-2 rounded-lg border border-secondary/50 bg-secondary/10 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-secondary/20 disabled:opacity-50"
+        >
+          {searching ? (
+            <RiLoader4Line className="size-4 animate-spin" />
+          ) : (
+            <RiSparkling2Line className="size-4" />
+          )}
+          {searching
+            ? "Searching the web for images…"
+            : "AI web search for images"}
+        </button>
+      )}
 
       <MediaLibraryPicker onSelect={(url) => appendUrls([url])} />
 
