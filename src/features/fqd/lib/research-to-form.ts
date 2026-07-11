@@ -1,0 +1,35 @@
+import { slugify } from "@/lib/utils";
+import {
+  emptyFqdEvent,
+  type EventResearch,
+  type FqdEventFormValues,
+} from "../types/fqd-types";
+
+const pick = (v?: string | null): string => (v && v.trim() ? v.trim() : "");
+
+// Convert an AI-parsed event into the form/create shape (marked "researched").
+export function researchToFormValues(f: EventResearch): FqdEventFormValues {
+  const title = pick(f.title);
+  return {
+    ...emptyFqdEvent,
+    title,
+    slug: slugify(title),
+    status: "researched",
+    startDate: f.startDate ? f.startDate.slice(0, 10) : "",
+    endDate: f.endDate ? f.endDate.slice(0, 10) : "",
+    startTime: pick(f.startTime),
+    locationName: pick(f.locationName),
+    address: pick(f.address),
+    category: pick(f.category),
+    subcategory: pick(f.subcategory),
+    description: pick(f.description),
+    admission: pick(f.admission),
+    ticketUrl: pick(f.ticketUrl),
+    organizer: pick(f.organizer),
+    expectedAttendance: pick(f.expectedAttendance),
+    ageRequirement: pick(f.ageRequirement),
+    website: pick(f.website),
+    notes: pick(f.notes),
+    images: [],
+  };
+}

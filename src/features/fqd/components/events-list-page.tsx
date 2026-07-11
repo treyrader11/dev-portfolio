@@ -5,6 +5,7 @@ import AdminLayout from "@/features/admin/components/admin-layout";
 import { ConfirmDialog } from "@/features/admin/components/confirm-dialog";
 import { useNotificationsContext } from "@/components/providers/NotificationsProvider";
 import { EventCard } from "./event-card";
+import { EventImport } from "./event-import";
 import { useFqdEvents } from "../hooks/use-fqd-events";
 import type { GetFqdEventsResult } from "../actions/get-events";
 import type { FqdEventListItem } from "../types/fqd-types";
@@ -53,12 +54,15 @@ export function EventsListPage({ data }: Props) {
           <p className="text-sm text-light-400">
             {data.total} event{data.total === 1 ? "" : "s"}
           </p>
-          <Link
-            href="/admin/french-quarter-direct/create-event/new"
-            className="rounded-lg bg-secondary px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-secondary/80"
-          >
-            Add Event
-          </Link>
+          <div className="flex items-center gap-2">
+            <EventImport />
+            <Link
+              href="/admin/french-quarter-direct/create-event/new"
+              className="rounded-lg bg-secondary px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-secondary/80"
+            >
+              Add Event
+            </Link>
+          </div>
         </div>
 
         {/* Filter (client-side, over the current page). */}
