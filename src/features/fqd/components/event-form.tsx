@@ -180,7 +180,7 @@ export function EventForm({ values, onChange, onApplyResearch, isNew }: Props) {
           onChange={(v) => set({ notes: v })}
         />
 
-        <SectionHeading>Images</SectionHeading>
+        <SectionHeading>Event Images</SectionHeading>
         <ImageManager
           images={values.images}
           onChange={(images) => set({ images })}

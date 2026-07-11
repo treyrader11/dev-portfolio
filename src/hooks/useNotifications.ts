@@ -18,9 +18,13 @@ const useNotifications = (): UseNotificationsReturn => {
 
     setNotifications((prev) => [...prev, newNotification]);
 
-    setTimeout(() => {
-      removeNotification(id);
-    }, NOTIFICATION_TTL);
+    // Errors persist until the user dismisses them with the X, so an important
+    // message can't be missed. Everything else auto-dismisses.
+    if (notification.variant !== "error") {
+      setTimeout(() => {
+        removeNotification(id);
+      }, NOTIFICATION_TTL);
+    }
   }, [removeNotification]);
 
 

@@ -36,15 +36,17 @@ export function Notification({
   variant = "success",
   removeNotif,
 }: NotificationProps) {
+  const isError = variant === "error";
+
   useEffect(() => {
+    // Error toasts stay until manually dismissed via the X.
+    if (isError) return;
     const timeoutRef = setTimeout(() => {
       removeNotif(id);
     }, NOTIFICATION_TTL);
 
     return () => clearTimeout(timeoutRef);
-  }, [id, removeNotif]);
-
-  const isError = variant === "error";
+  }, [id, removeNotif, isError]);
   const Icon = isError ? FiAlertCircle : FiCheckCircle;
 
   return (
