@@ -132,6 +132,8 @@ interface AdminLayoutProps {
   // Hide the title in the header (pages that render their own title in content,
   // e.g. the event details page).
   hideHeaderTitle?: boolean;
+  // Page-specific actions rendered on the right of the header.
+  headerActions?: ReactNode;
 }
 
 export default function AdminLayout({
@@ -140,10 +142,12 @@ export default function AdminLayout({
   className,
   breadcrumbs,
   hideHeaderTitle,
+  headerActions,
 }: AdminLayoutProps) {
   const router = useRouter();
   const { data: session } = useSession();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [showBurger, setShowBurger] = useState(false);
   const sidebarRef = useRef<HTMLElement>(null);
   const toggleRef = useRef<HTMLButtonElement>(null);
 
@@ -153,6 +157,24 @@ export default function AdminLayout({
     router.events.on("routeChangeStart", handleRouteChange);
     return () => router.events.off("routeChangeStart", handleRouteChange);
   }, [router.events]);
+
+  // Scale the burger in/out on scroll like the public site. Always shown on
+  // pages too short to scroll, so nav is never unreachable.
+  useEffect(() => {
+    const update = () => {
+      const doc = document.documentElement;
+      const notScrollable = doc.scrollHeight <= window.innerHeight + 80;
+      setShowBurger(window.scrollY > 80 || notScrollable);
+    };
+    update();
+    window.addEventListener("scroll", update, { passive: true });
+    window.addEventListener("resize", update);
+    return () => {
+      window.removeEventListener("scroll", update);
+      window.removeEventListener("resize", update);
+    };
+  }, []);
+  const burgerVisible = showBurger || sidebarOpen;
 
   // Close the sidebar when clicking outside it (ignoring the toggle button,
   // which manages its own open/close).
@@ -208,7 +230,11 @@ export default function AdminLayout({
     >
       {/* Main content — centered horizontally to a max width */}
       <main className="min-h-screen">
-        <AdminHeader title={title} hideTitle={hideHeaderTitle} />
+        <AdminHeader
+          title={title}
+          hideTitle={hideHeaderTitle}
+          actions={headerActions}
+        />
         {/* Single shared content column. Every admin page's content and the
             header above align to the same max-width + horizontal padding, so
             pages never need their own max-w-* overrides. */}
@@ -244,20 +270,23 @@ export default function AdminLayout({
           aria-label={sidebarOpen ? "Close menu" : "Open menu"}
           className={cn(
             "fixed",
-            "top-5",
+            "top-6",
             "right-5",
             "z-50",
             "flex",
             "size-16",
+            "origin-center",
             "items-center",
             "justify-center",
             "rounded-full",
             "border",
             "border-white/20",
             "outline-none",
-            "transition-colors",
+            "transition-transform",
             "duration-300",
+            "ease-out",
             sidebarOpen ? "bg-neutral-800" : "bg-dark",
+            burgerVisible ? "scale-100" : "scale-0",
           )}
         >
           <div

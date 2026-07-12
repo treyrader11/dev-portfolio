@@ -7,6 +7,7 @@ import {
   RiArrowDownSLine,
   RiCheckLine,
   RiFilter3Line,
+  RiAddLine,
 } from "react-icons/ri";
 import AdminLayout from "@/features/admin/components/admin-layout";
 import { ConfirmDialog } from "@/features/admin/components/confirm-dialog";
@@ -255,143 +256,158 @@ export function EventsListPage({ data }: Props) {
   }
 
   return (
-    <AdminLayout title="Events" breadcrumbs={CRUMBS}>
-      <div className="max-w-4xl">
-        {/* Row 1: actions. */}
-        <div className="mb-4 flex flex-wrap items-center justify-end gap-2">
+    <AdminLayout
+      title="Events"
+      hideHeaderTitle
+      breadcrumbs={CRUMBS}
+      headerActions={
+        <>
           <EventExportAll />
           <EventImport />
           <Link
             href="/admin/french-quarter-direct/create-event/new"
-            className="rounded-lg bg-secondary px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-secondary/80"
+            aria-label="Add event"
+            className="inline-flex items-center gap-1.5 rounded-lg bg-secondary px-3 py-2 text-sm font-medium text-white transition-colors hover:bg-secondary/80"
           >
-            Add Event
+            <RiAddLine className="size-4" />
+            <span className="hidden sm:inline">Add Event</span>
           </Link>
-        </div>
-
-        {/* Row 2: count + filter pills + select all + missing-field dropdown. */}
-        <div className="mb-4 flex flex-wrap items-center gap-3">
-          <p className="shrink-0 text-sm text-light-400">
-            Showing {events.length} of {total} event{total === 1 ? "" : "s"}
-          </p>
-
-          {/* Added-to-Joomla pill filter. */}
-          <div className="flex flex-wrap gap-2">
-            {ADDED_PILLS.map((p) => (
-              <button
-                key={p.value}
-                type="button"
-                onClick={() => setAdded(p.value)}
-                className={cn(
-                  "rounded-full border px-3 py-1 text-sm font-medium transition-colors",
-                  added === p.value
-                    ? "border-secondary bg-secondary/20 text-white"
-                    : "border-dark-600 text-light-400 hover:border-secondary/60 hover:text-white",
-                )}
-              >
-                {p.label}
-              </button>
-            ))}
-          </div>
-
-          {/* Select all. */}
-          {visible.length > 0 && (
-            <label className="inline-flex cursor-pointer items-center gap-2 text-sm text-light-400">
+        </>
+      }
+    >
+      <div className="max-w-4xl">
+        {/* Sticky list toolbar — sticks just below the header on scroll, with a
+            translucent blur so cards show through faintly while scrolling. */}
+        <div className="sticky top-20 z-20 border-b border-dark-600 bg-dark/60 py-3 backdrop-blur-md">
+          {/* Row A: search (left, fills) + filter dropdown. */}
+          <div className="flex items-center gap-2">
+            <div className="flex flex-1 items-center gap-2 rounded-lg border border-dark-600 bg-dark-600 px-3 py-2">
+              <RiSearchLine className="size-4 shrink-0 text-light-400" />
               <input
-                type="checkbox"
-                checked={allVisibleSelected}
-                onChange={toggleSelectAll}
-                className="size-4 accent-secondary"
+                value={filter}
+                onChange={(e) => setFilter(e.target.value)}
+                placeholder="Search events by title or location…"
+                className="w-full bg-transparent text-sm text-white outline-none placeholder:text-light-400"
               />
-              {selected.size > 0 ? `${selected.size} selected` : "Select all"}
-            </label>
-          )}
-
-          {/* Missing-field dropdown. */}
-          <Popover
-            align="start"
-            rootClassName="w-full sm:w-56"
-            trigger={({ open, toggle }) => (
-              <button
-                type="button"
-                onClick={toggle}
-                className={cn(
-                  "flex w-full items-center justify-between gap-2 rounded-lg border bg-dark-600 px-3 py-2 text-sm text-white transition-colors",
-                  missing ? "border-secondary/60" : "border-dark-600",
-                )}
-              >
-                <span className="flex min-w-0 items-center gap-2">
+              {reloading && searching && (
+                <RiLoader4Line className="size-4 shrink-0 animate-spin text-light-400" />
+              )}
+            </div>
+            <Popover
+              align="end"
+              rootClassName="shrink-0"
+              trigger={({ open, toggle }) => (
+                <button
+                  type="button"
+                  onClick={toggle}
+                  aria-label="Filter events"
+                  className={cn(
+                    "flex items-center gap-2 rounded-lg border bg-dark-600 px-3 py-2 text-sm text-white transition-colors",
+                    missing ? "border-secondary/60" : "border-dark-600",
+                  )}
+                >
                   <RiFilter3Line className="size-4 shrink-0 text-light-400" />
-                  <span className="truncate">
+                  <span className="hidden truncate sm:inline">
                     {MISSING_FILTERS.find((f) => f.value === missing)?.label ??
                       "All events"}
                   </span>
-                </span>
-                <RiArrowDownSLine
-                  className={cn(
-                    "size-4 shrink-0 text-light-400 transition-transform",
-                    open && "rotate-180",
-                  )}
-                />
-              </button>
-            )}
-          >
-            {(close) => (
-              <div className="max-h-72 overflow-auto">
-                {MISSING_FILTERS.map((f) => (
-                  <button
-                    key={f.value}
-                    type="button"
-                    onClick={() => {
-                      setMissing(f.value);
-                      close();
-                    }}
+                  <RiArrowDownSLine
                     className={cn(
-                      "flex w-full items-center gap-2 rounded-md px-3 py-2 text-left text-sm transition-colors",
-                      missing === f.value
-                        ? "bg-secondary/20 text-white"
-                        : "text-light-400 hover:bg-dark-600 hover:text-white",
+                      "hidden size-4 shrink-0 text-light-400 transition-transform sm:inline",
+                      open && "rotate-180",
                     )}
-                  >
-                    <RiCheckLine
-                      className={cn(
-                        "size-4 shrink-0",
-                        missing === f.value ? "text-secondary" : "opacity-0",
-                      )}
-                    />
-                    {f.label}
-                  </button>
-                ))}
-              </div>
-            )}
-          </Popover>
-
-          {/* Delete selected — pushed to the end of the row. */}
-          {selected.size > 0 && (
-            <button
-              type="button"
-              onClick={() => setBulkConfirm(true)}
-              className="ml-auto inline-flex items-center gap-1.5 rounded-lg border border-error/50 px-3 py-1.5 text-sm font-medium text-error transition-colors hover:bg-error/10"
+                  />
+                </button>
+              )}
             >
-              <RiDeleteBinLine className="size-4" />
-              Delete selected ({selected.size})
-            </button>
-          )}
+              {(close) => (
+                <div className="max-h-72 overflow-auto">
+                  {MISSING_FILTERS.map((f) => (
+                    <button
+                      key={f.value}
+                      type="button"
+                      onClick={() => {
+                        setMissing(f.value);
+                        close();
+                      }}
+                      className={cn(
+                        "flex w-full items-center gap-2 rounded-md px-3 py-2 text-left text-sm transition-colors",
+                        missing === f.value
+                          ? "bg-secondary/20 text-white"
+                          : "text-light-400 hover:bg-dark-600 hover:text-white",
+                      )}
+                    >
+                      <RiCheckLine
+                        className={cn(
+                          "size-4 shrink-0",
+                          missing === f.value ? "text-secondary" : "opacity-0",
+                        )}
+                      />
+                      {f.label}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </Popover>
+          </div>
+
+          {/* Row B: count + pills (left) · delete + select all (far right). */}
+          <div className="mt-3 flex flex-wrap items-center gap-3">
+            <p className="shrink-0 text-sm text-light-400">
+              Showing {events.length} of {total} event{total === 1 ? "" : "s"}
+            </p>
+
+            <div className="flex flex-wrap gap-2">
+              {ADDED_PILLS.map((p) => (
+                <button
+                  key={p.value}
+                  type="button"
+                  onClick={() => setAdded(p.value)}
+                  className={cn(
+                    "rounded-full border px-3 py-1 text-sm font-medium transition-colors",
+                    added === p.value
+                      ? "border-secondary bg-secondary/20 text-white"
+                      : "border-dark-600 text-light-400 hover:border-secondary/60 hover:text-white",
+                  )}
+                >
+                  {p.label}
+                </button>
+              ))}
+            </div>
+
+            <div className="ml-auto flex items-center gap-3">
+              {selected.size > 0 && (
+                <button
+                  type="button"
+                  onClick={() => setBulkConfirm(true)}
+                  className="inline-flex items-center gap-1.5 rounded-lg border border-error/50 px-3 py-1.5 text-sm font-medium text-error transition-colors hover:bg-error/10"
+                >
+                  <RiDeleteBinLine className="size-4" />
+                  <span className="hidden sm:inline">
+                    Delete selected ({selected.size})
+                  </span>
+                </button>
+              )}
+              {visible.length > 0 && (
+                <label className="inline-flex cursor-pointer items-center gap-2 text-sm text-light-400">
+                  <input
+                    type="checkbox"
+                    checked={allVisibleSelected}
+                    onChange={toggleSelectAll}
+                    className="size-4 accent-secondary"
+                  />
+                  <span className="hidden sm:inline">
+                    {selected.size > 0
+                      ? `${selected.size} selected`
+                      : "Select all"}
+                  </span>
+                </label>
+              )}
+            </div>
+          </div>
         </div>
 
-        {/* Search — its own row. */}
-        <div className="mb-4 flex items-center gap-2 rounded-lg border border-dark-600 bg-dark-600 px-3 py-2">
-          <RiSearchLine className="size-4 shrink-0 text-light-400" />
-          <input
-            value={filter}
-            onChange={(e) => setFilter(e.target.value)}
-            placeholder="Search events by title or location…"
-            className="w-full bg-transparent text-sm text-white outline-none placeholder:text-light-400"
-          />
-          {reloading && searching && (
-            <RiLoader4Line className="size-4 shrink-0 animate-spin text-light-400" />
-          )}
-        </div>
+        <div className="mt-4" />
 
         {reloading ? (
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
