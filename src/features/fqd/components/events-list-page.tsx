@@ -15,8 +15,6 @@ import { useDebounce } from "@/hooks/useDebounce";
 import { useNotificationsContext } from "@/components/providers/NotificationsProvider";
 import { cn } from "@/lib/utils";
 import { EventCard } from "./event-card";
-import { EventCardMobile } from "./event-card-mobile";
-
 import { EventImport } from "./event-import";
 import { EventExportAll } from "./event-export-all";
 import type { GetFqdEventsResult } from "../actions/get-events";
@@ -426,7 +424,7 @@ export function EventsListPage({ data }: Props) {
         ) : (
           <div className="space-y-3">
             {visible.map((e) => (
-              <EventCardMobile
+              <EventCard
                 key={e.id}
                 event={e}
                 onDelete={setTarget}

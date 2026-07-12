@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { RiLoader4Line } from "react-icons/ri";
+import { useEffect, useRef, useState } from "react";
+import { RiLoader4Line, RiCheckLine } from "react-icons/ri";
 import { useNotificationsContext } from "@/components/providers/NotificationsProvider";
 import { cn } from "@/lib/utils";
 import { TagsInput } from "./tags-input";
@@ -70,6 +70,7 @@ export function FqdNotificationSettings({
         : [],
   );
   const [saving, setSaving] = useState(false);
+  const [dirty, setDirty] = useState(false);
 
   const availableAccounts = emailOptions.filter(
     (e) => !emails.some((x) => x.toLowerCase() === e.toLowerCase()),
@@ -83,7 +84,6 @@ export function FqdNotificationSettings({
   }
 
   async function save() {
-    if (saving) return;
     setSaving(true);
     try {
       const res = await fetch("/api/fqd/settings", {
@@ -95,17 +95,31 @@ export function FqdNotificationSettings({
           recipientEmails: emails,
         }),
       });
-      addNotification(
-        res.ok
-          ? { text: "Notification settings saved", variant: "success" }
-          : { text: "Couldn't save settings", variant: "error" },
-      );
+      if (res.ok) {
+        setDirty(false);
+      } else {
+        addNotification({ text: "Couldn't save settings", variant: "error" });
+      }
     } catch {
       addNotification({ text: "Couldn't save settings", variant: "error" });
     } finally {
       setSaving(false);
     }
   }
+
+  // Auto-save (debounced) whenever a setting changes — skip the first render,
+  // since the initial values are already persisted.
+  const firstRun = useRef(true);
+  useEffect(() => {
+    if (firstRun.current) {
+      firstRun.current = false;
+      return;
+    }
+    setDirty(true);
+    const t = setTimeout(() => void save(), 600);
+    return () => clearTimeout(t);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [emailOnStart, emailOnEnd, emails]);
 
   return (
     <section className="mt-8 max-w-2xl rounded-lg border border-dark-600 bg-dark-400 p-6">
@@ -160,16 +174,28 @@ export function FqdNotificationSettings({
         </div>
       </div>
 
-      <div className="mt-6 flex justify-end">
-        <button
-          type="button"
-          onClick={save}
-          disabled={saving}
-          className="inline-flex items-center gap-1.5 rounded-lg bg-secondary px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-secondary/80 disabled:opacity-50"
-        >
-          {saving && <RiLoader4Line className="size-4 animate-spin" />}
-          {saving ? "Saving…" : "Save settings"}
-        </button>
+      {/* Changes auto-save; the button only appears while there are unsaved
+          changes (so you can also save immediately). */}
+      <div className="mt-6 flex items-center justify-end gap-2 text-sm">
+        {saving ? (
+          <span className="flex items-center gap-1.5 text-light-400">
+            <RiLoader4Line className="size-4 animate-spin" />
+            Saving…
+          </span>
+        ) : dirty ? (
+          <button
+            type="button"
+            onClick={() => void save()}
+            className="inline-flex items-center gap-1.5 rounded-lg bg-secondary px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-secondary/80"
+          >
+            Save now
+          </button>
+        ) : (
+          <span className="flex items-center gap-1.5 text-light-400">
+            <RiCheckLine className="size-4 text-success" />
+            All changes saved
+          </span>
+        )}
       </div>
     </section>
   );

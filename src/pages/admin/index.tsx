@@ -64,6 +64,7 @@ interface Props {
     configs: number;
     timeEntries: number;
     invoices: number;
+    fqdEvents: number;
   };
 }
 
@@ -71,7 +72,7 @@ export default function AdminDashboard({ counts }: Props) {
   return (
     <AdminLayout title="Dashboard">
       {/* Stats */}
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-8">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-7 gap-4 mb-8">
         <StatCard
           label="Experience"
           count={counts.experiences}
@@ -97,6 +98,11 @@ export default function AdminDashboard({ counts }: Props) {
           label="Invoices"
           count={counts.invoices}
           href="/admin/invoices"
+        />
+        <StatCard
+          label="FQD Events"
+          count={counts.fqdEvents}
+          href="/admin/french-quarter-direct/events"
         />
       </div>
 
@@ -179,6 +185,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     configs,
     timeEntries,
     invoices,
+    fqdEvents,
   ] = await Promise.all([
     prisma.experience.count(),
     prisma.project.count(),
@@ -187,6 +194,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     prisma.siteConfig.count(),
     prisma.timeEntry.count(),
     prisma.invoice.count(),
+    prisma.fqdEvent.count(),
   ]);
 
   return {
@@ -199,6 +207,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         configs,
         timeEntries,
         invoices,
+        fqdEvents,
       },
     },
   };
