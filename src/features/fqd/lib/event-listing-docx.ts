@@ -50,21 +50,16 @@ export async function buildEventListingDocx(
 ): Promise<Buffer> {
   const location = [event.locationName, event.address]
     .filter(Boolean)
-    .join(", ");
+    .join(" · ");
   const category = event.category
     ? `${event.category}${event.subcategory ? ` / ${event.subcategory}` : ""}`
     : "";
-  // "Age Requirement: 21+ | Expected Attendance: 5,000" on one line when both
-  // are present, otherwise whichever exists.
-  const ageAttendance = [
-    event.ageRequirement ? `Age Requirement: ${event.ageRequirement}` : null,
-    event.expectedAttendance
-      ? `Expected Attendance: ${event.expectedAttendance}`
-      : null,
-  ]
-    .filter(Boolean)
-    .join(" | ");
+  // "When" combines the date range with the start time, mirroring the detail
+  // page's "When" row.
+  const when = `${dateLine(event)}${event.startTime ? ` · ${event.startTime}` : ""}`;
 
+  // The fields mirror the event detail page — same order, same labels. Empty
+  // fields are skipped (as they are on the detail page).
   const doc = new Document({
     sections: [
       {
@@ -78,27 +73,18 @@ export async function buildEventListingDocx(
           new Paragraph({
             spacing: { after: 160 },
             children: [
-              new TextRun({ text: dateLine(event), italics: true, size: 24 }),
+              new TextRun({ text: when, italics: true, size: 24 }),
             ],
           }),
           ...line("Location", location),
-          ...line("Time", event.startTime),
-          ...line("Description", event.description),
-          ...line("Tickets", event.admission),
-          ...line("Ticket Link", event.ticketUrl),
-          ...(ageAttendance
-            ? [
-                new Paragraph({
-                  spacing: { after: 80 },
-                  children: [
-                    new TextRun({ text: ageAttendance, size: 22 }),
-                  ],
-                }),
-              ]
-            : []),
-          ...line("Organizer", event.organizer),
-          ...line("Website", event.website),
           ...line("Category", category),
+          ...line("Description", event.description),
+          ...line("Admission", event.admission),
+          ...line("Tickets", event.ticketUrl),
+          ...line("Organizer", event.organizer),
+          ...line("Expected Attendance", event.expectedAttendance),
+          ...line("Age Requirement", event.ageRequirement),
+          ...line("Website", event.website),
           ...line("Notes", event.notes),
           ...imagesSection(event),
         ],
