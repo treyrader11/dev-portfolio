@@ -4,7 +4,6 @@ import {
   RiPencilLine,
   RiMapPin2Line,
   RiCalendarLine,
-  RiExternalLinkLine,
   RiDownloadLine,
   RiFolderZipLine,
 } from "react-icons/ri";
@@ -12,6 +11,7 @@ import AdminLayout from "@/features/admin/components/admin-layout";
 import { EventExport } from "./event-export";
 import { EventLocationMap } from "./event-location-map";
 import { EventImageAlt } from "./event-image-alt";
+import { RichText } from "./rich-text";
 import { cn, resolveImageSrc } from "@/lib/utils";
 import { eventDateRange } from "../lib/format";
 import {
@@ -39,19 +39,6 @@ function Detail({
   );
 }
 
-function ExternalLink({ href }: { href: string }) {
-  return (
-    <a
-      href={href}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="inline-flex items-center gap-1 text-secondary hover:underline"
-    >
-      {href}
-      <RiExternalLinkLine className="size-3.5" />
-    </a>
-  );
-}
 
 interface Props {
   event: FqdEventListItem;
@@ -72,7 +59,7 @@ export function EventDetailPage({ event }: Props) {
         { label: event.title },
       ]}
     >
-      <div className="max-w-4xl space-y-8">
+      <div className="w-full space-y-8 md:max-w-4xl">
         {/* Page title (moved here from the header) + status + actions. */}
         <div className="space-y-4">
           <h1 className="text-2xl font-bold text-white font-pp-acma sm:text-3xl">
@@ -182,19 +169,23 @@ export function EventDetailPage({ event }: Props) {
           </Detail>
           <Detail label="Admission">{event.admission || null}</Detail>
           <Detail label="Tickets">
-            {event.ticketUrl ? <ExternalLink href={event.ticketUrl} /> : null}
+            {event.ticketUrl ? <RichText text={event.ticketUrl} /> : null}
           </Detail>
           <Detail label="Organizer">{event.organizer || null}</Detail>
           <Detail label="Expected attendance">
-            {event.expectedAttendance || null}
+            {event.expectedAttendance ? (
+              <RichText text={event.expectedAttendance} />
+            ) : null}
           </Detail>
           <Detail label="Age requirement">{event.ageRequirement || null}</Detail>
           <Detail label="Website">
-            {event.website ? <ExternalLink href={event.website} /> : null}
+            {event.website ? <RichText text={event.website} /> : null}
           </Detail>
           <Detail label="Notes">
             {event.notes ? (
-              <p className="whitespace-pre-wrap">{event.notes}</p>
+              <p className="whitespace-pre-wrap">
+                <RichText text={event.notes} />
+              </p>
             ) : null}
           </Detail>
         </dl>
