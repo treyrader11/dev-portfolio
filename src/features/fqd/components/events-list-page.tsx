@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import {
   RiSearchLine,
   RiLoader4Line,
@@ -62,8 +63,21 @@ const ADDED_PILLS: { value: string; label: string }[] = [
   { value: "false", label: "Not added" },
 ];
 
+const SNAPSHOT_KEY = "fqd-events-list-snapshot";
+
+interface ListSnapshot {
+  events: FqdEventListItem[];
+  total: number;
+  page: number;
+  filter: string;
+  missing: string;
+  added: string;
+  scrollY: number;
+}
+
 export function EventsListPage({ data }: Props) {
   const { addNotification } = useNotificationsContext();
+  const router = useRouter();
   const [events, setEvents] = useState<FqdEventListItem[]>(data.events);
   const [total, setTotal] = useState(data.total);
   const [page, setPage] = useState(data.page);
@@ -128,14 +142,73 @@ export function EventsListPage({ data }: Props) {
     }
   }
 
+  // Keep the latest list state in a ref so the navigation handler can snapshot
+  // it without re-subscribing on every change.
+  const stateRef = useRef({ events, total, page, filter, missing, added });
+  stateRef.current = { events, total, page, filter, missing, added };
+
+  // Save a snapshot (loaded events + filters + scroll) before navigating away,
+  // so returning via "View events" resumes right where you were.
+  useEffect(() => {
+    const save = () => {
+      try {
+        const snap: ListSnapshot = {
+          ...stateRef.current,
+          scrollY: window.scrollY,
+        };
+        sessionStorage.setItem(SNAPSHOT_KEY, JSON.stringify(snap));
+      } catch {
+        /* storage unavailable */
+      }
+    };
+    router.events.on("routeChangeStart", save);
+    return () => router.events.off("routeChangeStart", save);
+  }, [router.events]);
+
+  // On mount, restore a snapshot if one exists (one-shot), then scroll back to
+  // where the user was. Suppresses the filter-refetch while restoring.
+  const isRestoring = useRef(false);
+  useEffect(() => {
+    let snap: ListSnapshot | null = null;
+    try {
+      const raw = sessionStorage.getItem(SNAPSHOT_KEY);
+      if (raw) snap = JSON.parse(raw) as ListSnapshot;
+      sessionStorage.removeItem(SNAPSHOT_KEY);
+    } catch {
+      /* ignore */
+    }
+    if (!snap || !Array.isArray(snap.events) || snap.events.length === 0) return;
+
+    isRestoring.current = true;
+    setEvents(snap.events);
+    setTotal(snap.total);
+    setPage(snap.page);
+    setFilter(snap.filter);
+    setMissing(snap.missing);
+    setAdded(snap.added);
+    // Clear the guard after the debounced filter effect would have settled.
+    const clear = setTimeout(() => {
+      isRestoring.current = false;
+    }, 700);
+    // Restore scroll once the list has painted (cards are fixed-height, so the
+    // page height is stable regardless of image loading).
+    const y = snap.scrollY || 0;
+    requestAnimationFrame(() =>
+      requestAnimationFrame(() => window.scrollTo(0, y)),
+    );
+    return () => clearTimeout(clear);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   // Refetch page 1 whenever a filter/search changes (skip the very first render
-  // — the initial page is already loaded from SSR).
+  // — the initial page is already loaded from SSR — and while restoring).
   const firstRun = useRef(true);
   useEffect(() => {
     if (firstRun.current) {
       firstRun.current = false;
       return;
     }
+    if (isRestoring.current) return;
     setSelected(new Set());
     fetchEvents(1, missing, debouncedSearch, added, false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
