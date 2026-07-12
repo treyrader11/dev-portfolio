@@ -8,6 +8,7 @@ import {
   RiSparkling2Line,
   RiCalendarLine,
   RiMapPin2Line,
+  RiFileTextLine,
 } from "react-icons/ri";
 import { cn } from "@/lib/utils";
 import { useNotificationsContext } from "@/components/providers/NotificationsProvider";
@@ -89,6 +90,7 @@ export function EventDiscoverPanel() {
   const [selected, setSelected] = useState<Set<number>>(new Set());
   const [provider, setProvider] = useState<ProviderInfo | null>(null);
   const [adding, setAdding] = useState(false);
+  const [exporting, setExporting] = useState(false);
   const [progress, setProgress] = useState<{ done: number; total: number } | null>(
     null,
   );
@@ -200,6 +202,40 @@ export function EventDiscoverPanel() {
     } finally {
       setAdding(false);
       setProgress(null);
+    }
+  }
+
+  // Export the selected discovered events as a .docx list (no research/create).
+  async function exportDocx() {
+    if (!results || exporting) return;
+    const items = results.filter((_, i) => selected.has(i));
+    if (items.length === 0) return;
+    setExporting(true);
+    setError(null);
+    try {
+      const res = await fetch("/api/fqd/discover-export", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ events: items }),
+      });
+      if (!res.ok) {
+        const data = await res.json().catch(() => null);
+        setError(data?.error ?? "Couldn't export events");
+        return;
+      }
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "new-orleans-events.docx";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    } catch {
+      setError("Couldn't export events (network or timeout)");
+    } finally {
+      setExporting(false);
     }
   }
 
@@ -353,21 +389,39 @@ export function EventDiscoverPanel() {
                     ))}
                   </div>
 
-                  <button
-                    type="button"
-                    onClick={addSelected}
-                    disabled={adding || selected.size === 0}
-                    className="inline-flex w-fit items-center gap-1.5 rounded-lg bg-success px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-success-600 disabled:opacity-50"
-                  >
-                    {adding ? (
-                      <RiLoader4Line className="size-4 animate-spin" />
-                    ) : (
-                      <RiSparkling2Line className="size-4" />
-                    )}
-                    {adding && progress
-                      ? `Researching ${progress.done}/${progress.total}…`
-                      : `Add ${selected.size} & auto-fill`}
-                  </button>
+                  <div className="flex flex-wrap items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={addSelected}
+                      disabled={adding || exporting || selected.size === 0}
+                      className="inline-flex w-fit items-center gap-1.5 rounded-lg bg-success px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-success-600 disabled:opacity-50"
+                    >
+                      {adding ? (
+                        <RiLoader4Line className="size-4 animate-spin" />
+                      ) : (
+                        <RiSparkling2Line className="size-4" />
+                      )}
+                      {adding && progress
+                        ? `Researching ${progress.done}/${progress.total}…`
+                        : `Add ${selected.size} & auto-fill`}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={exportDocx}
+                      disabled={exporting || adding || selected.size === 0}
+                      title="Export the selected events as a .docx list"
+                      className="inline-flex w-fit items-center gap-1.5 rounded-lg border border-dark-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:border-secondary/60 disabled:opacity-50"
+                    >
+                      {exporting ? (
+                        <RiLoader4Line className="size-4 animate-spin" />
+                      ) : (
+                        <RiFileTextLine className="size-4" />
+                      )}
+                      {exporting
+                        ? "Exporting…"
+                        : `Export ${selected.size} (.docx)`}
+                    </button>
+                  </div>
                 </>
               )}
 
