@@ -9,6 +9,8 @@ import {
   RiCheckLine,
   RiFilter3Line,
   RiAddLine,
+  RiListUnordered,
+  RiLayoutGridLine,
 } from "react-icons/ri";
 import AdminLayout from "@/features/admin/components/admin-layout";
 import { ConfirmDialog } from "@/features/admin/components/confirm-dialog";
@@ -20,6 +22,10 @@ import {
   EventCardMobile,
   EventCardMobileSkeleton,
 } from "./event-card-mobile";
+import {
+  EventListItem,
+  EventListItemSkeleton,
+} from "./event-list-item";
 import { EventImport } from "./event-import";
 import { EventExportAll } from "./event-export-all";
 import type { GetFqdEventsResult } from "../actions/get-events";
@@ -86,6 +92,7 @@ export function EventsListPage({ data }: Props) {
   const [filter, setFilter] = useState("");
   const [missing, setMissing] = useState("");
   const [added, setAdded] = useState("");
+  const [view, setView] = useState<"grid" | "list">("grid");
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [target, setTarget] = useState<FqdEventListItem | null>(null);
   const [bulkConfirm, setBulkConfirm] = useState(false);
@@ -366,6 +373,20 @@ export function EventsListPage({ data }: Props) {
                 <RiLoader4Line className="size-4 shrink-0 animate-spin text-light-400" />
               )}
             </div>
+            {/* View toggle — grid ⇄ list. */}
+            <button
+              type="button"
+              onClick={() => setView((v) => (v === "grid" ? "list" : "grid"))}
+              aria-label={view === "grid" ? "List view" : "Grid view"}
+              title={view === "grid" ? "List view" : "Grid view"}
+              className="flex shrink-0 items-center rounded-lg border border-dark-600 bg-dark-600 px-3 py-2 text-light-400 transition-colors hover:border-secondary/60 hover:text-white"
+            >
+              {view === "grid" ? (
+                <RiListUnordered className="size-4" />
+              ) : (
+                <RiLayoutGridLine className="size-4" />
+              )}
+            </button>
             <Popover
               align="end"
               rootClassName="shrink-0"
@@ -425,19 +446,19 @@ export function EventsListPage({ data }: Props) {
           </div>
 
           {/* Row B: count + pills (left) · delete + select all (far right). */}
-          <div className="mt-3 flex flex-wrap items-center gap-3">
-            <p className="shrink-0 text-sm text-light-400">
+          <div className="mt-3 flex flex-nowrap items-center gap-2 sm:flex-wrap sm:gap-3">
+            <p className="shrink-0 text-xs text-light-400 sm:text-sm">
               Showing {events.length} of {total} event{total === 1 ? "" : "s"}
             </p>
 
-            <div className="flex flex-wrap gap-2">
+            <div className="flex min-w-0 flex-1 flex-nowrap gap-1.5 overflow-x-auto sm:flex-none sm:flex-wrap sm:gap-2 [&::-webkit-scrollbar]:hidden">
               {ADDED_PILLS.map((p) => (
                 <button
                   key={p.value}
                   type="button"
                   onClick={() => setAdded(p.value)}
                   className={cn(
-                    "rounded-full border px-3 py-1 text-sm font-medium transition-colors",
+                    "shrink-0 rounded-full border px-2 py-0.5 text-xs font-medium transition-colors sm:px-3 sm:py-1 sm:text-sm",
                     added === p.value
                       ? "border-secondary bg-secondary/20 text-white"
                       : "border-dark-600 text-light-400 hover:border-secondary/60 hover:text-white",
@@ -448,7 +469,7 @@ export function EventsListPage({ data }: Props) {
               ))}
             </div>
 
-            <div className="ml-auto flex items-center gap-3">
+            <div className="ml-auto flex shrink-0 items-center gap-3">
               {selected.size > 0 && (
                 <button
                   type="button"
@@ -483,11 +504,19 @@ export function EventsListPage({ data }: Props) {
         <div className="mt-4" />
 
         {reloading ? (
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {Array.from({ length: 6 }).map((_, i) => (
-              <EventCardMobileSkeleton key={i} />
-            ))}
-          </div>
+          view === "list" ? (
+            <div className="space-y-3">
+              {Array.from({ length: 6 }).map((_, i) => (
+                <EventListItemSkeleton key={i} />
+              ))}
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+              {Array.from({ length: 6 }).map((_, i) => (
+                <EventCardMobileSkeleton key={i} />
+              ))}
+            </div>
+          )
         ) : events.length === 0 && filtering ? (
           <div className="rounded-lg border border-dashed border-dark-600 p-8 text-center text-sm text-light-400">
             {searching ? (
@@ -524,6 +553,19 @@ export function EventsListPage({ data }: Props) {
               Add Event
             </Link>
           </div>
+        ) : view === "list" ? (
+          <div className="space-y-3">
+            {visible.map((e) => (
+              <EventListItem
+                key={e.id}
+                event={e}
+                onDelete={setTarget}
+                selected={selected.has(e.id)}
+                onToggleSelect={toggleSelect}
+                onToggleAdded={toggleAdded}
+              />
+            ))}
+          </div>
         ) : (
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
             {visible.map((e) => (
@@ -540,13 +582,20 @@ export function EventsListPage({ data }: Props) {
         )}
 
         {/* Skeletons appended while loading the next page. */}
-        {loadingMore && (
-          <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {Array.from({ length: 3 }).map((_, i) => (
-              <EventCardMobileSkeleton key={i} />
-            ))}
-          </div>
-        )}
+        {loadingMore &&
+          (view === "list" ? (
+            <div className="mt-4 space-y-3">
+              {Array.from({ length: 3 }).map((_, i) => (
+                <EventListItemSkeleton key={i} />
+              ))}
+            </div>
+          ) : (
+            <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+              {Array.from({ length: 3 }).map((_, i) => (
+                <EventCardMobileSkeleton key={i} />
+              ))}
+            </div>
+          ))}
 
         {/* Load more paginates within the current filters. */}
         {hasMore && (
