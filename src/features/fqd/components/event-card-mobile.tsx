@@ -1,127 +1,39 @@
 "use client";
 
 import * as React from "react";
+import Link from "next/link";
 import Image from "next/image";
 import {
-  Calendar,
-  MapPin,
-  Tag,
-  Users,
-  Ticket,
-  Globe,
-  ExternalLink,
-  ImageIcon,
-} from "lucide-react";
-import { cn } from "@/lib/utils";
+  RiCalendarLine,
+  RiMapPin2Line,
+  RiPriceTag3Line,
+  RiGroupLine,
+  RiTicket2Line,
+  RiGlobalLine,
+  RiExternalLinkLine,
+  RiImageLine,
+  RiPencilLine,
+  RiDeleteBinLine,
+  RiCheckboxCircleFill,
+  RiCheckboxBlankCircleLine,
+} from "react-icons/ri";
+import { cn, resolveImageSrc } from "@/lib/utils";
+import {
+  FQD_STATUS_BADGE,
+  type FqdEventListItem,
+  type FqdStatus,
+} from "../types/fqd-types";
 
-// ─── Types ──────────────────────────────────────────────────────────────────
-// Shape mirrors the fields from the FQD `EventDetailPage`, trimmed to what a
-// card needs to render.
-
-export type EventStatus =
-  | "draft"
-  | "scheduled"
-  | "published"
-  | "cancelled"
-  | "completed";
-
-export interface EventImage {
-  id: string;
-  url: string;
-  alt?: string | null;
-}
-
-export interface EventData {
-  id: string;
-  slug: string;
-  title: string;
-  status: EventStatus;
-  /** ISO date string, e.g. "2026-08-14". */
-  startDate: string;
-  /** ISO date string; omit for single-day events. */
-  endDate?: string | null;
-  /** Human-readable start time, e.g. "6:00 PM". */
-  startTime?: string | null;
-  locationName?: string | null;
-  address?: string | null;
-  category?: string | null;
-  subcategory?: string | null;
-  description?: string | null;
-  admission?: string | null;
-  ticketUrl?: string | null;
-  organizer?: string | null;
-  expectedAttendance?: number | null;
-  ageRequirement?: string | null;
-  website?: string | null;
-  notes?: string | null;
-  images: EventImage[];
-}
-
-// ─── Status badge config ──────────────────────────────────────────────────────
-
-const STATUS_BADGE: Record<EventStatus, string> = {
-  draft: "bg-slate-500/15 text-slate-600 dark:text-slate-300",
-  scheduled: "bg-sky-500/15 text-sky-600 dark:text-sky-300",
-  published: "bg-emerald-500/15 text-emerald-600 dark:text-emerald-300",
-  cancelled: "bg-rose-500/15 text-rose-600 dark:text-rose-300",
-  completed: "bg-violet-500/15 text-violet-600 dark:text-violet-300",
-};
-
-// ─── Placeholder data ─────────────────────────────────────────────────────────
-
-const PLACEHOLDER_IMAGES = {
-  mardiGrasParade:
-    "https://images.unsplash.com/photo-1703145217874-47c91be335e0?w=800&auto=format&fit=crop&q=80",
-  brassBandNight:
-    "https://images.unsplash.com/photo-1525994886773-080587e161c2?w=800&auto=format&fit=crop&q=80",
-  trombone:
-    "https://images.unsplash.com/photo-1506647385858-14280cbf4438?w=800&auto=format&fit=crop&q=80",
-};
-
-export const PLACEHOLDER_EVENT: EventData = {
-  id: "evt_001",
-  slug: "french-quarter-jazz-heritage-festival",
-  title: "French Quarter Jazz & Heritage Festival",
-  status: "published",
-  startDate: "2026-08-14",
-  endDate: "2026-08-16",
-  startTime: "6:00 PM",
-  locationName: "Jackson Square",
-  address: "701 Decatur St, New Orleans, LA",
-  category: "Music",
-  subcategory: "Jazz",
-  description:
-    "Three days of live jazz, brass bands, and local food vendors in the heart of the French Quarter. Bring the whole family for an unforgettable celebration of New Orleans culture.",
-  admission: "Free · donations welcome",
-  ticketUrl: "https://example.com/tickets",
-  organizer: "French Quarter Direct",
-  expectedAttendance: 4500,
-  ageRequirement: "All ages",
-  website: "https://example.com",
-  notes: null,
-  images: [
-    {
-      id: "img_1",
-      url: PLACEHOLDER_IMAGES.mardiGrasParade,
-      alt: "Mardi Gras parade",
-    },
-    {
-      id: "img_2",
-      url: PLACEHOLDER_IMAGES.brassBandNight,
-      alt: "Brass band at night",
-    },
-    { id: "img_3", url: PLACEHOLDER_IMAGES.trombone, alt: "Trombone player" },
-  ],
-};
+type EventImage = { id: string; url: string; alt?: string | null };
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
-// Treat date-only strings ("YYYY-MM-DD") as local time to avoid the UTC
-// off-by-one that `new Date("2026-08-14")` otherwise introduces.
+// Take the calendar date out of an ISO string and treat it as local midnight so
+// the displayed day never shifts by a timezone.
 function parseDate(value?: string | null): Date | null {
   if (!value) return null;
-  const iso = /^\d{4}-\d{2}-\d{2}$/.test(value) ? `${value}T00:00:00` : value;
-  const parsed = new Date(iso);
+  const m = value.match(/^\d{4}-\d{2}-\d{2}/);
+  const parsed = new Date(m ? `${m[0]}T00:00:00` : value);
   return isNaN(parsed.getTime()) ? null : parsed;
 }
 
@@ -158,9 +70,11 @@ const DISSOLVE_MS = 2000;
 function EventPoster({
   images,
   title,
+  className,
 }: {
   images: EventImage[];
   title: string;
+  className?: string;
 }) {
   const [index, setIndex] = React.useState(0);
   const [failed, setFailed] = React.useState<Set<string>>(() => new Set());
@@ -178,22 +92,24 @@ function EventPoster({
   }, [slides.length]);
 
   return (
-    <div className="absolute inset-0 transition-transform duration-500 group-hover:scale-105">
+    <div
+      className={cn(
+        "absolute inset-0 transition-transform duration-500 group-hover:scale-105",
+        className,
+      )}
+    >
       {/* Fallback base — visible when there are no images or the active one fails. */}
-      <div className="absolute inset-0 flex items-center justify-center bg-slate-200 dark:bg-neutral-800">
-        <ImageIcon
-          size={48}
-          className="text-slate-400 opacity-70 dark:text-slate-500"
-        />
+      <div className="absolute inset-0 flex items-center justify-center bg-neutral-800">
+        <RiImageLine className="size-12 text-neutral-500 opacity-70" />
       </div>
 
       {slides.map((img, i) => (
         <Image
           key={img.id ?? i}
-          src={img.url}
+          src={resolveImageSrc(img.url)}
           alt={img.alt ?? title}
           fill
-          sizes="(max-width: 640px) 100vw, 360px"
+          sizes="(max-width: 768px) 100vw, 360px"
           onError={() => setFailed((prev) => new Set(prev).add(img.url))}
           style={{ transitionDuration: `${DISSOLVE_MS}ms` }}
           className={cn(
@@ -216,8 +132,8 @@ function MetaRow({
   if (children === null || children === undefined || children === "")
     return null;
   return (
-    <div className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-300">
-      <span className="text-slate-400 dark:text-slate-500">{icon}</span>
+    <div className="flex items-center gap-2 text-sm text-slate-300">
+      <span className="shrink-0 text-slate-500">{icon}</span>
       <span className="min-w-0 truncate">{children}</span>
     </div>
   );
@@ -225,21 +141,24 @@ function MetaRow({
 
 // ─── Main component ────────────────────────────────────────────────────────────
 
-interface EventCardProps {
-  /** Defaults to placeholder data so `<EventCard />` renders standalone. */
-  event?: EventData;
-  className?: string;
-  /** Fixed pixel width. Omit to let the card fill its grid column. */
-  panelWidth?: number;
-  onOpen?: (eventId: string) => void;
+interface Props {
+  event: FqdEventListItem;
+  onDelete: (event: FqdEventListItem) => void;
+  selected?: boolean;
+  onToggleSelect?: (id: string) => void;
+  onToggleAdded?: (event: FqdEventListItem) => void;
 }
 
-export function EventCard({
-  event = PLACEHOLDER_EVENT,
-  className,
-  panelWidth,
-  onOpen,
-}: EventCardProps) {
+export function EventCardMobile({
+  event,
+  onDelete,
+  selected,
+  onToggleSelect,
+  onToggleAdded,
+}: Props) {
+  const detailHref = `/admin/french-quarter-direct/event/${event.slug}`;
+  const editHref = `/admin/french-quarter-direct/create-event/${event.id}`;
+  const status = event.status as FqdStatus;
   const dateLabel = formatEventDateRange(event.startDate, event.endDate);
   const location = [event.locationName, event.address]
     .filter(Boolean)
@@ -253,98 +172,107 @@ export function EventCard({
   return (
     <div
       className={cn(
-        "group relative overflow-hidden rounded-3xl bg-white shadow-lg transition-shadow duration-300 hover:shadow-2xl dark:bg-neutral-900",
-        onOpen && "cursor-pointer",
-        className,
+        "group flex flex-col overflow-hidden rounded-3xl border bg-neutral-900 shadow-lg transition-colors",
+        "w-full",
+        selected
+          ? "border-secondary/60"
+          : event.addedToJoomla
+            ? "border-lime-400/40"
+            : "border-neutral-800",
       )}
-      style={{ width: panelWidth ?? undefined }}
-      onClick={onOpen ? () => onOpen(event.id) : undefined}
-      role={onOpen ? "button" : undefined}
-      tabIndex={onOpen ? 0 : undefined}
-      onKeyDown={
-        onOpen
-          ? (e) => {
-              if (e.key === "Enter" || e.key === " ") {
-                e.preventDefault();
-                onOpen(event.id);
-              }
-            }
-          : undefined
-      }
     >
-      {/* ── Poster ── */}
-      <div className="relative h-[190px] w-full overflow-hidden">
-        <EventPoster images={event.images} title={event.title} />
+      {/* ── Poster (full-bleed, above the body) ── */}
+      <Link href={detailHref} className={cn("w-full")}>
+        <div className="relative h-[190px] w-full overflow-hidden">
+          <EventPoster
+            images={event.images}
+            title={event.title}
+            className={cn("")}
+          />
 
-        {/* Gradient scrim for legibility */}
-        <div
-          className="pointer-events-none absolute inset-x-0 bottom-0 h-2/3"
-          style={{
-            background:
-              "linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.55) 100%)",
-          }}
-        />
+          {/* Gradient scrim for legibility */}
+          <div
+            className="pointer-events-none absolute inset-x-0 bottom-0 h-2/3"
+            style={{
+              background:
+                "linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.55) 100%)",
+            }}
+          />
 
-        {/* Status badge */}
-        <span
-          className={cn(
-            "absolute left-3 top-3 rounded-full px-2.5 py-1 text-xs font-medium capitalize backdrop-blur-sm",
-            STATUS_BADGE[event.status] ?? STATUS_BADGE.draft,
-          )}
-        >
-          {event.status}
-        </span>
-
-        {/* Image count */}
-        {event.images.length > 1 && (
-          <span className="absolute right-3 top-3 inline-flex items-center gap-1 rounded-full bg-black/50 px-2 py-1 text-xs font-medium text-white backdrop-blur-sm">
-            <ImageIcon size={12} />
-            {event.images.length}
-          </span>
-        )}
-
-        {/* Title on poster */}
-        <div className="absolute inset-x-0 bottom-0 p-4">
-          <h3
-            className="line-clamp-2 text-xl font-bold leading-snug text-white"
-            style={{ textShadow: "0 1px 4px rgba(0,0,0,0.4)" }}
+          {/* Status badge */}
+          <span
+            className={cn(
+              "absolute left-3 top-3 rounded-full px-2.5 py-1 text-xs font-medium capitalize backdrop-blur-sm",
+              FQD_STATUS_BADGE[status] ?? FQD_STATUS_BADGE.draft,
+            )}
           >
-            {event.title}
-          </h3>
+            {status}
+          </span>
+
+          {/* Image count + added badge */}
+          <div className="absolute right-3 top-3 flex items-center gap-2">
+            {event.images.length > 1 && (
+              <span className="inline-flex items-center gap-1 rounded-full bg-black/50 px-2 py-1 text-xs font-medium text-white backdrop-blur-sm">
+                <RiImageLine className="size-3" />
+                {event.images.length}
+              </span>
+            )}
+            {event.addedToJoomla && (
+              <span className="rounded-full bg-lime-400 px-2 py-0.5 text-xs font-bold uppercase tracking-wide text-black shadow-lg">
+                Added
+              </span>
+            )}
+          </div>
+
+          {/* Title on poster */}
+          <div className="absolute inset-x-0 bottom-0 p-4">
+            <h3
+              className="line-clamp-2 text-xl font-bold leading-snug text-white"
+              style={{ textShadow: "0 1px 4px rgba(0,0,0,0.4)" }}
+            >
+              {event.title}
+            </h3>
+          </div>
         </div>
-      </div>
+      </Link>
 
       {/* ── Info section ── */}
-      <div className="space-y-3 px-4 pb-4 pt-3">
+      <div className="flex flex-1 flex-col gap-3 px-4 pb-4 pt-3">
         {/* Meta rows */}
         <div className="space-y-1.5">
-          <MetaRow icon={<Calendar size={14} />}>
+          <MetaRow icon={<RiCalendarLine className="size-3.5" />}>
             {dateLabel}
             {event.startTime ? ` · ${event.startTime}` : ""}
           </MetaRow>
-          <MetaRow icon={<MapPin size={14} />}>{location || null}</MetaRow>
-          <MetaRow icon={<Tag size={14} />}>{categoryLabel}</MetaRow>
-          {typeof event.expectedAttendance === "number" && (
-            <MetaRow icon={<Users size={14} />}>
-              {event.expectedAttendance.toLocaleString()} expected
+          <MetaRow icon={<RiMapPin2Line className="size-3.5" />}>
+            {location || null}
+          </MetaRow>
+          <MetaRow icon={<RiPriceTag3Line className="size-3.5" />}>
+            {categoryLabel}
+          </MetaRow>
+          {event.expectedAttendance && (
+            <MetaRow icon={<RiGroupLine className="size-3.5" />}>
+              {event.expectedAttendance}
             </MetaRow>
           )}
         </div>
 
         {/* Description */}
         {event.description && (
-          <p className="line-clamp-2 text-sm text-slate-500 dark:text-slate-400">
+          <p className="line-clamp-2 text-sm text-slate-400">
             {event.description}
           </p>
         )}
 
         {/* Footer: admission + external links */}
         {(event.admission || event.ticketUrl || event.website) && (
-          <div className="flex flex-wrap items-center justify-between gap-2 border-t border-slate-100 pt-3 dark:border-neutral-800">
-            {event.admission && (
-              <span className="text-sm font-medium text-slate-900 dark:text-white">
+          <div className="mt-auto flex flex-wrap items-center justify-between gap-2 border-t border-neutral-800 pt-3">
+            {event.admission ? (
+              <span className="truncate text-sm font-medium text-white">
                 {event.admission}
               </span>
+            ) : (
+              <span />
             )}
             <div className="flex items-center gap-3">
               {event.website && (
@@ -352,11 +280,10 @@ export function EventCard({
                   href={event.website}
                   target="_blank"
                   rel="noopener noreferrer"
-                  onClick={(e) => e.stopPropagation()}
                   aria-label="Visit event website"
-                  className="text-slate-400 transition-colors hover:text-slate-700 dark:hover:text-white"
+                  className="text-slate-400 transition-colors hover:text-white"
                 >
-                  <Globe size={16} />
+                  <RiGlobalLine className="size-4" />
                 </a>
               )}
               {event.ticketUrl && (
@@ -364,17 +291,97 @@ export function EventCard({
                   href={event.ticketUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  onClick={(e) => e.stopPropagation()}
-                  className="inline-flex items-center gap-1.5 rounded-lg bg-slate-900 px-3 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-slate-700 dark:bg-white dark:text-slate-900 dark:hover:bg-slate-200"
+                  className="inline-flex items-center gap-1.5 rounded-lg bg-white px-3 py-1.5 text-xs font-semibold text-slate-900 transition-colors hover:bg-slate-200"
                 >
-                  <Ticket size={13} />
+                  <RiTicket2Line className="size-3.5" />
                   Tickets
-                  <ExternalLink size={12} />
+                  <RiExternalLinkLine className="size-3" />
                 </a>
               )}
             </div>
           </div>
         )}
+
+        {/* Admin actions */}
+        <div className="flex items-center justify-between gap-2 border-t border-neutral-800 pt-3">
+          {onToggleSelect ? (
+            <label className="inline-flex cursor-pointer items-center gap-2 text-xs text-slate-400">
+              <input
+                type="checkbox"
+                checked={!!selected}
+                onChange={() => onToggleSelect(event.id)}
+                className="size-4 accent-secondary"
+              />
+              Select
+            </label>
+          ) : (
+            <span />
+          )}
+          <div className="flex items-center gap-4">
+            {onToggleAdded && (
+              <button
+                type="button"
+                aria-label={
+                  event.addedToJoomla
+                    ? "Mark as not added to French Quarter Direct"
+                    : "Mark as added to French Quarter Direct"
+                }
+                title={
+                  event.addedToJoomla
+                    ? "Added — click to unmark"
+                    : "Mark as added to French Quarter Direct"
+                }
+                onClick={() => onToggleAdded(event)}
+                className={cn(
+                  "transition-colors",
+                  event.addedToJoomla
+                    ? "text-lime-400 hover:text-lime-300"
+                    : "text-slate-400 hover:text-white",
+                )}
+              >
+                {event.addedToJoomla ? (
+                  <RiCheckboxCircleFill className="size-5" />
+                ) : (
+                  <RiCheckboxBlankCircleLine className="size-5" />
+                )}
+              </button>
+            )}
+            <Link
+              href={editHref}
+              aria-label="Edit event"
+              className="text-slate-400 transition-colors hover:text-white"
+            >
+              <RiPencilLine className="size-5" />
+            </Link>
+            <button
+              type="button"
+              aria-label="Delete event"
+              onClick={() => onDelete(event)}
+              className="text-rose-400 transition-colors hover:text-rose-300"
+            >
+              <RiDeleteBinLine className="size-5" />
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// A loading placeholder matching the tile's shape.
+export function EventCardMobileSkeleton() {
+  return (
+    <div className="overflow-hidden rounded-3xl border border-neutral-800 bg-neutral-900">
+      <div className="h-[190px] w-full animate-pulse bg-neutral-800" />
+      <div className="space-y-3 px-4 pb-4 pt-3">
+        <div className="h-3 w-3/4 animate-pulse rounded bg-neutral-800" />
+        <div className="h-3 w-1/2 animate-pulse rounded bg-neutral-800" />
+        <div className="h-3 w-2/3 animate-pulse rounded bg-neutral-800" />
+        <div className="mt-2 flex gap-3 border-t border-neutral-800 pt-3">
+          <div className="size-5 animate-pulse rounded-full bg-neutral-800" />
+          <div className="size-5 animate-pulse rounded-full bg-neutral-800" />
+          <div className="size-5 animate-pulse rounded-full bg-neutral-800" />
+        </div>
       </div>
     </div>
   );

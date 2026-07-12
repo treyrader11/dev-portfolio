@@ -14,7 +14,10 @@ import { Popover } from "@/components/ui/popover";
 import { useDebounce } from "@/hooks/useDebounce";
 import { useNotificationsContext } from "@/components/providers/NotificationsProvider";
 import { cn } from "@/lib/utils";
-import { EventCard } from "./event-card";
+import {
+  EventCardMobile,
+  EventCardMobileSkeleton,
+} from "./event-card-mobile";
 import { EventImport } from "./event-import";
 import { EventExportAll } from "./event-export-all";
 import type { GetFqdEventsResult } from "../actions/get-events";
@@ -64,6 +67,7 @@ export function EventsListPage({ data }: Props) {
   const [total, setTotal] = useState(data.total);
   const [page, setPage] = useState(data.page);
   const [loadingMore, setLoadingMore] = useState(false);
+  const [reloading, setReloading] = useState(false);
   const [filter, setFilter] = useState("");
   const [missing, setMissing] = useState("");
   const [added, setAdded] = useState("");
@@ -92,7 +96,8 @@ export function EventsListPage({ data }: Props) {
     addedFilter: string,
     append: boolean,
   ) {
-    setLoadingMore(true);
+    if (append) setLoadingMore(true);
+    else setReloading(true);
     try {
       const params = new URLSearchParams({
         page: String(nextPage),
@@ -117,7 +122,8 @@ export function EventsListPage({ data }: Props) {
     } catch {
       addNotification({ text: "Couldn't load events", variant: "error" });
     } finally {
-      setLoadingMore(false);
+      if (append) setLoadingMore(false);
+      else setReloading(false);
     }
   }
 
@@ -251,59 +257,60 @@ export function EventsListPage({ data }: Props) {
   return (
     <AdminLayout title="Events" breadcrumbs={CRUMBS}>
       <div className="max-w-4xl">
-        <div className="mb-6 flex items-center justify-between">
-          <p className="text-sm text-light-400">
+        {/* Row 1: actions. */}
+        <div className="mb-4 flex flex-wrap items-center justify-end gap-2">
+          <EventExportAll />
+          <EventImport />
+          <Link
+            href="/admin/french-quarter-direct/create-event/new"
+            className="rounded-lg bg-secondary px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-secondary/80"
+          >
+            Add Event
+          </Link>
+        </div>
+
+        {/* Row 2: count + filter pills + select all + missing-field dropdown. */}
+        <div className="mb-4 flex flex-wrap items-center gap-3">
+          <p className="shrink-0 text-sm text-light-400">
             Showing {events.length} of {total} event{total === 1 ? "" : "s"}
           </p>
-          <div className="flex items-center gap-2">
-            <EventExportAll />
-            <EventImport />
-            <Link
-              href="/admin/french-quarter-direct/create-event/new"
-              className="rounded-lg bg-secondary px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-secondary/80"
-            >
-              Add Event
-            </Link>
-          </div>
-        </div>
 
-        {/* Added-to-Joomla pill filter. */}
-        <div className="mb-3 flex flex-wrap gap-2">
-          {ADDED_PILLS.map((p) => (
-            <button
-              key={p.value}
-              type="button"
-              onClick={() => setAdded(p.value)}
-              className={cn(
-                "rounded-full border px-3 py-1 text-sm font-medium transition-colors",
-                added === p.value
-                  ? "border-secondary bg-secondary/20 text-white"
-                  : "border-dark-600 text-light-400 hover:border-secondary/60 hover:text-white",
-              )}
-            >
-              {p.label}
-            </button>
-          ))}
-        </div>
-
-        {/* Filters: free-text search + missing-field — both server-side, so
-            they match across all events, not just the loaded ones. */}
-        <div className="mb-4 flex flex-col gap-2 sm:flex-row">
-          <div className="flex flex-1 items-center gap-2 rounded-lg border border-dark-600 bg-dark-600 px-3 py-2">
-            <RiSearchLine className="size-4 shrink-0 text-light-400" />
-            <input
-              value={filter}
-              onChange={(e) => setFilter(e.target.value)}
-              placeholder="Search events by title or location…"
-              className="w-full bg-transparent text-sm text-white outline-none placeholder:text-light-400"
-            />
-            {loadingMore && searching && (
-              <RiLoader4Line className="size-4 shrink-0 animate-spin text-light-400" />
-            )}
+          {/* Added-to-Joomla pill filter. */}
+          <div className="flex flex-wrap gap-2">
+            {ADDED_PILLS.map((p) => (
+              <button
+                key={p.value}
+                type="button"
+                onClick={() => setAdded(p.value)}
+                className={cn(
+                  "rounded-full border px-3 py-1 text-sm font-medium transition-colors",
+                  added === p.value
+                    ? "border-secondary bg-secondary/20 text-white"
+                    : "border-dark-600 text-light-400 hover:border-secondary/60 hover:text-white",
+                )}
+              >
+                {p.label}
+              </button>
+            ))}
           </div>
+
+          {/* Select all. */}
+          {visible.length > 0 && (
+            <label className="inline-flex cursor-pointer items-center gap-2 text-sm text-light-400">
+              <input
+                type="checkbox"
+                checked={allVisibleSelected}
+                onChange={toggleSelectAll}
+                className="size-4 accent-secondary"
+              />
+              {selected.size > 0 ? `${selected.size} selected` : "Select all"}
+            </label>
+          )}
+
+          {/* Missing-field dropdown. */}
           <Popover
-            align="end"
-            rootClassName="w-full sm:w-64"
+            align="start"
+            rootClassName="w-full sm:w-56"
             trigger={({ open, toggle }) => (
               <button
                 type="button"
@@ -358,34 +365,41 @@ export function EventsListPage({ data }: Props) {
               </div>
             )}
           </Popover>
+
+          {/* Delete selected — pushed to the end of the row. */}
+          {selected.size > 0 && (
+            <button
+              type="button"
+              onClick={() => setBulkConfirm(true)}
+              className="ml-auto inline-flex items-center gap-1.5 rounded-lg border border-error/50 px-3 py-1.5 text-sm font-medium text-error transition-colors hover:bg-error/10"
+            >
+              <RiDeleteBinLine className="size-4" />
+              Delete selected ({selected.size})
+            </button>
+          )}
         </div>
 
-        {/* Bulk-select toolbar. */}
-        {visible.length > 0 && (
-          <div className="mb-3 flex items-center justify-between gap-3">
-            <label className="inline-flex cursor-pointer items-center gap-2 text-sm text-light-400">
-              <input
-                type="checkbox"
-                checked={allVisibleSelected}
-                onChange={toggleSelectAll}
-                className="size-4 accent-secondary"
-              />
-              {selected.size > 0 ? `${selected.size} selected` : "Select all"}
-            </label>
-            {selected.size > 0 && (
-              <button
-                type="button"
-                onClick={() => setBulkConfirm(true)}
-                className="inline-flex items-center gap-1.5 rounded-lg border border-error/50 px-3 py-1.5 text-sm font-medium text-error transition-colors hover:bg-error/10"
-              >
-                <RiDeleteBinLine className="size-4" />
-                Delete selected ({selected.size})
-              </button>
-            )}
-          </div>
-        )}
+        {/* Search — its own row. */}
+        <div className="mb-4 flex items-center gap-2 rounded-lg border border-dark-600 bg-dark-600 px-3 py-2">
+          <RiSearchLine className="size-4 shrink-0 text-light-400" />
+          <input
+            value={filter}
+            onChange={(e) => setFilter(e.target.value)}
+            placeholder="Search events by title or location…"
+            className="w-full bg-transparent text-sm text-white outline-none placeholder:text-light-400"
+          />
+          {reloading && searching && (
+            <RiLoader4Line className="size-4 shrink-0 animate-spin text-light-400" />
+          )}
+        </div>
 
-        {events.length === 0 && filtering ? (
+        {reloading ? (
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <EventCardMobileSkeleton key={i} />
+            ))}
+          </div>
+        ) : events.length === 0 && filtering ? (
           <div className="rounded-lg border border-dashed border-dark-600 p-8 text-center text-sm text-light-400">
             {searching ? (
               <>No events match &ldquo;{debouncedSearch.trim()}&rdquo;.</>
@@ -422,9 +436,9 @@ export function EventsListPage({ data }: Props) {
             </Link>
           </div>
         ) : (
-          <div className="space-y-3">
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
             {visible.map((e) => (
-              <EventCard
+              <EventCardMobile
                 key={e.id}
                 event={e}
                 onDelete={setTarget}
@@ -432,6 +446,15 @@ export function EventsListPage({ data }: Props) {
                 onToggleSelect={toggleSelect}
                 onToggleAdded={toggleAdded}
               />
+            ))}
+          </div>
+        )}
+
+        {/* Skeletons appended while loading the next page. */}
+        {loadingMore && (
+          <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+            {Array.from({ length: 3 }).map((_, i) => (
+              <EventCardMobileSkeleton key={i} />
             ))}
           </div>
         )}
