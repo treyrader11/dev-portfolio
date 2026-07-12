@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 import {
   RiSearchLine,
   RiLoader4Line,
-  RiDeleteBinLine,
+  RiCloseLine,
   RiArrowDownSLine,
   RiCheckLine,
   RiFilter3Line,
@@ -28,6 +28,7 @@ import {
 } from "./event-list-item";
 import { EventImport } from "./event-import";
 import { EventExportAll } from "./event-export-all";
+import { EventBulkActionsBar } from "./event-bulk-actions-bar";
 import {
   readEventsListSnapshot,
   writeEventsListSnapshot,
@@ -90,6 +91,7 @@ export function EventsListPage({ data }: Props) {
   const [target, setTarget] = useState<FqdEventListItem | null>(null);
   const [bulkConfirm, setBulkConfirm] = useState(false);
   const [deleting, setDeleting] = useState(false);
+  const [bulkBusy, setBulkBusy] = useState(false);
 
   // The title/location search runs server-side (debounced) so it also finds
   // events that haven't been paginated into the list yet.
@@ -316,6 +318,51 @@ export function EventsListPage({ data }: Props) {
     }
   }
 
+  // Bulk mark the selected events as added / not added to French Quarter Direct.
+  async function doBulkSetAdded(addedValue: boolean) {
+    const ids = [...selected];
+    if (ids.length === 0) return;
+    setBulkBusy(true);
+    try {
+      const res = await fetch("/api/fqd/events/bulk-added", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ids, added: addedValue }),
+      });
+      if (!res.ok) {
+        addNotification({ text: "Couldn't update events", variant: "error" });
+        return;
+      }
+      const { updated } = await res.json();
+      const idSet = new Set(ids);
+      // If the "Added"/"Not added" filter is active and the new value no longer
+      // matches, drop the affected events from the list; otherwise update them.
+      const dropsOut =
+        (added === "true" && !addedValue) || (added === "false" && addedValue);
+      if (dropsOut) {
+        setEvents((prev) => prev.filter((e) => !idSet.has(e.id)));
+        setTotal((t) => Math.max(0, t - ids.length));
+      } else {
+        setEvents((prev) =>
+          prev.map((e) =>
+            idSet.has(e.id) ? { ...e, addedToJoomla: addedValue } : e,
+          ),
+        );
+      }
+      setSelected(new Set());
+      addNotification({
+        text: `${addedValue ? "Added" : "Removed"} ${updated} event${
+          updated === 1 ? "" : "s"
+        } ${addedValue ? "to" : "from"} French Quarter Direct`,
+        variant: "success",
+      });
+    } catch {
+      addNotification({ text: "Couldn't update events", variant: "error" });
+    } finally {
+      setBulkBusy(false);
+    }
+  }
+
   return (
     <AdminLayout
       title="Events"
@@ -354,6 +401,17 @@ export function EventsListPage({ data }: Props) {
               />
               {reloading && searching && (
                 <RiLoader4Line className="size-4 shrink-0 animate-spin text-light-400" />
+              )}
+              {filter && (
+                <button
+                  type="button"
+                  onClick={() => setFilter("")}
+                  aria-label="Clear search"
+                  title="Clear search"
+                  className="shrink-0 text-light-400 transition-colors hover:text-white"
+                >
+                  <RiCloseLine className="size-4" />
+                </button>
               )}
             </div>
             {/* View toggle — grid ⇄ list. */}
@@ -453,18 +511,6 @@ export function EventsListPage({ data }: Props) {
             </div>
 
             <div className="ml-auto flex shrink-0 items-center gap-3">
-              {selected.size > 0 && (
-                <button
-                  type="button"
-                  onClick={() => setBulkConfirm(true)}
-                  className="inline-flex items-center gap-1.5 rounded-lg border border-error/50 px-3 py-1.5 text-sm font-medium text-error transition-colors hover:bg-error/10"
-                >
-                  <RiDeleteBinLine className="size-4" />
-                  <span className="hidden sm:inline">
-                    Delete selected ({selected.size})
-                  </span>
-                </button>
-              )}
               {visible.length > 0 && (
                 <label className="inline-flex cursor-pointer items-center gap-2 text-sm text-light-400">
                   <input
@@ -597,6 +643,15 @@ export function EventsListPage({ data }: Props) {
           </div>
         )}
       </div>
+
+      <EventBulkActionsBar
+        count={selected.size}
+        busy={bulkBusy}
+        onAdd={() => doBulkSetAdded(true)}
+        onRemove={() => doBulkSetAdded(false)}
+        onDelete={() => setBulkConfirm(true)}
+        onClear={() => setSelected(new Set())}
+      />
 
       <ConfirmDialog
         open={target !== null}
