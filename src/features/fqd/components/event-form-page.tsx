@@ -7,6 +7,7 @@ import { ConfirmDialog } from "@/features/admin/components/confirm-dialog";
 import { useNotificationsContext } from "@/components/providers/NotificationsProvider";
 import { slugify } from "@/lib/utils";
 import { EventForm } from "./event-form";
+import { EventDiscoverPanel } from "./event-discover-panel";
 import { fmtEventDate } from "../lib/format";
 import { patchEventInListSnapshot } from "../lib/events-list-snapshot";
 import type { ResearchResult } from "../hooks/use-event-research";
@@ -282,6 +283,9 @@ export function EventFormPage({ event }: Props) {
       ]}
     >
       <div className="w-full max-w-3xl pb-24">
+        {/* Create only: bulk-discover upcoming NOLA events not yet in the app. */}
+        {isNew && <EventDiscoverPanel />}
+
         <EventForm
           values={form}
           onChange={setForm}

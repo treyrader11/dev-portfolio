@@ -5,7 +5,9 @@ import { generateText, stepCountIs } from "ai";
 import { z } from "zod";
 import {
   eventResearchSchema,
+  discoveredEventSchema,
   type EventResearch,
+  type DiscoveredEvent,
   type FqdProvider,
 } from "../types/fqd-types";
 import { splitListings, chunk } from "./split-listings";
@@ -326,6 +328,68 @@ export function researchEventImageSourcesWithFallback(
     true,
     validateUrlList,
   );
+}
+
+// ---- Discover upcoming events (web search + dedupe) ----------------------
+
+const FQD_DISCOVER_SYSTEM_PROMPT = `You are a New Orleans events researcher. Search the web for UPCOMING, planned New Orleans events scheduled in the future — festivals, parades, second lines, concerts, food & drink events, cultural celebrations, sports, markets, and similar public happenings.
+
+You will be given a list of events ALREADY in our system. Do NOT include any event that is the same as one already listed, even when the wording differs slightly. Treat titles as the same event when they refer to the same recurring or specific happening — e.g. "Running of the Bulls 2026" is the same as "Running of the Bulls", and "36th Annual Oak Street Po-Boy Festival" is the same as "Oak Street Po-Boy Festival". When in doubt, exclude it.
+
+Return ONLY a valid JSON ARRAY (no markdown, no backticks, no preamble) of NEW events that are not already in the system. Each element must be exactly this shape:
+{
+  "title": string,
+  "startDate": "YYYY-MM-DD" | null,
+  "endDate": "YYYY-MM-DD" | null,
+  "locationName": string | null,
+  "category": string | null,
+  "description": string | null
+}
+Return up to 25 well-sourced events with real, specific dates. If you find none, return exactly: []`;
+
+// Parse the discovered-events array leniently: keep valid, titled entries and
+// silently drop malformed ones. An empty array is a valid "found nothing".
+const validateDiscovered = (text: string): DiscoveredEvent[] => {
+  const arr = extractJson(text, "[", "]");
+  if (!Array.isArray(arr)) throw new Error("response was not a JSON array");
+  const out: DiscoveredEvent[] = [];
+  for (const item of arr) {
+    const parsed = discoveredEventSchema.safeParse(item);
+    if (parsed.success && parsed.data.title.trim()) out.push(parsed.data);
+  }
+  return out;
+};
+
+export interface DiscoverResult {
+  events: DiscoveredEvent[];
+  provider: FqdProvider;
+  raw: string;
+}
+
+// Mode 7: web-search for upcoming NOLA events not already in the system. The
+// existing titles/dates are passed so the model can exclude what we already have
+// (fuzzy title matching); a deterministic dedupe pass runs on top in the route.
+export async function discoverEventsWithFallback(
+  existing: { title: string; startDate: string }[],
+): Promise<DiscoverResult> {
+  const list = existing.length
+    ? existing
+        .map((e) => `- ${e.title} (${e.startDate.slice(0, 10)})`)
+        .join("\n")
+    : "(none yet)";
+  const prompt = `Find upcoming New Orleans events that are NOT already in our system.
+
+Events already in our system (exclude these and any close variant of them):
+${list}
+
+Return the JSON array of new events.`;
+  const { data, provider, raw } = await withFallback(
+    FQD_DISCOVER_SYSTEM_PROMPT,
+    prompt,
+    true,
+    validateDiscovered,
+  );
+  return { events: data, provider, raw };
 }
 
 // ---- Bulk parse ----------------------------------------------------------

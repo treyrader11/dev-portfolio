@@ -51,6 +51,24 @@ export function matchDuplicate(
   };
 }
 
+// A looser key than slugify for "same event, slightly different wording"
+// matching: it drops a year (19xx/20xx), ordinal/edition markers ("2nd", "34th"),
+// the word "annual", and leading articles, so "Running of the Bulls 2026" and
+// "Running of the Bulls", or "36th Annual Oak Street Po-Boy Festival" and "Oak
+// Street Po-Boy Festival", collapse to the same key. Used to dedupe discovered
+// events against what already exists.
+export function fuzzyTitleKey(title: string): string {
+  return (title || "")
+    .toLowerCase()
+    .replace(/\b(19|20)\d{2}\b/g, " ") // years
+    .replace(/\b\d+\s*(st|nd|rd|th)\b/g, " ") // ordinals: 2nd, 34th
+    .replace(/\bannual\b/g, " ")
+    .replace(/\b(the|a|an)\b/g, " ")
+    .replace(/[^a-z0-9]+/g, " ")
+    .trim()
+    .replace(/\s+/g, "-");
+}
+
 export async function findDuplicateEvent(
   title: string,
   startDate?: string | null,

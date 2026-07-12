@@ -91,6 +91,20 @@ export const eventResearchSchema = z.object({
 
 export type EventResearch = z.infer<typeof eventResearchSchema>;
 
+// A lightweight event surfaced by the "discover upcoming events" web search —
+// just enough to identify and dedupe it in the results list. Full details are
+// researched per-event when the admin adds them.
+export const discoveredEventSchema = z.object({
+  title: z.string(),
+  startDate: nullableStr,
+  endDate: nullableStr,
+  locationName: nullableStr,
+  category: nullableStr,
+  description: nullableStr,
+});
+
+export type DiscoveredEvent = z.infer<typeof discoveredEventSchema>;
+
 // ---- AI providers (research fallback chain) ------------------------------
 
 export type FqdProvider = "anthropic" | "gemini" | "openai";
