@@ -18,13 +18,18 @@ import {
   RiCheckboxBlankCircleLine,
 } from "react-icons/ri";
 import { cn, resolveImageSrc } from "@/lib/utils";
-import {
-  FQD_STATUS_BADGE,
-  type FqdEventListItem,
-  type FqdStatus,
-} from "../types/fqd-types";
+import { Chip, type ChipVariant } from "@/components/ui/chip";
+import { type FqdEventListItem, type FqdStatus } from "../types/fqd-types";
 
 type EventImage = { id: string; url: string; alt?: string | null };
+
+// Status → chip color. "researched" is amber to match FQD_STATUS_BADGE.
+const STATUS_CHIP: Record<FqdStatus, ChipVariant> = {
+  draft: "neutral",
+  researched: "amber",
+  approved: "success",
+  exported: "secondary",
+};
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -200,14 +205,12 @@ export function EventCardMobile({
           />
 
           {/* Status badge */}
-          <span
-            className={cn(
-              "absolute left-3 top-3 rounded-full px-2.5 py-1 text-xs font-medium capitalize backdrop-blur-sm",
-              FQD_STATUS_BADGE[status] ?? FQD_STATUS_BADGE.draft,
-            )}
+          <Chip
+            variant={STATUS_CHIP[status] ?? "neutral"}
+            className="absolute left-3 top-3 capitalize backdrop-blur-sm"
           >
             {status}
-          </span>
+          </Chip>
 
           {/* Image count + added badge */}
           <div className="absolute right-3 top-3 flex items-center gap-2">

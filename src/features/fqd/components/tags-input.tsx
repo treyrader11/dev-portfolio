@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { RiCloseLine, RiSparkling2Line, RiLoader4Line } from "react-icons/ri";
+import { RiSparkling2Line, RiLoader4Line } from "react-icons/ri";
+import { Chip, type ChipVariant } from "@/components/ui/chip";
 
 interface Props {
   label: string;
@@ -12,6 +13,7 @@ interface Props {
   onAi?: () => void;
   aiLoading?: boolean;
   aiLabel?: string;
+  chipVariant?: ChipVariant;
 }
 
 // A pill/tag input: existing values show as removable badges; typing + Enter (or
@@ -25,6 +27,7 @@ export function TagsInput({
   onAi,
   aiLoading,
   aiLabel = "AI from description",
+  chipVariant = "secondary",
 }: Props) {
   const [draft, setDraft] = useState("");
   const listId = `${label.toLowerCase().replace(/\s+/g, "-")}-suggestions`;
@@ -65,20 +68,14 @@ export function TagsInput({
 
       <div className="flex flex-wrap items-center gap-2 rounded-lg border border-dark-600 bg-dark-600 px-2 py-2 focus-within:ring-1 focus-within:ring-secondary">
         {values.map((v) => (
-          <span
+          <Chip
             key={v}
-            className="inline-flex items-center gap-1 rounded-full bg-secondary/15 px-2.5 py-1 text-xs font-medium text-secondary"
+            variant={chipVariant}
+            onRemove={() => remove(v)}
+            removeLabel={`Remove ${v}`}
           >
             {v}
-            <button
-              type="button"
-              aria-label={`Remove ${v}`}
-              onClick={() => remove(v)}
-              className="text-secondary/70 transition-colors hover:text-secondary"
-            >
-              <RiCloseLine className="size-3.5" />
-            </button>
-          </span>
+          </Chip>
         ))}
         <input
           list={suggestions.length ? listId : undefined}

@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { RiLoader4Line, RiCheckLine } from "react-icons/ri";
 import { useNotificationsContext } from "@/components/providers/NotificationsProvider";
 import { cn } from "@/lib/utils";
 import { TagsInput } from "./tags-input";
@@ -69,9 +68,6 @@ export function FqdNotificationSettings({
         ? [currentUserEmail]
         : [],
   );
-  const [saving, setSaving] = useState(false);
-  const [dirty, setDirty] = useState(false);
-
   const availableAccounts = emailOptions.filter(
     (e) => !emails.some((x) => x.toLowerCase() === e.toLowerCase()),
   );
@@ -83,8 +79,8 @@ export function FqdNotificationSettings({
     }
   }
 
+  // Persist and toast the result.
   async function save() {
-    setSaving(true);
     try {
       const res = await fetch("/api/fqd/settings", {
         method: "PUT",
@@ -95,15 +91,13 @@ export function FqdNotificationSettings({
           recipientEmails: emails,
         }),
       });
-      if (res.ok) {
-        setDirty(false);
-      } else {
-        addNotification({ text: "Couldn't save settings", variant: "error" });
-      }
+      addNotification(
+        res.ok
+          ? { text: "Notification settings saved", variant: "success" }
+          : { text: "Couldn't save settings", variant: "error" },
+      );
     } catch {
       addNotification({ text: "Couldn't save settings", variant: "error" });
-    } finally {
-      setSaving(false);
     }
   }
 
@@ -115,7 +109,6 @@ export function FqdNotificationSettings({
       firstRun.current = false;
       return;
     }
-    setDirty(true);
     const t = setTimeout(() => void save(), 600);
     return () => clearTimeout(t);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -150,6 +143,7 @@ export function FqdNotificationSettings({
             onChange={setEmails}
             suggestions={emailOptions}
             placeholder="Type an email and press Enter…"
+            chipVariant="amber"
           />
           {availableAccounts.length > 0 && (
             <select
@@ -172,30 +166,6 @@ export function FqdNotificationSettings({
             of them. Defaults to your account email.
           </p>
         </div>
-      </div>
-
-      {/* Changes auto-save; the button only appears while there are unsaved
-          changes (so you can also save immediately). */}
-      <div className="mt-6 flex items-center justify-end gap-2 text-sm">
-        {saving ? (
-          <span className="flex items-center gap-1.5 text-light-400">
-            <RiLoader4Line className="size-4 animate-spin" />
-            Saving…
-          </span>
-        ) : dirty ? (
-          <button
-            type="button"
-            onClick={() => void save()}
-            className="inline-flex items-center gap-1.5 rounded-lg bg-secondary px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-secondary/80"
-          >
-            Save now
-          </button>
-        ) : (
-          <span className="flex items-center gap-1.5 text-light-400">
-            <RiCheckLine className="size-4 text-success" />
-            All changes saved
-          </span>
-        )}
       </div>
     </section>
   );

@@ -58,7 +58,7 @@ export type FqdStatus = (typeof FQD_STATUSES)[number];
 // Badge classes, matching the dark admin theme (translucent fill + accent text).
 export const FQD_STATUS_BADGE: Record<FqdStatus, string> = {
   draft: "bg-light-400/15 text-light-400",
-  researched: "bg-blue-500/15 text-blue-400",
+  researched: "bg-amber-400/15 text-amber-300",
   approved: "bg-success/15 text-success",
   exported: "bg-secondary/15 text-secondary",
 };
