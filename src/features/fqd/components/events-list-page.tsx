@@ -28,6 +28,11 @@ import {
 } from "./event-list-item";
 import { EventImport } from "./event-import";
 import { EventExportAll } from "./event-export-all";
+import {
+  readEventsListSnapshot,
+  writeEventsListSnapshot,
+  clearEventsListSnapshot,
+} from "../lib/events-list-snapshot";
 import type { GetFqdEventsResult } from "../actions/get-events";
 import type { FqdEventListItem } from "../types/fqd-types";
 
@@ -68,18 +73,6 @@ const ADDED_PILLS: { value: string; label: string }[] = [
   { value: "true", label: "Added" },
   { value: "false", label: "Not added" },
 ];
-
-const SNAPSHOT_KEY = "fqd-events-list-snapshot";
-
-interface ListSnapshot {
-  events: FqdEventListItem[];
-  total: number;
-  page: number;
-  filter: string;
-  missing: string;
-  added: string;
-  scrollY: number;
-}
 
 export function EventsListPage({ data }: Props) {
   const { addNotification } = useNotificationsContext();
@@ -157,17 +150,11 @@ export function EventsListPage({ data }: Props) {
   // Save a snapshot (loaded events + filters + scroll) before navigating away,
   // so returning via "View events" resumes right where you were.
   useEffect(() => {
-    const save = () => {
-      try {
-        const snap: ListSnapshot = {
-          ...stateRef.current,
-          scrollY: window.scrollY,
-        };
-        sessionStorage.setItem(SNAPSHOT_KEY, JSON.stringify(snap));
-      } catch {
-        /* storage unavailable */
-      }
-    };
+    const save = () =>
+      writeEventsListSnapshot({
+        ...stateRef.current,
+        scrollY: window.scrollY,
+      });
     router.events.on("routeChangeStart", save);
     return () => router.events.off("routeChangeStart", save);
   }, [router.events]);
@@ -176,14 +163,8 @@ export function EventsListPage({ data }: Props) {
   // where the user was. Suppresses the filter-refetch while restoring.
   const isRestoring = useRef(false);
   useEffect(() => {
-    let snap: ListSnapshot | null = null;
-    try {
-      const raw = sessionStorage.getItem(SNAPSHOT_KEY);
-      if (raw) snap = JSON.parse(raw) as ListSnapshot;
-      sessionStorage.removeItem(SNAPSHOT_KEY);
-    } catch {
-      /* ignore */
-    }
+    const snap = readEventsListSnapshot();
+    clearEventsListSnapshot();
     if (!snap || !Array.isArray(snap.events) || snap.events.length === 0) return;
 
     isRestoring.current = true;

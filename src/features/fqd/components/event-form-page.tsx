@@ -8,6 +8,7 @@ import { useNotificationsContext } from "@/components/providers/NotificationsPro
 import { slugify } from "@/lib/utils";
 import { EventForm } from "./event-form";
 import { fmtEventDate } from "../lib/format";
+import { patchEventInListSnapshot } from "../lib/events-list-snapshot";
 import type { ResearchResult } from "../hooks/use-event-research";
 import {
   emptyFqdEvent,
@@ -219,6 +220,9 @@ export function EventFormPage({ event }: Props) {
         setSavedEvent(saved);
         setForm(nextForm);
         initial.current = JSON.stringify(nextForm);
+        // Keep the events-list snapshot fresh so returning via "View events"
+        // shows the updated event (new images, title, etc.) — not stale cache.
+        patchEventInListSnapshot(saved);
       } else {
         initial.current = JSON.stringify(form);
       }
