@@ -58,51 +58,53 @@ export function EventDetailPage({ event }: Props) {
         { label: "Events", href: "/admin/french-quarter-direct/events" },
         { label: event.title },
       ]}
+      headerActions={
+        <>
+          <EventExport eventId={event.id} />
+          {event.images.length > 0 && (
+            <a
+              href={`/api/fqd/events/${event.id}?download=zip`}
+              aria-label="Download all images (.zip)"
+              className="inline-flex items-center gap-1.5 rounded-lg border border-dark-600 px-3 py-2 text-sm text-white transition-colors hover:border-secondary/60"
+            >
+              <RiFolderZipLine className="size-4" />
+              <span className="hidden lg:inline">Download all (.zip)</span>
+            </a>
+          )}
+          <Link
+            href={`/admin/french-quarter-direct/create-event/${event.id}`}
+            aria-label="Edit event"
+            className="inline-flex items-center gap-1.5 rounded-lg border border-dark-600 px-3 py-2 text-sm text-white transition-colors hover:border-secondary/60"
+          >
+            <RiPencilLine className="size-4" />
+            <span className="hidden lg:inline">Edit</span>
+          </Link>
+        </>
+      }
     >
       <div className="w-full space-y-8 md:max-w-4xl">
-        {/* Page title (moved here from the header) + status + actions. */}
+        {/* Page title + status. */}
         <div className="space-y-4">
           <h1 className="text-2xl font-bold text-white font-pp-acma sm:text-3xl">
             {event.title}
           </h1>
-          <div className="flex flex-wrap items-center justify-between gap-3">
-            <span
-              className={cn(
-                "rounded-full px-3 py-1 text-xs font-medium capitalize",
-                FQD_STATUS_BADGE[status] ?? FQD_STATUS_BADGE.draft,
-              )}
-            >
-              {status}
-            </span>
-            <div className="flex items-center gap-2">
-              <EventExport eventId={event.id} />
-              <Link
-                href={`/admin/french-quarter-direct/create-event/${event.id}`}
-                className="inline-flex items-center gap-1.5 rounded-lg border border-dark-600 px-3 py-2 text-sm text-white transition-colors hover:border-secondary/60"
-              >
-                <RiPencilLine className="size-4" />
-                Edit
-              </Link>
-            </div>
-          </div>
+          <span
+            className={cn(
+              "inline-block rounded-full px-3 py-1 text-xs font-medium capitalize",
+              FQD_STATUS_BADGE[status] ?? FQD_STATUS_BADGE.draft,
+            )}
+          >
+            {status}
+          </span>
         </div>
 
         {/* Image carousel — same horizontal rail as the public "Similar
             projects" section, adapted to the dark admin theme. */}
         {event.images.length > 0 && (
           <section>
-            <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
-              <h2 className="text-lg font-semibold text-white">
-                Images ({event.images.length})
-              </h2>
-              <a
-                href={`/api/fqd/events/${event.id}?download=zip`}
-                className="inline-flex items-center gap-1.5 rounded-lg border border-dark-600 px-3 py-1.5 text-sm text-white transition-colors hover:border-secondary/60"
-              >
-                <RiFolderZipLine className="size-4" />
-                Download all (.zip)
-              </a>
-            </div>
+            <h2 className="mb-3 text-lg font-semibold text-white">
+              Images ({event.images.length})
+            </h2>
             <div className="-mx-4 flex gap-6 overflow-x-auto scroll-smooth px-4 pb-4 sm:mx-0 sm:px-0 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
               {event.images.map((img, i) => (
                 <div
