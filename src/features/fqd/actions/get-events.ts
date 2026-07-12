@@ -75,16 +75,26 @@ function addedWhere(added?: string): Prisma.FqdEventWhereInput | undefined {
   return undefined;
 }
 
-// Combine the optional missing-field, search, and added filters.
+// A where-clause for the "New" pill filter: events created today (server time).
+function newWhere(newOnly?: string): Prisma.FqdEventWhereInput | undefined {
+  if (newOnly !== "true") return undefined;
+  const start = new Date();
+  start.setHours(0, 0, 0, 0);
+  return { createdAt: { gte: start } };
+}
+
+// Combine the optional missing-field, search, added, and new filters.
 function buildWhere(
   missing?: string,
   search?: string,
   added?: string,
+  newOnly?: string,
 ): Prisma.FqdEventWhereInput | undefined {
   const clauses = [
     missingWhere(missing),
     searchWhere(search),
     addedWhere(added),
+    newWhere(newOnly),
   ].filter((c): c is Prisma.FqdEventWhereInput => !!c);
   if (clauses.length === 0) return undefined;
   if (clauses.length === 1) return clauses[0];
@@ -105,10 +115,11 @@ export async function getFqdEvents(
   missing?: string,
   search?: string,
   added?: string,
+  newOnly?: string,
 ): Promise<GetFqdEventsResult> {
   const safePage = Math.max(1, page);
   const skip = (safePage - 1) * pageSize;
-  const where = buildWhere(missing, search, added);
+  const where = buildWhere(missing, search, added, newOnly);
   const [rows, total] = await Promise.all([
     prisma.fqdEvent.findMany({
       where,

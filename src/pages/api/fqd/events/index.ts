@@ -21,8 +21,17 @@ export default async function handler(
       typeof req.query.search === "string" ? req.query.search : undefined;
     const added =
       typeof req.query.added === "string" ? req.query.added : undefined;
+    const newOnly =
+      typeof req.query.new === "string" ? req.query.new : undefined;
     try {
-      const data = await getFqdEvents(page, pageSize, missing, search, added);
+      const data = await getFqdEvents(
+        page,
+        pageSize,
+        missing,
+        search,
+        added,
+        newOnly,
+      );
       return res.status(200).json(data);
     } catch (err) {
       console.error("[fqd] events GET failed:", err);

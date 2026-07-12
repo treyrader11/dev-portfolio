@@ -208,6 +208,8 @@ export type FqdEventListItem = Omit<
   // Derived from rawResearch presence: true when AI research/parse/import
   // populated any of this event's fields.
   aiScraped: boolean;
+  // True when the event was created today (server local time).
+  isNew: boolean;
 };
 
 export type SerializedFqdImage = Omit<FqdEventImage, "createdAt"> & {

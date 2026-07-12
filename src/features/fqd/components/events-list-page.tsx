@@ -86,6 +86,7 @@ export function EventsListPage({ data }: Props) {
   const [filter, setFilter] = useState("");
   const [missing, setMissing] = useState("");
   const [added, setAdded] = useState("");
+  const [newOnly, setNewOnly] = useState("");
   const [view, setView] = useState<"grid" | "list">("grid");
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [target, setTarget] = useState<FqdEventListItem | null>(null);
@@ -97,7 +98,7 @@ export function EventsListPage({ data }: Props) {
   // events that haven't been paginated into the list yet.
   const debouncedSearch = useDebounce(filter, 400);
   const searching = !!debouncedSearch.trim();
-  const filtering = searching || !!missing || !!added;
+  const filtering = searching || !!missing || !!added || newOnly === "true";
 
   const visible = events;
   const hasMore = events.length < total;
@@ -111,6 +112,7 @@ export function EventsListPage({ data }: Props) {
     missingFilter: string,
     searchQuery: string,
     addedFilter: string,
+    newFilter: string,
     append: boolean,
   ) {
     if (append) setLoadingMore(true);
@@ -123,6 +125,7 @@ export function EventsListPage({ data }: Props) {
       if (missingFilter) params.set("missing", missingFilter);
       if (searchQuery.trim()) params.set("search", searchQuery.trim());
       if (addedFilter) params.set("added", addedFilter);
+      if (newFilter === "true") params.set("new", "true");
       const res = await fetch(`/api/fqd/events?${params.toString()}`);
       if (res.ok) {
         const result: GetFqdEventsResult = await res.json();
@@ -146,8 +149,16 @@ export function EventsListPage({ data }: Props) {
 
   // Keep the latest list state in a ref so the navigation handler can snapshot
   // it without re-subscribing on every change.
-  const stateRef = useRef({ events, total, page, filter, missing, added });
-  stateRef.current = { events, total, page, filter, missing, added };
+  const stateRef = useRef({
+    events,
+    total,
+    page,
+    filter,
+    missing,
+    added,
+    newOnly,
+  });
+  stateRef.current = { events, total, page, filter, missing, added, newOnly };
 
   // Save a snapshot (loaded events + filters + scroll) before navigating away,
   // so returning via "View events" resumes right where you were.
@@ -176,6 +187,7 @@ export function EventsListPage({ data }: Props) {
     setFilter(snap.filter);
     setMissing(snap.missing);
     setAdded(snap.added);
+    setNewOnly(snap.newOnly ?? "");
     // Clear the guard after the debounced filter effect would have settled.
     const clear = setTimeout(() => {
       isRestoring.current = false;
@@ -200,13 +212,13 @@ export function EventsListPage({ data }: Props) {
     }
     if (isRestoring.current) return;
     setSelected(new Set());
-    fetchEvents(1, missing, debouncedSearch, added, false);
+    fetchEvents(1, missing, debouncedSearch, added, newOnly, false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [debouncedSearch, missing, added]);
+  }, [debouncedSearch, missing, added, newOnly]);
 
   function loadMore() {
     if (loadingMore || !hasMore) return;
-    fetchEvents(page + 1, missing, debouncedSearch, added, true);
+    fetchEvents(page + 1, missing, debouncedSearch, added, newOnly, true);
   }
 
   // Toggle an event's "added to Joomla" flag.
@@ -508,6 +520,22 @@ export function EventsListPage({ data }: Props) {
                   {p.label}
                 </button>
               ))}
+              {/* "New" = created today. Toggles on/off. */}
+              <button
+                type="button"
+                onClick={() =>
+                  setNewOnly((v) => (v === "true" ? "" : "true"))
+                }
+                aria-pressed={newOnly === "true"}
+                className={cn(
+                  "shrink-0 rounded-full border px-2 py-0.5 text-xs font-medium transition-colors sm:px-3 sm:py-1 sm:text-sm",
+                  newOnly === "true"
+                    ? "border-success bg-success/20 text-success"
+                    : "border-dark-600 text-light-400 hover:border-success/60 hover:text-white",
+                )}
+              >
+                New
+              </button>
             </div>
 
             <div className="ml-auto flex shrink-0 items-center gap-3">
@@ -564,6 +592,8 @@ export function EventsListPage({ data }: Props) {
               <>No events are marked as added yet.</>
             ) : added === "false" ? (
               <>All events are marked as added.</>
+            ) : newOnly === "true" ? (
+              <>No new events were created today.</>
             ) : (
               <>No events match this filter.</>
             )}

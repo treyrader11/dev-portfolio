@@ -11,6 +11,7 @@ export interface EventsListSnapshot {
   filter: string;
   missing: string;
   added: string;
+  newOnly: string;
   scrollY: number;
 }
 

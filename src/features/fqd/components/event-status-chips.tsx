@@ -26,6 +26,7 @@ export function EventStatusChips({
   const status = event.status as FqdStatus;
   const workflow = WORKFLOW_CHIP[status];
   const chips: { key: string; label: string; variant: ChipVariant }[] = [];
+  if (event.isNew) chips.push({ key: "new", label: "New", variant: "success" });
   if (workflow) chips.push({ key: "status", ...workflow });
   if (event.aiScraped)
     chips.push({ key: "ai", label: "AI Scraped", variant: "info" });

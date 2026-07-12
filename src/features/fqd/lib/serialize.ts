@@ -17,9 +17,13 @@ export function serializeFqdEvent(row: EventWithImages): FqdEventListItem {
   // rawResearch is the AI payload — don't ship it to the client, but derive an
   // `aiScraped` flag from its presence (any AI research/parse/import sets it).
   const { startNotifiedAt: _startNotifiedAt, rawResearch, ...rest } = row;
+  // "New" = created today (server local time). Matches the "New" pill filter.
+  const startOfToday = new Date();
+  startOfToday.setHours(0, 0, 0, 0);
   return {
     ...rest,
     aiScraped: rawResearch != null,
+    isNew: row.createdAt.getTime() >= startOfToday.getTime(),
     startDate: row.startDate.toISOString(),
     endDate: row.endDate ? row.endDate.toISOString() : null,
     createdAt: row.createdAt.toISOString(),
