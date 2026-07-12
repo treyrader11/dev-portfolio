@@ -12,16 +12,9 @@ import {
   RiCheckboxBlankCircleLine,
 } from "react-icons/ri";
 import { cn, resolveImageSrc } from "@/lib/utils";
-import { Chip, type ChipVariant } from "@/components/ui/chip";
+import { EventStatusChips } from "./event-status-chips";
 import { eventDateRange } from "../lib/format";
-import { type FqdEventListItem, type FqdStatus } from "../types/fqd-types";
-
-const STATUS_CHIP: Record<FqdStatus, ChipVariant> = {
-  draft: "neutral",
-  researched: "amber",
-  approved: "success",
-  exported: "secondary",
-};
+import { type FqdEventListItem } from "../types/fqd-types";
 
 interface Props {
   event: FqdEventListItem;
@@ -43,7 +36,6 @@ export function EventListItem({
   const detailHref = `/admin/french-quarter-direct/event/${event.slug}`;
   const editHref = `/admin/french-quarter-direct/create-event/${event.id}`;
   const thumbnail = event.images[0]?.url;
-  const status = event.status as FqdStatus;
   const dateLabel = eventDateRange(event.startDate, event.endDate);
 
   return (
@@ -87,12 +79,9 @@ export function EventListItem({
         <div className="min-w-0">
           <div className="flex items-center gap-2">
             <h3 className="truncate font-medium text-white">{event.title}</h3>
-            <Chip
-              variant={STATUS_CHIP[status] ?? "neutral"}
-              className="shrink-0 capitalize"
-            >
-              {status}
-            </Chip>
+            <div className="flex shrink-0 items-center gap-1.5">
+              <EventStatusChips event={event} />
+            </div>
             {event.addedToJoomla && (
               <span className="shrink-0 rounded-full bg-lime-400 px-2 py-0.5 text-xs font-bold uppercase tracking-wide text-black">
                 Added

@@ -16,20 +16,12 @@ import {
   RiDeleteBinLine,
 } from "react-icons/ri";
 import { cn, resolveImageSrc } from "@/lib/utils";
-import { Chip, type ChipVariant } from "@/components/ui/chip";
 import { FqdAddIcon } from "@/components/icons/FqdAddIcon";
 import { FqdRemoveIcon } from "@/components/icons/FqdRemoveIcon";
-import { type FqdEventListItem, type FqdStatus } from "../types/fqd-types";
+import { EventStatusChips } from "./event-status-chips";
+import { type FqdEventListItem } from "../types/fqd-types";
 
 type EventImage = { id: string; url: string; alt?: string | null };
-
-// Status → chip color. "researched" is amber to match FQD_STATUS_BADGE.
-const STATUS_CHIP: Record<FqdStatus, ChipVariant> = {
-  draft: "neutral",
-  researched: "amber",
-  approved: "success",
-  exported: "secondary",
-};
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -163,7 +155,6 @@ export function EventCardMobile({
 }: Props) {
   const detailHref = `/admin/french-quarter-direct/event/${event.slug}`;
   const editHref = `/admin/french-quarter-direct/create-event/${event.id}`;
-  const status = event.status as FqdStatus;
   const dateLabel = formatEventDateRange(event.startDate, event.endDate);
   const location = [event.locationName, event.address]
     .filter(Boolean)
@@ -204,13 +195,10 @@ export function EventCardMobile({
             }}
           />
 
-          {/* Status badge */}
-          <Chip
-            variant={STATUS_CHIP[status] ?? "neutral"}
-            className="absolute left-3 top-3 capitalize backdrop-blur-sm"
-          >
-            {status}
-          </Chip>
+          {/* Provenance + status badges (AI Scraped / Researched / …) */}
+          <div className="absolute left-3 top-3 flex flex-wrap items-center gap-1.5">
+            <EventStatusChips event={event} chipClassName="backdrop-blur-sm" />
+          </div>
 
           {/* Image count + added badge */}
           <div className="absolute right-3 top-3 flex items-center gap-2">

@@ -12,13 +12,10 @@ import { EventExport } from "./event-export";
 import { EventLocationMap } from "./event-location-map";
 import { EventImageAlt } from "./event-image-alt";
 import { RichText } from "./rich-text";
-import { cn, resolveImageSrc } from "@/lib/utils";
+import { EventStatusChips } from "./event-status-chips";
+import { resolveImageSrc } from "@/lib/utils";
 import { eventDateRange } from "../lib/format";
-import {
-  FQD_STATUS_BADGE,
-  type FqdEventListItem,
-  type FqdStatus,
-} from "../types/fqd-types";
+import { type FqdEventListItem } from "../types/fqd-types";
 
 // A labeled detail row that renders only when it has a value.
 function Detail({
@@ -45,7 +42,6 @@ interface Props {
 }
 
 export function EventDetailPage({ event }: Props) {
-  const status = event.status as FqdStatus;
   const dateLabel = eventDateRange(event.startDate, event.endDate);
 
   return (
@@ -88,14 +84,9 @@ export function EventDetailPage({ event }: Props) {
           <h1 className="text-2xl font-bold text-white font-pp-acma sm:text-3xl">
             {event.title}
           </h1>
-          <span
-            className={cn(
-              "inline-block rounded-full px-3 py-1 text-xs font-medium capitalize",
-              FQD_STATUS_BADGE[status] ?? FQD_STATUS_BADGE.draft,
-            )}
-          >
-            {status}
-          </span>
+          <div className="flex flex-wrap items-center gap-2">
+            <EventStatusChips event={event} />
+          </div>
         </div>
 
         {/* Image carousel — same horizontal rail as the public "Similar

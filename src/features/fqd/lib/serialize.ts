@@ -14,9 +14,12 @@ type EventWithImages = FqdEvent & { images: FqdEventImage[] };
 export function serializeFqdEvent(row: EventWithImages): FqdEventListItem {
   // startNotifiedAt is an internal Date (cron bookkeeping) — strip it so it
   // never leaks a non-serializable value into getServerSideProps props.
-  const { startNotifiedAt: _startNotifiedAt, ...rest } = row;
+  // rawResearch is the AI payload — don't ship it to the client, but derive an
+  // `aiScraped` flag from its presence (any AI research/parse/import sets it).
+  const { startNotifiedAt: _startNotifiedAt, rawResearch, ...rest } = row;
   return {
     ...rest,
+    aiScraped: rawResearch != null,
     startDate: row.startDate.toISOString(),
     endDate: row.endDate ? row.endDate.toISOString() : null,
     createdAt: row.createdAt.toISOString(),

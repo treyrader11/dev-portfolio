@@ -10,7 +10,8 @@ export type ChipVariant =
   | "lime"
   | "neutral"
   | "success"
-  | "error";
+  | "error"
+  | "info";
 
 const CHIP_VARIANT: Record<ChipVariant, string> = {
   amber: "bg-amber-400/15 text-amber-300",
@@ -19,6 +20,7 @@ const CHIP_VARIANT: Record<ChipVariant, string> = {
   neutral: "bg-light-400/15 text-light-400",
   success: "bg-success/15 text-success",
   error: "bg-error/15 text-error",
+  info: "bg-sky-500/15 text-sky-400",
 };
 
 interface ChipProps {

@@ -14,7 +14,9 @@ export function researchToFormValues(f: EventResearch): FqdEventFormValues {
     ...emptyFqdEvent,
     title,
     slug: slugify(title),
-    status: "researched",
+    // Leave as draft — bulk import is AI-sourced and surfaces via the
+    // "AI Scraped" chip (derived from rawResearch), not the "researched" status.
+    status: "draft",
     startDate: f.startDate ? f.startDate.slice(0, 10) : "",
     endDate: f.endDate ? f.endDate.slice(0, 10) : "",
     startTime: pick(f.startTime),

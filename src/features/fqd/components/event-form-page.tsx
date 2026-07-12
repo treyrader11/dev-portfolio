@@ -128,7 +128,8 @@ export function EventFormPage({ event }: Props) {
       next.ageRequirement = pick(fields.ageRequirement, prev.ageRequirement);
       next.notes = pick(fields.notes, prev.notes);
       if (!prev.slug && next.title) next.slug = slugify(next.title);
-      next.status = "researched";
+      // Don't force "researched" — an AI populate is surfaced by rawResearch
+      // (the "AI Scraped" chip). "researched" is reserved for manual research.
       return next;
     });
     setRawResearch(raw);

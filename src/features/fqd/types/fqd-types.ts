@@ -191,6 +191,9 @@ export type FqdEventListItem = Omit<
   createdAt: string;
   updatedAt: string;
   images: SerializedFqdImage[];
+  // Derived from rawResearch presence: true when AI research/parse/import
+  // populated any of this event's fields.
+  aiScraped: boolean;
 };
 
 export type SerializedFqdImage = Omit<FqdEventImage, "createdAt"> & {
