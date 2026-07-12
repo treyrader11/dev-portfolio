@@ -14,11 +14,11 @@ import {
   RiImageLine,
   RiPencilLine,
   RiDeleteBinLine,
-  RiCheckboxCircleFill,
-  RiCheckboxBlankCircleLine,
 } from "react-icons/ri";
 import { cn, resolveImageSrc } from "@/lib/utils";
 import { Chip, type ChipVariant } from "@/components/ui/chip";
+import { FqdAddIcon } from "@/components/icons/FqdAddIcon";
+import { FqdRemoveIcon } from "@/components/icons/FqdRemoveIcon";
 import { type FqdEventListItem, type FqdStatus } from "../types/fqd-types";
 
 type EventImage = { id: string; url: string; alt?: string | null };
@@ -343,9 +343,9 @@ export function EventCardMobile({
                 )}
               >
                 {event.addedToJoomla ? (
-                  <RiCheckboxCircleFill className="size-5" />
+                  <FqdRemoveIcon size={20} />
                 ) : (
-                  <RiCheckboxBlankCircleLine className="size-5" />
+                  <FqdAddIcon size={20} />
                 )}
               </button>
             )}
