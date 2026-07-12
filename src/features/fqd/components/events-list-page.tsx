@@ -348,7 +348,9 @@ export function EventsListPage({ data }: Props) {
                 value={filter}
                 onChange={(e) => setFilter(e.target.value)}
                 placeholder="Search events by title or location…"
-                className="w-full bg-transparent text-sm text-white outline-none placeholder:text-light-400"
+                // text-base (16px) on mobile stops iOS Safari from zooming the
+                // page on focus (which broke the width + sticky header).
+                className="w-full bg-transparent text-base text-white outline-none placeholder:text-light-400 sm:text-sm"
               />
               {reloading && searching && (
                 <RiLoader4Line className="size-4 shrink-0 animate-spin text-light-400" />
