@@ -5,9 +5,15 @@ import { deleteFqdEventWithImages } from "@/features/fqd/lib/delete-with-images"
 import { loadDuplicateIndex } from "@/features/fqd/lib/duplicates";
 import { researchToFormValues } from "@/features/fqd/lib/research-to-form";
 import { slugify } from "@/lib/utils";
-import type { EventResearch } from "@/features/fqd/types/fqd-types";
+import type {
+  EventResearch,
+  FqdEventImageInput,
+} from "@/features/fqd/types/fqd-types";
 
-type BulkItem = EventResearch & { replaceId?: string };
+type BulkItem = EventResearch & {
+  replaceId?: string;
+  images?: FqdEventImageInput[];
+};
 
 const dupeKey = (title: string, startDate: string) =>
   `${slugify(title)}::${startDate.slice(0, 10)}`;
@@ -43,8 +49,9 @@ export default async function handler(
   let skipped = 0;
 
   for (const item of events) {
-    const { replaceId, ...fields } = item;
+    const { replaceId, images, ...fields } = item;
     const values = researchToFormValues(fields);
+    if (Array.isArray(images) && images.length) values.images = images;
     if (!values.title || !values.startDate) {
       skipped += 1;
       continue;

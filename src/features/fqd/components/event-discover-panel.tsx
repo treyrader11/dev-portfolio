@@ -17,6 +17,7 @@ import {
   FQD_PROVIDER_DOT,
   type DiscoveredEvent,
   type EventResearch,
+  type FqdEventImageInput,
   type FqdProvider,
 } from "../types/fqd-types";
 
@@ -159,6 +160,42 @@ export function EventDiscoverPanel() {
     }
   }
 
+  // AI image search for one event → uploaded Cloudinary images ready to save.
+  async function fetchImagesFor(
+    fields: EventResearch,
+  ): Promise<FqdEventImageInput[]> {
+    if (!fields.title?.trim()) return [];
+    try {
+      const res = await fetch("/api/fqd/search-images", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          title: fields.title,
+          locationName: fields.locationName,
+          address: fields.address,
+          startDate: fields.startDate,
+          category: fields.category,
+          subcategory: fields.subcategory,
+          website: fields.website,
+          description: fields.description,
+        }),
+      });
+      const data = await res.json().catch(() => null);
+      const imgs: { url?: string; cloudinaryId?: string | null }[] =
+        res.ok && Array.isArray(data?.images) ? data.images : [];
+      return imgs
+        .filter((i) => i.url)
+        .map((i, idx) => ({
+          url: i.url as string,
+          cloudinaryId: i.cloudinaryId ?? null,
+          alt: "",
+          order: idx,
+        }));
+    } catch {
+      return [];
+    }
+  }
+
   async function addSelected() {
     if (!results || adding) return;
     const items = results.filter((_, i) => selected.has(i));
@@ -169,18 +206,21 @@ export function EventDiscoverPanel() {
     let done = 0;
     setProgress({ done: 0, total: items.length });
 
-    const researched = await mapPool(items, 3, async (d) => {
-      const r = await researchOne(d);
+    // Research each event's fields, then AI-search its images, so created events
+    // arrive with both populated.
+    const built = await mapPool(items, 3, async (d) => {
+      const fields = await researchOne(d);
+      const images = await fetchImagesFor(fields);
       done += 1;
       setProgress({ done, total: items.length });
-      return r;
+      return { ...fields, images };
     });
 
     try {
       const res = await fetch("/api/fqd/events/bulk", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ events: researched }),
+        body: JSON.stringify({ events: built }),
       });
       const data = await res.json().catch(() => null);
       if (res.ok) {
