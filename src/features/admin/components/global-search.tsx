@@ -116,6 +116,7 @@ export function GlobalSearch() {
   const s = useGlobalSearch();
   const [open, setOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
 
   // Close on outside click.
@@ -130,6 +131,20 @@ export function GlobalSearch() {
     }
     document.addEventListener("mousedown", onClick);
     return () => document.removeEventListener("mousedown", onClick);
+  }, []);
+
+  // ⌘K / Ctrl+K opens the search and focuses the input.
+  useEffect(() => {
+    function onKey(e: KeyboardEvent) {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
+        e.preventDefault();
+        setOpen(true);
+        inputRef.current?.focus();
+        inputRef.current?.select();
+      }
+    }
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
   }, []);
 
   // Clear + close when navigating to a result.
@@ -151,6 +166,7 @@ export function GlobalSearch() {
       <div className="flex items-center gap-2 rounded-lg border border-dark-600 bg-dark-600 px-3 py-2 focus-within:border-secondary/60">
         <RiSearchLine className="size-4 shrink-0 text-light-400" />
         <input
+          ref={inputRef}
           value={s.value}
           onChange={(e) => s.setValue(e.target.value)}
           onFocus={() => setOpen(true)}
@@ -158,8 +174,12 @@ export function GlobalSearch() {
           placeholder="Search events, projects, repos…"
           className="w-full bg-transparent text-sm text-white outline-none placeholder:text-light-400"
         />
-        {s.loading && (
+        {s.loading ? (
           <RiLoader4Line className="size-4 shrink-0 animate-spin text-light-400" />
+        ) : (
+          <kbd className="pointer-events-none hidden shrink-0 rounded border border-dark-600 px-1.5 py-0.5 text-[10px] font-medium text-light-400 md:inline">
+            ⌘K
+          </kbd>
         )}
       </div>
 
