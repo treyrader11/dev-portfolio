@@ -29,6 +29,7 @@ import {
 import { EventImport } from "./event-import";
 import { EventExportAll } from "./event-export-all";
 import { EventBulkActionsBar } from "./event-bulk-actions-bar";
+import { EventsScrollTop } from "./events-scroll-top";
 import {
   readEventsListSnapshot,
   writeEventsListSnapshot,
@@ -683,6 +684,8 @@ export function EventsListPage({ data }: Props) {
           </div>
         )}
       </div>
+
+      <EventsScrollTop />
 
       <EventBulkActionsBar
         count={selected.size}
