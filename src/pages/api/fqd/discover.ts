@@ -29,17 +29,29 @@ export default async function handler(
     startDate: r.startDate.toISOString(),
   }));
 
-  try {
-    const { events, provider } = await discoverEventsWithFallback(existing);
+  // Today (server local date, YYYY-MM-DD) — used to exclude past events.
+  const now = new Date();
+  const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(
+    2,
+    "0",
+  )}-${String(now.getDate()).padStart(2, "0")}`;
 
-    // Deterministic fuzzy-dedupe safety net: drop any discovered event whose
-    // normalized title matches an existing one (or an earlier result), catching
-    // near-duplicates the model may have missed.
+  try {
+    const { events, provider } = await discoverEventsWithFallback(
+      existing,
+      today,
+    );
+
+    // Deterministic safety nets on top of the model's own filtering:
+    //  - fuzzy-dedupe: drop any discovered event whose normalized title matches
+    //    an existing one (or an earlier result in this batch);
+    //  - date: drop events dated before today (keep undated ones).
     const existingKeys = new Set(existing.map((e) => fuzzyTitleKey(e.title)));
     const seen = new Set<string>();
     const fresh = events.filter((e) => {
       const key = fuzzyTitleKey(e.title);
       if (!key || existingKeys.has(key) || seen.has(key)) return false;
+      if (e.startDate && e.startDate.slice(0, 10) < today) return false;
       seen.add(key);
       return true;
     });

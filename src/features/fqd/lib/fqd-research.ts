@@ -336,6 +336,8 @@ const FQD_DISCOVER_SYSTEM_PROMPT = `You are a New Orleans events researcher. Sea
 
 You will be given a list of events ALREADY in our system. Do NOT include any event that is the same as one already listed, even when the wording differs slightly. Treat titles as the same event when they refer to the same recurring or specific happening — e.g. "Running of the Bulls 2026" is the same as "Running of the Bulls", and "36th Annual Oak Street Po-Boy Festival" is the same as "Oak Street Po-Boy Festival". When in doubt, exclude it.
 
+Only include events taking place on or after today — never include events whose date has already passed.
+
 Return ONLY a valid JSON ARRAY (no markdown, no backticks, no preamble) of NEW events that are not already in the system. Each element must be exactly this shape:
 {
   "title": string,
@@ -371,6 +373,7 @@ export interface DiscoverResult {
 // (fuzzy title matching); a deterministic dedupe pass runs on top in the route.
 export async function discoverEventsWithFallback(
   existing: { title: string; startDate: string }[],
+  today: string,
 ): Promise<DiscoverResult> {
   const list = existing.length
     ? existing
@@ -378,6 +381,8 @@ export async function discoverEventsWithFallback(
         .join("\n")
     : "(none yet)";
   const prompt = `Find upcoming New Orleans events that are NOT already in our system.
+
+Today's date is ${today}. Only include events happening on or after today (${today}) — never events whose date has already passed.
 
 Events already in our system (exclude these and any close variant of them):
 ${list}
