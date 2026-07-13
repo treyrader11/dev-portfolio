@@ -137,9 +137,14 @@ export async function getFqdEvents(
   search?: string,
   added?: string,
   newOnly?: string,
+  offset?: number,
 ): Promise<GetFqdEventsResult> {
   const safePage = Math.max(1, page);
-  const skip = (safePage - 1) * pageSize;
+  // An explicit `offset` (used by infinite-scroll to fetch the next N after the
+  // already-loaded events) takes precedence over page math, so batch sizes and
+  // the initial page size can differ without misaligning the window.
+  const skip =
+    offset != null && offset >= 0 ? Math.floor(offset) : (safePage - 1) * pageSize;
   // Never show expired events (past their end date). They're emailed + removed
   // by the expiry cron / lazy pass, but hide them here too so they never linger
   // in the list before that runs.

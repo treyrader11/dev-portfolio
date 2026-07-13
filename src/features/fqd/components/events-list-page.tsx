@@ -63,6 +63,9 @@ const MISSING_FILTERS: { value: string; label: string }[] = [
   { value: "notes", label: "Without notes" },
 ];
 
+// How many events to pull in per infinite-scroll batch.
+const SCROLL_BATCH_SIZE = 4;
+
 // "Added to French Quarter Direct" pill filter.
 const ADDED_PILLS: { value: string; label: string }[] = [
   { value: "", label: "All" },
@@ -110,14 +113,22 @@ export function EventsListPage({ data }: Props) {
     addedFilter: string,
     newFilter: string,
     append: boolean,
+    offset?: number,
   ) {
     if (append) setLoadingMore(true);
     else setReloading(true);
     try {
-      const params = new URLSearchParams({
-        page: String(nextPage),
-        pageSize: String(data.pageSize),
-      });
+      const params = new URLSearchParams();
+      if (offset != null) {
+        // Infinite-scroll batch: fetch the next SCROLL_BATCH_SIZE after what's
+        // already loaded (offset-based, so it never misaligns with the larger
+        // initial page size).
+        params.set("offset", String(offset));
+        params.set("pageSize", String(SCROLL_BATCH_SIZE));
+      } else {
+        params.set("page", String(nextPage));
+        params.set("pageSize", String(data.pageSize));
+      }
       if (missingFilter) params.set("missing", missingFilter);
       if (searchQuery.trim()) params.set("search", searchQuery.trim());
       if (addedFilter) params.set("added", addedFilter);
@@ -214,9 +225,45 @@ export function EventsListPage({ data }: Props) {
   }, [debouncedSearch, missing, added, newOnly]);
 
   function loadMore() {
-    if (loadingMore || !hasMore) return;
-    fetchEvents(page + 1, missing, debouncedSearch, added, newOnly, true);
+    if (loadingMore || reloading || !hasMore) return;
+    // Offset = the number already loaded, so we pull the next batch after them.
+    fetchEvents(0, missing, debouncedSearch, added, newOnly, true, events.length);
   }
+
+  // Keep a live ref to loadMore so the trigger effect always calls the latest
+  // closure with current events/filters — no stale state.
+  const loadMoreRef = useRef(loadMore);
+  loadMoreRef.current = loadMore;
+
+  // Infinite scroll: the observer only tracks whether the sentinel is near the
+  // viewport; a separate effect does the loading. This keeps loading batches
+  // even when a small batch doesn't push the sentinel back out of view (the
+  // observer wouldn't re-fire in that case).
+  const sentinelRef = useRef<HTMLDivElement>(null);
+  const [sentinelVisible, setSentinelVisible] = useState(false);
+  useEffect(() => {
+    const el = sentinelRef.current;
+    if (!el) {
+      setSentinelVisible(false);
+      return;
+    }
+    const io = new IntersectionObserver(
+      (entries) => setSentinelVisible(!!entries[0]?.isIntersecting),
+      { rootMargin: "600px 0px" },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+    // Re-attach when the sentinel mounts/unmounts (hasMore) or the view (grid ⇄
+    // list) re-renders it, so the observer never tracks a stale node.
+  }, [hasMore, view]);
+
+  // Load the next batch whenever the sentinel is in view and we're idle — re-runs
+  // after each batch settles, so it keeps filling until the sentinel scrolls off.
+  useEffect(() => {
+    if (sentinelVisible && hasMore && !loadingMore && !reloading) {
+      loadMoreRef.current();
+    }
+  }, [sentinelVisible, hasMore, loadingMore, reloading]);
 
   // On touch devices, dragging to scroll the list dismisses the keyboard (blurs
   // the search). With the keyboard closed, the sticky header/toolbar behave
@@ -689,37 +736,26 @@ export function EventsListPage({ data }: Props) {
           </div>
         )}
 
-        {/* Skeletons appended while loading the next page. */}
+        {/* Skeletons appended while the next batch loads (infinite scroll). */}
         {loadingMore &&
           (view === "list" ? (
             <div className="mt-4 space-y-3">
-              {Array.from({ length: 3 }).map((_, i) => (
+              {Array.from({ length: SCROLL_BATCH_SIZE }).map((_, i) => (
                 <EventListItemSkeleton key={i} />
               ))}
             </div>
           ) : (
             <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-              {Array.from({ length: 3 }).map((_, i) => (
+              {Array.from({ length: SCROLL_BATCH_SIZE }).map((_, i) => (
                 <EventCardMobileSkeleton key={i} />
               ))}
             </div>
           ))}
 
-        {/* Load more paginates within the current filters. */}
+        {/* Infinite-scroll sentinel: auto-loads the next batch as it nears the
+            viewport. Rendered only while there are more events to load. */}
         {hasMore && (
-          <div className="mt-6 flex justify-center">
-            <button
-              type="button"
-              onClick={loadMore}
-              disabled={loadingMore}
-              className="inline-flex items-center gap-2 rounded-lg border border-dark-600 px-5 py-2.5 text-sm font-medium text-white transition-colors hover:border-secondary/60 disabled:opacity-50"
-            >
-              {loadingMore && <RiLoader4Line className="size-4 animate-spin" />}
-              {loadingMore
-                ? "Loading…"
-                : `Load more (${total - events.length} remaining)`}
-            </button>
-          </div>
+          <div ref={sentinelRef} aria-hidden className="h-px w-full" />
         )}
       </div>
 

@@ -23,6 +23,12 @@ export default async function handler(
       typeof req.query.added === "string" ? req.query.added : undefined;
     const newOnly =
       typeof req.query.new === "string" ? req.query.new : undefined;
+    const offsetNum =
+      typeof req.query.offset === "string" && req.query.offset !== ""
+        ? Number(req.query.offset)
+        : undefined;
+    const offset =
+      offsetNum != null && Number.isFinite(offsetNum) ? offsetNum : undefined;
     try {
       const data = await getFqdEvents(
         page,
@@ -31,6 +37,7 @@ export default async function handler(
         search,
         added,
         newOnly,
+        offset,
       );
       return res.status(200).json(data);
     } catch (err) {
