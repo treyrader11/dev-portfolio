@@ -138,7 +138,7 @@ async function objectSearch<T>(
     prompt,
     maxOutputTokens: 4096,
     tools: searchTools,
-    stopWhen: stepCountIs(6),
+    stopWhen: stepCountIs(4),
     experimental_output: Output.object({ schema }),
   });
   return experimental_output;
@@ -157,7 +157,7 @@ async function arraySearch<E>(
     prompt,
     maxOutputTokens: 4096,
     tools: searchTools,
-    stopWhen: stepCountIs(6),
+    stopWhen: stepCountIs(4),
     experimental_output: Output.array({ element }),
   });
   return experimental_output;
