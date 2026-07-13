@@ -36,6 +36,20 @@ function stripMarkdownLinks(value: string): string {
     .trim();
 }
 
+// Max length for X-EXTRAINFO — AI research can produce full paragraphs, which
+// bloat the CSV; keep it short.
+const MAX_EXTRA_INFO = 200;
+
+// Truncate to `max` characters, cutting at the last complete word before the
+// limit and appending "..." (no-op when already within the limit).
+function truncateWords(value: string, max: number): string {
+  if (value.length <= max) return value;
+  const slice = value.slice(0, max);
+  const lastSpace = slice.lastIndexOf(" ");
+  const cut = lastSpace > 0 ? slice.slice(0, lastSpace) : slice;
+  return `${cut.trimEnd()}...`;
+}
+
 // LOCATION: "locationName - address", or whichever exists, or "".
 function locationCell(
   locationName?: string | null,
@@ -73,18 +87,30 @@ function timeParts(startTime?: string | null): { h: number; m: number } | null {
 }
 
 // DTSTART = start date + start time (or 00:00:00). DTEND = end date (00:00:00)
-// when present, else start + 2 hours. Formatted as floating local times for the
-// TIMEZONE column (no UTC conversion).
+// only when it is strictly after the start; otherwise start + 2 hours. Formatted
+// as floating local times for the TIMEZONE column (no UTC conversion).
 function dtStartEnd(event: FqdEventListItem): { dtStart: string; dtEnd: string } {
   const start = new Date(`${str(event.startDate).slice(0, 10)}T00:00:00`);
   const tp = timeParts(event.startTime);
   if (tp) start.setHours(tp.h, tp.m, 0, 0);
 
-  // DTEND: the end date at midnight when one exists; otherwise ALWAYS the start
-  // plus two hours (via addHours) — never midnight (T000000) of the start date.
-  const end = event.endDate
+  // The candidate end from endDate (midnight of that day), or null when unset.
+  const endFromDate = event.endDate
     ? new Date(`${str(event.endDate).slice(0, 10)}T00:00:00`)
-    : addHours(start, 2);
+    : null;
+
+  // DTEND fix — before/after so this is verifiably the right place:
+  //   BEFORE: `event.endDate ? endDate@midnight : addHours(start, 2)`
+  //           A single-day event whose endDate is null OR equal to startDate
+  //           emitted DTEND "YYYYMMDDT000000" (midnight of the start date).
+  //   AFTER:  use endDate only when strictly AFTER start; else take the
+  //           startDate and add 2 hours via addHours, then format below.
+  //           e.g. start 20260708T183000 -> DTEND 20260708T203000
+  //                start 20260708T000000 -> DTEND 20260708T020000 (never T000000)
+  const end =
+    endFromDate && endFromDate.getTime() > start.getTime()
+      ? endFromDate
+      : addHours(start, 2);
 
   return {
     dtStart: format(start, DT_FORMAT),
@@ -100,7 +126,11 @@ function eventCells(event: FqdEventListItem): string[] {
     locationCell(event.locationName, event.address), // LOCATION
     stripMarkdownLinks(str(event.description)), // DESCRIPTION
     str(event.organizer), // CONTACT
-    stripMarkdownLinks(extraInfoCell(event.admission, event.ticketUrl)), // X-EXTRAINFO
+    truncateWords(
+      stripMarkdownLinks(extraInfoCell(event.admission, event.ticketUrl)),
+      MAX_EXTRA_INFO,
+    ), // X-EXTRAINFO
+
     dtStart, // DTSTART
     dtEnd, // DTEND
     TIMEZONE, // TIMEZONE
