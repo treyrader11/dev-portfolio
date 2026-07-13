@@ -444,7 +444,7 @@ export function EventsListPage({ data }: Props) {
       <div className="max-w-4xl">
         {/* Sticky list toolbar — sticks just below the header on scroll, with a
             translucent blur so cards show through faintly while scrolling. */}
-        <div className="sticky top-20 z-20 border-b border-dark-600 bg-dark py-3">
+        <div className="sticky top-20 z-20 transform-gpu border-b border-dark-600 bg-dark/80 py-3 backdrop-blur-md">
           {/* Row A: search (left, fills) + filter dropdown. */}
           <div className="flex items-center gap-2">
             <div className="flex flex-1 items-center gap-2 rounded-lg border border-dark-600 bg-dark-600 px-3 py-2">

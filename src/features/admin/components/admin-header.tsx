@@ -16,7 +16,7 @@ interface AdminHeaderProps {
 // desktop search.
 export function AdminHeader({ title, hideTitle, actions }: AdminHeaderProps) {
   return (
-    <header className="sticky top-0 z-30 h-20 w-full border-b border-dark-600 bg-dark-500">
+    <header className="sticky top-0 z-30 h-20 w-full transform-gpu border-b border-dark-600 bg-dark-500">
       <div className="mx-auto flex h-full w-full max-w-5xl items-center justify-between gap-3 px-4 sm:px-6 lg:px-8">
         {/* Left: mobile search trigger, then the title. */}
         <div className="flex min-w-0 items-center gap-3">
