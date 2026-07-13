@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/multi-step-loader";
 import { eventDateRange } from "../lib/format";
 import { clearEventsListSnapshot } from "../lib/events-list-snapshot";
+import { useFqdProvider } from "../hooks/use-fqd-provider";
 import {
   FQD_PROVIDER_DOT,
   type DiscoveredEvent,
@@ -97,6 +98,7 @@ interface ProcStep {
 export function EventDiscoverPanel() {
   const router = useRouter();
   const { addNotification } = useNotificationsContext();
+  const selectedProvider = useFqdProvider((s) => s.provider);
   const [open, setOpen] = useState(false);
   const [discovering, setDiscovering] = useState(false);
   const [results, setResults] = useState<DiscoveredEvent[] | null>(null);
@@ -119,7 +121,11 @@ export function EventDiscoverPanel() {
     setResults(null);
     setProvider(null);
     try {
-      const res = await fetch("/api/fqd/discover", { method: "POST" });
+      const res = await fetch("/api/fqd/discover", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ provider: selectedProvider }),
+      });
       const data = await res.json().catch(() => null);
       if (!res.ok) {
         // Free-tier / rate-limit reached → amber notice, not a red error.
@@ -163,7 +169,7 @@ export function EventDiscoverPanel() {
       const res = await fetch("/api/fqd/research", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ query }),
+        body: JSON.stringify({ query, provider: selectedProvider }),
       });
       if (!res.ok) return base;
       const json = await res.json();
@@ -199,6 +205,7 @@ export function EventDiscoverPanel() {
           subcategory: fields.subcategory,
           website: fields.website,
           description: fields.description,
+          provider: selectedProvider,
         }),
       });
       const data = await res.json().catch(() => null);

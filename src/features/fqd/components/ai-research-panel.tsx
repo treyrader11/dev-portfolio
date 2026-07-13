@@ -29,7 +29,7 @@ export function AiResearchPanel({ onApply, defaultOpen = false }: Props) {
   const [text, setText] = useState("");
   const [dragOver, setDragOver] = useState(false);
   const [lastResult, setLastResult] = useState<ResearchResult | null>(null);
-  const { research, parse, loading, error } = useEventResearch();
+  const { research, parse, loading, error, notice } = useEventResearch();
 
   function handleResult(result: ResearchResult | null) {
     if (!result) return;
@@ -189,10 +189,11 @@ export function AiResearchPanel({ onApply, defaultOpen = false }: Props) {
               )}
 
               {error && <p className="text-xs text-red-400">{error}</p>}
+              {notice && <p className="text-xs text-amber-400">{notice}</p>}
 
-              {/* Which provider actually answered (after the fallback chain). */}
-              {lastResult && (
-                <div className="flex items-center gap-2 text-xs text-light-300">
+              {/* Success — which model answered. */}
+              {lastResult && !error && !notice && (
+                <div className="flex items-center gap-2 text-xs text-emerald-400">
                   <span
                     className={cn(
                       "size-2 shrink-0 rounded-full",
@@ -200,8 +201,8 @@ export function AiResearchPanel({ onApply, defaultOpen = false }: Props) {
                     )}
                   />
                   <span>
-                    Researched via{" "}
-                    <span className="font-medium text-white">
+                    Populated via{" "}
+                    <span className="font-medium">
                       {lastResult.providerLabel}
                     </span>{" "}
                     · {lastResult.searchEngine}

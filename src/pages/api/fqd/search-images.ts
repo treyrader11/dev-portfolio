@@ -4,8 +4,10 @@ import { requireAdmin } from "@/features/admin/lib/admin-auth";
 import {
   researchEventImageSourcesWithFallback,
   FqdAllProvidersError,
+  isQuotaError,
 } from "@/features/fqd/lib/fqd-research";
 import { resolveImageCandidates } from "@/features/fqd/lib/scrape-images";
+import { parseFqdProvider } from "@/features/fqd/types/fqd-types";
 
 export const config = { maxDuration: 60 };
 
@@ -18,6 +20,7 @@ interface Body {
   subcategory?: string;
   website?: string;
   description?: string;
+  provider?: string;
 }
 
 // Build a compact search query from whatever event details we have.
@@ -60,16 +63,25 @@ export default async function handler(
   let sources: string[];
   let provider: string;
   try {
-    const result = await researchEventImageSourcesWithFallback(buildQuery(body));
+    const result = await researchEventImageSourcesWithFallback(
+      buildQuery(body),
+      parseFqdProvider(body.provider),
+    );
     sources = result.data;
     provider = result.provider;
   } catch (err) {
     if (err instanceof FqdAllProvidersError) {
-      return res
-        .status(502)
-        .json({ error: "AI providers unavailable", attempts: err.attempts });
+      const quota = isQuotaError(err.attempts);
+      return res.status(quota ? 429 : 502).json({
+        code: quota ? "quota" : "failed",
+        error: err.attempts.join(" · ") || "Image search failed",
+        attempts: err.attempts,
+      });
     }
-    return res.status(500).json({ error: "Image search failed" });
+    return res.status(500).json({
+      code: "failed",
+      error: err instanceof Error ? err.message : "Image search failed",
+    });
   }
 
   // Seed with the known website too, in case the model didn't include it.

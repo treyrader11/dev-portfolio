@@ -184,23 +184,37 @@ const RUNNERS: { key: FqdProvider; run: Runner }[] = [
   { key: "openai", run: callOpenAI },
 ];
 
+// True when the failure messages indicate a rate-limit / quota / credits issue
+// (vs. a genuine error), so callers can show the right message.
+export function isQuotaError(attempts: string[]): boolean {
+  return attempts.some((a) =>
+    /(429|rate.?limit|quota|exceeded|insufficient_quota|billing|too many requests|overloaded|resource[_ ]?exhausted|credit)/i.test(
+      a,
+    ),
+  );
+}
+
 // Try each provider in order; any error (missing key, API failure, or a
-// validation failure of the returned JSON) falls through to the next.
+// validation failure of the returned JSON) falls through to the next. When
+// `only` is set, use ONLY that provider (the user picked a model) — no fallback,
+// so its exact failure reason surfaces.
 async function withFallback<T>(
   system: string,
   prompt: string,
   useSearch: boolean,
   validate: (text: string) => T,
+  only?: FqdProvider,
 ): Promise<{ data: T; provider: FqdProvider; raw: string }> {
+  const runners = only ? RUNNERS.filter((r) => r.key === only) : RUNNERS;
   const errors: string[] = [];
-  for (const { key, run } of RUNNERS) {
+  for (const { key, run } of runners) {
     try {
       const text = await run(system, prompt, useSearch);
       return { data: validate(text), provider: key, raw: text };
     } catch (err) {
       const message = err instanceof Error ? err.message : String(err);
       errors.push(`${key}: ${message}`);
-      console.warn(`[fqd-research] ${key} failed, trying next provider. Reason: ${message}`);
+      console.warn(`[fqd-research] ${key} failed${only ? "" : ", trying next provider"}. Reason: ${message}`);
     }
   }
   throw new FqdAllProvidersError(errors);
@@ -213,22 +227,30 @@ export interface FallbackResult {
 }
 
 // Mode 1: research an event by name/query (web search).
-export function researchEventWithFallback(query: string): Promise<FallbackResult> {
+export function researchEventWithFallback(
+  query: string,
+  provider?: FqdProvider,
+): Promise<FallbackResult> {
   return withFallback(
     FQD_SYSTEM_PROMPT,
     `Research this New Orleans event and return the JSON object. Search the web for accurate, current details. Query: ${query}`,
     true,
     validateOne,
+    provider,
   );
 }
 
 // Mode 2: parse a single raw listing (no web search).
-export function parseEventWithFallback(text: string): Promise<FallbackResult> {
+export function parseEventWithFallback(
+  text: string,
+  provider?: FqdProvider,
+): Promise<FallbackResult> {
   return withFallback(
     FQD_SYSTEM_PROMPT,
     `Extract the event from this listing text and return the JSON object:\n\n${text}`,
     false,
     validateOne,
+    provider,
   );
 }
 
@@ -237,6 +259,7 @@ export function parseEventWithFallback(text: string): Promise<FallbackResult> {
 export async function generateClassificationsWithFallback(
   field: "category" | "subcategory",
   ctx: { description: string; title?: string | null; category?: string | null },
+  provider?: FqdProvider,
 ): Promise<{ values: string[]; provider: FqdProvider }> {
   const kind = field === "category" ? "top-level category" : "subcategory";
   const count = field === "category" ? "1 to 2" : "1 to 3";
@@ -253,13 +276,14 @@ export async function generateClassificationsWithFallback(
   ]
     .filter(Boolean)
     .join("\n");
-  const { data, provider } = await withFallback(
+  const { data, provider: used } = await withFallback(
     system,
     prompt,
     false,
     cleanLabelList,
+    provider,
   );
-  return { values: data, provider };
+  return { values: data, provider: used };
 }
 
 // The model replies with a plain description; trim and sanity-check length.
@@ -272,6 +296,7 @@ const cleanDescription = (text: string): string => {
 // Mode 5: web-search for a factual description of an event.
 export function researchEventDescriptionWithFallback(
   query: string,
+  provider?: FqdProvider,
 ): Promise<{ data: string; provider: FqdProvider; raw: string }> {
   const system = `You are a New Orleans event researcher. Search the web for the given event and write a concise, factual description of 2 to 4 sentences suitable for an event listing — what the event is, its key highlights, and what attendees can expect. Return ONLY the description text: no title, no markdown, no preamble, no quotes.`;
   return withFallback(
@@ -279,6 +304,7 @@ export function researchEventDescriptionWithFallback(
     `Write a description for this New Orleans event. Search the web for accurate, current details.\n${query}`,
     true,
     cleanDescription,
+    provider,
   );
 }
 
@@ -317,6 +343,7 @@ const cleanFieldValue = (text: string): string => {
 export function researchEventFieldWithFallback(
   field: string,
   query: string,
+  provider?: FqdProvider,
 ): Promise<{ data: string; provider: FqdProvider; raw: string }> {
   const instruction = FIELD_INSTRUCTIONS[field] ?? `the event's ${field}`;
   const system = `You are a New Orleans event researcher. Search the web for the given event and determine ${instruction}. Respond with ONLY that value — no label, no preamble, no markdown, no surrounding quotes. If you genuinely cannot determine it, respond with exactly: NONE`;
@@ -325,6 +352,7 @@ export function researchEventFieldWithFallback(
     `Find ${instruction} for this New Orleans event. Search the web for accurate, current details.\n${query}`,
     true,
     cleanFieldValue,
+    provider,
   );
 }
 
@@ -332,6 +360,7 @@ export function researchEventFieldWithFallback(
 // news, socials). Returns a list of URLs — direct image URLs or pages to scrape.
 export function researchEventImageSourcesWithFallback(
   query: string,
+  provider?: FqdProvider,
 ): Promise<{ data: string[]; provider: FqdProvider; raw: string }> {
   const system = `You are an event image researcher. Given event details, search the web and return ONLY a JSON array (no markdown, no preamble) of up to 15 URLs most likely to contain photos of THIS specific event. Prefer the official event page, ticketing pages, reputable news articles, and the event's own social posts. Include as many distinct, relevant image sources as you can find. Include direct image URLs (ending in .jpg/.jpeg/.png/.webp) when you find them; otherwise include the page URL. Return only the JSON array of URL strings.`;
   return withFallback(
@@ -339,6 +368,7 @@ export function researchEventImageSourcesWithFallback(
     `Find image sources for this New Orleans event:\n${query}`,
     true,
     validateUrlList,
+    provider,
   );
 }
 
@@ -397,6 +427,7 @@ export interface DiscoverResult {
 export async function discoverEventsWithFallback(
   existing: { title: string; startDate: string }[],
   today: string,
+  provider?: FqdProvider,
 ): Promise<DiscoverResult> {
   const list = existing.length
     ? existing
@@ -411,13 +442,14 @@ Events already in our system (exclude these and any close variant of them):
 ${list}
 
 Return the JSON array of new events.`;
-  const { data, provider, raw } = await withFallback(
+  const { data, provider: used, raw } = await withFallback(
     FQD_DISCOVER_SYSTEM_PROMPT,
     prompt,
     true,
     validateDiscovered,
+    provider,
   );
-  return { events: data, provider, raw };
+  return { events: data, provider: used, raw };
 }
 
 // ---- Bulk parse ----------------------------------------------------------

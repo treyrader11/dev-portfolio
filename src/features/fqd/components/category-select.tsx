@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useNotificationsContext } from "@/components/providers/NotificationsProvider";
 import { TagsInput } from "./tags-input";
+import { useFqdProvider } from "../hooks/use-fqd-provider";
 import {
   FQD_CATEGORIES,
   FQD_CATEGORY_NAMES,
@@ -53,6 +54,7 @@ export function CategorySelect({
   title,
 }: Props) {
   const { addNotification } = useNotificationsContext();
+  const provider = useFqdProvider((s) => s.provider);
   const [genCat, setGenCat] = useState(false);
   const [genSub, setGenSub] = useState(false);
 
@@ -85,10 +87,11 @@ export function CategorySelect({
       const res = await fetch("/api/fqd/generate-classification", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ field, description, title, category }),
+        body: JSON.stringify({ field, description, title, category, provider }),
       });
-      const data = await res.json();
-      if (res.ok && Array.isArray(data.values) && data.values.length) {
+      const data = await res.json().catch(() => null);
+      if (res.ok && Array.isArray(data?.values) && data.values.length) {
+        // Green — generated labels.
         if (field === "category") {
           onCategoryChange(joinTags(mergeUnique(categories, data.values)));
         } else {
@@ -98,9 +101,22 @@ export function CategorySelect({
           text: `Added ${data.values.length} ${field}${data.values.length === 1 ? "" : "s"}`,
           variant: "success",
         });
-      } else {
+      } else if (res.ok) {
+        // Amber — no result.
         addNotification({
-          text: data.error ?? `Couldn't generate a ${field}`,
+          text: `No ${field} could be generated — add more description detail`,
+          variant: "warning",
+        });
+      } else if (res.status === 429 || data?.code === "quota") {
+        // Amber — usage / credits limit reached.
+        addNotification({
+          text: `AI usage limit reached — ${data?.error ?? "try another model"}`,
+          variant: "warning",
+        });
+      } else {
+        // Red — genuine error, exact reason.
+        addNotification({
+          text: data?.error ?? `Couldn't generate a ${field}`,
           variant: "error",
         });
       }

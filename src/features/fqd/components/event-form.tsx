@@ -11,6 +11,7 @@ import { useNotificationsContext } from "@/components/providers/NotificationsPro
 import { CategorySelect } from "./category-select";
 import { ImageManager } from "./image-manager";
 import { AiResearchPanel } from "./ai-research-panel";
+import { useFqdProvider } from "../hooks/use-fqd-provider";
 import type { ResearchResult } from "../hooks/use-event-research";
 import {
   FQD_STATUSES,
@@ -22,7 +23,6 @@ interface Props {
   values: FqdEventFormValues;
   onChange: (values: FqdEventFormValues) => void;
   onApplyResearch: (result: ResearchResult) => void;
-  isNew: boolean;
   imagesLoading?: boolean;
 }
 
@@ -75,13 +75,13 @@ export function EventForm({
   values,
   onChange,
   onApplyResearch,
-  isNew,
   imagesLoading = false,
 }: Props) {
   const set = (patch: Partial<FqdEventFormValues>) =>
     onChange({ ...values, ...patch });
 
   const { addNotification } = useNotificationsContext();
+  const provider = useFqdProvider((s) => s.provider);
   // Which single field is currently being web-searched (null = none).
   const [genField, setGenField] = useState<AiField | null>(null);
 
@@ -112,25 +112,35 @@ export function EventForm({
           category: values.category,
           subcategory: values.subcategory,
           website: values.website,
+          provider,
         }),
       });
-      const data = await res.json();
+      const data = await res.json().catch(() => null);
       if (res.ok) {
-        if (data.value) {
+        if (data?.value) {
+          // Green — found a value.
           set({ [field]: data.value } as Partial<FqdEventFormValues>);
           addNotification({
             text: `${AI_FIELD_LABELS[field]} filled from the web`,
             variant: "success",
           });
         } else {
+          // Amber — no result.
           addNotification({
-            text: `Couldn't find ${AI_FIELD_LABELS[field].toLowerCase()} — try adding more details or enter it manually`,
-            variant: "success",
+            text: `No result for ${AI_FIELD_LABELS[field].toLowerCase()} — add more details or enter it manually`,
+            variant: "warning",
           });
         }
-      } else {
+      } else if (res.status === 429 || data?.code === "quota") {
+        // Amber — usage / credits limit reached.
         addNotification({
-          text: data.error ?? "Search failed",
+          text: `AI usage limit reached — ${data?.error ?? "try another model"}`,
+          variant: "warning",
+        });
+      } else {
+        // Red — genuine error, exact reason.
+        addNotification({
+          text: data?.error ?? "Search failed",
           variant: "error",
         });
       }
@@ -168,7 +178,7 @@ export function EventForm({
   return (
     <div className="space-y-4">
       {/* AI research + auto-fill — open by default when creating. */}
-      <AiResearchPanel onApply={onApplyResearch} defaultOpen={isNew} />
+      <AiResearchPanel onApply={onApplyResearch} defaultOpen />
 
       <AdminFocusScope className="space-y-4 rounded-lg border border-dark-600 bg-dark-400 p-4 sm:p-6">
         <SectionHeading>Core info</SectionHeading>

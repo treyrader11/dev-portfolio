@@ -3,7 +3,9 @@ import { requireAdmin } from "@/features/admin/lib/admin-auth";
 import {
   generateClassificationsWithFallback,
   FqdAllProvidersError,
+  isQuotaError,
 } from "@/features/fqd/lib/fqd-research";
+import { parseFqdProvider } from "@/features/fqd/types/fqd-types";
 
 export const config = { maxDuration: 30 };
 
@@ -19,11 +21,18 @@ export default async function handler(
     return res.status(405).json({ error: "Method not allowed" });
   }
 
-  const { field, description, title, category } = req.body as {
+  const {
+    field,
+    description,
+    title,
+    category,
+    provider: sel,
+  } = req.body as {
     field?: "category" | "subcategory";
     description?: string;
     title?: string;
     category?: string;
+    provider?: string;
   };
   if (field !== "category" && field !== "subcategory") {
     return res.status(400).json({ error: "Invalid field" });
@@ -38,14 +47,21 @@ export default async function handler(
     const { values, provider } = await generateClassificationsWithFallback(
       field,
       { description, title, category },
+      parseFqdProvider(sel),
     );
     return res.status(200).json({ values, provider });
   } catch (err) {
     if (err instanceof FqdAllProvidersError) {
-      return res
-        .status(502)
-        .json({ error: "AI providers unavailable", attempts: err.attempts });
+      const quota = isQuotaError(err.attempts);
+      return res.status(quota ? 429 : 502).json({
+        code: quota ? "quota" : "failed",
+        error: err.attempts.join(" · ") || `Couldn't generate a ${field}`,
+        attempts: err.attempts,
+      });
     }
-    return res.status(500).json({ error: `Couldn't generate a ${field}` });
+    return res.status(500).json({
+      code: "failed",
+      error: err instanceof Error ? err.message : `Couldn't generate a ${field}`,
+    });
   }
 }

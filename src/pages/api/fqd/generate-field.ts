@@ -4,7 +4,9 @@ import {
   researchEventFieldWithFallback,
   researchEventDescriptionWithFallback,
   FqdAllProvidersError,
+  isQuotaError,
 } from "@/features/fqd/lib/fqd-research";
+import { parseFqdProvider } from "@/features/fqd/types/fqd-types";
 
 export const config = { maxDuration: 60 };
 
@@ -34,6 +36,7 @@ interface Body {
   category?: string;
   subcategory?: string;
   website?: string;
+  provider?: string;
 }
 
 function buildQuery(b: Body): string {
@@ -74,11 +77,12 @@ export default async function handler(
   }
 
   const query = buildQuery(body);
+  const only = parseFqdProvider(body.provider);
   try {
     const raw =
       field === "description"
-        ? (await researchEventDescriptionWithFallback(query)).data
-        : (await researchEventFieldWithFallback(field, query)).data;
+        ? (await researchEventDescriptionWithFallback(query, only)).data
+        : (await researchEventFieldWithFallback(field, query, only)).data;
 
     const value = raw.trim();
     if (/^none$/i.test(value)) {
@@ -93,10 +97,16 @@ export default async function handler(
     return res.status(200).json({ value });
   } catch (err) {
     if (err instanceof FqdAllProvidersError) {
-      return res
-        .status(502)
-        .json({ error: "AI providers unavailable", attempts: err.attempts });
+      const quota = isQuotaError(err.attempts);
+      return res.status(quota ? 429 : 502).json({
+        code: quota ? "quota" : "failed",
+        error: err.attempts.join(" · ") || `Couldn't search for ${field}`,
+        attempts: err.attempts,
+      });
     }
-    return res.status(500).json({ error: `Couldn't search for ${field}` });
+    return res.status(500).json({
+      code: "failed",
+      error: err instanceof Error ? err.message : `Couldn't search for ${field}`,
+    });
   }
 }

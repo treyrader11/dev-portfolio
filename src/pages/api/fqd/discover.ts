@@ -5,8 +5,10 @@ import {
   discoverEventsWithFallback,
   PROVIDER_META,
   FqdAllProvidersError,
+  isQuotaError,
 } from "@/features/fqd/lib/fqd-research";
 import { fuzzyTitleKey } from "@/features/fqd/lib/duplicates";
+import { parseFqdProvider } from "@/features/fqd/types/fqd-types";
 
 // Web search can take a while (multiple tool calls) — give it room.
 export const config = { maxDuration: 60 };
@@ -36,10 +38,13 @@ export default async function handler(
     "0",
   )}-${String(now.getDate()).padStart(2, "0")}`;
 
+  const { provider: sel } = req.body as { provider?: string };
+
   try {
     const { events, provider } = await discoverEventsWithFallback(
       existing,
       today,
+      parseFqdProvider(sel),
     );
 
     // Deterministic safety nets on top of the model's own filtering:
@@ -66,17 +71,11 @@ export default async function handler(
   } catch (err) {
     if (err instanceof FqdAllProvidersError) {
       // Distinguish "hit the free-tier / rate limit" from a genuine failure so
-      // the UI can show the right message.
-      const quota = err.attempts.some((a) =>
-        /(429|rate.?limit|quota|exceeded|insufficient_quota|billing|too many requests|overloaded)/i.test(
-          a,
-        ),
-      );
+      // the UI can show the right message, and surface the exact reason.
+      const quota = isQuotaError(err.attempts);
       return res.status(quota ? 429 : 503).json({
         code: quota ? "quota" : "failed",
-        error: quota
-          ? "AI provider quota reached"
-          : "All AI providers failed to discover events.",
+        error: err.attempts.join(" · ") || "Discovery failed",
         attempts: err.attempts,
       });
     }

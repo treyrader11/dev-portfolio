@@ -3,7 +3,7 @@ import type { Dispatch, SetStateAction } from "react";
 export interface Notification {
   id: string;
   text?: string;
-  variant?: "success" | "error";
+  variant?: "success" | "error" | "warning";
 }
 
 export interface UseNotificationsReturn {

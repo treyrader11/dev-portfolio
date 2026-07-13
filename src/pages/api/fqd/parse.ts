@@ -4,7 +4,9 @@ import {
   parseEventWithFallback,
   PROVIDER_META,
   FqdAllProvidersError,
+  isQuotaError,
 } from "@/features/fqd/lib/fqd-research";
+import { parseFqdProvider } from "@/features/fqd/types/fqd-types";
 
 export const config = {
   api: { bodyParser: { sizeLimit: "1mb" } },
@@ -20,13 +22,19 @@ export default async function handler(
     return res.status(405).json({ error: "Method not allowed" });
   }
 
-  const { text } = req.body as { text?: string };
+  const { text, provider: sel } = req.body as {
+    text?: string;
+    provider?: string;
+  };
   if (!text?.trim()) {
     return res.status(400).json({ error: "No text provided to parse" });
   }
 
   try {
-    const { data, provider, raw } = await parseEventWithFallback(text.trim());
+    const { data, provider, raw } = await parseEventWithFallback(
+      text.trim(),
+      parseFqdProvider(sel),
+    );
     const meta = PROVIDER_META[provider];
     return res.status(200).json({
       data,
@@ -38,12 +46,15 @@ export default async function handler(
     });
   } catch (err) {
     if (err instanceof FqdAllProvidersError) {
-      return res.status(503).json({
-        error: "All AI providers failed to parse this listing.",
+      const quota = isQuotaError(err.attempts);
+      return res.status(quota ? 429 : 502).json({
+        code: quota ? "quota" : "failed",
+        error: err.attempts.join(" · ") || "Parse failed",
         attempts: err.attempts,
       });
     }
-    return res.status(502).json({
+    return res.status(500).json({
+      code: "failed",
       error: err instanceof Error ? err.message : "Parse failed",
     });
   }

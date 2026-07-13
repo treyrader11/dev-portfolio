@@ -116,6 +116,21 @@ export type DiscoveredEvent = z.infer<typeof discoveredEventSchema>;
 
 export type FqdProvider = "anthropic" | "gemini" | "openai";
 
+// The selectable models, Gemini first (it's free — the default).
+export const FQD_PROVIDERS: FqdProvider[] = ["gemini", "anthropic", "openai"];
+
+// Human labels for the model picker (client-safe — no AI SDK imports).
+export const FQD_PROVIDER_LABEL: Record<FqdProvider, string> = {
+  gemini: "Gemini (Google)",
+  anthropic: "Claude (Anthropic)",
+  openai: "ChatGPT (OpenAI)",
+};
+
+// Narrow an untrusted value to a FqdProvider, or undefined.
+export function parseFqdProvider(v: unknown): FqdProvider | undefined {
+  return v === "gemini" || v === "anthropic" || v === "openai" ? v : undefined;
+}
+
 // Dot color per provider for the "researched via …" status line.
 export const FQD_PROVIDER_DOT: Record<FqdProvider, string> = {
   anthropic: "bg-amber-400",

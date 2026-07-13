@@ -8,6 +8,7 @@ import { useNotificationsContext } from "@/components/providers/NotificationsPro
 import { slugify } from "@/lib/utils";
 import { EventForm } from "./event-form";
 import { EventDiscoverPanel } from "./event-discover-panel";
+import { FqdProviderSelect } from "./fqd-provider-select";
 import { fmtEventDate } from "../lib/format";
 import { patchEventInListSnapshot } from "../lib/events-list-snapshot";
 import type { ResearchResult } from "../hooks/use-event-research";
@@ -303,7 +304,10 @@ export function EventFormPage({ event }: Props) {
         { label: isNew ? "New" : savedEvent?.title || "Edit" },
       ]}
     >
-      <div className="w-full max-w-3xl pb-24">
+      <div className="mx-auto w-full max-w-3xl pb-24">
+        {/* Pick the AI model used by every AI action on this page. */}
+        <FqdProviderSelect />
+
         {/* Create only: bulk-discover upcoming NOLA events not yet in the app. */}
         {isNew && <EventDiscoverPanel />}
 
@@ -311,7 +315,6 @@ export function EventFormPage({ event }: Props) {
           values={form}
           onChange={setForm}
           onApplyResearch={applyResearch}
-          isNew={isNew}
           imagesLoading={fetchingImages}
         />
 

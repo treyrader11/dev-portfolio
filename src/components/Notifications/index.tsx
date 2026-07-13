@@ -37,6 +37,7 @@ export function Notification({
   removeNotif,
 }: NotificationProps) {
   const isError = variant === "error";
+  const isWarning = variant === "warning";
 
   useEffect(() => {
     // Error toasts stay until manually dismissed via the X.
@@ -47,7 +48,7 @@ export function Notification({
 
     return () => clearTimeout(timeoutRef);
   }, [id, removeNotif, isError]);
-  const Icon = isError ? FiAlertCircle : FiCheckCircle;
+  const Icon = isError || isWarning ? FiAlertCircle : FiCheckCircle;
 
   return (
     <motion.div
@@ -71,7 +72,7 @@ export function Notification({
         "z-50",
         "bottom-4",
         "right-4",
-        isError ? "bg-red-500" : "bg-emerald-500"
+        isError ? "bg-red-500" : isWarning ? "bg-amber-500" : "bg-emerald-500"
       )}
     >
       <Icon
@@ -84,7 +85,7 @@ export function Notification({
           "rounded-full",
           "bg-white",
           "shadow",
-          isError ? "text-red-500" : "text-emerald-500"
+          isError ? "text-red-500" : isWarning ? "text-amber-500" : "text-emerald-500"
         )}
       />
       <span>{text}</span>
