@@ -9,7 +9,10 @@ import {
 } from "react-icons/ri";
 import { cn } from "@/lib/utils";
 import { FQD_PROVIDER_DOT } from "../types/fqd-types";
-import { useEventResearch, type ResearchResult } from "../hooks/use-event-research";
+import {
+  useEventResearch,
+  type ResearchResult,
+} from "../hooks/use-event-research";
 
 interface Props {
   onApply: (result: ResearchResult) => void;
@@ -109,8 +112,16 @@ export function AiResearchPanel({ onApply, defaultOpen = false }: Props) {
               <div className="flex gap-1 rounded-lg bg-dark-600 p-1">
                 {(
                   [
-                    { id: "search", label: "Search by name", icon: RiSearchLine },
-                    { id: "parse", label: "Paste / drop listing", icon: RiFileTextLine },
+                    {
+                      id: "search",
+                      label: "Search by name",
+                      icon: RiSearchLine,
+                    },
+                    {
+                      id: "parse",
+                      label: "Paste / drop listing",
+                      icon: RiFileTextLine,
+                    },
                   ] as const
                 ).map((t) => (
                   <button

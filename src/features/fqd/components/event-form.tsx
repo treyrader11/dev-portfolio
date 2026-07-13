@@ -145,7 +145,10 @@ export function EventForm({
         });
       }
     } catch {
-      addNotification({ text: "Search failed — request error", variant: "error" });
+      addNotification({
+        text: "Search failed — request error",
+        variant: "error",
+      });
     } finally {
       setGenField(null);
     }
@@ -178,7 +181,7 @@ export function EventForm({
   return (
     <div className="space-y-4">
       {/* AI research + auto-fill — open by default when creating. */}
-      <AiResearchPanel onApply={onApplyResearch} defaultOpen />
+      <AiResearchPanel onApply={onApplyResearch} />
 
       <AdminFocusScope className="space-y-4 rounded-lg border border-dark-600 bg-dark-400 p-4 sm:p-6">
         <SectionHeading>Core info</SectionHeading>

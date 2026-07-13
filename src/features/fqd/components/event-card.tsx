@@ -1,28 +1,142 @@
 "use client";
 
-import { useState } from "react";
+import * as React from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { AnimatePresence, motion } from "framer-motion";
 import {
-  RiDeleteBinLine,
-  RiPencilLine,
-  RiImageLine,
-  RiMapPin2Line,
   RiCalendarLine,
-  RiArrowDownSLine,
-  RiCheckLine,
-  RiCloseLine,
-  RiCheckboxCircleFill,
-  RiCheckboxBlankCircleLine,
+  RiMapPin2Line,
+  RiPriceTag3Line,
+  RiGroupLine,
+  RiTicket2Line,
+  RiGlobalLine,
+  RiExternalLinkLine,
+  RiImageLine,
+  RiPencilLine,
+  RiDeleteBinLine,
 } from "react-icons/ri";
-import { cn, hasText, resolveImageSrc } from "@/lib/utils";
-import { eventDateRange } from "../lib/format";
-import {
-  FQD_STATUS_BADGE,
-  type FqdEventListItem,
-  type FqdStatus,
-} from "../types/fqd-types";
+import { cn, resolveImageSrc } from "@/lib/utils";
+import { FqdAddIcon } from "@/components/icons/FqdAddIcon";
+import { FqdRemoveIcon } from "@/components/icons/FqdRemoveIcon";
+import { EventStatusChips } from "./event-status-chips";
+import { type FqdEventListItem } from "../types/fqd-types";
+
+type EventImage = { id: string; url: string; alt?: string | null };
+
+// ─── Helpers ──────────────────────────────────────────────────────────────────
+
+// Take the calendar date out of an ISO string and treat it as local midnight so
+// the displayed day never shifts by a timezone.
+function parseDate(value?: string | null): Date | null {
+  if (!value) return null;
+  const m = value.match(/^\d{4}-\d{2}-\d{2}/);
+  const parsed = new Date(m ? `${m[0]}T00:00:00` : value);
+  return isNaN(parsed.getTime()) ? null : parsed;
+}
+
+// "Aug 14, 2026" · "Aug 14–16, 2026" · "Aug 28 – Sep 2, 2026" ·
+// "Dec 30, 2026 – Jan 2, 2027"
+function formatEventDateRange(start: string, end?: string | null): string {
+  const s = parseDate(start);
+  if (!s) return "";
+  const e = parseDate(end);
+
+  const md: Intl.DateTimeFormatOptions = { month: "short", day: "numeric" };
+  const mdy: Intl.DateTimeFormatOptions = { ...md, year: "numeric" };
+
+  if (!e || s.toDateString() === e.toDateString()) {
+    return s.toLocaleDateString("en-US", mdy);
+  }
+  const sameYear = s.getFullYear() === e.getFullYear();
+  const sameMonth = sameYear && s.getMonth() === e.getMonth();
+
+  if (sameMonth) {
+    return `${s.toLocaleDateString("en-US", md)}–${e.getDate()}, ${e.getFullYear()}`;
+  }
+  if (sameYear) {
+    return `${s.toLocaleDateString("en-US", md)} – ${e.toLocaleDateString("en-US", md)}, ${e.getFullYear()}`;
+  }
+  return `${s.toLocaleDateString("en-US", mdy)} – ${e.toLocaleDateString("en-US", mdy)}`;
+}
+
+// ─── Sub-components ────────────────────────────────────────────────────────────
+
+// Cross-dissolve interval between poster images, in milliseconds.
+const DISSOLVE_MS = 2000;
+
+function EventPoster({
+  images,
+  title,
+  className,
+}: {
+  images: EventImage[];
+  title: string;
+  className?: string;
+}) {
+  const [index, setIndex] = React.useState(0);
+  const [failed, setFailed] = React.useState<Set<string>>(() => new Set());
+
+  const slides = images.filter((img) => !!img?.url);
+
+  // Advance to the next image on a fixed interval; the cross-fade itself is
+  // handled by the CSS opacity transition below.
+  React.useEffect(() => {
+    if (slides.length <= 1) return;
+    const id = setInterval(() => {
+      setIndex((i) => (i + 1) % slides.length);
+    }, DISSOLVE_MS);
+    return () => clearInterval(id);
+  }, [slides.length]);
+
+  return (
+    <div
+      className={cn(
+        "absolute inset-0 transition-transform duration-500 group-hover:scale-105",
+        className,
+      )}
+    >
+      {/* Fallback base — visible when there are no images or the active one fails. */}
+      <div className="absolute inset-0 flex items-center justify-center bg-neutral-800">
+        <RiImageLine className="size-12 text-neutral-500 opacity-70" />
+      </div>
+
+      {slides.map((img, i) => (
+        <Image
+          key={img.id ?? i}
+          src={resolveImageSrc(img.url)}
+          alt={img.alt ?? title}
+          fill
+          sizes="(max-width: 768px) 100vw, 360px"
+          onError={() => setFailed((prev) => new Set(prev).add(img.url))}
+          style={{ transitionDuration: `${DISSOLVE_MS}ms` }}
+          className={cn(
+            "object-cover transition-opacity ease-in-out",
+            i === index && !failed.has(img.url) ? "opacity-100" : "opacity-0",
+          )}
+        />
+      ))}
+    </div>
+  );
+}
+
+function MetaRow({
+  icon,
+  children,
+}: {
+  icon: React.ReactNode;
+  children: React.ReactNode;
+}) {
+  if (children === null || children === undefined || children === "")
+    return null;
+  return (
+    <div className="flex items-center gap-2 text-sm text-slate-300">
+      <span className="shrink-0 text-slate-500">{icon}</span>
+      <span className="min-w-0 truncate">{children}</span>
+    </div>
+  );
+}
+
+// ─── Main component ────────────────────────────────────────────────────────────
 
 interface Props {
   event: FqdEventListItem;
@@ -39,310 +153,227 @@ export function EventCard({
   onToggleSelect,
   onToggleAdded,
 }: Props) {
-  const [expanded, setExpanded] = useState(false);
-
   const detailHref = `/admin/french-quarter-direct/event/${event.slug}`;
   const editHref = `/admin/french-quarter-direct/create-event/${event.id}`;
-  const thumbnail = event.images[0]?.url;
-  const status = event.status as FqdStatus;
-  const dateLabel = eventDateRange(event.startDate, event.endDate);
-
-  // Field-completeness checklist shown in the accordion.
-  const fields: { label: string; ok: boolean }[] = [
-    { label: "Title", ok: hasText(event.title) },
-    { label: "Slug", ok: hasText(event.slug) },
-    { label: "Start date", ok: hasText(event.startDate) },
-    { label: "End date", ok: hasText(event.endDate) },
-    { label: "Start time", ok: hasText(event.startTime) },
-    { label: "Location", ok: hasText(event.locationName) },
-    { label: "Address", ok: hasText(event.address) },
-    { label: "Description", ok: hasText(event.description) },
-    { label: "Category", ok: hasText(event.category) },
-    { label: "Subcategory", ok: hasText(event.subcategory) },
-    { label: "Admission", ok: hasText(event.admission) },
-    { label: "Ticket URL", ok: hasText(event.ticketUrl) },
-    { label: "Organizer", ok: hasText(event.organizer) },
-    { label: "Expected attendance", ok: hasText(event.expectedAttendance) },
-    { label: "Age requirement", ok: hasText(event.ageRequirement) },
-    { label: "Website", ok: hasText(event.website) },
-    { label: "Notes", ok: hasText(event.notes) },
-    { label: "Images", ok: event.images.length > 0 },
-  ];
-  const filled = fields.filter((f) => f.ok).length;
-
-  const metaRow = (
-    <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-light-400">
-      <span className="inline-flex items-center gap-1">
-        <RiCalendarLine className="size-3.5" />
-        {dateLabel}
-        {event.startTime ? ` · ${event.startTime}` : ""}
-      </span>
-      {event.locationName && (
-        <span className="inline-flex items-center gap-1">
-          <RiMapPin2Line className="size-3.5" />
-          {event.locationName}
-        </span>
-      )}
-      {event.category && (
-        <span>
-          {event.category}
-          {event.subcategory ? ` / ${event.subcategory}` : ""}
-        </span>
-      )}
-      <span className="inline-flex items-center gap-1 text-secondary">
-        <RiImageLine className="size-3.5" />
-        {event.images.length} image{event.images.length === 1 ? "" : "s"}
-      </span>
-    </div>
-  );
-
-  const chevron = (
-    <button
-      type="button"
-      aria-label={expanded ? "Hide fields" : "Show fields"}
-      aria-expanded={expanded}
-      onClick={() => setExpanded((e) => !e)}
-      className="text-light-400 transition-colors hover:text-white"
-    >
-      <motion.span
-        animate={{ rotate: expanded ? 180 : 0 }}
-        transition={{ duration: 0.2 }}
-        className="inline-flex"
-      >
-        <RiArrowDownSLine className="size-5" />
-      </motion.span>
-    </button>
-  );
-
-  const addedToggle = onToggleAdded && (
-    <button
-      type="button"
-      aria-label={
-        event.addedToJoomla
-          ? "Mark as not added to French Quarter Direct"
-          : "Mark as added to French Quarter Direct"
-      }
-      title={
-        event.addedToJoomla
-          ? "Added to French Quarter Direct — click to unmark"
-          : "Mark as added to French Quarter Direct"
-      }
-      onClick={() => onToggleAdded(event)}
-      className={cn(
-        "transition-colors",
-        event.addedToJoomla
-          ? "text-lime-400 hover:text-lime-300"
-          : "text-light-400 hover:text-white",
-      )}
-    >
-      {event.addedToJoomla ? (
-        <RiCheckboxCircleFill className="size-5" />
-      ) : (
-        <RiCheckboxBlankCircleLine className="size-5" />
-      )}
-    </button>
-  );
-
-  const editLink = (
-    <Link
-      href={editHref}
-      aria-label="Edit event"
-      className="text-light-400 transition-colors hover:text-white"
-    >
-      <RiPencilLine className="size-5" />
-    </Link>
-  );
-
-  const deleteButton = (
-    <button
-      type="button"
-      aria-label="Delete event"
-      onClick={() => onDelete(event)}
-      className="text-error transition-colors hover:text-error-600"
-    >
-      <RiDeleteBinLine className="size-5" />
-    </button>
-  );
+  const dateLabel = formatEventDateRange(event.startDate, event.endDate);
+  const location = [event.locationName, event.address]
+    .filter(Boolean)
+    .join(" · ");
+  const categoryLabel = event.category
+    ? event.subcategory
+      ? `${event.category} · ${event.subcategory}`
+      : event.category
+    : null;
 
   return (
     <div
       className={cn(
-        "overflow-hidden rounded-2xl border bg-dark-400 transition-colors sm:rounded-lg",
+        "group flex flex-col overflow-hidden rounded-3xl border bg-neutral-900 shadow-lg transition-colors",
+        "w-full",
         selected
           ? "border-secondary/60"
           : event.addedToJoomla
             ? "border-lime-400/40"
-            : "border-dark-600",
+            : "border-neutral-800",
       )}
     >
-      {/* ── Mobile: image on top, content below ── */}
-      <div className="relative sm:hidden">
-        {/* Image */}
-        <Link href={detailHref} className="block">
-          <div className="relative h-48 w-full overflow-hidden bg-dark-600">
-            {thumbnail ? (
-              <Image
-                src={resolveImageSrc(thumbnail)}
-                alt=""
-                fill
-                sizes="100vw"
-                className="object-cover"
-              />
-            ) : (
-              <span className="flex h-full items-center justify-center text-light-400">
-                <RiImageLine className="size-12 opacity-60" />
+      {/* ── Poster (full-bleed, above the body) ── */}
+      <Link href={detailHref} className={cn("w-full")}>
+        <div className="relative h-[190px] w-full overflow-hidden">
+          <EventPoster
+            images={event.images}
+            title={event.title}
+            className={cn("")}
+          />
+
+          {/* Gradient scrim for legibility */}
+          <div
+            className="pointer-events-none absolute inset-x-0 bottom-0 h-2/3"
+            style={{
+              background:
+                "linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.55) 100%)",
+            }}
+          />
+
+          {/* Provenance + status badges (AI Scraped / Researched / …) */}
+          <div className="absolute left-3 top-3 flex flex-wrap items-center gap-1.5">
+            <EventStatusChips event={event} chipClassName="backdrop-blur-sm" />
+          </div>
+
+          {/* Image count + added badge */}
+          <div className="absolute right-3 top-3 flex items-center gap-2">
+            {event.images.length > 1 && (
+              <span className="inline-flex items-center gap-1 rounded-full bg-black/50 px-2 py-1 text-xs font-medium text-white backdrop-blur-sm">
+                <RiImageLine className="size-3" />
+                {event.images.length}
+              </span>
+            )}
+            {event.addedToJoomla && (
+              <span className="rounded-full bg-lime-400 px-2 py-0.5 text-xs font-bold uppercase tracking-wide text-black shadow-lg">
+                Added
               </span>
             )}
           </div>
-        </Link>
 
-        {/* Selection checkbox — over the image, outside the link. */}
-        {onToggleSelect && (
-          <button
-            type="button"
-            onClick={() => onToggleSelect(event.id)}
-            aria-label={`Select ${event.title}`}
-            className="absolute left-3 top-3 rounded-full bg-black/50 p-1 backdrop-blur-sm"
-          >
-            {selected ? (
-              <RiCheckboxCircleFill className="size-5 text-secondary" />
-            ) : (
-              <RiCheckboxBlankCircleLine className="size-5 text-white" />
-            )}
-          </button>
-        )}
-
-        {/* Added badge — bright, over the image, top-right. */}
-        {event.addedToJoomla && (
-          <span className="absolute right-3 top-3 rounded-full bg-lime-400 px-2.5 py-1 text-xs font-bold uppercase tracking-wide text-black shadow-lg">
-            Added
-          </span>
-        )}
-
-        {/* Content */}
-        <div className="p-4">
-          <div className="flex items-start justify-between gap-2">
-            <Link href={detailHref} className="min-w-0">
-              <h3 className="text-lg font-semibold text-white">
-                {event.title}
-              </h3>
-            </Link>
-            <span
-              className={cn(
-                "shrink-0 rounded-full px-2 py-0.5 text-xs font-medium capitalize",
-                FQD_STATUS_BADGE[status] ?? FQD_STATUS_BADGE.draft,
-              )}
+          {/* Title on poster */}
+          <div className="absolute inset-x-0 bottom-0 p-4">
+            <h3
+              className="line-clamp-2 text-xl font-bold leading-snug text-white"
+              style={{ textShadow: "0 1px 4px rgba(0,0,0,0.4)" }}
             >
-              {status}
-            </span>
-          </div>
-
-          <div className="mt-2">{metaRow}</div>
-
-          <div className="mt-4 flex items-center justify-between border-t border-dark-600 pt-3">
-            <div className="flex items-center gap-4">
-              {addedToggle}
-              {editLink}
-              {deleteButton}
-            </div>
-            {chevron}
+              {event.title}
+            </h3>
           </div>
         </div>
-      </div>
+      </Link>
 
-      {/* ── Desktop: compact row ── */}
-      <div className="hidden items-start justify-between gap-3 p-4 sm:flex">
-        {onToggleSelect && (
-          <input
-            type="checkbox"
-            checked={!!selected}
-            onChange={() => onToggleSelect(event.id)}
-            aria-label={`Select ${event.title}`}
-            className="mt-4 size-4 shrink-0 accent-secondary"
-          />
+      {/* ── Info section ── */}
+      <div className="flex flex-1 flex-col gap-3 px-4 pb-4 pt-3">
+        {/* Meta rows */}
+        <div className="space-y-1.5">
+          <MetaRow icon={<RiCalendarLine className="size-3.5" />}>
+            {dateLabel}
+            {event.startTime ? ` · ${event.startTime}` : ""}
+          </MetaRow>
+          <MetaRow icon={<RiMapPin2Line className="size-3.5" />}>
+            {location || null}
+          </MetaRow>
+          <MetaRow icon={<RiPriceTag3Line className="size-3.5" />}>
+            {categoryLabel}
+          </MetaRow>
+          {event.expectedAttendance && (
+            <MetaRow icon={<RiGroupLine className="size-3.5" />}>
+              {event.expectedAttendance}
+            </MetaRow>
+          )}
+        </div>
+
+        {/* Description */}
+        {event.description && (
+          <p className="line-clamp-2 text-sm text-slate-400">
+            {event.description}
+          </p>
         )}
-        <Link
-          href={detailHref}
-          className="flex min-w-0 flex-1 items-center gap-3"
-        >
-          <div className="relative h-14 w-20 shrink-0 overflow-hidden rounded border border-dark-600 bg-dark-600">
-            {thumbnail ? (
-              <Image
-                src={resolveImageSrc(thumbnail)}
-                alt=""
-                fill
-                sizes="80px"
-                className="object-cover"
-              />
-            ) : (
-              <span className="flex h-full items-center justify-center text-light-400">
-                <RiImageLine className="size-5" />
-              </span>
-            )}
-          </div>
 
-          <div className="min-w-0">
-            <div className="flex items-center gap-2">
-              <h3 className="truncate font-medium text-white">{event.title}</h3>
-              <span
+        {/* Footer: admission + external links */}
+        {(event.admission || event.ticketUrl || event.website) && (
+          <div className="mt-auto flex flex-wrap items-center justify-between gap-2 border-t border-neutral-800 pt-3">
+            {event.admission ? (
+              <span className="truncate text-sm font-medium text-white">
+                {event.admission}
+              </span>
+            ) : (
+              <span />
+            )}
+            <div className="flex items-center gap-3">
+              {event.website && (
+                <a
+                  href={event.website}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Visit event website"
+                  className="text-slate-400 transition-colors hover:text-white"
+                >
+                  <RiGlobalLine className="size-4" />
+                </a>
+              )}
+              {event.ticketUrl && (
+                <a
+                  href={event.ticketUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 rounded-lg bg-white px-3 py-1.5 text-xs font-semibold text-slate-900 transition-colors hover:bg-slate-200"
+                >
+                  <RiTicket2Line className="size-3.5" />
+                  Tickets
+                  <RiExternalLinkLine className="size-3" />
+                </a>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* Admin actions */}
+        <div className="flex items-center justify-between gap-2 border-t border-neutral-800 pt-3">
+          {onToggleSelect ? (
+            <label className="inline-flex cursor-pointer items-center gap-2 text-xs text-slate-400">
+              <input
+                type="checkbox"
+                checked={!!selected}
+                onChange={() => onToggleSelect(event.id)}
+                className="size-4 accent-secondary"
+              />
+              Select
+            </label>
+          ) : (
+            <span />
+          )}
+          <div className="flex items-center gap-4">
+            {onToggleAdded && (
+              <button
+                type="button"
+                aria-label={
+                  event.addedToJoomla
+                    ? "Mark as not added to French Quarter Direct"
+                    : "Mark as added to French Quarter Direct"
+                }
+                title={
+                  event.addedToJoomla
+                    ? "Added — click to unmark"
+                    : "Mark as added to French Quarter Direct"
+                }
+                onClick={() => onToggleAdded(event)}
                 className={cn(
-                  "shrink-0 rounded-full px-2 py-0.5 text-xs font-medium capitalize",
-                  FQD_STATUS_BADGE[status] ?? FQD_STATUS_BADGE.draft,
+                  "transition-colors",
+                  event.addedToJoomla
+                    ? "text-lime-400 hover:text-lime-300"
+                    : "text-slate-400 hover:text-white",
                 )}
               >
-                {status}
-              </span>
-              {event.addedToJoomla && (
-                <span className="shrink-0 rounded-full bg-lime-400 px-2 py-0.5 text-xs font-bold uppercase tracking-wide text-black">
-                  Added
-                </span>
-              )}
-            </div>
-            <div className="mt-1">{metaRow}</div>
+                {event.addedToJoomla ? (
+                  <FqdRemoveIcon size={20} />
+                ) : (
+                  <FqdAddIcon size={20} />
+                )}
+              </button>
+            )}
+            <Link
+              href={editHref}
+              aria-label="Edit event"
+              className="text-slate-400 transition-colors hover:text-white"
+            >
+              <RiPencilLine className="size-5" />
+            </Link>
+            <button
+              type="button"
+              aria-label="Delete event"
+              onClick={() => onDelete(event)}
+              className="text-rose-400 transition-colors hover:text-rose-300"
+            >
+              <RiDeleteBinLine className="size-5" />
+            </button>
           </div>
-        </Link>
-
-        <div className="flex shrink-0 items-center gap-2">
-          {addedToggle}
-          {chevron}
-          {editLink}
-          {deleteButton}
         </div>
       </div>
+    </div>
+  );
+}
 
-      {/* ── Accordion (shared) — field completeness checklist. ── */}
-      <AnimatePresence initial={false}>
-        {expanded && (
-          <motion.div
-            key="fields"
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: "auto", opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.25, ease: "easeInOut" }}
-            className="overflow-hidden"
-          >
-            <div className="border-t border-dark-600 px-4 py-3">
-              <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-light-400">
-                Fields ({filled}/{fields.length})
-              </p>
-              <ul className="grid grid-cols-1 gap-x-6 gap-y-1.5 sm:grid-cols-2">
-                {fields.map((f) => (
-                  <li key={f.label} className="flex items-center gap-2 text-sm">
-                    {f.ok ? (
-                      <RiCheckLine className="size-4 shrink-0 text-success" />
-                    ) : (
-                      <RiCloseLine className="size-4 shrink-0 text-error" />
-                    )}
-                    <span className={f.ok ? "text-white" : "text-light-400"}>
-                      {f.label}
-                    </span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+// A loading placeholder matching the tile's shape.
+export function EventCardMobileSkeleton() {
+  return (
+    <div className="overflow-hidden rounded-3xl border border-neutral-800 bg-neutral-900">
+      <div className="h-[190px] w-full animate-pulse bg-neutral-800" />
+      <div className="space-y-3 px-4 pb-4 pt-3">
+        <div className="h-3 w-3/4 animate-pulse rounded bg-neutral-800" />
+        <div className="h-3 w-1/2 animate-pulse rounded bg-neutral-800" />
+        <div className="h-3 w-2/3 animate-pulse rounded bg-neutral-800" />
+        <div className="mt-2 flex gap-3 border-t border-neutral-800 pt-3">
+          <div className="size-5 animate-pulse rounded-full bg-neutral-800" />
+          <div className="size-5 animate-pulse rounded-full bg-neutral-800" />
+          <div className="size-5 animate-pulse rounded-full bg-neutral-800" />
+        </div>
+      </div>
     </div>
   );
 }

@@ -18,14 +18,8 @@ import { Popover } from "@/components/ui/popover";
 import { useDebounce } from "@/hooks/useDebounce";
 import { useNotificationsContext } from "@/components/providers/NotificationsProvider";
 import { cn } from "@/lib/utils";
-import {
-  EventCardMobile,
-  EventCardMobileSkeleton,
-} from "./event-card-mobile";
-import {
-  EventListItem,
-  EventListItemSkeleton,
-} from "./event-list-item";
+import { EventCard, EventCardMobileSkeleton } from "./event-card";
+import { EventListItem, EventListItemSkeleton } from "./event-list-item";
 import { EventImport } from "./event-import";
 import { EventExportAll } from "./event-export-all";
 import { EventBulkActionsBar } from "./event-bulk-actions-bar";
@@ -180,7 +174,8 @@ export function EventsListPage({ data }: Props) {
   useEffect(() => {
     const snap = readEventsListSnapshot();
     clearEventsListSnapshot();
-    if (!snap || !Array.isArray(snap.events) || snap.events.length === 0) return;
+    if (!snap || !Array.isArray(snap.events) || snap.events.length === 0)
+      return;
 
     isRestoring.current = true;
     setEvents(snap.events);
@@ -592,9 +587,7 @@ export function EventsListPage({ data }: Props) {
               {/* "New" = created today. Toggles on/off. */}
               <button
                 type="button"
-                onClick={() =>
-                  setNewOnly((v) => (v === "true" ? "" : "true"))
-                }
+                onClick={() => setNewOnly((v) => (v === "true" ? "" : "true"))}
                 aria-pressed={newOnly === "true"}
                 className={cn(
                   "shrink-0 rounded-full border px-2 py-0.5 text-xs font-medium transition-colors sm:px-3 sm:py-1 sm:text-sm",
@@ -677,7 +670,7 @@ export function EventsListPage({ data }: Props) {
         ) : (
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
             {visible.map((e) => (
-              <EventCardMobile
+              <EventCard
                 key={e.id}
                 event={e}
                 onDelete={setTarget}

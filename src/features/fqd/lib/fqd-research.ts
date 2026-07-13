@@ -207,14 +207,32 @@ async function withFallback<T>(
   const order = only ? [only] : PROVIDER_ORDER;
   const errors: string[] = [];
   for (const provider of order) {
-    try {
-      return { data: await run(provider), provider };
-    } catch (err) {
-      const message = err instanceof Error ? err.message : String(err);
-      errors.push(`${provider}: ${message}`);
-      console.warn(
-        `[fqd-research] ${provider} failed${only ? "" : ", trying next provider"}. Reason: ${message}`,
-      );
+    // Retry the SAME provider once on a transient error (5xx / overloaded /
+    // timeout) — a one-off web-search hiccup shouldn't fail the request. Not a
+    // provider switch, so it respects the "use the selected model" rule. Quota
+    // and config errors won't succeed on retry, so they fail fast.
+    for (let attempt = 1; attempt <= 2; attempt++) {
+      try {
+        return { data: await run(provider), provider };
+      } catch (err) {
+        const message = err instanceof Error ? err.message : String(err);
+        const transient =
+          !isQuotaError([message]) &&
+          /(5\d\d|overloaded|internal|temporar|timed? ?out|econnreset|fetch failed|network|unavailable|no object generated|response did not|could not parse)/i.test(
+            message,
+          );
+        if (attempt === 1 && transient) {
+          console.warn(
+            `[fqd-research] ${provider} transient error, retrying once. Reason: ${message}`,
+          );
+          continue;
+        }
+        errors.push(`${provider}: ${message}`);
+        console.warn(
+          `[fqd-research] ${provider} failed${only ? "" : ", trying next provider"}. Reason: ${message}`,
+        );
+        break;
+      }
     }
   }
   throw new FqdAllProvidersError(errors);
