@@ -1,4 +1,4 @@
-import { useState, type DragEvent } from "react";
+import { useEffect, useRef, useState, type DragEvent } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   RiSparkling2Line,
@@ -24,6 +24,13 @@ type Mode = "search" | "parse";
 //   parse  — extract fields from a dropped .txt file or pasted listing text
 export function AiResearchPanel({ onApply, defaultOpen = false }: Props) {
   const [open, setOpen] = useState(defaultOpen);
+  // Skip the collapse/expand animation on the very first render so a
+  // default-open panel always paints expanded (avoids a framer height:0
+  // hydration quirk that can leave it stuck collapsed). Toggles still animate.
+  const firstRender = useRef(true);
+  useEffect(() => {
+    firstRender.current = false;
+  }, []);
   const [mode, setMode] = useState<Mode>("search");
   const [query, setQuery] = useState("");
   const [text, setText] = useState("");
@@ -91,7 +98,7 @@ export function AiResearchPanel({ onApply, defaultOpen = false }: Props) {
       <AnimatePresence initial={false}>
         {open && (
           <motion.div
-            initial={{ height: 0, opacity: 0 }}
+            initial={firstRender.current ? false : { height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.2 }}
