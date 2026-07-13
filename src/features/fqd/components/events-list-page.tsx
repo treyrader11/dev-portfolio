@@ -233,7 +233,10 @@ export function EventsListPage({ data }: Props) {
     if (!vv || !el) return;
     const HEADER_H = 80; // AdminHeader height (h-20)
     const sync = () => {
-      el.style.top = `${HEADER_H + vv.offsetTop}px`;
+      // Only override the CSS `top-20` while the keyboard is actually open
+      // (offsetTop > 0). Otherwise clear the inline top so pure CSS sticky
+      // (known-good on desktop) takes over.
+      el.style.top = vv.offsetTop > 0 ? `${HEADER_H + vv.offsetTop}px` : "";
     };
     sync();
     vv.addEventListener("resize", sync);
@@ -453,7 +456,7 @@ export function EventsListPage({ data }: Props) {
             translucent blur so cards show through faintly while scrolling. */}
         <div
           ref={toolbarRef}
-          className="sticky top-20 z-30 border-b border-dark-600 bg-dark/85 py-3 backdrop-blur-md"
+          className="sticky top-20 z-20 border-b border-dark-600 bg-dark/85 py-3 backdrop-blur-md"
         >
           {/* Row A: search (left, fills) + filter dropdown. */}
           <div className="flex items-center gap-2">
