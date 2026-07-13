@@ -91,6 +91,13 @@ export const eventResearchSchema = z.object({
 
 export type EventResearch = z.infer<typeof eventResearchSchema>;
 
+// A saved email recipient for sharing event exports. Admin accounts are always
+// present and can't be removed.
+export interface FqdRecipient {
+  email: string;
+  isAdmin: boolean;
+}
+
 // A lightweight event surfaced by the "discover upcoming events" web search —
 // just enough to identify and dedupe it in the results list. Full details are
 // researched per-event when the admin adds them.

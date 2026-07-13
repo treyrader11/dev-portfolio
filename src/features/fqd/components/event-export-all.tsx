@@ -7,10 +7,12 @@ import {
   RiLoader4Line,
   RiCloseLine,
   RiImageLine,
+  RiMailSendLine,
 } from "react-icons/ri";
 import { useNotificationsContext } from "@/components/providers/NotificationsProvider";
 import { cn } from "@/lib/utils";
 import { fmtEventDate } from "../lib/format";
+import { EventExportEmailStep } from "./event-export-email-step";
 import type { FqdEventBrief } from "../actions/get-events-brief";
 
 // Export events to a .zip (one folder per event slug, each with the listing
@@ -23,11 +25,13 @@ export function EventExportAll() {
   const [exporting, setExporting] = useState(false);
   const [events, setEvents] = useState<FqdEventBrief[] | null>(null);
   const [selected, setSelected] = useState<Set<string>>(new Set());
+  const [view, setView] = useState<"events" | "email">("events");
 
   function close() {
     setOpen(false);
     setEvents(null);
     setSelected(new Set());
+    setView("events");
   }
 
   async function openModal() {
@@ -138,6 +142,14 @@ export function EventExportAll() {
               transition={{ type: "spring", stiffness: 300, damping: 28 }}
               className="relative z-10 flex max-h-[85vh] w-full max-w-2xl flex-col overflow-hidden rounded-xl border border-dark-600 bg-dark-500"
             >
+              {view === "email" ? (
+                <EventExportEmailStep
+                  ids={[...selected]}
+                  onBack={() => setView("events")}
+                  onClose={close}
+                />
+              ) : (
+                <>
               <div className="flex items-center justify-between border-b border-dark-600 px-5 py-4">
                 <div>
                   <h3 className="text-sm font-medium text-white">
@@ -223,13 +235,22 @@ export function EventExportAll() {
                 )}
               </div>
 
-              <div className="flex items-center justify-end gap-3 border-t border-dark-600 px-5 py-4">
+              <div className="flex flex-wrap items-center justify-end gap-3 border-t border-dark-600 px-5 py-4">
                 <button
                   type="button"
                   onClick={close}
-                  className="px-3 py-2 text-sm text-light-400 hover:text-white"
+                  className="mr-auto px-3 py-2 text-sm text-light-400 hover:text-white"
                 >
                   Cancel
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setView("email")}
+                  disabled={selected.size === 0}
+                  className="inline-flex items-center gap-1.5 rounded-lg border border-dark-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:border-secondary/60 disabled:opacity-50"
+                >
+                  <RiMailSendLine className="size-4" />
+                  Share via email
                 </button>
                 <button
                   type="button"
@@ -247,6 +268,8 @@ export function EventExportAll() {
                     : `Export ${selected.size} event${selected.size === 1 ? "" : "s"}`}
                 </button>
               </div>
+                </>
+              )}
             </motion.div>
           </motion.div>
         )}

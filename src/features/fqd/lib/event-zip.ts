@@ -44,12 +44,15 @@ export async function addEventFolder(
   zip: JSZip,
   event: FqdEventListItem,
   folderName: string,
+  includeImages = true,
 ): Promise<void> {
   const folder = zip.folder(folderName);
   if (!folder) return;
 
   const docx = await buildEventListingDocx(event);
   folder.file(`${folderName}.docx`, docx);
+
+  if (!includeImages) return;
 
   const total = event.images.length;
   const buffers = await mapPool(event.images, 4, (img) =>
@@ -68,14 +71,16 @@ export async function addEventFolder(
 // PNGs is easily 100+ MB, far too large to buffer into one response.
 export async function buildEventsZip(
   events: FqdEventListItem[],
+  opts: { includeImages?: boolean } = {},
 ): Promise<JSZip> {
+  const includeImages = opts.includeImages ?? true;
   const zip = new JSZip();
   const failures: string[] = [];
 
   await mapPool(events, 4, async (event) => {
     const folderName = event.slug || `event-${event.id.slice(0, 8)}`;
     try {
-      await addEventFolder(zip, event, folderName);
+      await addEventFolder(zip, event, folderName, includeImages);
     } catch (err) {
       const message = err instanceof Error ? err.message : String(err);
       failures.push(`${folderName} (${event.id}): ${message}`);

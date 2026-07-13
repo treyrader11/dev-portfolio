@@ -5,6 +5,7 @@ import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import type { GetServerSideProps } from "next";
 import { cn } from "@/lib/utils";
+import { FqdRecipientsCard } from "@/features/fqd/components/fqd-recipients-card";
 
 const sections = [
   {
@@ -121,6 +122,9 @@ export default function AdminDashboard({ counts }: Props) {
           </Link>
         ))}
       </div>
+
+      {/* Common email recipients for sharing event exports. */}
+      <FqdRecipientsCard />
 
       {/* Seed button */}
       {counts.experiences === 0 &&
