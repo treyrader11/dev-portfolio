@@ -3,8 +3,7 @@ import { cloudinary } from "@/lib/cloudinary";
 import { requireAdmin } from "@/features/admin/lib/admin-auth";
 import {
   researchEventImageSourcesWithFallback,
-  FqdAllProvidersError,
-  isQuotaError,
+  aiErrorResponse,
 } from "@/features/fqd/lib/fqd-research";
 import { resolveImageCandidates } from "@/features/fqd/lib/scrape-images";
 import { parseFqdProvider } from "@/features/fqd/types/fqd-types";
@@ -70,18 +69,8 @@ export default async function handler(
     sources = result.data;
     provider = result.provider;
   } catch (err) {
-    if (err instanceof FqdAllProvidersError) {
-      const quota = isQuotaError(err.attempts);
-      return res.status(quota ? 429 : 502).json({
-        code: quota ? "quota" : "failed",
-        error: err.attempts.join(" · ") || "Image search failed",
-        attempts: err.attempts,
-      });
-    }
-    return res.status(500).json({
-      code: "failed",
-      error: err instanceof Error ? err.message : "Image search failed",
-    });
+    const { status, body } = aiErrorResponse(err, "Image search failed");
+    return res.status(status).json(body);
   }
 
   // Seed with the known website too, in case the model didn't include it.

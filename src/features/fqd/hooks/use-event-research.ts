@@ -37,6 +37,11 @@ export function useEventResearch() {
               ? `AI usage limit reached — ${data.error}`
               : "AI usage limit reached for this model. Try another model.",
           );
+        } else if (res.status === 503 || data?.code === "overloaded") {
+          setNotice(
+            data?.error ??
+              "The AI model is overloaded right now (high demand). Please try again in a moment.",
+          );
         } else {
           setError(data?.error ?? "Something went wrong");
         }

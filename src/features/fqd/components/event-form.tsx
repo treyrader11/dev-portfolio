@@ -137,6 +137,14 @@ export function EventForm({
           text: `AI usage limit reached — ${data?.error ?? "try another model"}`,
           variant: "warning",
         });
+      } else if (res.status === 503 || data?.code === "overloaded") {
+        // Amber — provider overloaded (transient).
+        addNotification({
+          text:
+            data?.error ??
+            "The AI model is overloaded right now — please try again in a moment.",
+          variant: "warning",
+        });
       } else {
         // Red — genuine error, exact reason.
         addNotification({

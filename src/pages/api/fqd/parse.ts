@@ -3,8 +3,7 @@ import { requireAdmin } from "@/features/admin/lib/admin-auth";
 import {
   parseEventWithFallback,
   PROVIDER_META,
-  FqdAllProvidersError,
-  isQuotaError,
+  aiErrorResponse,
 } from "@/features/fqd/lib/fqd-research";
 import { parseFqdProvider } from "@/features/fqd/types/fqd-types";
 
@@ -45,17 +44,7 @@ export default async function handler(
       raw,
     });
   } catch (err) {
-    if (err instanceof FqdAllProvidersError) {
-      const quota = isQuotaError(err.attempts);
-      return res.status(quota ? 429 : 502).json({
-        code: quota ? "quota" : "failed",
-        error: err.attempts.join(" · ") || "Parse failed",
-        attempts: err.attempts,
-      });
-    }
-    return res.status(500).json({
-      code: "failed",
-      error: err instanceof Error ? err.message : "Parse failed",
-    });
+    const { status, body } = aiErrorResponse(err, "Parse failed");
+    return res.status(status).json(body);
   }
 }

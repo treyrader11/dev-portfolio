@@ -4,8 +4,7 @@ import { prisma } from "@/lib/prisma";
 import {
   discoverEventsWithFallback,
   PROVIDER_META,
-  FqdAllProvidersError,
-  isQuotaError,
+  aiErrorResponse,
 } from "@/features/fqd/lib/fqd-research";
 import { fuzzyTitleKey } from "@/features/fqd/lib/duplicates";
 import { parseFqdProvider } from "@/features/fqd/types/fqd-types";
@@ -70,19 +69,7 @@ export default async function handler(
       searchEngine: meta.searchEngine,
     });
   } catch (err) {
-    if (err instanceof FqdAllProvidersError) {
-      // Distinguish "hit the free-tier / rate limit" from a genuine failure so
-      // the UI can show the right message, and surface the exact reason.
-      const quota = isQuotaError(err.attempts);
-      return res.status(quota ? 429 : 503).json({
-        code: quota ? "quota" : "failed",
-        error: err.attempts.join(" · ") || "Discovery failed",
-        attempts: err.attempts,
-      });
-    }
-    return res.status(502).json({
-      code: "failed",
-      error: err instanceof Error ? err.message : "Discovery failed",
-    });
+    const { status, body } = aiErrorResponse(err, "Discovery failed");
+    return res.status(status).json(body);
   }
 }

@@ -79,10 +79,82 @@ export class FqdAllProvidersError extends Error {
 // (vs. a genuine error), so callers can show the right (amber) message.
 export function isQuotaError(attempts: string[]): boolean {
   return attempts.some((a) =>
-    /(429|rate.?limit|quota|exceeded|insufficient_quota|billing|too many requests|overloaded|resource[_ ]?exhausted|credit)/i.test(
+    /(429|rate.?limit|quota|exceeded|insufficient_quota|billing|too many requests|resource[_ ]?exhausted|credit)/i.test(
       a,
     ),
   );
+}
+
+// True when the provider is temporarily overloaded/busy (503/529, "high
+// demand", "try again later") — transient and retryable, distinct from quota.
+export function isOverloadError(attempts: string[]): boolean {
+  return attempts.some((a) =>
+    /(503|529|unavailable|overloaded|high demand|experiencing high|temporarily|try again later|please try again)/i.test(
+      a,
+    ),
+  );
+}
+
+// A specific, provider-named message for an overload failure.
+export function overloadMessage(attempts: string[]): string {
+  const hit =
+    attempts.find((a) =>
+      /(503|529|unavailable|overloaded|high demand|experiencing high|temporarily|try again)/i.test(
+        a,
+      ),
+    ) ?? attempts[0] ?? "";
+  const key = hit.split(":")[0]?.trim();
+  const name =
+    key === "gemini"
+      ? "Gemini"
+      : key === "anthropic"
+        ? "Claude"
+        : key === "openai"
+          ? "ChatGPT"
+          : "The AI model";
+  return `${name} is overloaded right now (high demand). Please try again in a moment.`;
+}
+
+// Map an AI failure to an HTTP status + JSON body: quota (429), overloaded
+// (503), or failed (502/500). `code` lets the UI colour it (amber vs red).
+export function aiErrorResponse(
+  err: unknown,
+  fallback: string,
+): { status: number; body: { code: string; error: string; attempts?: string[] } } {
+  if (err instanceof FqdAllProvidersError) {
+    if (isQuotaError(err.attempts)) {
+      return {
+        status: 429,
+        body: {
+          code: "quota",
+          error: err.attempts.join(" · ") || fallback,
+          attempts: err.attempts,
+        },
+      };
+    }
+    if (isOverloadError(err.attempts)) {
+      return {
+        status: 503,
+        body: {
+          code: "overloaded",
+          error: overloadMessage(err.attempts),
+          attempts: err.attempts,
+        },
+      };
+    }
+    return {
+      status: 502,
+      body: {
+        code: "failed",
+        error: err.attempts.join(" · ") || fallback,
+        attempts: err.attempts,
+      },
+    };
+  }
+  return {
+    status: 500,
+    body: { code: "failed", error: err instanceof Error ? err.message : fallback },
+  };
 }
 
 function requireKey(name: string): string {

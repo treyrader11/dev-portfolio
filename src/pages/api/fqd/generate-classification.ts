@@ -2,8 +2,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { requireAdmin } from "@/features/admin/lib/admin-auth";
 import {
   generateClassificationsWithFallback,
-  FqdAllProvidersError,
-  isQuotaError,
+  aiErrorResponse,
 } from "@/features/fqd/lib/fqd-research";
 import { parseFqdProvider } from "@/features/fqd/types/fqd-types";
 
@@ -51,17 +50,7 @@ export default async function handler(
     );
     return res.status(200).json({ values, provider });
   } catch (err) {
-    if (err instanceof FqdAllProvidersError) {
-      const quota = isQuotaError(err.attempts);
-      return res.status(quota ? 429 : 502).json({
-        code: quota ? "quota" : "failed",
-        error: err.attempts.join(" · ") || `Couldn't generate a ${field}`,
-        attempts: err.attempts,
-      });
-    }
-    return res.status(500).json({
-      code: "failed",
-      error: err instanceof Error ? err.message : `Couldn't generate a ${field}`,
-    });
+    const { status, body } = aiErrorResponse(err, `Couldn't generate a ${field}`);
+    return res.status(status).json(body);
   }
 }

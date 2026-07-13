@@ -108,10 +108,16 @@ export function EventDiscoverPanel() {
       });
       const data = await res.json().catch(() => null);
       if (!res.ok) {
-        // Free-tier / rate-limit reached → amber notice, not a red error.
+        // Free-tier / rate-limit reached, or provider overloaded → amber notice
+        // (both are transient/retryable), not a red error.
         if (res.status === 429 || data?.code === "quota") {
           setNotice(
             "You've reached the AI provider's free-tier limit for now. Try again a little later.",
+          );
+        } else if (res.status === 503 || data?.code === "overloaded") {
+          setNotice(
+            data?.error ??
+              "The AI model is overloaded right now (high demand). Please try again in a moment.",
           );
         } else {
           setError(data?.error ?? "Discovery failed");
