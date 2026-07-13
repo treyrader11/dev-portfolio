@@ -12,6 +12,7 @@ import { EventDiscoverPanel } from "./event-discover-panel";
 import { FqdProviderSelect } from "./fqd-provider-select";
 import { fmtEventDate } from "../lib/format";
 import { patchEventInListSnapshot } from "../lib/events-list-snapshot";
+import { withFreeTicketUrl } from "../lib/free-ticket";
 import type { ResearchResult } from "../hooks/use-event-research";
 import {
   emptyFqdEvent,
@@ -159,7 +160,8 @@ export function EventFormPage({ event }: Props) {
       if (!prev.slug && next.title) next.slug = slugify(next.title);
       // Don't force "researched" — an AI populate is surfaced by rawResearch
       // (the "AI Scraped" chip). "researched" is reserved for manual research.
-      return next;
+      // Free events with no ticket link get ticketUrl "Free".
+      return withFreeTicketUrl(next);
     });
     setRawResearch(raw);
     const filled = Object.values(fields).filter(

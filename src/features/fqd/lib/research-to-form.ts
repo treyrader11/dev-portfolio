@@ -1,4 +1,5 @@
 import { slugify } from "@/lib/utils";
+import { withFreeTicketUrl } from "./free-ticket";
 import {
   emptyFqdEvent,
   type EventResearch,
@@ -10,7 +11,8 @@ const pick = (v?: string | null): string => (v && v.trim() ? v.trim() : "");
 // Convert an AI-parsed event into the form/create shape (marked "researched").
 export function researchToFormValues(f: EventResearch): FqdEventFormValues {
   const title = pick(f.title);
-  return {
+  // Free events with no ticket link get ticketUrl "Free".
+  return withFreeTicketUrl({
     ...emptyFqdEvent,
     title,
     slug: slugify(title),
@@ -33,5 +35,5 @@ export function researchToFormValues(f: EventResearch): FqdEventFormValues {
     website: pick(f.website),
     notes: pick(f.notes),
     images: [],
-  };
+  });
 }

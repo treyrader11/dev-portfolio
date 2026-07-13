@@ -50,7 +50,8 @@ const FIELD_GUIDANCE = `Field rules:
 - "category": one or two broad category labels as a comma-separated string, e.g. "Festival, Music".
 - "subcategory": two or three specific subcategory labels as a comma-separated string, e.g. "Jazz Concert, Second Line Parade, Outdoor Festival". Include multiple when more than one applies — do not return just one when several fit.
 - "startDate"/"endDate": use YYYY-MM-DD. Leave endDate null for a single-day event.
-- "expectedAttendance": the expected number of attendees as a number or range, e.g. "5,000" or "10,000-15,000". If it isn't explicitly stated, give a reasonable estimate based on the event's type, venue, and scale rather than null.`;
+- "expectedAttendance": the expected number of attendees as a number or range, e.g. "5,000" or "10,000-15,000". If it isn't explicitly stated, give a reasonable estimate based on the event's type, venue, and scale rather than null.
+- "ticketUrl": the ticket purchase URL. If the event is free (no paid ticket), set this to exactly "Free".`;
 
 const FQD_SYSTEM_PROMPT = `You are a New Orleans event data researcher. Given an event name, search query, or listing text, determine the event's structured details. Leave a field null only when you cannot determine it with reasonable confidence.
 
