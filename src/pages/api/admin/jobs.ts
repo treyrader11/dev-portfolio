@@ -1,5 +1,14 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { requireAdmin } from "@/features/admin/lib/admin-auth";
+import { slugify } from "@/lib/utils";
+import {
+  researchJobsWithFallback,
+  JobsResearchError,
+  isQuotaError,
+} from "@/features/jobs/lib/jobs-research";
+
+// Web search (AI source) can take a while — give it room.
+export const config = { maxDuration: 60 };
 
 interface ArbeitnowJob {
   slug: string;
@@ -14,6 +23,56 @@ interface ArbeitnowJob {
   created_at: number;
 }
 
+// AI results are mapped to the same shape the Arbeitnow path returns so the UI
+// renders both identically.
+async function handleAiSearch(
+  res: NextApiResponse,
+  search: string,
+): Promise<void> {
+  try {
+    const { jobs, provider } = await researchJobsWithFallback(search);
+    const nowSeconds = Math.floor(Date.now() / 1000);
+    const mapped: ArbeitnowJob[] = jobs.map((j, i) => ({
+      slug: `ai-${i}-${slugify(`${j.title}-${j.company}`) || i}`,
+      company_name: j.company,
+      title: j.title,
+      description: "",
+      remote: j.remote ?? false,
+      url:
+        j.url && /^https?:\/\//i.test(j.url)
+          ? j.url
+          : `https://www.google.com/search?q=${encodeURIComponent(`${j.title} ${j.company} job`)}`,
+      tags: j.tags ?? [],
+      job_types: j.jobType ? [j.jobType] : [],
+      location: j.location ?? "",
+      created_at: nowSeconds,
+    }));
+    res.json({
+      jobs: mapped,
+      meta: {
+        page: 1,
+        hasNext: false,
+        total: mapped.length,
+        source: "ai",
+        provider,
+      },
+    });
+  } catch (err) {
+    if (err instanceof JobsResearchError) {
+      const quota = isQuotaError(err.attempts);
+      res.status(quota ? 429 : 502).json({
+        code: quota ? "quota" : "failed",
+        error: err.attempts.join(" · ") || "AI job search failed",
+      });
+      return;
+    }
+    res.status(500).json({
+      code: "failed",
+      error: err instanceof Error ? err.message : "AI job search failed",
+    });
+  }
+}
+
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
@@ -26,6 +85,13 @@ export default async function handler(
 
   const search = (req.query.search as string) || "react";
   const page = (req.query.page as string) || "1";
+  const source = (req.query.source as string) || "arbeitnow";
+
+  // AI web-search option (same engine as French Quarter Direct). The existing
+  // Arbeitnow job board is unchanged and remains the default.
+  if (source === "ai") {
+    return handleAiSearch(res, search);
+  }
 
   try {
     // Fetch from Arbeitnow API

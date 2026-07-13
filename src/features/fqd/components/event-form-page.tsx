@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import { motion } from "framer-motion";
+import { RiErrorWarningLine } from "react-icons/ri";
 import AdminLayout from "@/features/admin/components/admin-layout";
 import { ConfirmDialog } from "@/features/admin/components/confirm-dialog";
 import { useNotificationsContext } from "@/components/providers/NotificationsProvider";
@@ -18,6 +19,31 @@ import {
   type FqdEventFormValues,
   type FqdEventListItem,
 } from "../types/fqd-types";
+
+const isBlank = (v?: string | null) => !v || !v.trim();
+
+// The exact fields the "incomplete" list filter checks (get-events.ts), computed
+// live from the form so the callout shows which fields still need values and
+// clears as they're filled.
+function getMissingFormFields(form: FqdEventFormValues): string[] {
+  const m: string[] = [];
+  if (isBlank(form.startTime)) m.push("Start time");
+  if (isBlank(form.endDate)) m.push("End date");
+  if (isBlank(form.locationName)) m.push("Location name");
+  if (isBlank(form.address)) m.push("Address");
+  if (isBlank(form.description)) m.push("Description");
+  if (isBlank(form.category)) m.push("Category");
+  if (isBlank(form.subcategory)) m.push("Subcategory");
+  if (isBlank(form.admission)) m.push("Admission");
+  if (isBlank(form.ticketUrl)) m.push("Ticket URL");
+  if (isBlank(form.organizer)) m.push("Organizer");
+  if (isBlank(form.expectedAttendance)) m.push("Expected attendance");
+  if (isBlank(form.ageRequirement)) m.push("Age requirement");
+  if (isBlank(form.website)) m.push("Website");
+  if (isBlank(form.notes)) m.push("Notes");
+  if (form.images.length === 0) m.push("Images");
+  return m;
+}
 
 interface Props {
   mode: "create" | "edit";
@@ -75,6 +101,7 @@ export function EventFormPage({ event }: Props) {
   const [form, setForm] = useState<FqdEventFormValues>(() =>
     event ? toFormValues(event) : { ...emptyFqdEvent },
   );
+  const missingFields = getMissingFormFields(form);
   const [rawResearch, setRawResearch] = useState<unknown>(undefined);
   const [saving, setSaving] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(false);
@@ -310,6 +337,21 @@ export function EventFormPage({ event }: Props) {
 
         {/* Create only: bulk-discover upcoming NOLA events not yet in the app. */}
         {isNew && <EventDiscoverPanel />}
+
+        {/* Editing only: which fields are still empty (this is what the list's
+            "Incomplete" filter flags). Updates live and clears as you fill them. */}
+        {!isNew && missingFields.length > 0 && (
+          <div className="mb-4 rounded-lg border border-amber-400/30 bg-amber-400/10 px-4 py-3">
+            <p className="flex items-center gap-1.5 text-sm font-medium text-amber-300">
+              <RiErrorWarningLine className="size-4 shrink-0" />
+              {missingFields.length} field{missingFields.length === 1 ? "" : "s"}{" "}
+              still empty
+            </p>
+            <p className="mt-1 text-xs text-amber-200/90">
+              {missingFields.join(" · ")}
+            </p>
+          </div>
+        )}
 
         <EventForm
           values={form}

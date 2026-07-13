@@ -1,6 +1,20 @@
 import { useState, useEffect } from "react";
 import AdminLayout from "@/features/admin/components/admin-layout";
-import { RiMapPinLine, RiTimeLine, RiExternalLinkLine } from "react-icons/ri";
+import {
+  RiMapPinLine,
+  RiTimeLine,
+  RiExternalLinkLine,
+  RiBriefcaseLine,
+  RiSparkling2Line,
+} from "react-icons/ri";
+import { cn } from "@/lib/utils";
+
+type JobSource = "arbeitnow" | "ai";
+
+const SOURCES: { value: JobSource; label: string; icon: typeof RiBriefcaseLine }[] = [
+  { value: "arbeitnow", label: "Job Board", icon: RiBriefcaseLine },
+  { value: "ai", label: "AI Web Search", icon: RiSparkling2Line },
+];
 
 interface Job {
   slug: string;
@@ -31,27 +45,46 @@ export function AdminJobsPage() {
   const [page, setPage] = useState(1);
   const [hasNext, setHasNext] = useState(false);
   const [activePreset, setActivePreset] = useState("react,react native");
+  const [source, setSource] = useState<JobSource>("arbeitnow");
+  const [error, setError] = useState<string | null>(null); // red
+  const [notice, setNotice] = useState<string | null>(null); // amber
 
-  async function fetchJobs(searchQuery: string, pageNum: number) {
+  async function fetchJobs(searchQuery: string, pageNum: number, src: JobSource) {
     setLoading(true);
+    setError(null);
+    setNotice(null);
     try {
       const res = await fetch(
-        `/api/admin/jobs?search=${encodeURIComponent(searchQuery)}&page=${pageNum}`
+        `/api/admin/jobs?source=${src}&search=${encodeURIComponent(searchQuery)}&page=${pageNum}`
       );
+      const data = await res.json().catch(() => null);
       if (res.ok) {
-        const data = await res.json();
-        setJobs(data.jobs || []);
-        setHasNext(data.meta?.hasNext || false);
+        const list: Job[] = data?.jobs || [];
+        setJobs(list);
+        setHasNext(data?.meta?.hasNext || false);
+        if (list.length === 0 && src === "ai") {
+          setNotice("No jobs found via AI — try different or broader keywords.");
+        }
+      } else if (res.status === 429 || data?.code === "quota") {
+        setJobs([]);
+        setHasNext(false);
+        setNotice(`AI usage limit reached — ${data?.error ?? "try again later"}`);
+      } else {
+        setJobs([]);
+        setHasNext(false);
+        setError(data?.error ?? "Couldn't load jobs");
       }
     } catch {
-      // ignore
+      setJobs([]);
+      setHasNext(false);
+      setError("Couldn't load jobs — network error");
     }
     setLoading(false);
   }
 
   useEffect(() => {
-    fetchJobs(search, page);
-  }, [search, page]);
+    fetchJobs(search, page, source);
+  }, [search, page, source]);
 
   function handlePreset(preset: (typeof PRESET_SEARCHES)[number]) {
     setActivePreset(preset.search);
@@ -82,6 +115,29 @@ export function AdminJobsPage() {
       <div className="flex flex-col min-h-[calc(100vh-88px)]">
         {/* Controls */}
         <div className="space-y-4 mb-6">
+          {/* Source toggle: existing job board vs AI web search */}
+          <div className="flex w-fit gap-1 rounded-lg bg-dark-600 p-1">
+            {SOURCES.map((s) => (
+              <button
+                key={s.value}
+                type="button"
+                onClick={() => {
+                  setSource(s.value);
+                  setPage(1);
+                }}
+                className={cn(
+                  "inline-flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium transition-colors",
+                  source === s.value
+                    ? "bg-secondary text-white"
+                    : "text-light-400 hover:text-white"
+                )}
+              >
+                <s.icon className="size-3.5" />
+                {s.label}
+              </button>
+            ))}
+          </div>
+
           {/* Search Bar */}
           <div className="flex gap-2">
             <input
@@ -116,6 +172,15 @@ export function AdminJobsPage() {
               </button>
             ))}
           </div>
+
+          {error && <p className="text-xs text-red-400">{error}</p>}
+          {notice && <p className="text-xs text-amber-400">{notice}</p>}
+          {source === "ai" && !error && !notice && (
+            <p className="text-xs text-light-400">
+              AI searches the web for current openings matching your keywords
+              (Gemini, with Claude fallback). Results are best-effort links.
+            </p>
+          )}
         </div>
 
         {/* Job List */}
@@ -123,8 +188,12 @@ export function AdminJobsPage() {
           {loading ? (
             <div className="flex items-center justify-center py-24">
               <div className="flex flex-col items-center gap-3">
-                <div className="w-6 h-6 border-2 border-dark-600 border-t-gray-900 rounded-full animate-spin" />
-                <span className="text-sm text-light-400">Finding jobs...</span>
+                <div className="w-6 h-6 border-2 border-dark-600 border-t-secondary rounded-full animate-spin" />
+                <span className="text-sm text-light-400">
+                  {source === "ai"
+                    ? "AI is searching the web for jobs…"
+                    : "Finding jobs..."}
+                </span>
               </div>
             </div>
           ) : jobs.length === 0 ? (
@@ -194,7 +263,7 @@ export function AdminJobsPage() {
 
         {/* Footer: Pagination + Attribution */}
         <div className="mt-6 space-y-3 pb-2">
-          {!loading && jobs.length > 0 && (
+          {!loading && jobs.length > 0 && source !== "ai" && (
             <div className="flex items-center justify-between">
               <button
                 onClick={() => setPage((p) => Math.max(1, p - 1))}
@@ -214,7 +283,7 @@ export function AdminJobsPage() {
             </div>
           )}
           <p className="text-[10px] text-light-400 text-center uppercase tracking-wider">
-            Powered by Arbeitnow
+            {source === "ai" ? "AI web search" : "Powered by Arbeitnow"}
           </p>
         </div>
       </div>

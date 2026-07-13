@@ -159,6 +159,15 @@ The create-event page has a top-level AI provider/model dropdown that defaults t
 - Never run more than 2 concurrent AI calls (p-limit concurrency 2)
 - Use `generateObject` with Zod schemas from `fqd-types.ts` — never `generateText` with post-hoc JSON parsing
 
+### Jobs (job board + AI search)
+
+`admin/jobs` finds jobs two ways, toggled in the UI (both driven by the same keyword filters):
+
+- **Job Board** (default) — the free **Arbeitnow** API via `/api/admin/jobs`, unchanged.
+- **AI Web Search** — `/api/admin/jobs?source=ai`, backed by `src/features/jobs/lib/jobs-research.ts`, which mirrors the FQD AI engine (Gemini → Anthropic fallback, web search + schema-enforced `Output.array`). Results are mapped to the same shape the job board returns so the UI renders both identically.
+
+Pattern to reuse for any future AI web-search feature: add a self-contained `*-research.ts` that mirrors `fqd-research.ts` (provider fallback + `Output.object/array` + web search), and expose AI as an **option alongside** the existing source — never replace the current API.
+
 ### API Routes Pattern
 
 API routes in `pages/api/` are the mutation layer. Keep them thin — import logic from `features/` or `lib/`.
