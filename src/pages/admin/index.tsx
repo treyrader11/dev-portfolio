@@ -6,6 +6,7 @@ import { prisma } from "@/lib/prisma";
 import type { GetServerSideProps } from "next";
 import { cn } from "@/lib/utils";
 import { FqdRecipientsCard } from "@/features/fqd/components/fqd-recipients-card";
+import { DefaultAiModelCard } from "@/features/admin/components/default-ai-model-card";
 
 const sections = [
   {
@@ -72,6 +73,9 @@ interface Props {
 export default function AdminDashboard({ counts }: Props) {
   return (
     <AdminLayout title="Dashboard">
+      {/* App-wide default AI model — auto-saves on select. */}
+      <DefaultAiModelCard />
+
       {/* Stats */}
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-7 gap-4 mb-8">
         <StatCard

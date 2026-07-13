@@ -4,8 +4,13 @@ import { parseFqdProvider, type FqdProvider } from "../types/fqd-types";
 // SiteConfig key for the admin-chosen default AI model, used across the app.
 export const AI_SETTINGS_KEY = "aiSettings";
 
-// Only providers with a runner can be the default (OpenAI has none in FQD).
-export const DEFAULT_AI_PROVIDERS: FqdProvider[] = ["gemini", "anthropic"];
+// The providers that can be the default (each has a working runner + web
+// search). Gemini is first so it's the fallback when nothing is configured.
+export const DEFAULT_AI_PROVIDERS: FqdProvider[] = [
+  "gemini",
+  "anthropic",
+  "openai",
+];
 
 export interface AiSettings {
   defaultProvider: FqdProvider;

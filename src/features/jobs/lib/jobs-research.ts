@@ -1,5 +1,6 @@
 import { createAnthropic } from "@ai-sdk/anthropic";
 import { createGoogleGenerativeAI } from "@ai-sdk/google";
+import { createOpenAI } from "@ai-sdk/openai";
 import {
   generateText,
   stepCountIs,
@@ -16,7 +17,8 @@ import { getProviderOrder } from "@/features/fqd/lib/ai-settings";
 
 const GEMINI_MODEL = "gemini-flash-latest";
 const ANTHROPIC_MODEL = "claude-sonnet-4-20250514";
-export type JobProvider = "gemini" | "anthropic";
+const OPENAI_MODEL = "gpt-4o";
+export type JobProvider = "gemini" | "anthropic" | "openai";
 
 export class JobsResearchError extends Error {
   attempts: string[];
@@ -53,6 +55,13 @@ function providerClient(provider: JobProvider): {
     return {
       model: google(GEMINI_MODEL),
       searchTools: { google_search: google.tools.googleSearch({}) },
+    };
+  }
+  if (provider === "openai") {
+    const openai = createOpenAI({ apiKey: requireKey("OPENAI_API_KEY") });
+    return {
+      model: openai(OPENAI_MODEL),
+      searchTools: { web_search: openai.tools.webSearch({}) },
     };
   }
   const anthropic = createAnthropic({ apiKey: requireKey("ANTHROPIC_API_KEY") });
@@ -105,11 +114,12 @@ export async function researchJobsWithFallback(
   const system = `You are a tech job-search assistant. Search the web for CURRENT, open software/developer job postings matching the given keywords. Return only genuinely open roles you can find on real job boards or company career pages, each with: title, hiring company, location, whether it is remote, the direct application/listing URL, relevant skill tags, and the job type (e.g. Full-time, Contract). Prefer recent postings. Return up to 20; if you find none, return an empty array.`;
   const prompt = `Find current job postings matching these keywords: ${query}`;
 
-  // Respect the admin default AI model (Gemini/Anthropic) when none is forced.
+  // Respect the admin default AI model when none is forced.
   const order: JobProvider[] = only
     ? [only]
     : (await getProviderOrder()).filter(
-        (p): p is JobProvider => p === "gemini" || p === "anthropic",
+        (p): p is JobProvider =>
+          p === "gemini" || p === "anthropic" || p === "openai",
       );
   const errors: string[] = [];
   for (const provider of order) {

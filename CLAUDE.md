@@ -138,13 +138,13 @@ The FQD subsystem lives in `src/features/fqd/` and `src/pages/api/fqd/`. It is a
 
 Plus, at the ZIP root: `_all-events.csv` — a combined JEvents CSV (one header + one row per event). CSV columns are fixed: `CATEGORIES, SUMMARY, LOCATION, DESCRIPTION, CONTACT, X-EXTRAINFO, DTSTART, DTEND, TIMEZONE, RRULE`; every field is double-quoted with inner quotes doubled; dates use `date-fns` and `TIMEZONE` is `America/Chicago`. When changing exports, do not alter the DOCX, image, or PDF logic or the `addedToJoomla` flag unless the task requires it.
 
-**Provider order (Gemini first — it is free tier):**
+**Provider order (driven by the admin default; Gemini leads by default — it is free tier):**
 
-The fallback chain must always be: Gemini → Anthropic. OpenAI is not in the FQD chain. When a preferred provider is passed from the UI selector, use it directly with no fallback — do not silently switch providers on the user.
+All three providers have a working runner with web search — Gemini (`google.tools.googleSearch`), Anthropic (`webSearch_20250305`), and OpenAI (Responses-API `gpt-4o` + `webSearch`) — in `providerClient` in `fqd-research.ts`. The fallback chain order is `getProviderOrder()` = the admin default first, then the rest of `DEFAULT_AI_PROVIDERS` (`["gemini", "anthropic", "openai"]`). Never hardcode a provider order in a runner. When a preferred provider is passed from the UI selector, use it directly with no fallback — do not silently switch providers on the user.
 
-**Default AI model (admin settings):**
+**Default AI model (admin settings + dashboard):**
 
-The app-wide default AI provider is stored in `SiteConfig` under the `aiSettings` key (`{ defaultProvider }`) and edited in the "Default AI Model" section of `/admin/settings`. Server code reads it via `getDefaultAiProvider()` / `getProviderOrder()` in `src/features/fqd/lib/ai-settings.ts` — the fallback chain order is derived from this (default first, then the rest). Both FQD research/discovery and AI job search honor it. Never hardcode `["gemini", "anthropic"]` order in a runner; call `getProviderOrder()`.
+The app-wide default AI provider is stored in `SiteConfig` under the `aiSettings` key (`{ defaultProvider }`). It is edited via the self-contained `DefaultAiModelCard` (`src/features/admin/components/default-ai-model-card.tsx`), which is rendered both at the top of the `/admin` dashboard and in `/admin/settings`. The card **auto-saves on select** (PUT `/api/admin/config/aiSettings`) and toasts — there is no Save button, and it deliberately does not reuse the profile form logic. Server code reads the value via `getDefaultAiProvider()` / `getProviderOrder()` in `src/features/fqd/lib/ai-settings.ts`. Both FQD research/discovery and AI job search honor it.
 
 **AI model selector (create-event page):**
 
@@ -174,7 +174,7 @@ The create-event page has a top-level AI provider/model dropdown seeded from the
 `admin/jobs` finds jobs two ways, toggled in the UI (both driven by the same keyword filters):
 
 - **Job Board** (default) — the free **Arbeitnow** API via `/api/admin/jobs`, unchanged.
-- **AI Web Search** — `/api/admin/jobs?source=ai`, backed by `src/features/jobs/lib/jobs-research.ts`, which mirrors the FQD AI engine (Gemini → Anthropic fallback, web search + schema-enforced `Output.array`). Results are mapped to the same shape the job board returns so the UI renders both identically.
+- **AI Web Search** — `/api/admin/jobs?source=ai`, backed by `src/features/jobs/lib/jobs-research.ts`, which mirrors the FQD AI engine (admin-default provider order across Gemini/Anthropic/OpenAI, web search + schema-enforced `Output.array`). Results are mapped to the same shape the job board returns so the UI renders both identically.
 
 Pattern to reuse for any future AI web-search feature: add a self-contained `*-research.ts` that mirrors `fqd-research.ts` (provider fallback + `Output.object/array` + web search), and expose AI as an **option alongside** the existing source — never replace the current API.
 

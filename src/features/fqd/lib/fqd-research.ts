@@ -1,5 +1,6 @@
 import { createAnthropic } from "@ai-sdk/anthropic";
 import { createGoogleGenerativeAI } from "@ai-sdk/google";
+import { createOpenAI } from "@ai-sdk/openai";
 import {
   generateObject,
   generateText,
@@ -25,6 +26,8 @@ import { getProviderOrder } from "./ai-settings";
 // it won't hit "model no longer available" as Google retires dated versions.
 const GEMINI_MODEL = "gemini-flash-latest";
 const ANTHROPIC_MODEL = "claude-sonnet-4-20250514";
+// The Responses-API model — required for OpenAI's built-in web_search tool.
+const OPENAI_MODEL = "gpt-4o";
 
 export const PROVIDER_META: Record<
   FqdProvider,
@@ -35,9 +38,10 @@ export const PROVIDER_META: Record<
     providerLabel: "Claude (Anthropic)",
     searchEngine: "Anthropic Web Search",
   },
-  // Label kept only so the map covers the FqdProvider type — there is no OpenAI
-  // runner; selecting it surfaces a clear "not available" error.
-  openai: { providerLabel: "ChatGPT (OpenAI)", searchEngine: "OpenAI" },
+  openai: {
+    providerLabel: "ChatGPT (OpenAI)",
+    searchEngine: "OpenAI Web Search",
+  },
 };
 
 // Per-field content rules. Category/subcategory hold MULTIPLE comma-separated
@@ -185,6 +189,14 @@ function providerClient(provider: FqdProvider): {
       searchTools: {
         web_search: anthropic.tools.webSearch_20250305({ maxUses: 5 }),
       },
+    };
+  }
+  if (provider === "openai") {
+    const openai = createOpenAI({ apiKey: requireKey("OPENAI_API_KEY") });
+    return {
+      // Responses-API model + its built-in web_search tool.
+      model: openai(OPENAI_MODEL),
+      searchTools: { web_search: openai.tools.webSearch({}) },
     };
   }
   throw new Error(`Provider "${provider}" is not available`);
