@@ -20,6 +20,22 @@ const DT_FORMAT = "yyyyMMdd'T'HHmmss";
 
 const str = (v: unknown): string => (v == null ? "" : String(v));
 
+// Strip markdown link syntax and bare URL citation artifacts that AI responses
+// leave in free-text fields, so DESCRIPTION / X-EXTRAINFO are plain text.
+//   "[Jazz Fest](https://x.com)"  -> "Jazz Fest"
+//   "Great show (https://x.com)"  -> "Great show"
+function stripMarkdownLinks(value: string): string {
+  return value
+    // Markdown links: [text](url) -> text
+    .replace(/\[([^\]]*?)\]\([^)]*?\)/g, "$1")
+    // Bare parenthesized URL citations: "(https://…)" / "(www.…)" -> removed
+    .replace(/\(\s*(?:https?:\/\/|www\.)[^)\s]*\s*\)/gi, "")
+    // Tidy up whitespace left behind (double spaces, space before punctuation)
+    .replace(/[ \t]{2,}/g, " ")
+    .replace(/[ \t]+([,.;:!?])/g, "$1")
+    .trim();
+}
+
 // LOCATION: "locationName - address", or whichever exists, or "".
 function locationCell(
   locationName?: string | null,
@@ -64,6 +80,8 @@ function dtStartEnd(event: FqdEventListItem): { dtStart: string; dtEnd: string }
   const tp = timeParts(event.startTime);
   if (tp) start.setHours(tp.h, tp.m, 0, 0);
 
+  // DTEND: the end date at midnight when one exists; otherwise ALWAYS the start
+  // plus two hours (via addHours) — never midnight (T000000) of the start date.
   const end = event.endDate
     ? new Date(`${str(event.endDate).slice(0, 10)}T00:00:00`)
     : addHours(start, 2);
@@ -80,9 +98,9 @@ function eventCells(event: FqdEventListItem): string[] {
     str(event.category), // CATEGORIES
     str(event.title), // SUMMARY
     locationCell(event.locationName, event.address), // LOCATION
-    str(event.description), // DESCRIPTION
+    stripMarkdownLinks(str(event.description)), // DESCRIPTION
     str(event.organizer), // CONTACT
-    extraInfoCell(event.admission, event.ticketUrl), // X-EXTRAINFO
+    stripMarkdownLinks(extraInfoCell(event.admission, event.ticketUrl)), // X-EXTRAINFO
     dtStart, // DTSTART
     dtEnd, // DTEND
     TIMEZONE, // TIMEZONE
