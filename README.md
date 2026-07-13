@@ -7,11 +7,13 @@ A personal developer portfolio **and** a private admin CMS, built with the Next.
 
 ### Product Screenshots
 
-![](./screenshots/landing.png)
+![Landing hero — animated intro with an orbiting tech-stack constellation](./product-screenshots/hero.png)
 
-![](./screenshots/about.png)
+![Portfolio — filterable project grid with live demo and repo links](./product-screenshots/portfolio.png)
 
-![](./screenshots/projects.png)
+![Work experience — timeline of roles rendered from the admin CMS](./product-screenshots/experience.png)
+
+![Contact — Let's talk code call-to-action footer](./product-screenshots/footer.png)
 
 ---
 
