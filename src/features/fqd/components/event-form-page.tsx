@@ -92,7 +92,7 @@ function toFormValues(event: FqdEventListItem): FqdEventFormValues {
   };
 }
 
-export function EventFormPage({ event, defaultProvider }: Props) {
+export function EventFormPage({ event, mode, defaultProvider }: Props) {
   const router = useRouter();
   const { addNotification } = useNotificationsContext();
 
@@ -309,8 +309,14 @@ export function EventFormPage({ event, defaultProvider }: Props) {
       return;
     }
     setSaving(true);
-    await submit();
+    const ok = await submit();
     setSaving(false);
+    // When editing an existing event, return to the events list on success. The
+    // list restores your scroll position + filters from the snapshot (which
+    // submit() just refreshed with the saved event).
+    if (ok && mode === "edit") {
+      router.push("/admin/french-quarter-direct/events");
+    }
   }
 
   async function handleReplace() {
