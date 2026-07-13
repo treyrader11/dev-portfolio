@@ -94,6 +94,7 @@ export function EventsListPage({ data }: Props) {
   const [bulkConfirm, setBulkConfirm] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [bulkBusy, setBulkBusy] = useState(false);
+  const searchInputRef = useRef<HTMLInputElement>(null);
 
   // The title/location search runs server-side (debounced) so it also finds
   // events that haven't been paginated into the list yet.
@@ -221,6 +222,20 @@ export function EventsListPage({ data }: Props) {
     if (loadingMore || !hasMore) return;
     fetchEvents(page + 1, missing, debouncedSearch, added, newOnly, true);
   }
+
+  // On touch devices, dragging to scroll the list dismisses the keyboard (blurs
+  // the search). With the keyboard closed, the sticky header/toolbar behave
+  // normally — iOS otherwise keeps the focused input's container visible and
+  // renders content over the header while scrolling. No-op on desktop (no
+  // touchmove).
+  useEffect(() => {
+    const onTouchMove = () => {
+      const input = searchInputRef.current;
+      if (input && document.activeElement === input) input.blur();
+    };
+    window.addEventListener("touchmove", onTouchMove, { passive: true });
+    return () => window.removeEventListener("touchmove", onTouchMove);
+  }, []);
 
   // Toggle an event's "added to Joomla" flag.
   async function toggleAdded(event: FqdEventListItem) {
@@ -435,6 +450,7 @@ export function EventsListPage({ data }: Props) {
             <div className="flex flex-1 items-center gap-2 rounded-lg border border-dark-600 bg-dark-600 px-3 py-2">
               <RiSearchLine className="size-4 shrink-0 text-light-400" />
               <input
+                ref={searchInputRef}
                 value={filter}
                 onChange={(e) => setFilter(e.target.value)}
                 placeholder="Search events by title or location…"
