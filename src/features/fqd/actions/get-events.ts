@@ -1,7 +1,7 @@
 import type { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import { serializeFqdEvent } from "../lib/serialize";
-import { expiredCutoff, expiredEventsWhere } from "../lib/expiry";
+import { expiredCutoff, notExpiredEventsWhere } from "../lib/expiry";
 import type { FqdEventListItem } from "../types/fqd-types";
 
 export interface GetFqdEventsResult {
@@ -118,9 +118,7 @@ export function fqdEventsListWhere(
   f: FqdEventFilters = {},
 ): Prisma.FqdEventWhereInput {
   const filters = buildWhere(f.missing, f.search, f.added, f.newOnly);
-  const notExpired: Prisma.FqdEventWhereInput = {
-    NOT: expiredEventsWhere(expiredCutoff()),
-  };
+  const notExpired = notExpiredEventsWhere(expiredCutoff());
   return filters ? { AND: [filters, notExpired] } : notExpired;
 }
 

@@ -17,3 +17,17 @@ export function expiredEventsWhere(cutoff: Date): Prisma.FqdEventWhereInput {
     ],
   };
 }
+
+// The inverse of expiredEventsWhere, written POSITIVELY (an event is live when
+// its effective end — endDate, or startDate when there's no endDate — is on or
+// after the cutoff). Do NOT filter with `{ NOT: expiredEventsWhere(cutoff) }`:
+// in SQL, `NOT(endDate < cutoff)` is NULL (not true) for a null endDate, so
+// every single-day event with no end date is wrongly dropped from the results.
+export function notExpiredEventsWhere(cutoff: Date): Prisma.FqdEventWhereInput {
+  return {
+    OR: [
+      { endDate: { gte: cutoff } },
+      { AND: [{ endDate: null }, { startDate: { gte: cutoff } }] },
+    ],
+  };
+}

@@ -2,7 +2,11 @@ import { Resend } from "resend";
 import { prisma } from "@/lib/prisma";
 import { cloudinary } from "@/lib/cloudinary";
 import { serializeFqdEvent } from "./serialize";
-import { expiredCutoff, expiredEventsWhere } from "./expiry";
+import {
+  expiredCutoff,
+  expiredEventsWhere,
+  notExpiredEventsWhere,
+} from "./expiry";
 import { eventStartAt } from "./event-start-at";
 import {
   getFqdNotificationSettings,
@@ -42,7 +46,7 @@ export async function runStartNotifications(now: Date = new Date()) {
   const candidates = await prisma.fqdEvent.findMany({
     where: {
       startNotifiedAt: null,
-      NOT: expiredEventsWhere(expiredCutoff(now)),
+      ...notExpiredEventsWhere(expiredCutoff(now)),
     },
     include: { images: { orderBy: { order: "asc" } } },
   });
