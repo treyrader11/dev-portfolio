@@ -375,6 +375,36 @@ export function EventsListPage({ data }: Props) {
     }
   }
 
+  // Compose the empty-state message from the active filters so combinations
+  // (e.g. New + Added) read naturally.
+  function emptyMessage(): string {
+    if (searching) return `No events match “${debouncedSearch.trim()}”.`;
+    const isNew = newOnly === "true";
+    const noun = isNew ? "new events" : "events";
+    if (added === "true") {
+      return `No ${noun} have been added to French Quarter Direct yet.`;
+    }
+    if (added === "false") {
+      return isNew
+        ? "No new events are yet to be added to French Quarter Direct."
+        : "All events have been added to French Quarter Direct.";
+    }
+    if (missing === "incomplete") {
+      return isNew
+        ? "Every new event has all its fields filled. 🎉"
+        : "Every event has all its fields filled. 🎉";
+    }
+    if (missing) {
+      const label =
+        MISSING_FILTERS.find((f) => f.value === missing)
+          ?.label.toLowerCase()
+          .replace(/^without/, "are missing") ?? "match this filter";
+      return `No ${noun} ${label}.`;
+    }
+    if (isNew) return "No new events were created today.";
+    return "No events match this filter.";
+  }
+
   return (
     <AdminLayout
       title="Events"
@@ -576,27 +606,7 @@ export function EventsListPage({ data }: Props) {
           )
         ) : events.length === 0 && filtering ? (
           <div className="rounded-lg border border-dashed border-dark-600 p-8 text-center text-sm text-light-400">
-            {searching ? (
-              <>No events match &ldquo;{debouncedSearch.trim()}&rdquo;.</>
-            ) : missing === "incomplete" ? (
-              <>Every event has all its fields filled. 🎉</>
-            ) : missing ? (
-              <>
-                No events{" "}
-                {MISSING_FILTERS.find((f) => f.value === missing)
-                  ?.label.toLowerCase()
-                  .replace(/^without/, "are missing") ?? "match this filter"}
-                .
-              </>
-            ) : added === "true" ? (
-              <>No events are marked as added yet.</>
-            ) : added === "false" ? (
-              <>All events are marked as added.</>
-            ) : newOnly === "true" ? (
-              <>No new events were created today.</>
-            ) : (
-              <>No events match this filter.</>
-            )}
+            {emptyMessage()}
           </div>
         ) : events.length === 0 ? (
           <div className="rounded-lg border border-dashed border-dark-600 p-10 text-center">
