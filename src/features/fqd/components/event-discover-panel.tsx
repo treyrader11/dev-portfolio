@@ -14,7 +14,8 @@ import { cn } from "@/lib/utils";
 import { useNotificationsContext } from "@/components/providers/NotificationsProvider";
 import {
   MultiStepLoader,
-  type LoadingState,
+  type LoadingStep,
+  type StepStatus,
 } from "@/components/ui/multi-step-loader";
 import { eventDateRange } from "../lib/format";
 import { clearEventsListSnapshot } from "../lib/events-list-snapshot";
@@ -84,14 +85,11 @@ interface ProviderInfo {
   searchEngine: string;
 }
 
-// Steps shown in the full-screen loader while researching + creating events.
-const ADD_STEPS: LoadingState[] = [
-  { text: "Searching the web" },
-  { text: "Researching event details" },
-  { text: "Finding event images" },
-  { text: "Uploading to your library" },
-  { text: "Saving new events" },
-];
+interface ProcStep {
+  title: string;
+  status: StepStatus;
+  action: string;
+}
 
 // A panel (create page only) that web-searches for upcoming New Orleans events
 // not already in the app, dedupes them, and lets the admin bulk-add the results
@@ -107,6 +105,9 @@ export function EventDiscoverPanel() {
   const [adding, setAdding] = useState(false);
   const [exporting, setExporting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  // Live per-event progress shown in the full-screen loader.
+  const [procSteps, setProcSteps] = useState<ProcStep[]>([]);
+  const [savingPhase, setSavingPhase] = useState(false);
 
   async function discover() {
     if (discovering || adding) return;
@@ -207,6 +208,12 @@ export function EventDiscoverPanel() {
     }
   }
 
+  function updateStep(i: number, patch: Partial<ProcStep>) {
+    setProcSteps((prev) =>
+      prev.map((s, idx) => (idx === i ? { ...s, ...patch } : s)),
+    );
+  }
+
   async function addSelected() {
     if (!results || adding) return;
     const items = results.filter((_, i) => selected.has(i));
@@ -214,15 +221,23 @@ export function EventDiscoverPanel() {
 
     setAdding(true);
     setError(null);
+    setSavingPhase(false);
+    setProcSteps(
+      items.map((d) => ({ title: d.title, status: "pending", action: "" })),
+    );
 
-    // Research each event's fields, then AI-search its images, so created events
-    // arrive with both populated.
-    const built = await mapPool(items, 3, async (d) => {
+    // Research each event's fields, then AI-search its images, updating the
+    // loader with each event's live status so the user sees real progress.
+    const built = await mapPool(items, 3, async (d, i) => {
+      updateStep(i, { status: "active", action: "populating fields" });
       const fields = await researchOne(d);
+      updateStep(i, { action: "searching for images" });
       const images = await fetchImagesFor(fields);
+      updateStep(i, { status: "done", action: "" });
       return { ...fields, images };
     });
 
+    setSavingPhase(true);
     try {
       const res = await fetch("/api/fqd/events/bulk", {
         method: "POST",
@@ -251,6 +266,7 @@ export function EventDiscoverPanel() {
       setError("Couldn't add events (network or timeout)");
     } finally {
       setAdding(false);
+      setSavingPhase(false);
     }
   }
 
@@ -300,14 +316,22 @@ export function EventDiscoverPanel() {
   const allSelected = !!results && selected.size === results.length;
   const busy = discovering || adding;
 
+  // Build the loader checklist from live per-event status (+ a final save step).
+  const loaderSteps: LoadingStep[] = [
+    ...procSteps.map((s, i) => ({
+      text: `Populating ${i + 1}/${procSteps.length}: ${s.title}${
+        s.status === "active" && s.action ? ` — ${s.action}` : ""
+      }`,
+      status: s.status,
+    })),
+    ...(savingPhase
+      ? [{ text: "Saving new events", status: "active" as const }]
+      : []),
+  ];
+
   return (
     <>
-      <MultiStepLoader
-        loadingStates={ADD_STEPS}
-        loading={adding}
-        duration={1400}
-        loop
-      />
+      <MultiStepLoader steps={loaderSteps} loading={adding} />
 
       <div className="mb-4 rounded-lg border border-secondary/40 bg-secondary/5">
       <button

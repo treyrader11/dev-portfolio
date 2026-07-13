@@ -37,7 +37,10 @@ const CheckFilled = ({ className }: { className?: string }) => (
 );
 
 export type LoadingState = { text: string };
+export type StepStatus = "pending" | "active" | "done";
+export type LoadingStep = { text: string; status: StepStatus };
 
+// Auto-advancing / value-driven checklist (the generic looping loader).
 function LoaderCore({
   loadingStates,
   value = 0,
@@ -52,7 +55,6 @@ function LoaderCore({
         const opacity = Math.max(1 - distance * 0.2, 0);
         const active = value === index;
         const done = index < value;
-
         return (
           <motion.div
             key={index}
@@ -73,12 +75,7 @@ function LoaderCore({
                 />
               )}
             </div>
-            <span
-              className={cn(
-                "text-white",
-                active && "font-medium text-lime-400",
-              )}
-            >
+            <span className={cn("text-white", active && "font-medium text-lime-400")}>
               {state.text}
             </span>
           </motion.div>
@@ -88,23 +85,79 @@ function LoaderCore({
   );
 }
 
-// Full-screen, multi-step animated loading overlay. Pass `value` to drive the
-// active step from real progress, or omit it to auto-advance on a timer.
+// Status-driven checklist: each step carries its own pending/active/done state,
+// so several can be in progress at once and the copy reflects real work.
+function StatusLoaderCore({ steps }: { steps: LoadingStep[] }) {
+  const firstActive = steps.findIndex((s) => s.status === "active");
+  const doneCount = steps.filter((s) => s.status === "done").length;
+  const focus =
+    firstActive >= 0
+      ? firstActive
+      : Math.min(doneCount, Math.max(0, steps.length - 1));
+
+  return (
+    <div className="relative mx-auto mt-40 flex max-w-xl flex-col justify-start">
+      {steps.map((s, index) => {
+        const distance = Math.abs(index - focus);
+        const opacity = Math.max(1 - distance * 0.2, 0);
+        return (
+          <motion.div
+            key={index}
+            className="mb-4 flex items-start gap-2 text-left"
+            initial={{ opacity: 0, y: -(focus * 40) }}
+            animate={{ opacity, y: -(focus * 40) }}
+            transition={{ duration: 0.5 }}
+          >
+            <div className="shrink-0">
+              {s.status === "pending" ? (
+                <CheckIcon className="text-light-400" />
+              ) : (
+                <CheckFilled
+                  className={cn(
+                    s.status === "done"
+                      ? "text-white"
+                      : "text-lime-400 animate-pulse",
+                  )}
+                />
+              )}
+            </div>
+            <span
+              className={cn(
+                s.status === "done" && "text-white",
+                s.status === "active" && "font-medium text-lime-400",
+                s.status === "pending" && "text-light-400",
+              )}
+            >
+              {s.text}
+            </span>
+          </motion.div>
+        );
+      })}
+    </div>
+  );
+}
+
+// Full-screen, multi-step animated loading overlay.
+// - Pass `steps` (with per-step status) for a live, real-progress checklist.
+// - Or pass `loadingStates` (+ optional `value`) for a value-driven / looping one.
 export function MultiStepLoader({
   loadingStates,
+  steps,
   loading,
   value,
   duration = 2000,
   loop = true,
 }: {
-  loadingStates: LoadingState[];
+  loadingStates?: LoadingState[];
+  steps?: LoadingStep[];
   loading?: boolean;
   value?: number;
   duration?: number;
   loop?: boolean;
 }) {
-  const controlled = value !== undefined;
+  const controlled = value !== undefined || steps !== undefined;
   const [currentState, setCurrentState] = useState(0);
+  const count = loadingStates?.length ?? 0;
 
   useEffect(() => {
     if (controlled) return;
@@ -114,17 +167,11 @@ export function MultiStepLoader({
     }
     const timeout = setTimeout(() => {
       setCurrentState((prev) =>
-        loop
-          ? prev === loadingStates.length - 1
-            ? 0
-            : prev + 1
-          : Math.min(prev + 1, loadingStates.length - 1),
+        loop ? (prev === count - 1 ? 0 : prev + 1) : Math.min(prev + 1, count - 1),
       );
     }, duration);
     return () => clearTimeout(timeout);
-  }, [currentState, loading, loop, loadingStates.length, duration, controlled]);
-
-  const active = controlled ? value! : currentState;
+  }, [currentState, loading, loop, count, duration, controlled]);
 
   return (
     <AnimatePresence mode="wait">
@@ -136,7 +183,14 @@ export function MultiStepLoader({
           className="fixed inset-0 z-[100] flex h-full w-full items-center justify-center backdrop-blur-2xl"
         >
           <div className="relative h-96">
-            <LoaderCore value={active} loadingStates={loadingStates} />
+            {steps ? (
+              <StatusLoaderCore steps={steps} />
+            ) : (
+              <LoaderCore
+                value={value ?? currentState}
+                loadingStates={loadingStates ?? []}
+              />
+            )}
           </div>
           <div className="absolute inset-x-0 bottom-0 z-20 h-full bg-dark [mask-image:radial-gradient(900px_at_center,transparent_30%,black)]" />
         </motion.div>
