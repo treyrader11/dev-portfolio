@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
+import JSZip from "jszip";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   RiFolderZipLine,
@@ -104,11 +105,26 @@ export function EventExportAll({ filters }: { filters?: EventExportFilters }) {
 
   const allSelected = !!events && selected.size === events.length;
 
+  // Fetch one Cloudinary image as a blob, with bounded concurrency. Returns
+  // null on failure so a single bad image never fails the whole export.
+  async function fetchImageBlob(url: string): Promise<Blob | null> {
+    try {
+      const r = await fetch(url);
+      return r.ok ? await r.blob() : null;
+    } catch {
+      return null;
+    }
+  }
+
+  // Build the export zip IN THE BROWSER: the server returns a lightweight
+  // manifest (DOCX + CSV text + Cloudinary image URLs), and we fetch the images
+  // straight from Cloudinary and zip locally. This keeps large, image-heavy
+  // exports off the serverless function, which otherwise hit memory/time limits.
   async function exportZip() {
     if (exporting || selected.size === 0) return;
     setExporting(true);
     try {
-      const res = await fetch("/api/fqd/events/export-zip", {
+      const res = await fetch("/api/fqd/events/export-manifest", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ ids: [...selected] }),
@@ -123,8 +139,37 @@ export function EventExportAll({ filters }: { filters?: EventExportFilters }) {
         addNotification({ text: msg, variant: "error" });
         return;
       }
-      // Stream the zip to a download.
-      const blob = await res.blob();
+      const manifest = (await res.json()) as {
+        events: {
+          folderName: string;
+          docxBase64: string;
+          csv: string;
+          images: { filename: string; url: string }[];
+        }[];
+        allCsv: string;
+      };
+
+      const zip = new JSZip();
+      zip.file("_all-events.csv", manifest.allCsv);
+      let imageFailures = 0;
+
+      for (const ev of manifest.events) {
+        const folder = zip.folder(ev.folderName);
+        if (!folder) continue;
+        folder.file(`${ev.folderName}.docx`, ev.docxBase64, { base64: true });
+        folder.file("event.csv", ev.csv);
+        // This event's images, fetched in parallel from Cloudinary.
+        const blobs = await Promise.all(
+          ev.images.map((img) => fetchImageBlob(img.url)),
+        );
+        ev.images.forEach((img, i) => {
+          const blob = blobs[i];
+          if (blob) folder.file(img.filename, blob);
+          else imageFailures++;
+        });
+      }
+
+      const blob = await zip.generateAsync({ type: "blob" });
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
@@ -133,19 +178,20 @@ export function EventExportAll({ filters }: { filters?: EventExportFilters }) {
       a.click();
       a.remove();
       URL.revokeObjectURL(url);
+
+      const n = manifest.events.length;
       addNotification({
-        text: `Exported ${selected.size} event${selected.size === 1 ? "" : "s"}`,
-        variant: "success",
+        text: imageFailures
+          ? `Exported ${n} event${n === 1 ? "" : "s"} — ${imageFailures} image${
+              imageFailures === 1 ? "" : "s"
+            } couldn't be fetched`
+          : `Exported ${n} event${n === 1 ? "" : "s"}`,
+        variant: imageFailures ? "warning" : "success",
       });
       close();
     } catch {
-      // A dropped connection is usually a large export exceeding the request
-      // time limit — the email path builds it server-side without that cap.
       addNotification({
-        text:
-          selected.size > 15
-            ? "Export failed — that's a lot of events for one download. Try selecting fewer, or use Share via email."
-            : "Couldn't export events — the request was interrupted. Please try again.",
+        text: "Couldn't build the export zip. Please try again.",
         variant: "error",
       });
     } finally {
