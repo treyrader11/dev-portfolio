@@ -84,7 +84,7 @@ const validateUrlList = (text: string): string[] => {
     (u): u is string => typeof u === "string" && /^https?:\/\//i.test(u),
   );
   if (urls.length === 0) throw new Error("no usable URLs in response");
-  return urls.slice(0, 8);
+  return urls.slice(0, 15);
 };
 
 // A JSON array of short classification labels (category / subcategory).
@@ -321,7 +321,7 @@ export function researchEventFieldWithFallback(
 export function researchEventImageSourcesWithFallback(
   query: string,
 ): Promise<{ data: string[]; provider: FqdProvider; raw: string }> {
-  const system = `You are an event image researcher. Given event details, search the web and return ONLY a JSON array (no markdown, no preamble) of up to 8 URLs most likely to contain photos of THIS specific event. Prefer the official event page, ticketing pages, reputable news articles, and the event's own social posts. Include direct image URLs (ending in .jpg/.jpeg/.png/.webp) when you find them; otherwise include the page URL. Return only the JSON array of URL strings.`;
+  const system = `You are an event image researcher. Given event details, search the web and return ONLY a JSON array (no markdown, no preamble) of up to 15 URLs most likely to contain photos of THIS specific event. Prefer the official event page, ticketing pages, reputable news articles, and the event's own social posts. Include as many distinct, relevant image sources as you can find. Include direct image URLs (ending in .jpg/.jpeg/.png/.webp) when you find them; otherwise include the page URL. Return only the JSON array of URL strings.`;
   return withFallback(
     system,
     `Find image sources for this New Orleans event:\n${query}`,

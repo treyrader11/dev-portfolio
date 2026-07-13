@@ -142,21 +142,42 @@ export function EventFormPage({ event }: Props) {
       variant: "success",
     });
 
-    // Bonus: pull representative images off the event's website (if any) and add
-    // them to the images field so the admin gets an instant preview.
-    const website = fields.website?.trim();
-    if (website) void fetchWebsiteImages(website);
+    // Bonus: AI web-search for images of this event (event website + other
+    // sources) and add them so the admin gets an instant preview.
+    void fetchAiImages({
+      title: fields.title ?? form.title,
+      locationName: fields.locationName,
+      address: fields.address,
+      startDate: fields.startDate,
+      category: fields.category,
+      subcategory: fields.subcategory,
+      website: fields.website,
+      description: fields.description,
+    });
   }
 
   const [fetchingImages, setFetchingImages] = useState(false);
 
-  async function fetchWebsiteImages(website: string) {
+  // Run the AI image search (web search → Cloudinary upload) for the event and
+  // append whatever it finds. Covers the event website plus other sources, so
+  // it returns more images than scraping the website alone.
+  async function fetchAiImages(ctx: {
+    title?: string | null;
+    locationName?: string | null;
+    address?: string | null;
+    startDate?: string | null;
+    category?: string | null;
+    subcategory?: string | null;
+    website?: string | null;
+    description?: string | null;
+  }) {
+    if (!ctx.title?.trim()) return;
     setFetchingImages(true);
     try {
-      const res = await fetch("/api/fqd/website-images", {
+      const res = await fetch("/api/fqd/search-images", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ url: website }),
+        body: JSON.stringify(ctx),
       });
       const data = await res.json();
       const found: { url: string; cloudinaryId?: string | null }[] =
@@ -177,7 +198,7 @@ export function EventFormPage({ event }: Props) {
           : prev;
       });
       addNotification({
-        text: `Added ${found.length} image${found.length === 1 ? "" : "s"} from the event website`,
+        text: `Added ${found.length} image${found.length === 1 ? "" : "s"} from an AI image search`,
         variant: "success",
       });
     } catch {

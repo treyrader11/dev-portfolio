@@ -78,7 +78,7 @@ export default async function handler(
     : sources;
 
   // 2) Resolve candidates to direct image URLs (scrape og:image from pages).
-  const imageUrls = await resolveImageCandidates(candidates, 6);
+  const imageUrls = await resolveImageCandidates(candidates, 15);
   if (imageUrls.length === 0) {
     return res.status(200).json({ images: [], provider });
   }
