@@ -42,15 +42,27 @@ const SHAPE = `{
   "notes": string | null
 }`;
 
+// Per-field formatting rules. Category/subcategory hold MULTIPLE comma-separated
+// labels (the form renders them as pills), and expected attendance should be
+// estimated rather than left blank.
+const FIELD_GUIDANCE = `Field rules:
+- "category": one or two broad category labels as a comma-separated string, e.g. "Festival, Music".
+- "subcategory": two or three specific subcategory labels as a comma-separated string, e.g. "Jazz Concert, Second Line Parade, Outdoor Festival". Include multiple when more than one applies — do not return just one when several fit.
+- "expectedAttendance": the expected number of attendees as a number or range, e.g. "5,000" or "10,000-15,000". If it isn't explicitly stated, give a reasonable estimate based on the event's type, venue, and scale rather than null.`;
+
 const FQD_SYSTEM_PROMPT = `You are a New Orleans event data researcher. Given an event name, search query, or raw event listing text, extract structured event information and return ONLY a valid JSON object. No markdown, no backticks, no preamble. Return null for any field you cannot determine with reasonable confidence.
 
 Return this exact shape:
-${SHAPE}`;
+${SHAPE}
+
+${FIELD_GUIDANCE}`;
 
 const FQD_BULK_SYSTEM_PROMPT = `You are a New Orleans event data extractor. The input contains one or more event listings. Return ONLY a valid JSON ARRAY — no markdown, no backticks, no preamble — with exactly one object per distinct listing, in the same order. Return null for any field you cannot determine.
 
 Each element must be this exact shape:
-${SHAPE}`;
+${SHAPE}
+
+${FIELD_GUIDANCE}`;
 
 export class FqdAllProvidersError extends Error {
   attempts: string[];
