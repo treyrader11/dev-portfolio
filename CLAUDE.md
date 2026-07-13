@@ -1,3 +1,37 @@
+# CLAUDE.md — Dev Portfolio Development Guide
+
+> Configures AI-agent behavior for this codebase. Keep it at the project root and update it as the app evolves.
+
+## Project Identity
+
+- **Name:** Dev Portfolio
+- **Purpose:** Personal developer portfolio + private admin CMS — portfolio projects, work experience, skills, references, jobs, Jira tickets with time tracking, PDF invoices, a GitHub contribution showcase, a contact form, and **French Quarter Direct (FQD)**, an AI-powered New Orleans event-management tool.
+- **URL (local):** http://localhost:3000
+- **Framework:** Next.js 15 (**Pages Router ONLY** — `pages/`, NOT `app/`)
+- **Language:** TypeScript (strict), React 19
+- **Package Manager:** Bun (NEVER npm/yarn/pnpm)
+
+## Tech Stack (actual)
+
+- **Database / ORM:** PostgreSQL + **Prisma** — `prisma/schema.prisma`, client at `src/lib/prisma.ts`
+- **Auth:** **NextAuth v4** — Google + GitHub OAuth, Prisma adapter, `ADMIN_EMAIL` whitelist for admin access
+- **Styling:** Tailwind CSS + `cn()` (`clsx` + `tailwind-merge`). No CVA, no shadcn/ui, no `next-themes`. Dark-only theme.
+- **Animation:** Framer Motion, GSAP, Lenis smooth scroll, Three.js / React Three Fiber (public site)
+- **Images:** Cloudinary (upload, transform, PNG delivery) — `src/lib/cloudinary.ts`. No AWS S3.
+- **Email:** Resend + React Email templates (`src/lib/emails/`, `src/features/fqd/emails/`)
+- **AI:** Vercel AI SDK (`ai`) with `@ai-sdk/google` (Gemini, default), `@ai-sdk/anthropic` (Claude), `@ai-sdk/openai`
+- **Docs/exports:** `@react-pdf/renderer` (PDF), `docx` (Word), `jszip` (zips), `mammoth`/`pdf-parse` (ingest)
+- **State/forms:** Zustand, React Hook Form + Zod; `p-limit` for AI concurrency; Vercel Cron for FQD jobs
+
+## Commands
+
+- Dev server: `bun dev`
+- Build (runs `prisma generate` first): `bun run build`
+- Lint: `bun run lint`
+- Prisma: `bunx prisma migrate dev --name <change>`, `bunx prisma generate`, `bunx prisma studio`
+- Install deps: `bun add <pkg>` / `bun add -D <pkg>`; CLI tools: `bunx <tool>`
+- **After any code change, run `bun run build` and confirm it passes before finishing.**
+
 ---
 
 ## Naming Convention (MANDATORY)
@@ -47,8 +81,8 @@ All admin pages must:
 // pages/admin/experiences.tsx
 import type { GetServerSideProps } from 'next'
 import { getServerSession } from 'next-auth'
-import { authOptions } from '@/lib/auth'
-import { AdminLayout } from '@/components/layout/admin-layout'
+import { authOptions } from '@/pages/api/auth/[...nextauth]'
+import AdminLayout from '@/features/admin/components/admin-layout'
 import { ExperiencesPage } from '@/features/experiences/components/experiences-page'
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
@@ -108,7 +142,7 @@ API routes in `pages/api/` are the mutation layer. Keep them thin — import log
 // pages/api/experiences/index.ts
 import type { NextApiRequest, NextApiResponse } from "next";
 import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
+import { authOptions } from "@/pages/api/auth/[...nextauth]";
 import {
   getExperiences,
   createExperience,
@@ -136,64 +170,58 @@ export default async function handler(
 }
 ```
 
-### Invoice PDF Generation
+### Invoice / PDF Generation
 
-Invoice generation uses `pdf-lib`. Keep all invoice logic in `src/features/invoices/`.
+Invoices and FQD event PDFs use **`@react-pdf/renderer`** (React components → PDF). Invoice logic lives in `src/features/invoices/` (template at `src/features/invoices/lib/invoice-template.tsx`).
 
-- Generate PDFs server-side in API routes (`pages/api/invoices/`)
-- Return PDF as a `Buffer` with `Content-Type: application/pdf`
-- Store invoice metadata in the database; store the generated PDF in S3 if persistence is needed
+- Generate PDFs server-side in API routes (e.g. `pages/api/admin/invoices/[id].ts`)
+- Return the PDF as a `Buffer` with `Content-Type: application/pdf`
+- Store invoice metadata in the database (`Invoice` / `InvoiceLineItem` models)
 - Never generate PDFs client-side — always a server API route
+- DOCX exports use `docx`; multi-file downloads are zipped with `jszip`
 
 ### Jira Integration
 
-Jira client config lives in `src/lib/jira.ts`. Feature logic lives in `src/features/jira/`.
+Jira request helpers live in `src/lib/jira.ts`; the authenticated client is `src/features/jira/lib/jira-client.ts`; feature UI lives in `src/features/jira/`.
 
-- Use Jira REST API v3 with Basic Auth (email + API token)
-- Jira API token goes in `.env.local` as `JIRA_API_TOKEN`, email as `JIRA_EMAIL`, domain as `JIRA_DOMAIN`
-- All Jira calls must happen in API routes or `getServerSideProps` — NEVER expose credentials client-side
-- The Jira page should support: list issues, create issue, delete/transition issue
+- Use the Jira REST API v3 with Basic Auth (email + API token)
+- Credentials are **stored in the database** (`SiteConfig`) and edited via the admin settings page — there are NO `JIRA_*` env vars
+- All Jira calls happen in API routes or `getServerSideProps` — NEVER expose credentials client-side
+- Supports: list issues, create issue, delete/transition issue, and log time entries
 
 ### Email (Resend)
 
-- Resend client lives in `src/lib/resend.ts`
-- Email templates live in `src/features/email/templates/` using React Email
-- All email sends happen in API routes only — never from client-side code
-- Always include a plain text fallback
-- Contact form submits to `pages/api/contact.ts` which sends via Resend
+- Resend is instantiated inline where it is used (`new Resend(process.env.RESEND_API_KEY)`) — there is no `src/lib/resend.ts`
+- React Email templates live in `src/lib/emails/` (shared) and `src/features/fqd/emails/` (event start/expiry notifications)
+- All email sends happen in API routes / server code only — never from the client
+- Contact form submits to `pages/api/contact.tsx` (Resend + reCAPTCHA verification)
+- FQD notification/export emails send via `src/features/fqd/lib/event-notifications.ts` and `pages/api/fqd/events/email-export.ts`
 
-```typescript
-// src/lib/resend.ts
-import { Resend } from "resend";
-export const resend = new Resend(process.env.RESEND_API_KEY);
-```
+### Authentication (NextAuth v4)
 
-### Authentication (NextAuth v5)
+- Config + `authOptions` live in `src/pages/api/auth/[...nextauth].ts`
+- Providers: **Google OAuth** and **GitHub OAuth**; admin access is gated by the `ADMIN_EMAIL` whitelist (comma-separated)
+- Sessions/accounts persist to Postgres via `@auth/prisma-adapter`
+- Use `getServerSession(req, res, authOptions)` in API routes and `getServerSideProps`; `useSession()` client-side
+- `src/middleware.ts` protects `/admin/*` routes at the edge; sign-in page is `/admin/signin`
 
-- Config lives in `src/lib/auth.ts` — export `authOptions` for use in API routes
-- Use `getServerSession(req, res, authOptions)` in API routes and `getServerSideProps`
-- Use `useSession()` client-side for session state
-- Middleware protects `/admin/*` routes at the edge
-- Sign-in page lives at `/admin/signin`
+### Database (Prisma + PostgreSQL)
 
-### Database (Drizzle ORM)
-
-- Drizzle client lives in `src/lib/db.ts`
-- Schema files live in `src/drizzle/schema/` — one file per domain
-- Column naming: snake_case in DB, camelCase in TypeScript
-- Always include `created_at` and `updated_at` timestamps
-- Use UUID primary keys: `uuid('id').defaultRandom().primaryKey()`
-- Run migrations with: `bunx drizzle-kit generate` then `bunx drizzle-kit migrate`
+- Prisma client singleton lives in `src/lib/prisma.ts` (import as `import { prisma } from "@/lib/prisma"`)
+- Single schema file: `prisma/schema.prisma` (models: User, Account, Session, VerificationToken, SiteConfig, Experience, Project, Skill, Reference, TimeEntry, Invoice, InvoiceLineItem, FqdEvent, FqdEventImage)
+- UUID primary keys; camelCase fields in TypeScript; `createdAt` / `updatedAt` timestamps
+- `bun run build` runs `prisma generate` automatically. For schema changes: `bunx prisma migrate dev --name <change>` then `bunx prisma generate`
+- Never wipe the database — migrations must be additive; verify before applying
 
 ---
 
 ## Styling
 
 - Use Tailwind CSS utility classes — never write custom CSS unless absolutely necessary
-- Use `cn()` from `src/lib/utils.ts` for conditional class merging
-- Use CVA (`class-variance-authority`) for component variants
-- Use shadcn/ui components as the base — customize via Tailwind, never rewrite from scratch
-- ALWAYS support dark mode via `next-themes` — use `dark:` variants or CSS variables
+- Use `cn()` from `src/lib/utils.ts` (`clsx` + `tailwind-merge`) for conditional class merging
+- The project does NOT use CVA, shadcn/ui, or `next-themes` — do not introduce them; build components with plain Tailwind + `cn()`
+- The app is **dark by default** (custom theme colors like `dark`, `dark-400/500/600`, `secondary`, `light-400`); the admin is permanently dark. There is no light/dark toggle — do not add `dark:` variants expecting a theme switch
+- Icons come from `react-icons` (mainly `react-icons/ri`); `@tabler/icons-react` is also available
 - Never use inline styles unless dynamic values require it
 
 ---
@@ -201,29 +229,35 @@ export const resend = new Resend(process.env.RESEND_API_KEY);
 ## File & Folder Conventions
 
 - Feature-based structure: group components, hooks, actions/queries, and types inside `src/features/<feature-name>/`
-- Each feature directory should have an `index.ts` barrel export
-- Shared UI primitives: `src/components/ui/` (shadcn only)
-- Shared layout: `src/components/layout/`
+- Each feature directory can have an `index.ts` barrel export
+- Shared UI primitives: `src/components/ui/` (plain Tailwind components, e.g. `chip.tsx`, `popover.tsx`, `multi-step-loader.tsx`)
+- Shared layout / admin shell: `src/components/`, `src/features/admin/components/`
 - Reusable generic components (dropdowns, inputs, accordions, buttons, etc.): `src/components/shared/`
+- Shared icon library: `src/icons/`; shared hooks: `src/hooks/`
 - File naming: kebab-case for files (`invoice-card.tsx`), PascalCase for component exports (`InvoiceCard`)
 - Types co-located with their feature; global types in `src/types/`
+- Actual feature directories: `admin`, `fqd`, `portfolio`, `experiences`, `skills`, `references`, `profile`, `jobs`, `invoices`, `jira`, `github`
 
 **Feature directory structure:**
 
+```
 src/features/invoices/
-components/
-invoices-page.tsx
-invoice-card.tsx
-invoice-form.tsx
-hooks/
-use-invoices.ts
-actions/
-get-invoices.ts
-create-invoice.ts
-delete-invoice.ts
-types/
-invoice-types.ts
-index.ts
+  components/
+    invoices-page.tsx
+    invoice-card.tsx
+    invoice-form.tsx
+  hooks/
+    use-invoices.ts
+  actions/
+    get-invoices.ts
+    create-invoice.ts
+    delete-invoice.ts
+  lib/
+    invoice-template.tsx
+  types/
+    invoice-types.ts
+  index.ts
+```
 
 ---
 
@@ -244,8 +278,8 @@ Before considering any task complete, verify:
 2. **No lint errors** — `bun run lint` passes
 3. **No `any` types** — use proper typing or `unknown` with type guards
 4. **No unused imports or variables**
-5. **No `console.log`** left in production code
-6. **Dark mode works** — check both light and dark themes
+5. **No `console.log`** left in production code (intentional server-side diagnostics are fine)
+6. **Dark theme** — the app is dark-only; new UI must read well on the dark surface (there is no light theme)
 7. **Mobile responsive** — test at 375px, 768px, 1024px, 1440px
 8. **Loading states** — every async operation shows a loading indicator
 9. **Error states** — every async operation handles errors gracefully
@@ -260,7 +294,7 @@ Before considering any task complete, verify:
 - Do not use App Router patterns (`app/` dir, Server Components, `'use server'`, `metadata` export, `generateMetadata`)
 - Do not use `next/navigation` — use `next/router` (`useRouter`) for this Pages Router project
 - Do not put secrets in `NEXT_PUBLIC_` env vars
-- Do not expose API keys (Resend, Jira, S3, Anthropic, Gemini, OpenAI) to the client — API routes only
+- Do not expose secrets (Resend, Jira, Cloudinary secret, Anthropic, Gemini, OpenAI, `GITHUB_AUTH_TOKEN`) to the client — server/API routes only
 - Do not write custom CSS when Tailwind utilities exist
 - Do not skip loading and error states
 - Do not use `var` — always `const` or `let`
@@ -275,36 +309,61 @@ Before considering any task complete, verify:
 
 ## Environment Variables
 
-Keep `.env.example` updated whenever you add or remove variables. Required variables:
+Keep `.env.example` updated whenever you add or remove variables. This mirrors `.env.example` exactly — every variable the app actually uses:
 
 ```bash
-# Auth
-AUTH_SECRET=
-AUTH_URL=
+# App / Site
+NEXTAUTH_URL=http://localhost:3000
+# Public site URL — absolute URLs in email templates (images, links)
+NEXT_PUBLIC_SITE_URL=http://localhost:3000
 
-# Database
+# Database (PostgreSQL — Neon, Supabase, etc.)
 DATABASE_URL=
+
+# Auth (NextAuth v4)
+NEXTAUTH_SECRET=
+# Google OAuth
+GOOGLE_CLIENT_ID=
+GOOGLE_CLIENT_SECRET=
+# GitHub OAuth
+GITHUB_CLIENT_ID=
+GITHUB_CLIENT_SECRET=
+# GitHub PAT (read:user) — higher REST rate limits + GraphQL contribution
+# calendar on /portfolio. Without it the GithubContributions section is hidden.
+GITHUB_AUTH_TOKEN=
+# Admin whitelist (comma-separated emails)
+ADMIN_EMAIL=
 
 # Email (Resend)
 RESEND_API_KEY=
-RESEND_FROM_EMAIL=
+CONTACT_FORM_TO_EMAIL=
+# "From" addresses (must be on a verified Resend domain)
+RESEND_CONTACT_FROM_EMAIL="Dev Portfolio <contact@yourdomain.com>"
+RESEND_AUTOREPLY_FROM_EMAIL="Your Name <noreply@yourdomain.com>"
 
-# Jira
-JIRA_EMAIL=
-JIRA_API_TOKEN=
-JIRA_DOMAIN=
-JIRA_PROJECT_KEY=
+# Google reCAPTCHA v2 (contact form)
+RECAPTCHA_SITE_KEY=
+RECAPTCHA_SECRET_KEY=
+NEXT_PUBLIC_RECAPTCHA_SITE_KEY=
 
-# AWS S3 (if used for invoice/asset storage)
-AWS_ACCESS_KEY_ID=
-AWS_SECRET_ACCESS_KEY=
-AWS_REGION=
-AWS_BUCKET_NAME=
-
-# AI providers (FQD event research)
-ANTHROPIC_API_KEY=
+# AI services (FQD research; Gemini is the default/free provider)
+OPENAI_API_KEY=
 GEMINI_API_KEY=
+ANTHROPIC_API_KEY=
+
+# Cloudinary (image uploads/delivery)
+NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME=
+NEXT_PUBLIC_CLOUDINARY_API_KEY=
+CLOUDINARY_API_SECRET=
+CLOUDINARY_URL=
+NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET=
+
+# Vercel Cron auth — sent as "Authorization: Bearer <CRON_SECRET>" to protect
+# the scheduled event-processing route (/api/fqd/process-events).
+CRON_SECRET=
 ```
+
+> There are no `JIRA_*` or `AWS_*` env vars — Jira credentials are stored in the DB via admin settings, and images use Cloudinary (not S3).
 
 ---
 
@@ -364,10 +423,11 @@ When refactoring the project to feature-based structure, tackle in this order:
 5. `src/features/skills/` — skills display + admin management
 6. `src/features/invoices/` — PDF generation, invoice management
 7. `src/features/jira/` — Jira ticket integration
-8. `src/features/contact/` — contact form + email sending
-9. `src/features/references/` — references display + admin management
-10. `src/features/profile/` — bio, avatar, links
-11. `src/features/jobs/` — job/application tracking
-12. `src/features/email/` — React Email templates
+8. `src/features/references/` — references display + admin management
+9. `src/features/profile/` — bio, avatar, links
+10. `src/features/jobs/` — job/application tracking
+11. `src/features/github/` — GitHub repos + contribution calendar (public portfolio)
+
+> Contact form lives in `pages/api/contact.tsx` + `src/components`; React Email templates live in `src/lib/emails/` and `src/features/fqd/emails/` (there is no standalone `email` feature directory).
 
 For each migration: create the feature directory, move components/hooks/types in, update imports, thin the page file to a shell, then run `bun run build` to confirm zero errors before moving to the next feature.
