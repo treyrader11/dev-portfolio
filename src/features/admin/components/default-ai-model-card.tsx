@@ -1,7 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { RiSparkling2Line, RiLoader4Line, RiCheckLine } from "react-icons/ri";
+import {
+  RiSparkling2Line,
+  RiLoader4Line,
+  RiCheckLine,
+  RiExternalLinkLine,
+} from "react-icons/ri";
 import { useNotificationsContext } from "@/components/providers/NotificationsProvider";
 import { cn } from "@/lib/utils";
 import {
@@ -14,10 +19,31 @@ import {
 // search). Selecting one auto-saves to SiteConfig and toasts — no Save button.
 // Self-contained (its own fetch/save), deliberately not built on the profile
 // form logic.
-const AI_PROVIDER_OPTIONS: { value: FqdProvider; hint: string }[] = [
-  { value: "gemini", hint: "Free tier — default" },
-  { value: "anthropic", hint: "Paid" },
-  { value: "openai", hint: "Paid" },
+const AI_PROVIDER_OPTIONS: {
+  value: FqdProvider;
+  hint: string;
+  // The provider's console/dashboard, for managing API keys, credits & usage.
+  consoleUrl: string;
+  consoleLabel: string;
+}[] = [
+  {
+    value: "gemini",
+    hint: "Free tier — default",
+    consoleUrl: "https://aistudio.google.com/",
+    consoleLabel: "Google AI Studio",
+  },
+  {
+    value: "anthropic",
+    hint: "Paid",
+    consoleUrl: "https://console.anthropic.com/",
+    consoleLabel: "Anthropic Console",
+  },
+  {
+    value: "openai",
+    hint: "Paid",
+    consoleUrl: "https://platform.openai.com/",
+    consoleLabel: "OpenAI Platform",
+  },
 ];
 
 const AI_SETTINGS_KEY = "aiSettings";
@@ -128,6 +154,23 @@ export function DefaultAiModelCard() {
                 </button>
               );
             })}
+      </div>
+
+      {/* Provider consoles — manage API keys, credits & usage for each model. */}
+      <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-dark-600 pt-4 text-xs">
+        <span className="text-light-400">Manage keys, credits &amp; usage:</span>
+        {AI_PROVIDER_OPTIONS.map((o) => (
+          <a
+            key={o.value}
+            href={o.consoleUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1 text-secondary transition-colors hover:text-white hover:underline"
+          >
+            {o.consoleLabel}
+            <RiExternalLinkLine className="size-3.5" />
+          </a>
+        ))}
       </div>
     </div>
   );
