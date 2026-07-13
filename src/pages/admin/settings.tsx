@@ -18,6 +18,14 @@ import type {
   Appearance,
   AppearanceArea,
 } from "@/types/data";
+import {
+  FQD_PROVIDER_LABEL,
+  parseFqdProvider,
+  type FqdProvider,
+} from "@/features/fqd/types/fqd-types";
+
+// Only providers with a runner can be the default (OpenAI has none).
+const AI_PROVIDER_OPTIONS: FqdProvider[] = ["gemini", "anthropic"];
 
 const APPEARANCE_AREAS: { key: AppearanceArea; label: string }[] = [
   { key: "hero", label: "Hero Background" },
@@ -41,6 +49,7 @@ interface Props {
   jiraCredentials: JiraCredentials;
   portfolioIntro: string;
   appearance: Appearance;
+  aiDefaultProvider: FqdProvider;
 }
 
 export default function AdminSettings({
@@ -50,6 +59,7 @@ export default function AdminSettings({
   jiraCredentials: initialJira,
   portfolioIntro: initialIntro,
   appearance: initialAppearance,
+  aiDefaultProvider: initialAiProvider,
 }: Props) {
   const [meta, setMeta] = useState(initialMeta);
   const [cta, setCta] = useState(initialCta);
@@ -57,6 +67,7 @@ export default function AdminSettings({
   const [jira, setJira] = useState(initialJira);
   const [portfolioIntro, setPortfolioIntro] = useState(initialIntro);
   const [appearance, setAppearance] = useState(initialAppearance);
+  const [aiProvider, setAiProvider] = useState<FqdProvider>(initialAiProvider);
 
   function setAreaBg(area: AppearanceArea, bg: "solid" | "noise") {
     setAppearance((a) => ({ ...a, [area]: { ...a[area], bg } }));
@@ -94,6 +105,44 @@ export default function AdminSettings({
   return (
     <AdminLayout title="Settings">
       <div className="max-w-3xl space-y-8">
+        {/* Default AI Model — used across the app (FQD event research/discovery,
+            AI job search). The create-event selector seeds from this. */}
+        <div className="bg-dark-400 rounded-lg border border-dark-600 p-6">
+          <h2 className="text-lg font-semibold text-white mb-1">
+            Default AI Model
+          </h2>
+          <p className="text-sm text-light-400 mb-4">
+            The model every AI feature uses by default (event research and
+            discovery, AI job search). You can still override it per-session with
+            the selector on the create-event page.
+          </p>
+          <div className="space-y-2">
+            {AI_PROVIDER_OPTIONS.map((p) => (
+              <label
+                key={p}
+                className="flex items-center gap-2 text-sm text-white"
+              >
+                <input
+                  type="radio"
+                  name="ai-default-provider"
+                  checked={aiProvider === p}
+                  onChange={() => setAiProvider(p)}
+                  className="accent-secondary"
+                />
+                {FQD_PROVIDER_LABEL[p]}
+                {p === "gemini" ? " — free tier" : ""}
+              </label>
+            ))}
+          </div>
+          <button
+            onClick={() => saveConfig("aiSettings", { defaultProvider: aiProvider })}
+            disabled={saving === "aiSettings"}
+            className="mt-4 px-4 py-2 bg-dark-600 text-white text-sm font-medium rounded-lg hover:bg-dark-600 disabled:opacity-50"
+          >
+            {saving === "aiSettings" ? "Saving..." : "Save Default Model"}
+          </button>
+        </div>
+
         {/* Meta Descriptions */}
         <div className="bg-dark-400 rounded-lg border border-dark-600 p-6">
           <h2 className="text-lg font-semibold text-white mb-4">
@@ -436,6 +485,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     jiraConfig,
     introConfig,
     appearanceConfig,
+    aiConfig,
   ] = await Promise.all([
     prisma.siteConfig.findUnique({ where: { key: "metaDescriptions" } }),
     prisma.siteConfig.findUnique({ where: { key: "ctaTexts" } }),
@@ -443,7 +493,15 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     prisma.siteConfig.findUnique({ where: { key: "jiraCredentials" } }),
     prisma.siteConfig.findUnique({ where: { key: "portfolioIntro" } }),
     prisma.siteConfig.findUnique({ where: { key: "appearance" } }),
+    prisma.siteConfig.findUnique({ where: { key: "aiSettings" } }),
   ]);
+
+  const aiValue = aiConfig?.value as { defaultProvider?: unknown } | null;
+  const parsedProvider = parseFqdProvider(aiValue?.defaultProvider);
+  const aiDefaultProvider: FqdProvider =
+    parsedProvider && AI_PROVIDER_OPTIONS.includes(parsedProvider)
+      ? parsedProvider
+      : "gemini";
 
   return {
     props: {
@@ -464,6 +522,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
           ? introConfig.value
           : fallbackPortfolioIntro,
       appearance: normalizeAppearance(appearanceConfig?.value),
+      aiDefaultProvider,
     },
   };
 };

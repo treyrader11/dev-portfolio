@@ -13,12 +13,14 @@ import { FqdProviderSelect } from "./fqd-provider-select";
 import { fmtEventDate } from "../lib/format";
 import { patchEventInListSnapshot } from "../lib/events-list-snapshot";
 import { withFreeTicketUrl } from "../lib/free-ticket";
+import { useFqdProvider } from "../hooks/use-fqd-provider";
 import type { ResearchResult } from "../hooks/use-event-research";
 import {
   emptyFqdEvent,
   type FqdDuplicateInfo,
   type FqdEventFormValues,
   type FqdEventListItem,
+  type FqdProvider,
 } from "../types/fqd-types";
 
 const isBlank = (v?: string | null) => !v || !v.trim();
@@ -49,6 +51,8 @@ function getMissingFormFields(form: FqdEventFormValues): string[] {
 interface Props {
   mode: "create" | "edit";
   event?: FqdEventListItem;
+  // Admin-configured default AI model (from settings); seeds the selector.
+  defaultProvider?: FqdProvider;
 }
 
 const CRUMBS = [
@@ -88,9 +92,15 @@ function toFormValues(event: FqdEventListItem): FqdEventFormValues {
   };
 }
 
-export function EventFormPage({ event }: Props) {
+export function EventFormPage({ event, defaultProvider }: Props) {
   const router = useRouter();
   const { addNotification } = useNotificationsContext();
+
+  // Seed the AI model selector with the admin default (unless the user already
+  // picked one this session).
+  useEffect(() => {
+    if (defaultProvider) useFqdProvider.getState().applyDefault(defaultProvider);
+  }, [defaultProvider]);
 
   // The persisted event: the prop for edit mode, or set after the first save of
   // a new event (so re-saves become updates, not new inserts).

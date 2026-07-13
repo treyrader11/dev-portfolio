@@ -142,9 +142,13 @@ Plus, at the ZIP root: `_all-events.csv` — a combined JEvents CSV (one header 
 
 The fallback chain must always be: Gemini → Anthropic. OpenAI is not in the FQD chain. When a preferred provider is passed from the UI selector, use it directly with no fallback — do not silently switch providers on the user.
 
+**Default AI model (admin settings):**
+
+The app-wide default AI provider is stored in `SiteConfig` under the `aiSettings` key (`{ defaultProvider }`) and edited in the "Default AI Model" section of `/admin/settings`. Server code reads it via `getDefaultAiProvider()` / `getProviderOrder()` in `src/features/fqd/lib/ai-settings.ts` — the fallback chain order is derived from this (default first, then the rest). Both FQD research/discovery and AI job search honor it. Never hardcode `["gemini", "anthropic"]` order in a runner; call `getProviderOrder()`.
+
 **AI model selector (create-event page):**
 
-The create-event page has a top-level AI provider/model dropdown that defaults to Gemini. Every AI action on the page (auto-fill, per-field generate, description, image search, classification) must read from this selector and pass the chosen provider through to the API route and into `fqd-research.ts`. Never hardcode a provider on the create-event page.
+The create-event page has a top-level AI provider/model dropdown seeded from the admin default (via `applyDefault` in `use-fqd-provider.ts`, which only applies until the user manually picks one). Every AI action on the page (auto-fill, per-field generate, description, image search, classification) must read from this selector and pass the chosen provider through to the API route and into `fqd-research.ts`. Never hardcode a provider on the create-event page.
 
 **Error feedback colors (create-event page):**
 

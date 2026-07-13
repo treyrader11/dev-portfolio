@@ -8,15 +8,15 @@ import {
   type ToolSet,
 } from "ai";
 import { z } from "zod";
+import { getProviderOrder } from "@/features/fqd/lib/ai-settings";
 
-// Mirrors the French Quarter Direct AI engine (fqd-research.ts): Gemini-first
-// provider fallback + web search + schema-enforced structured output. Kept
-// self-contained so the jobs feature doesn't depend on FQD internals.
+// Mirrors the French Quarter Direct AI engine (fqd-research.ts): provider
+// fallback (admin-default order) + web search + schema-enforced structured
+// output.
 
 const GEMINI_MODEL = "gemini-flash-latest";
 const ANTHROPIC_MODEL = "claude-sonnet-4-20250514";
-const PROVIDER_ORDER = ["gemini", "anthropic"] as const;
-export type JobProvider = (typeof PROVIDER_ORDER)[number];
+export type JobProvider = "gemini" | "anthropic";
 
 export class JobsResearchError extends Error {
   attempts: string[];
@@ -105,7 +105,12 @@ export async function researchJobsWithFallback(
   const system = `You are a tech job-search assistant. Search the web for CURRENT, open software/developer job postings matching the given keywords. Return only genuinely open roles you can find on real job boards or company career pages, each with: title, hiring company, location, whether it is remote, the direct application/listing URL, relevant skill tags, and the job type (e.g. Full-time, Contract). Prefer recent postings. Return up to 20; if you find none, return an empty array.`;
   const prompt = `Find current job postings matching these keywords: ${query}`;
 
-  const order = only ? [only] : PROVIDER_ORDER;
+  // Respect the admin default AI model (Gemini/Anthropic) when none is forced.
+  const order: JobProvider[] = only
+    ? [only]
+    : (await getProviderOrder()).filter(
+        (p): p is JobProvider => p === "gemini" || p === "anthropic",
+      );
   const errors: string[] = [];
   for (const provider of order) {
     try {

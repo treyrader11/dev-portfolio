@@ -3,13 +3,21 @@ import type { FqdProvider } from "../types/fqd-types";
 
 interface FqdProviderState {
   provider: FqdProvider;
+  // Whether the user changed it this session (a manual pick beats the default).
+  userSet: boolean;
   setProvider: (provider: FqdProvider) => void;
+  // Apply the admin-configured default (only if the user hasn't picked one).
+  applyDefault: (provider: FqdProvider) => void;
 }
 
-// The AI model chosen at the top of the create-event page. Every AI action on
-// that page reads this so they all use the selected model. Defaults to Gemini
-// (free).
-export const useFqdProvider = create<FqdProviderState>((set) => ({
+// The AI model used by every AI action on the create-event page. Initializes to
+// the admin default (from settings) and can be overridden per-session with the
+// top-of-page selector.
+export const useFqdProvider = create<FqdProviderState>((set, get) => ({
   provider: "gemini",
-  setProvider: (provider) => set({ provider }),
+  userSet: false,
+  setProvider: (provider) => set({ provider, userSet: true }),
+  applyDefault: (provider) => {
+    if (!get().userSet) set({ provider });
+  },
 }));

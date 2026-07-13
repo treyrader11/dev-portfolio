@@ -2,15 +2,22 @@ import type { GetServerSideProps } from "next";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/pages/api/auth/[...nextauth]";
 import { EventFormPage } from "@/features/fqd/components/event-form-page";
+import { getDefaultAiProvider } from "@/features/fqd/lib/ai-settings";
+import type { FqdProvider } from "@/features/fqd/types/fqd-types";
 
-export default function Page() {
-  return <EventFormPage mode="create" />;
+interface Props {
+  defaultProvider: FqdProvider;
 }
 
-export const getServerSideProps: GetServerSideProps = async (ctx) => {
+export default function Page({ defaultProvider }: Props) {
+  return <EventFormPage mode="create" defaultProvider={defaultProvider} />;
+}
+
+export const getServerSideProps: GetServerSideProps<Props> = async (ctx) => {
   const session = await getServerSession(ctx.req, ctx.res, authOptions);
   if (!session?.user?.isAdmin) {
     return { redirect: { destination: "/admin/signin", permanent: false } };
   }
-  return { props: {} };
+  const defaultProvider = await getDefaultAiProvider();
+  return { props: { defaultProvider } };
 };

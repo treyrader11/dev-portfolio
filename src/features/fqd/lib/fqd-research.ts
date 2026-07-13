@@ -19,15 +19,12 @@ import {
   type FqdProvider,
 } from "../types/fqd-types";
 import { splitListings, chunk } from "./split-listings";
+import { getProviderOrder } from "./ai-settings";
 
 // `gemini-flash-latest` always resolves to the current stable Flash model, so
 // it won't hit "model no longer available" as Google retires dated versions.
 const GEMINI_MODEL = "gemini-flash-latest";
 const ANTHROPIC_MODEL = "claude-sonnet-4-20250514";
-
-// Fallback order: Gemini first (free), then Anthropic. OpenAI is intentionally
-// not a runner here.
-const PROVIDER_ORDER: FqdProvider[] = ["gemini", "anthropic"];
 
 export const PROVIDER_META: Record<
   FqdProvider,
@@ -277,7 +274,8 @@ async function withFallback<T>(
   run: (provider: FqdProvider) => Promise<T>,
   only?: FqdProvider,
 ): Promise<{ data: T; provider: FqdProvider }> {
-  const order = only ? [only] : PROVIDER_ORDER;
+  // A selected provider is used alone; otherwise the admin-default order.
+  const order = only ? [only] : await getProviderOrder();
   const errors: string[] = [];
   for (const provider of order) {
     // Retry the SAME provider once on a transient error (5xx / overloaded /
