@@ -1,6 +1,18 @@
 # CLAUDE.md — Dev Portfolio Development Guide
 
-> Configures AI-agent behavior for this codebase. Keep it at the project root and update it as the app evolves.
+> Configures AI-agent behavior for this codebase. Keep it at the project root.
+
+## Keeping this file current (MANDATORY)
+
+**Claude Code must update this file as part of any task that changes what it documents.** Before finishing a task, check whether the work invalidates or extends anything here — and if so, edit CLAUDE.md in the same change. This includes:
+
+- New or changed **tech / dependencies** (a `bun add`/`bun remove`) → update the Tech Stack and, if relevant, the README
+- New or changed **environment variables** → update the Environment Variables section to mirror `.env.example` exactly
+- New **features, admin pages, API routes, or exports** → document them in Feature Breakdown & Patterns
+- New **conventions or rules** the user establishes during a task → capture them so they persist
+- Anything here that becomes **false** (renamed files, changed architecture) → correct it
+
+Never let CLAUDE.md drift from the actual codebase. When you finish a task, if nothing here needed changing, that's fine — but you must have checked.
 
 ## Project Identity
 
@@ -109,9 +121,22 @@ The FQD subsystem lives in `src/features/fqd/` and `src/pages/api/fqd/`. It is a
 **Key files:**
 
 - `src/features/fqd/lib/fqd-research.ts` — single AI engine, 7 modes, provider fallback chain
-- `src/features/fqd/lib/fqd-types.ts` — Zod schemas and TypeScript types for all 16 event fields
+- `src/features/fqd/types/fqd-types.ts` — Zod schemas and TypeScript types for all 16 event fields
 - `src/features/fqd/lib/scrape-images.ts` — og:image regex scraper with SSRF guard
-- `src/features/fqd/lib/serialize.ts` — data transformation between DB and client shapes
+- `src/features/fqd/lib/serialize.ts` — data transformation between DB and client shapes (`FqdEventListItem`)
+- `src/features/fqd/lib/event-zip.ts` — assembles the export ZIP (one folder per event)
+- `src/features/fqd/lib/event-listing-docx.ts` — the per-event listing `.docx`
+- `src/features/fqd/lib/event-csv.ts` — JEvents-compatible CSV generator
+
+**Exports (ZIP structure):**
+
+`buildEventsZip` (in `event-zip.ts`) builds the bulk export; the route is `pages/api/fqd/events/export-zip.ts`. Events flow through the export as the serialized `FqdEventListItem` (ISO date strings), NOT the Prisma `FqdEvent`. Each ZIP contains, per event, a folder named by slug with:
+
+- `<slug>.docx` — formatted listing (mirrors the event detail page fields)
+- `event.csv` — single-row JEvents CSV (header + that event)
+- image `PNG`s (unless `includeImages: false`, used by the email-a-zip path)
+
+Plus, at the ZIP root: `_all-events.csv` — a combined JEvents CSV (one header + one row per event). CSV columns are fixed: `CATEGORIES, SUMMARY, LOCATION, DESCRIPTION, CONTACT, X-EXTRAINFO, DTSTART, DTEND, TIMEZONE, RRULE`; every field is double-quoted with inner quotes doubled; dates use `date-fns` and `TIMEZONE` is `America/Chicago`. When changing exports, do not alter the DOCX, image, or PDF logic or the `addedToJoomla` flag unless the task requires it.
 
 **Provider order (Gemini first — it is free tier):**
 
