@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useRouter } from "next/router";
+import pLimit from "p-limit";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   RiRadarLine,
@@ -57,27 +58,6 @@ function discoveredToResearch(d: DiscoveredEvent): EventResearch {
     category: d.category,
     description: d.description,
   };
-}
-
-// Run tasks with a small concurrency cap so per-event web-search calls don't all
-// fire at once (rate limits) but the batch still finishes reasonably fast.
-async function mapPool<T, R>(
-  items: T[],
-  limit: number,
-  fn: (item: T, index: number) => Promise<R>,
-): Promise<R[]> {
-  const results = new Array<R>(items.length);
-  let next = 0;
-  async function worker() {
-    while (next < items.length) {
-      const i = next++;
-      results[i] = await fn(items[i], i);
-    }
-  }
-  await Promise.all(
-    Array.from({ length: Math.min(limit, items.length) }, worker),
-  );
-  return results;
 }
 
 interface ProviderInfo {
@@ -169,7 +149,11 @@ export function EventDiscoverPanel() {
       const res = await fetch("/api/fqd/research", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ query, provider: selectedProvider }),
+        body: JSON.stringify({
+          query,
+          title: d.title,
+          provider: selectedProvider,
+        }),
       });
       if (!res.ok) return base;
       const json = await res.json();
@@ -243,15 +227,21 @@ export function EventDiscoverPanel() {
     );
 
     // Research each event's fields, then AI-search its images, updating the
-    // loader with each event's live status so the user sees real progress.
-    const built = await mapPool(items, 3, async (d, i) => {
-      updateStep(i, { status: "active", action: "populating fields" });
-      const fields = await researchOne(d);
-      updateStep(i, { action: "searching for images" });
-      const images = await fetchImagesFor(fields);
-      updateStep(i, { status: "done", action: "" });
-      return { ...fields, images };
-    });
+    // loader with each event's live status. p-limit caps concurrency at 2 so
+    // web-search calls don't all fire at once (rate limits).
+    const limit = pLimit(2);
+    const built = await Promise.all(
+      items.map((d, i) =>
+        limit(async () => {
+          updateStep(i, { status: "active", action: "populating fields" });
+          const fields = await researchOne(d);
+          updateStep(i, { action: "searching for images" });
+          const images = await fetchImagesFor(fields);
+          updateStep(i, { status: "done", action: "" });
+          return { ...fields, images };
+        }),
+      ),
+    );
 
     setSavingPhase(true);
     try {

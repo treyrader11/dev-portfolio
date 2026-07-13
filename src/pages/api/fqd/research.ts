@@ -18,26 +18,29 @@ export default async function handler(
     return res.status(405).json({ error: "Method not allowed" });
   }
 
-  const { query, provider: sel } = req.body as {
+  const { query, provider: sel, title } = req.body as {
     query?: string;
     provider?: string;
+    title?: string;
   };
   if (!query?.trim()) {
     return res.status(400).json({ error: "A search query is required" });
   }
 
   try {
-    const { data, provider, raw } = await researchEventWithFallback(
+    const { data, provider, raw, cached } = await researchEventWithFallback(
       query.trim(),
       parseFqdProvider(sel),
+      typeof title === "string" ? title : undefined,
     );
     const meta = PROVIDER_META[provider];
     return res.status(200).json({
       data,
       provider,
       providerLabel: meta.providerLabel,
-      searchEngine: meta.searchEngine,
+      searchEngine: cached ? "7-day cache" : meta.searchEngine,
       raw,
+      cached: cached ?? false,
     });
   } catch (err) {
     if (err instanceof FqdAllProvidersError) {

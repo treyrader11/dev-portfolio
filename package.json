@@ -41,6 +41,7 @@
     "next-auth": "4",
     "next-cloudinary": "^6.17.5",
     "nextjs-progressbar": "^0.0.16",
+    "p-limit": "^7.3.0",
     "pdf-parse": "1.1.1",
     "react": "^19",
     "react-dom": "^19",

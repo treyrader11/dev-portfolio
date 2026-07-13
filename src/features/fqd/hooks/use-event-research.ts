@@ -55,7 +55,10 @@ export function useEventResearch() {
     loading,
     error,
     notice,
-    research: (query: string) => call("/api/fqd/research", { query }),
+    // Pass the query as the title too so the 7-day research cache can match on
+    // it (users search by event name).
+    research: (query: string) =>
+      call("/api/fqd/research", { query, title: query }),
     parse: (text: string) => call("/api/fqd/parse", { text }),
   };
 }
