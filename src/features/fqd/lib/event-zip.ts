@@ -1,6 +1,7 @@
 import JSZip from "jszip";
 import { eventImageFilename, pngDeliveryUrl } from "./image-filenames";
 import { buildEventListingDocx } from "./event-listing-docx";
+import { generateEventCsv, generateCombinedCsv } from "./event-csv";
 import type { FqdEventListItem } from "../types/fqd-types";
 
 // Run tasks with a concurrency cap so a large export doesn't open hundreds of
@@ -52,6 +53,9 @@ export async function addEventFolder(
   const docx = await buildEventListingDocx(event);
   folder.file(`${folderName}.docx`, docx);
 
+  // JEvents-compatible per-event CSV alongside the docx.
+  folder.file("event.csv", generateEventCsv(event));
+
   if (!includeImages) return;
 
   const total = event.images.length;
@@ -101,6 +105,9 @@ export async function buildEventsZip(
       `${failures.length} event(s) could not be exported:\n\n${failures.join("\n")}\n`,
     );
   }
+
+  // Combined JEvents CSV at the root (underscore prefix sorts it to the top).
+  zip.file("_all-events.csv", generateCombinedCsv(events));
 
   return zip;
 }
