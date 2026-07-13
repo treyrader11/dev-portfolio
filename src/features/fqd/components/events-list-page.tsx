@@ -94,6 +94,7 @@ export function EventsListPage({ data }: Props) {
   const [bulkConfirm, setBulkConfirm] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [bulkBusy, setBulkBusy] = useState(false);
+  const toolbarRef = useRef<HTMLDivElement>(null);
 
   // The title/location search runs server-side (debounced) so it also finds
   // events that haven't been paginated into the list yet.
@@ -221,6 +222,27 @@ export function EventsListPage({ data }: Props) {
     if (loadingMore || !hasMore) return;
     fetchEvents(page + 1, missing, debouncedSearch, added, newOnly, true);
   }
+
+  // Keep the sticky toolbar pinned below the header within the *visible* viewport
+  // when the mobile keyboard opens. iOS shifts the visual viewport on input
+  // focus, which otherwise pushes CSS-sticky top elements out of view. No-op on
+  // desktop, where visualViewport.offsetTop stays 0.
+  useEffect(() => {
+    const vv = window.visualViewport;
+    const el = toolbarRef.current;
+    if (!vv || !el) return;
+    const HEADER_H = 80; // AdminHeader height (h-20)
+    const sync = () => {
+      el.style.top = `${HEADER_H + vv.offsetTop}px`;
+    };
+    sync();
+    vv.addEventListener("resize", sync);
+    vv.addEventListener("scroll", sync);
+    return () => {
+      vv.removeEventListener("resize", sync);
+      vv.removeEventListener("scroll", sync);
+    };
+  }, []);
 
   // Toggle an event's "added to Joomla" flag.
   async function toggleAdded(event: FqdEventListItem) {
@@ -429,7 +451,10 @@ export function EventsListPage({ data }: Props) {
       <div className="max-w-4xl">
         {/* Sticky list toolbar — sticks just below the header on scroll, with a
             translucent blur so cards show through faintly while scrolling. */}
-        <div className="sticky top-20 z-20 border-b border-dark-600 bg-dark/60 py-3 backdrop-blur-md">
+        <div
+          ref={toolbarRef}
+          className="sticky top-20 z-30 border-b border-dark-600 bg-dark/85 py-3 backdrop-blur-md"
+        >
           {/* Row A: search (left, fills) + filter dropdown. */}
           <div className="flex items-center gap-2">
             <div className="flex flex-1 items-center gap-2 rounded-lg border border-dark-600 bg-dark-600 px-3 py-2">
