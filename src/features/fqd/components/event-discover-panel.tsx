@@ -12,6 +12,10 @@ import {
 } from "react-icons/ri";
 import { cn } from "@/lib/utils";
 import { useNotificationsContext } from "@/components/providers/NotificationsProvider";
+import {
+  MultiStepLoader,
+  type LoadingState,
+} from "@/components/ui/multi-step-loader";
 import { eventDateRange } from "../lib/format";
 import {
   FQD_PROVIDER_DOT,
@@ -79,6 +83,15 @@ interface ProviderInfo {
   searchEngine: string;
 }
 
+// Steps shown in the full-screen loader while researching + creating events.
+const ADD_STEPS: LoadingState[] = [
+  { text: "Searching the web" },
+  { text: "Researching event details" },
+  { text: "Finding event images" },
+  { text: "Uploading to your library" },
+  { text: "Saving new events" },
+];
+
 // A panel (create page only) that web-searches for upcoming New Orleans events
 // not already in the app, dedupes them, and lets the admin bulk-add the results
 // with per-event AI web research auto-filling the fields.
@@ -92,9 +105,6 @@ export function EventDiscoverPanel() {
   const [provider, setProvider] = useState<ProviderInfo | null>(null);
   const [adding, setAdding] = useState(false);
   const [exporting, setExporting] = useState(false);
-  const [progress, setProgress] = useState<{ done: number; total: number } | null>(
-    null,
-  );
   const [error, setError] = useState<string | null>(null);
 
   async function discover() {
@@ -203,16 +213,12 @@ export function EventDiscoverPanel() {
 
     setAdding(true);
     setError(null);
-    let done = 0;
-    setProgress({ done: 0, total: items.length });
 
     // Research each event's fields, then AI-search its images, so created events
     // arrive with both populated.
     const built = await mapPool(items, 3, async (d) => {
       const fields = await researchOne(d);
       const images = await fetchImagesFor(fields);
-      done += 1;
-      setProgress({ done, total: items.length });
       return { ...fields, images };
     });
 
@@ -241,7 +247,6 @@ export function EventDiscoverPanel() {
       setError("Couldn't add events (network or timeout)");
     } finally {
       setAdding(false);
-      setProgress(null);
     }
   }
 
@@ -292,7 +297,15 @@ export function EventDiscoverPanel() {
   const busy = discovering || adding;
 
   return (
-    <div className="mb-4 rounded-lg border border-secondary/40 bg-secondary/5">
+    <>
+      <MultiStepLoader
+        loadingStates={ADD_STEPS}
+        loading={adding}
+        duration={1400}
+        loop
+      />
+
+      <div className="mb-4 rounded-lg border border-secondary/40 bg-secondary/5">
       <button
         type="button"
         onClick={() => setOpen((o) => !o)}
@@ -441,9 +454,7 @@ export function EventDiscoverPanel() {
                       ) : (
                         <RiSparkling2Line className="size-4" />
                       )}
-                      {adding && progress
-                        ? `Researching ${progress.done}/${progress.total}…`
-                        : `Add ${selected.size} & auto-fill`}
+                      {adding ? "Adding…" : `Add ${selected.size} & auto-fill`}
                     </button>
                     <button
                       type="button"
@@ -475,6 +486,7 @@ export function EventDiscoverPanel() {
           </motion.div>
         )}
       </AnimatePresence>
-    </div>
+      </div>
+    </>
   );
 }
