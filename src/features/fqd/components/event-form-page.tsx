@@ -13,6 +13,7 @@ import { FqdProviderSelect } from "./fqd-provider-select";
 import { fmtEventDate } from "../lib/format";
 import { patchEventInListSnapshot } from "../lib/events-list-snapshot";
 import { withFreeTicketUrl } from "../lib/free-ticket";
+import { withDefaultEndDate } from "../lib/default-end-date";
 import { useFqdProvider } from "../hooks/use-fqd-provider";
 import type { ResearchResult } from "../hooks/use-event-research";
 import {
@@ -170,8 +171,9 @@ export function EventFormPage({ event, mode, defaultProvider }: Props) {
       if (!prev.slug && next.title) next.slug = slugify(next.title);
       // Don't force "researched" — an AI populate is surfaced by rawResearch
       // (the "AI Scraped" chip). "researched" is reserved for manual research.
-      // Free events with no ticket link get ticketUrl "Free".
-      return withFreeTicketUrl(next);
+      // Free events with no ticket link get ticketUrl "Free"; a populated start
+      // date with no end date defaults the end date to the start.
+      return withFreeTicketUrl(withDefaultEndDate(next));
     });
     setRawResearch(raw);
     const filled = Object.values(fields).filter(

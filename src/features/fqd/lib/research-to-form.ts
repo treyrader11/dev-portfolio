@@ -1,5 +1,6 @@
 import { slugify } from "@/lib/utils";
 import { withFreeTicketUrl } from "./free-ticket";
+import { withDefaultEndDate } from "./default-end-date";
 import {
   emptyFqdEvent,
   type EventResearch,
@@ -11,11 +12,13 @@ const pick = (v?: string | null): string => (v && v.trim() ? v.trim() : "");
 // Convert an AI-parsed event into the form/create shape (marked "researched").
 export function researchToFormValues(f: EventResearch): FqdEventFormValues {
   const title = pick(f.title);
-  // Free events with no ticket link get ticketUrl "Free".
-  return withFreeTicketUrl({
-    ...emptyFqdEvent,
-    title,
-    slug: slugify(title),
+  // Free events with no ticket link get ticketUrl "Free"; a start date with no
+  // end date defaults the end date to the start (single-day event).
+  return withDefaultEndDate(
+    withFreeTicketUrl({
+      ...emptyFqdEvent,
+      title,
+      slug: slugify(title),
     // Leave as draft — bulk import is AI-sourced and surfaces via the
     // "AI Scraped" chip (derived from rawResearch), not the "researched" status.
     status: "draft",
@@ -35,5 +38,6 @@ export function researchToFormValues(f: EventResearch): FqdEventFormValues {
     website: pick(f.website),
     notes: pick(f.notes),
     images: [],
-  });
+    }),
+  );
 }
