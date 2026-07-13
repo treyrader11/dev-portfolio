@@ -105,6 +105,8 @@ export function EventDiscoverPanel() {
   const [adding, setAdding] = useState(false);
   const [exporting, setExporting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  // A non-error, amber informational message (quota reached / all caught up).
+  const [notice, setNotice] = useState<string | null>(null);
   // Live per-event progress shown in the full-screen loader.
   const [procSteps, setProcSteps] = useState<ProcStep[]>([]);
   const [savingPhase, setSavingPhase] = useState(false);
@@ -113,13 +115,21 @@ export function EventDiscoverPanel() {
     if (discovering || adding) return;
     setDiscovering(true);
     setError(null);
+    setNotice(null);
     setResults(null);
     setProvider(null);
     try {
       const res = await fetch("/api/fqd/discover", { method: "POST" });
       const data = await res.json().catch(() => null);
       if (!res.ok) {
-        setError(data?.error ?? "Discovery failed");
+        // Free-tier / rate-limit reached → amber notice, not a red error.
+        if (res.status === 429 || data?.code === "quota") {
+          setNotice(
+            "You've reached the AI provider's free-tier limit for now. Try again a little later.",
+          );
+        } else {
+          setError(data?.error ?? "Discovery failed");
+        }
         return;
       }
       const events = (data.events as DiscoveredEvent[]) ?? [];
@@ -131,10 +141,9 @@ export function EventDiscoverPanel() {
         searchEngine: data.searchEngine,
       });
       if (events.length === 0) {
-        addNotification({
-          text: "No new events found — everything already exists",
-          variant: "success",
-        });
+        setNotice(
+          "All caught up — no new upcoming events found that aren't already in your app.",
+        );
       }
     } catch {
       setError("Request failed (network or timeout)");
@@ -386,6 +395,7 @@ export function EventDiscoverPanel() {
               </button>
 
               {error && <p className="text-xs text-red-400">{error}</p>}
+              {notice && <p className="text-xs text-amber-400">{notice}</p>}
 
               {provider && results && results.length > 0 && (
                 <div className="flex items-center gap-2 text-xs text-light-300">
@@ -504,12 +514,6 @@ export function EventDiscoverPanel() {
                 </>
               )}
 
-              {results && results.length === 0 && !discovering && (
-                <p className="text-xs text-light-400">
-                  No new events found — everything the search surfaced already
-                  exists in your app.
-                </p>
-              )}
             </div>
           </motion.div>
         )}

@@ -65,12 +65,23 @@ export default async function handler(
     });
   } catch (err) {
     if (err instanceof FqdAllProvidersError) {
-      return res.status(503).json({
-        error: "All AI providers failed to discover events.",
+      // Distinguish "hit the free-tier / rate limit" from a genuine failure so
+      // the UI can show the right message.
+      const quota = err.attempts.some((a) =>
+        /(429|rate.?limit|quota|exceeded|insufficient_quota|billing|too many requests|overloaded)/i.test(
+          a,
+        ),
+      );
+      return res.status(quota ? 429 : 503).json({
+        code: quota ? "quota" : "failed",
+        error: quota
+          ? "AI provider quota reached"
+          : "All AI providers failed to discover events.",
         attempts: err.attempts,
       });
     }
     return res.status(502).json({
+      code: "failed",
       error: err instanceof Error ? err.message : "Discovery failed",
     });
   }

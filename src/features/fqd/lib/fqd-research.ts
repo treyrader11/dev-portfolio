@@ -362,10 +362,21 @@ Return ONLY a valid JSON ARRAY (no markdown, no backticks, no preamble) of NEW e
 Return up to 25 well-sourced events with real, specific dates. If you find none, return exactly: []`;
 
 // Parse the discovered-events array leniently: keep valid, titled entries and
-// silently drop malformed ones. An empty array is a valid "found nothing".
+// silently drop malformed ones. Crucially, a response with NO JSON array (e.g.
+// the model replying in prose that it found nothing) is treated as "found
+// nothing" (empty), NOT a failure — otherwise every provider "fails" and the
+// genuine no-new-events case looks like a hard error.
 const validateDiscovered = (text: string): DiscoveredEvent[] => {
-  const arr = extractJson(text, "[", "]");
-  if (!Array.isArray(arr)) throw new Error("response was not a JSON array");
+  const start = text.indexOf("[");
+  const end = text.lastIndexOf("]");
+  if (start === -1 || end === -1 || end <= start) return [];
+  let arr: unknown;
+  try {
+    arr = JSON.parse(text.slice(start, end + 1));
+  } catch {
+    return [];
+  }
+  if (!Array.isArray(arr)) return [];
   const out: DiscoveredEvent[] = [];
   for (const item of arr) {
     const parsed = discoveredEventSchema.safeParse(item);
