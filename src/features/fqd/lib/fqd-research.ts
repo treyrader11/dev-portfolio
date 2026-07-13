@@ -20,7 +20,9 @@ import {
 } from "../types/fqd-types";
 import { splitListings, chunk } from "./split-listings";
 
-const GEMINI_MODEL = "gemini-2.5-flash";
+// `gemini-flash-latest` always resolves to the current stable Flash model, so
+// it won't hit "model no longer available" as Google retires dated versions.
+const GEMINI_MODEL = "gemini-flash-latest";
 const ANTHROPIC_MODEL = "claude-sonnet-4-20250514";
 
 // Fallback order: Gemini first (free), then Anthropic. OpenAI is intentionally
