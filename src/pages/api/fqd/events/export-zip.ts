@@ -52,11 +52,31 @@ export default async function handler(
       streamFiles: true,
     });
     await new Promise<void>((resolve, reject) => {
-      stream.on("error", reject);
-      res.on("error", reject);
-      res.on("close", resolve);
+      let done = false;
+      const settleOk = () => {
+        if (!done) {
+          done = true;
+          resolve();
+        }
+      };
+      const settleErr = (err: unknown) => {
+        if (!done) {
+          done = true;
+          reject(err);
+        }
+      };
+      stream.on("error", settleErr);
+      res.on("error", settleErr);
+      // Resolve only once the RESPONSE has flushed every byte to the client
+      // ("finish"), not when the source stream drains ("end") — otherwise the
+      // handler can return and the platform tears down mid-flush, truncating
+      // the download and failing the client's blob().
+      res.on("finish", settleOk);
+      // A close before finish means the connection dropped mid-stream.
+      res.on("close", () =>
+        settleErr(new Error("connection closed before the zip finished")),
+      );
       stream.pipe(res);
-      stream.on("end", resolve);
     });
   } catch (err) {
     console.error("[fqd export-zip] export failed", err);

@@ -139,8 +139,13 @@ export function EventExportAll({ filters }: { filters?: EventExportFilters }) {
       });
       close();
     } catch {
+      // A dropped connection is usually a large export exceeding the request
+      // time limit — the email path builds it server-side without that cap.
       addNotification({
-        text: "Couldn't export events — request failed",
+        text:
+          selected.size > 15
+            ? "Export failed — that's a lot of events for one download. Try selecting fewer, or use Share via email."
+            : "Couldn't export events — the request was interrupted. Please try again.",
         variant: "error",
       });
     } finally {
@@ -196,8 +201,9 @@ export function EventExportAll({ filters }: { filters?: EventExportFilters }) {
                     Export events to .zip
                   </h3>
                   <p className="mt-0.5 text-xs text-light-400">
-                    One folder per event (named by slug) with its listing .docx
-                    and image PNGs.
+                    One folder per event (named by slug) with its listing .docx,
+                    a JEvents-compatible CSV for Joomla, and image PNGs — plus a
+                    combined _all-events.csv at the root.
                   </p>
                 </div>
                 <button
