@@ -17,6 +17,7 @@ import {
   type LoadingState,
 } from "@/components/ui/multi-step-loader";
 import { eventDateRange } from "../lib/format";
+import { clearEventsListSnapshot } from "../lib/events-list-snapshot";
 import {
   FQD_PROVIDER_DOT,
   type DiscoveredEvent,
@@ -239,6 +240,9 @@ export function EventDiscoverPanel() {
             : "Nothing added",
           variant: "success",
         });
+        // Drop the saved list snapshot so the events page loads fresh data
+        // (with the newly added events) instead of restoring the stale list.
+        clearEventsListSnapshot();
         router.push("/admin/french-quarter-direct/events");
       } else {
         setError(data?.error ?? "Couldn't add events");
