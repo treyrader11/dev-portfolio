@@ -25,7 +25,7 @@ import { getProviderOrder } from "./ai-settings";
 // `gemini-flash-latest` always resolves to the current stable Flash model, so
 // it won't hit "model no longer available" as Google retires dated versions.
 const GEMINI_MODEL = "gemini-flash-latest";
-const ANTHROPIC_MODEL = "claude-sonnet-4-20250514";
+const ANTHROPIC_MODEL = "claude-sonnet-4-6";
 // The Responses-API model — required for OpenAI's built-in web_search tool.
 const OPENAI_MODEL = "gpt-4o";
 

@@ -16,7 +16,7 @@ import { getProviderOrder } from "@/features/fqd/lib/ai-settings";
 // output.
 
 const GEMINI_MODEL = "gemini-flash-latest";
-const ANTHROPIC_MODEL = "claude-sonnet-4-20250514";
+const ANTHROPIC_MODEL = "claude-sonnet-4-6";
 const OPENAI_MODEL = "gpt-4o";
 export type JobProvider = "gemini" | "anthropic" | "openai";
 

@@ -65,10 +65,14 @@ export const FQD_STATUS_BADGE: Record<FqdStatus, string> = {
 
 // ---- AI research / parse schema ------------------------------------------
 
-// Every field is nullish because the model is told to return null for anything
-// it can't determine (and may omit fields entirely) — validation stays lenient
-// so a partial result still populates the form.
-const nullableStr = z.string().trim().nullish();
+// Every field is nullable (required, but may be null): the model is told to
+// return null for anything it can't determine, so a partial result still
+// populates the form. It must be `.nullable()` and NOT `.nullish()`/`.optional()`
+// — OpenAI's strict structured outputs require every property to appear in the
+// schema's `required` array, and an optional field is omitted from it (which
+// throws "'required' ... Missing '<field>'"). Nullable keeps null allowed while
+// keeping the field required, which every provider accepts.
+const nullableStr = z.string().trim().nullable();
 
 export const eventResearchSchema = z.object({
   title: nullableStr,
