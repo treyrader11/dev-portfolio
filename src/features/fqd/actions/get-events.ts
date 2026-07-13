@@ -1,6 +1,7 @@
 import type { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import { serializeFqdEvent } from "../lib/serialize";
+import { expiredCutoff, expiredEventsWhere } from "../lib/expiry";
 import type { FqdEventListItem } from "../types/fqd-types";
 
 export interface GetFqdEventsResult {
@@ -119,7 +120,16 @@ export async function getFqdEvents(
 ): Promise<GetFqdEventsResult> {
   const safePage = Math.max(1, page);
   const skip = (safePage - 1) * pageSize;
-  const where = buildWhere(missing, search, added, newOnly);
+  // Never show expired events (past their end date). They're emailed + removed
+  // by the expiry cron / lazy pass, but hide them here too so they never linger
+  // in the list before that runs.
+  const filters = buildWhere(missing, search, added, newOnly);
+  const notExpired: Prisma.FqdEventWhereInput = {
+    NOT: expiredEventsWhere(expiredCutoff()),
+  };
+  const where: Prisma.FqdEventWhereInput = filters
+    ? { AND: [filters, notExpired] }
+    : notExpired;
   const [rows, total] = await Promise.all([
     prisma.fqdEvent.findMany({
       where,

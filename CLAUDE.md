@@ -159,6 +159,12 @@ The create-event page has a top-level AI provider/model dropdown that defaults t
 - Never run more than 2 concurrent AI calls (p-limit concurrency 2)
 - Use `generateObject` with Zod schemas from `fqd-types.ts` — never `generateText` with post-hoc JSON parsing
 
+### FQD notifications & expiry
+
+- Scheduled via Vercel Cron (`/api/fqd/process-events`, daily 08:00 UTC, `CRON_SECRET`-protected): `runStartNotifications` emails events at their start time; `runExpiration` emails (when `emailOnEnd`) then removes events past their end date. Recipients + toggles live in `SiteConfig` (`fqdNotifications`), edited in admin settings.
+- "Expired" = effective end (endDate, or startDate when no endDate) is before today (UTC) — see `expiry.ts`.
+- The cron is unreliable in local dev / on Hobby, so there is also a **lazy expiry pass** in the events page `getServerSideProps` (`runExpiration`, best-effort) and the events **list query hides expired events** (`get-events.ts`). Don't remove either — they're what make expiry work without a live cron.
+
 ### Jobs (job board + AI search)
 
 `admin/jobs` finds jobs two ways, toggled in the UI (both driven by the same keyword filters):
