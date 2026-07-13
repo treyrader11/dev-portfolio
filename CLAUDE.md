@@ -118,6 +118,8 @@ export default function Experiences() {
 
 The FQD subsystem lives in `src/features/fqd/` and `src/pages/api/fqd/`. It is an AI-powered event listing CMS that discovers and researches New Orleans events via LLM web search, enriches them with images hosted on Cloudinary, stores them in Postgres, and exports them as DOCX/PDF/ZIP for manual publishing to a Joomla site.
 
+**Workflow status:** each event has a manual `status` — `draft` (default) → `researched` → `approved` → `exported` (`FQD_STATUSES`/`FQD_STATUS_LABEL`/`FQD_STATUS_BADGE` in `fqd-types.ts`). AI populating does NOT change it (AI provenance shows via the separate "AI Scraped" chip). It does not hide events or gate exports; its only functional effect is that the 7-day research cache (`findCachedResearch`) ignores drafts. Change it inline via the `EventStatusSelect` on each card/list row (PATCH `/api/fqd/events/[id]` with `{ status }`), or in bulk from the selection bar (POST `/api/fqd/events/bulk-status`). `FqdEventListItem.status` is narrowed to `FqdStatus` at the serialize boundary.
+
 **Key files:**
 
 - `src/features/fqd/lib/fqd-research.ts` — single AI engine, 7 modes, provider fallback chain

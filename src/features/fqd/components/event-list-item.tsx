@@ -13,8 +13,9 @@ import {
 } from "react-icons/ri";
 import { cn, resolveImageSrc } from "@/lib/utils";
 import { EventStatusChips } from "./event-status-chips";
+import { EventStatusSelect } from "./event-status-select";
 import { eventDateRange } from "../lib/format";
-import { type FqdEventListItem } from "../types/fqd-types";
+import { type FqdEventListItem, type FqdStatus } from "../types/fqd-types";
 
 interface Props {
   event: FqdEventListItem;
@@ -22,6 +23,7 @@ interface Props {
   selected?: boolean;
   onToggleSelect?: (id: string) => void;
   onToggleAdded?: (event: FqdEventListItem) => void;
+  onStatusChange?: (event: FqdEventListItem, status: FqdStatus) => void;
 }
 
 // A compact list-row rendering of an event (same data/actions as the card,
@@ -32,6 +34,7 @@ export function EventListItem({
   selected,
   onToggleSelect,
   onToggleAdded,
+  onStatusChange,
 }: Props) {
   const detailHref = `/admin/french-quarter-direct/event/${event.slug}`;
   const editHref = `/admin/french-quarter-direct/create-event/${event.id}`;
@@ -115,6 +118,13 @@ export function EventListItem({
       </Link>
 
       <div className="flex shrink-0 items-center gap-2">
+        {onStatusChange && (
+          <EventStatusSelect
+            value={event.status}
+            onChange={(status) => onStatusChange(event, status)}
+            className="hidden sm:inline-flex"
+          />
+        )}
         {onToggleAdded && (
           <button
             type="button"

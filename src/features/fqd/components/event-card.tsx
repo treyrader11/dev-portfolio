@@ -19,7 +19,8 @@ import { cn, resolveImageSrc } from "@/lib/utils";
 import { FqdAddIcon } from "@/components/icons/FqdAddIcon";
 import { FqdRemoveIcon } from "@/components/icons/FqdRemoveIcon";
 import { EventStatusChips } from "./event-status-chips";
-import { type FqdEventListItem } from "../types/fqd-types";
+import { EventStatusSelect } from "./event-status-select";
+import { type FqdEventListItem, type FqdStatus } from "../types/fqd-types";
 
 type EventImage = { id: string; url: string; alt?: string | null };
 
@@ -144,6 +145,7 @@ interface Props {
   selected?: boolean;
   onToggleSelect?: (id: string) => void;
   onToggleAdded?: (event: FqdEventListItem) => void;
+  onStatusChange?: (event: FqdEventListItem, status: FqdStatus) => void;
 }
 
 export function EventCard({
@@ -152,6 +154,7 @@ export function EventCard({
   selected,
   onToggleSelect,
   onToggleAdded,
+  onStatusChange,
 }: Props) {
   const detailHref = `/admin/french-quarter-direct/event/${event.slug}`;
   const editHref = `/admin/french-quarter-direct/create-event/${event.id}`;
@@ -295,19 +298,25 @@ export function EventCard({
 
         {/* Admin actions */}
         <div className="flex items-center justify-between gap-2 border-t border-neutral-800 pt-3">
-          {onToggleSelect ? (
-            <label className="inline-flex cursor-pointer items-center gap-2 text-xs text-slate-400">
-              <input
-                type="checkbox"
-                checked={!!selected}
-                onChange={() => onToggleSelect(event.id)}
-                className="size-4 accent-secondary"
+          <div className="flex min-w-0 items-center gap-2">
+            {onToggleSelect && (
+              <label className="inline-flex cursor-pointer items-center gap-2 text-xs text-slate-400">
+                <input
+                  type="checkbox"
+                  checked={!!selected}
+                  onChange={() => onToggleSelect(event.id)}
+                  className="size-4 accent-secondary"
+                />
+                Select
+              </label>
+            )}
+            {onStatusChange && (
+              <EventStatusSelect
+                value={event.status}
+                onChange={(status) => onStatusChange(event, status)}
               />
-              Select
-            </label>
-          ) : (
-            <span />
-          )}
+            )}
+          </div>
           <div className="flex items-center gap-4">
             {onToggleAdded && (
               <button

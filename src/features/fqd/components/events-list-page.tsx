@@ -30,7 +30,11 @@ import {
   clearEventsListSnapshot,
 } from "../lib/events-list-snapshot";
 import type { GetFqdEventsResult } from "../actions/get-events";
-import type { FqdEventListItem } from "../types/fqd-types";
+import {
+  FQD_STATUS_LABEL,
+  type FqdEventListItem,
+  type FqdStatus,
+} from "../types/fqd-types";
 
 interface Props {
   data: GetFqdEventsResult;
@@ -312,6 +316,34 @@ export function EventsListPage({ data }: Props) {
     }
   }
 
+  // Change a single event's workflow status (optimistic; reverts on failure).
+  async function updateStatus(event: FqdEventListItem, status: FqdStatus) {
+    if (status === event.status) return;
+    const prev = event.status;
+    setEvents((es) =>
+      es.map((e) => (e.id === event.id ? { ...e, status } : e)),
+    );
+    try {
+      const res = await fetch(`/api/fqd/events/${event.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status }),
+      });
+      if (!res.ok) throw new Error();
+      const updated = (await res.json()) as FqdEventListItem;
+      setEvents((es) => es.map((e) => (e.id === event.id ? updated : e)));
+      addNotification({
+        text: `Status set to ${FQD_STATUS_LABEL[status]}`,
+        variant: "success",
+      });
+    } catch {
+      setEvents((es) =>
+        es.map((e) => (e.id === event.id ? { ...e, status: prev } : e)),
+      );
+      addNotification({ text: "Couldn't update status", variant: "error" });
+    }
+  }
+
   function toggleSelect(id: string) {
     setSelected((prev) => {
       const n = new Set(prev);
@@ -424,6 +456,40 @@ export function EventsListPage({ data }: Props) {
         text: `${addedValue ? "Added" : "Removed"} ${updated} event${
           updated === 1 ? "" : "s"
         } ${addedValue ? "to" : "from"} French Quarter Direct`,
+        variant: "success",
+      });
+    } catch {
+      addNotification({ text: "Couldn't update events", variant: "error" });
+    } finally {
+      setBulkBusy(false);
+    }
+  }
+
+  // Bulk-set the workflow status on the selected events.
+  async function doBulkSetStatus(status: FqdStatus) {
+    const ids = [...selected];
+    if (ids.length === 0) return;
+    setBulkBusy(true);
+    try {
+      const res = await fetch("/api/fqd/events/bulk-status", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ids, status }),
+      });
+      if (!res.ok) {
+        addNotification({ text: "Couldn't update events", variant: "error" });
+        return;
+      }
+      const { updated } = await res.json();
+      const idSet = new Set(ids);
+      setEvents((prev) =>
+        prev.map((e) => (idSet.has(e.id) ? { ...e, status } : e)),
+      );
+      setSelected(new Set());
+      addNotification({
+        text: `Set ${updated} event${updated === 1 ? "" : "s"} to ${
+          FQD_STATUS_LABEL[status]
+        }`,
         variant: "success",
       });
     } catch {
@@ -718,6 +784,7 @@ export function EventsListPage({ data }: Props) {
                 selected={selected.has(e.id)}
                 onToggleSelect={toggleSelect}
                 onToggleAdded={toggleAdded}
+                onStatusChange={updateStatus}
               />
             ))}
           </div>
@@ -731,6 +798,7 @@ export function EventsListPage({ data }: Props) {
                 selected={selected.has(e.id)}
                 onToggleSelect={toggleSelect}
                 onToggleAdded={toggleAdded}
+                onStatusChange={updateStatus}
               />
             ))}
           </div>
@@ -768,6 +836,7 @@ export function EventsListPage({ data }: Props) {
         onRemove={() => doBulkSetAdded(false)}
         onDelete={() => setBulkConfirm(true)}
         onClear={() => setSelected(new Set())}
+        onSetStatus={doBulkSetStatus}
       />
 
       <ConfirmDialog

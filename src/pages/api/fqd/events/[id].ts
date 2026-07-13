@@ -3,12 +3,17 @@ import { requireAdmin } from "@/features/admin/lib/admin-auth";
 import { getFqdEvent } from "@/features/fqd/actions/get-event";
 import { updateFqdEvent } from "@/features/fqd/actions/update-event";
 import { setFqdEventAdded } from "@/features/fqd/actions/set-event-added";
+import { setFqdEventStatus } from "@/features/fqd/actions/set-event-status";
 import { deleteFqdEventWithImages } from "@/features/fqd/lib/delete-with-images";
 import {
   eventImageFilename,
   pngDeliveryUrl,
 } from "@/features/fqd/lib/image-filenames";
-import type { FqdEventFormValues } from "@/features/fqd/types/fqd-types";
+import {
+  FQD_STATUSES,
+  type FqdEventFormValues,
+  type FqdStatus,
+} from "@/features/fqd/types/fqd-types";
 
 export const config = { maxDuration: 30 };
 
@@ -169,14 +174,24 @@ export default async function handler(
   }
 
   if (req.method === "PATCH") {
-    const { addedToJoomla } = req.body as { addedToJoomla?: boolean };
-    if (typeof addedToJoomla !== "boolean") {
-      return res
-        .status(400)
-        .json({ error: "addedToJoomla (boolean) is required" });
+    const { addedToJoomla, status } = req.body as {
+      addedToJoomla?: boolean;
+      status?: string;
+    };
+    if (typeof status === "string") {
+      if (!FQD_STATUSES.includes(status as FqdStatus)) {
+        return res.status(400).json({ error: "Invalid status" });
+      }
+      const event = await setFqdEventStatus(id, status as FqdStatus);
+      return res.status(200).json(event);
     }
-    const event = await setFqdEventAdded(id, addedToJoomla);
-    return res.status(200).json(event);
+    if (typeof addedToJoomla === "boolean") {
+      const event = await setFqdEventAdded(id, addedToJoomla);
+      return res.status(200).json(event);
+    }
+    return res
+      .status(400)
+      .json({ error: "addedToJoomla (boolean) or status is required" });
   }
 
   if (req.method === "DELETE") {

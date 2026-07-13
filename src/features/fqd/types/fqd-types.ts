@@ -63,6 +63,14 @@ export const FQD_STATUS_BADGE: Record<FqdStatus, string> = {
   exported: "bg-secondary/15 text-secondary",
 };
 
+// Human-readable workflow-status labels.
+export const FQD_STATUS_LABEL: Record<FqdStatus, string> = {
+  draft: "Draft",
+  researched: "Researched",
+  approved: "Approved",
+  exported: "Exported",
+};
+
 // ---- AI research / parse schema ------------------------------------------
 
 // Every field is nullable (required, but may be null): the model is told to
@@ -225,11 +233,14 @@ export type FqdEventListItem = Omit<
   | "updatedAt"
   | "rawResearch"
   | "startNotifiedAt"
+  | "status"
 > & {
   startDate: string;
   endDate: string | null;
   createdAt: string;
   updatedAt: string;
+  // Narrowed from the DB's free-form string column to the known workflow values.
+  status: FqdStatus;
   images: SerializedFqdImage[];
   // Derived from rawResearch presence: true when AI research/parse/import
   // populated any of this event's fields.

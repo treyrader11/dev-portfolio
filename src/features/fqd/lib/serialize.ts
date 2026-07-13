@@ -4,6 +4,7 @@ import type { FqdEvent, FqdEventImage, Prisma } from "@prisma/client";
 import type {
   FqdEventFormValues,
   FqdEventListItem,
+  FqdStatus,
 } from "../types/fqd-types";
 
 // A Prisma event row with its images included.
@@ -22,6 +23,8 @@ export function serializeFqdEvent(row: EventWithImages): FqdEventListItem {
   startOfToday.setHours(0, 0, 0, 0);
   return {
     ...rest,
+    // DB column is a free-form string; narrow to the known workflow values.
+    status: rest.status as FqdStatus,
     aiScraped: rawResearch != null,
     isNew: row.createdAt.getTime() >= startOfToday.getTime(),
     startDate: row.startDate.toISOString(),

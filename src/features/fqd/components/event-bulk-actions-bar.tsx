@@ -4,11 +4,17 @@ import {
   RiDeleteBinLine,
   RiCloseLine,
   RiArrowUpSLine,
+  RiArrowDownSLine,
   RiLoader4Line,
 } from "react-icons/ri";
 import { FqdAddIcon } from "@/components/icons/FqdAddIcon";
 import { FqdRemoveIcon } from "@/components/icons/FqdRemoveIcon";
 import { cn } from "@/lib/utils";
+import {
+  FQD_STATUSES,
+  FQD_STATUS_LABEL,
+  type FqdStatus,
+} from "../types/fqd-types";
 
 interface Props {
   count: number;
@@ -17,6 +23,7 @@ interface Props {
   onRemove: () => void;
   onDelete: () => void;
   onClear: () => void;
+  onSetStatus?: (status: FqdStatus) => void;
 }
 
 // A floating, collapsible bulk-actions bar that overlaps the list (high z-index)
@@ -29,6 +36,7 @@ export function EventBulkActionsBar({
   onRemove,
   onDelete,
   onClear,
+  onSetStatus,
 }: Props) {
   const [collapsed, setCollapsed] = useState(false);
 
@@ -94,6 +102,35 @@ export function EventBulkActionsBar({
                   >
                     <FqdRemoveIcon size={20} />
                   </Action>
+                  {onSetStatus && (
+                    <>
+                      <span className="mx-0.5 h-6 w-px shrink-0 bg-dark-600" />
+                      <div className="relative shrink-0">
+                        <select
+                          value=""
+                          disabled={busy}
+                          onChange={(e) => {
+                            if (e.target.value)
+                              onSetStatus(e.target.value as FqdStatus);
+                          }}
+                          aria-label="Set status for selected events"
+                          title="Set workflow status for selected"
+                          className="cursor-pointer appearance-none rounded-xl bg-dark-600 py-1.5 pl-2.5 pr-7 text-sm font-medium text-white outline-none [color-scheme:dark] hover:bg-dark-500 disabled:opacity-50"
+                        >
+                          <option value="" disabled>
+                            Status…
+                          </option>
+                          {FQD_STATUSES.map((s) => (
+                            <option key={s} value={s}>
+                              Set {FQD_STATUS_LABEL[s]}
+                            </option>
+                          ))}
+                        </select>
+                        <RiArrowDownSLine className="pointer-events-none absolute right-1.5 top-1/2 size-4 -translate-y-1/2 text-light-400" />
+                      </div>
+                    </>
+                  )}
+                  <span className="mx-0.5 h-6 w-px shrink-0 bg-dark-600" />
                   <Action
                     onClick={onDelete}
                     disabled={busy}

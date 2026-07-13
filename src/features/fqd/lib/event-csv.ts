@@ -40,14 +40,19 @@ function stripMarkdownLinks(value: string): string {
 // bloat the CSV; keep it short.
 const MAX_EXTRA_INFO = 200;
 
-// Truncate to `max` characters, cutting at the last complete word before the
-// limit and appending "..." (no-op when already within the limit).
+const ELLIPSIS = "...";
+
+// Truncate so the FINAL string (including the appended "...") is at most `max`
+// characters. The ellipsis counts toward the limit, so content is cut at
+// `max - 3`, then trimmed back to the last complete word. No-op when already
+// within the limit.
 function truncateWords(value: string, max: number): string {
   if (value.length <= max) return value;
-  const slice = value.slice(0, max);
+  const budget = Math.max(0, max - ELLIPSIS.length);
+  const slice = value.slice(0, budget);
   const lastSpace = slice.lastIndexOf(" ");
   const cut = lastSpace > 0 ? slice.slice(0, lastSpace) : slice;
-  return `${cut.trimEnd()}...`;
+  return `${cut.trimEnd()}${ELLIPSIS}`;
 }
 
 // LOCATION: "locationName - address", or whichever exists, or "".
