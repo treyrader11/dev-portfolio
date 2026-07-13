@@ -247,6 +247,7 @@ Jira request helpers live in `src/lib/jira.ts`; the authenticated client is `src
 - The project does NOT use CVA, shadcn/ui, or `next-themes` — do not introduce them; build components with plain Tailwind + `cn()`
 - The app is **dark by default** (custom theme colors like `dark`, `dark-400/500/600`, `secondary`, `light-400`); the admin is permanently dark. There is no light/dark toggle — do not add `dark:` variants expecting a theme switch
 - Icons come from `react-icons` (mainly `react-icons/ri`); `@tabler/icons-react` is also available
+- **Dropdown / select controls:** use the **custom dropdown** (the `Popover`-based component, e.g. `@/components/ui/popover`) on **desktop**, and a **native `<select>`** on **mobile** (so the OS renders its nicely-animated native picker). Render both and switch with responsive classes (`hidden sm:block` for the custom one, `sm:hidden` for the native `<select>`); keep them driven by the same state. The events-list filter (`events-list-page.tsx`) is the reference implementation.
 - Never use inline styles unless dynamic values require it
 
 ---

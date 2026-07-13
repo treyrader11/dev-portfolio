@@ -487,9 +487,31 @@ export function EventsListPage({ data }: Props) {
                 <RiLayoutGridLine className="size-4" />
               )}
             </button>
+            {/* Mobile: native <select> — the OS renders its own nicely-animated
+                picker. Desktop uses the custom Popover below. */}
+            <div className="relative shrink-0 sm:hidden">
+              <RiFilter3Line className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-light-400" />
+              <select
+                value={missing}
+                onChange={(e) => setMissing(e.target.value)}
+                aria-label="Filter events"
+                className={cn(
+                  "max-w-[9.5rem] appearance-none rounded-lg border bg-dark-600 py-2 pl-9 pr-8 text-sm text-white outline-none [color-scheme:dark] focus:border-secondary",
+                  missing ? "border-secondary/60" : "border-dark-600",
+                )}
+              >
+                {MISSING_FILTERS.map((f) => (
+                  <option key={f.value} value={f.value}>
+                    {f.label}
+                  </option>
+                ))}
+              </select>
+              <RiArrowDownSLine className="pointer-events-none absolute right-2.5 top-1/2 size-4 -translate-y-1/2 text-light-400" />
+            </div>
+
             <Popover
               align="end"
-              rootClassName="shrink-0"
+              rootClassName="hidden shrink-0 sm:block"
               trigger={({ open, toggle }) => (
                 <button
                   type="button"
