@@ -1,175 +1,14 @@
-# CLAUDE.md — Dev Portfolio Development Guide
-
-> This file configures Claude AI agent behavior when working on this codebase. Keep it at the project root and update it as the project evolves.
-
 ---
 
-## Project Identity
+## Naming Convention (MANDATORY)
 
-- **Name:** Dev Portfolio
-- **Purpose:** Personal developer portfolio + admin CMS (manage content, Jira tickets, PDF invoices, email)
-- **URL (local):** http://localhost:3000
-- **Package Manager:** Bun (NEVER use npm, yarn, or pnpm)
-- **Runtime:** Bun + Node.js compatible
-- **Framework:** Next.js (Pages Router ONLY — this project uses `pages/`, NOT `app/`)
-- **Language:** TypeScript (strict mode)
+This project is migrating from PascalCase barrel files to kebab-case feature-based files. All new files and any files touched during a task must follow the new convention:
 
----
-
-## Current Structure vs Target Structure
-
-> **This project is actively being refactored from a flat structure to a feature-based structure.** When touching any file, migrate it toward the feature-based layout described below. Never create new flat files under `src/components/` for feature-specific code — always put new work in the correct `src/features/` directory.
-
-### Current (flat — being phased out)
-
-```
-src/
-  components/       ← shared + feature components mixed together (being split)
-  hooks/            ← all hooks mixed together (being split)
-  icons/            ← keep as-is (shared icon library)
-  lib/              ← utilities, db, auth, external clients
-  pages/
-    admin/          ← experiences, invoices, jira, jobs, profile, projects, references, settings, signin, skills
-    api/            ← API route handlers
-    contact/
-    info/
-    portfolio/
-    project/
-    _app.tsx
-    _document.tsx
-    404.tsx
-    index.tsx
-  types/            ← global types (keep, but co-locate feature types in features/)
-  globals.css
-  middleware.ts
-```
-
-### Target (feature-based — build toward this)
-
-```
-src/
-  features/
-    admin/                     ← admin dashboard shell, layout, sidebar nav
-    experiences/               ← work experience CRUD (admin + public display)
-    invoices/                  ← PDF invoice generation and management
-    jira/                      ← Jira ticket integration (create, list, delete)
-    jobs/                      ← job listings/applications management
-    portfolio/                 ← portfolio projects (public display + admin CRUD)
-    profile/                   ← personal profile info (bio, avatar, links)
-    references/                ← professional references management
-    skills/                    ← skills list management
-    contact/                   ← contact form + Resend email sending
-    email/                     ← shared email templates (React Email)
-  components/
-    ui/                        ← shadcn primitives only
-    layout/                    ← Navbar, Footer, PageWrapper, AdminLayout
-    shared/                    ← truly shared components used across 3+ features
-  hooks/                       ← truly shared hooks (useMediaQuery, useDebounce, etc.)
-  icons/                       ← icon library (unchanged)
-  lib/
-    db.ts                      ← Drizzle client
-    auth.ts                    ← NextAuth config
-    utils.ts                   ← cn() and general utilities
-    resend.ts                  ← Resend client instance
-    jira.ts                    ← Jira API client/helpers
-    s3.ts                      ← AWS S3 presigned URL helpers (if used)
-  pages/                       ← ONLY Next.js routing files live here
-    admin/                     ← thin page files that import from features/admin/*
-    api/                       ← API route handlers
-    contact/
-    info/
-    portfolio/
-    project/
-    _app.tsx
-    _document.tsx
-    404.tsx
-    index.tsx
-  types/                       ← global/shared types only
-  globals.css
-  middleware.ts
-```
-
-### Migration Rule
-
-When you touch a file during any task, check if it belongs in `features/`. If yes, move it. The `pages/` files should be thin shells: import the feature component and export it as the default. Example:
-
-```typescript
-// pages/admin/invoices.tsx — THIN SHELL (correct)
-import { InvoicesPage } from "@/features/invoices/components/invoices-page"
-import { AdminLayout } from "@/components/layout/admin-layout"
-
-export default function Invoices() {
-  return (
-    <AdminLayout>
-      <InvoicesPage />
-    </AdminLayout>
-  )
-}
-```
-
----
-
-## Critical Rules (Always Follow)
-
-### Commands
-
-- ALWAYS use `bun` for installs: `bun add <package>`, `bun add -D <package>`
-- ALWAYS use `bunx` for CLI tools: `bunx drizzle-kit generate`
-- Dev server: `bun dev`
-- Build: `bun run build`
-- Lint: `bun run lint`
-- **After completing ANY task that modifies code, run `bun run build` to confirm zero errors before declaring the task done.**
-
-### CI Check (MANDATORY After Every Code Task)
-
-Before ending any response that changed code:
-
-1. Mentally confirm no TypeScript errors were introduced
-2. State that the user should run `bun run build` to verify
-3. If you ran bash commands during the task, actually execute `bun run build` and confirm it passes
-4. If build fails, fix all errors before ending the response — never leave the build broken
-
-### TypeScript & React
-
-- ALWAYS use TypeScript — never create `.js` or `.jsx` files (except config files that require it)
-- This project uses the **Pages Router** — NEVER use `app/` directory patterns, `metadata` exports, Server Components, Server Actions, or `"use server"` directives
-- Data fetching uses `getServerSideProps`, `getStaticProps`, or client-side fetch — choose appropriately
-- Use `getServerSideProps` for pages that need auth-protected or real-time data (admin pages)
-- Use `getStaticProps` with `revalidate` for public pages where data changes infrequently (portfolio, skills, info)
-- Client-side fetch with SWR or `useEffect` is acceptable for admin dashboard mutations and live updates
-- NEVER use `React.FC` — use plain function declarations with typed props
-- Destructure props in function parameters: `function ProjectCard({ title, href }: ProjectCardProps)`
-- Use `satisfies` operator for type-safe object literals where appropriate
-
-### Pages Router Specifics
-
-- `_app.tsx` is the global layout wrapper — add providers here (ThemeProvider, SessionProvider, Toaster)
-- `_document.tsx` is for HTML shell customization only (fonts, meta charset, etc.)
-- API routes live in `pages/api/` — these are the mutation layer (equivalent to Server Actions in App Router)
-- Middleware (`middleware.ts`) handles auth protection for `/admin/*` routes
-- Dynamic routes use file-based patterns: `pages/project/[slug].tsx`
-- Use `next/router` (`useRouter`) for client-side navigation — NOT `next/navigation`
-- Use `next/link` for all internal links
-- Use `next/image` for all images — never raw `<img>` tags
-- Use `next/head` for per-page metadata (title, description, og tags)
-- Use `next/dynamic` for heavy client components: `dynamic(() => import('...'), { ssr: false })`
-
-### Page Transitions (MANDATORY for every public page)
-
-Public pages animate in/out via a shared `AnimatePresence` in `src/components/Layout.tsx`. For the transition to work correctly — **especially on dynamic routes** (`pages/portfolio/[project].tsx`, `pages/portfolio/repo/[name].tsx`, etc.) — every new page and every navigation into it MUST follow these rules:
-
-1. **Wrap the page's content in `<Inner>`** (`@/components/layout/Inner`). `Inner` provides the slide/perspective/opacity exit + enter animation. A page that doesn't render inside `Inner` has no transition. Admin pages are the only exception (they bypass `Layout`).
-
-2. **The transition is keyed by `router.asPath`, NOT `router.route`.** This is what makes navigating between two pages that share a dynamic route (e.g. project → project via "Similar projects", or repo → repo) actually re-run the exit/enter animation and the `onExitComplete` scroll reset. **Do not** change the `AnimatePresence` child `key` back to the route pattern (`router.route`) — that silently kills transitions for same-dynamic-route navigation. Keep `router.route` only for pattern-based lookups (the footer-curve color map, the GoBack visibility check).
-
-3. **Every internal navigation must opt out of Next's auto scroll-to-top** so the exit animation plays from the current scroll position instead of the page flashing to the top first:
-   - `<Link href="..." scroll={false}>` on all internal links.
-   - `router.push(href, undefined, { scroll: false })` for programmatic navigation (e.g. the `Rounded` button).
-   - The Layout's `onExitComplete` already resets scroll to the top of the new page — do not also rely on Next's default scroll.
-
-4. **To skip the transition on purpose** (instant navigation, e.g. opening a fetched repo detail page), call `skipNextPageTransition()` from `@/lib/page-transition` right before navigating; still pass `scroll={false}`.
-
-When adding a new dynamic page or a new component that links between pages, verify a scrolled-down navigation both animates and lands at the top of the destination.
+- **File names:** kebab-case — `event-card.tsx`, `use-events.ts`, `fqd-research.ts`
+- **Component exports:** named exports, PascalCase — `export function EventCard()`
+- **Page files:** default export only (Next.js requirement) — `export default function CreateEventPage()`
+- **Barrel files (`index.ts`):** allowed per feature directory for clean imports, but do not create new barrel files in `src/components/` for feature-specific code
+- Do not rename existing PascalCase files unless you are already touching that file for another reason — avoid noisy diffs
 
 ---
 
@@ -181,19 +20,20 @@ The admin dashboard (`pages/admin/`) is a private CMS protected by NextAuth midd
 
 **Admin pages and their purpose:**
 
-| Page                | Purpose                                          |
-| ------------------- | ------------------------------------------------ |
-| `admin/index`       | Dashboard overview, recent activity, quick stats |
-| `admin/experiences` | CRUD for work experience entries                 |
-| `admin/jobs`        | Job listings or application tracker              |
-| `admin/projects`    | CRUD for portfolio projects                      |
-| `admin/skills`      | Manage skills list                               |
-| `admin/references`  | Manage professional references                   |
-| `admin/profile`     | Edit personal bio, avatar, social links          |
-| `admin/invoices`    | Generate and manage PDF invoices                 |
-| `admin/jira`        | Create, view, and delete Jira tickets            |
-| `admin/settings`    | App settings (email config, API keys UI)         |
-| `admin/signin`      | Auth sign-in page                                |
+| Page                          | Purpose                                                                       |
+| ----------------------------- | ----------------------------------------------------------------------------- |
+| `admin/index`                 | Dashboard overview, recent activity, quick stats                              |
+| `admin/experiences`           | CRUD for work experience entries                                              |
+| `admin/jobs`                  | Job listings or application tracker                                           |
+| `admin/projects`              | CRUD for portfolio projects                                                   |
+| `admin/skills`                | Manage skills list                                                            |
+| `admin/references`            | Manage professional references                                                |
+| `admin/profile`               | Edit personal bio, avatar, social links                                       |
+| `admin/invoices`              | Generate and manage PDF invoices                                              |
+| `admin/jira`                  | Create, view, and delete Jira tickets                                         |
+| `admin/settings`              | App settings (email config, API keys UI)                                      |
+| `admin/signin`                | Auth sign-in page                                                             |
+| `admin/french-quarter-direct` | FQD event listing CMS — discover, research, enrich, export New Orleans events |
 
 All admin pages must:
 
@@ -205,16 +45,16 @@ All admin pages must:
 
 ```typescript
 // pages/admin/experiences.tsx
-import type { GetServerSideProps } from "next"
-import { getServerSession } from "next-auth"
-import { authOptions } from "@/lib/auth"
-import { AdminLayout } from "@/components/layout/admin-layout"
-import { ExperiencesPage } from "@/features/experiences/components/experiences-page"
+import type { GetServerSideProps } from 'next'
+import { getServerSession } from 'next-auth'
+import { authOptions } from '@/lib/auth'
+import { AdminLayout } from '@/components/layout/admin-layout'
+import { ExperiencesPage } from '@/features/experiences/components/experiences-page'
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const session = await getServerSession(ctx.req, ctx.res, authOptions)
   if (!session) {
-    return { redirect: { destination: "/admin/signin", permanent: false } }
+    return { redirect: { destination: '/admin/signin', permanent: false } }
   }
   return { props: {} }
 }
@@ -227,6 +67,38 @@ export default function Experiences() {
   )
 }
 ```
+
+### French Quarter Direct (FQD)
+
+The FQD subsystem lives in `src/features/fqd/` and `src/pages/api/fqd/`. It is an AI-powered event listing CMS that discovers and researches New Orleans events via LLM web search, enriches them with images hosted on Cloudinary, stores them in Postgres, and exports them as DOCX/PDF/ZIP for manual publishing to a Joomla site.
+
+**Key files:**
+
+- `src/features/fqd/lib/fqd-research.ts` — single AI engine, 7 modes, provider fallback chain
+- `src/features/fqd/lib/fqd-types.ts` — Zod schemas and TypeScript types for all 16 event fields
+- `src/features/fqd/lib/scrape-images.ts` — og:image regex scraper with SSRF guard
+- `src/features/fqd/lib/serialize.ts` — data transformation between DB and client shapes
+
+**Provider order (Gemini first — it is free tier):**
+
+The fallback chain must always be: Gemini → Anthropic. OpenAI is not in the FQD chain. When a preferred provider is passed from the UI selector, use it directly with no fallback — do not silently switch providers on the user.
+
+**AI model selector (create-event page):**
+
+The create-event page has a top-level AI provider/model dropdown that defaults to Gemini. Every AI action on the page (auto-fill, per-field generate, description, image search, classification) must read from this selector and pass the chosen provider through to the API route and into `fqd-research.ts`. Never hardcode a provider on the create-event page.
+
+**Error feedback colors (create-event page):**
+
+- Green: results returned successfully
+- Amber: quota exceeded, rate limited, no results found
+- Red: network errors, validation failures, unexpected errors
+
+**Cost rules:**
+
+- Gemini free tier handles the majority of calls — default to it
+- Anthropic is the paid fallback — only used when Gemini fails or is explicitly selected
+- Never run more than 2 concurrent AI calls (p-limit concurrency 2)
+- Use `generateObject` with Zod schemas from `fqd-types.ts` — never `generateText` with post-hoc JSON parsing
 
 ### API Routes Pattern
 
@@ -293,7 +165,6 @@ Jira client config lives in `src/lib/jira.ts`. Feature logic lives in `src/featu
 ```typescript
 // src/lib/resend.ts
 import { Resend } from "resend";
-
 export const resend = new Resend(process.env.RESEND_API_KEY);
 ```
 
@@ -304,7 +175,6 @@ export const resend = new Resend(process.env.RESEND_API_KEY);
 - Use `useSession()` client-side for session state
 - Middleware protects `/admin/*` routes at the edge
 - Sign-in page lives at `/admin/signin`
-- Use credentials provider for simple email/password or magic link — keep it minimal for a personal portfolio
 
 ### Database (Drizzle ORM)
 
@@ -312,8 +182,8 @@ export const resend = new Resend(process.env.RESEND_API_KEY);
 - Schema files live in `src/drizzle/schema/` — one file per domain
 - Column naming: snake_case in DB, camelCase in TypeScript
 - Always include `created_at` and `updated_at` timestamps
-- Use UUID primary keys: `uuid("id").defaultRandom().primaryKey()`
-- Run migrations with: `bunx drizzle-kit generate` → `bunx drizzle-kit migrate`
+- Use UUID primary keys: `uuid('id').defaultRandom().primaryKey()`
+- Run migrations with: `bunx drizzle-kit generate` then `bunx drizzle-kit migrate`
 
 ---
 
@@ -334,37 +204,35 @@ export const resend = new Resend(process.env.RESEND_API_KEY);
 - Each feature directory should have an `index.ts` barrel export
 - Shared UI primitives: `src/components/ui/` (shadcn only)
 - Shared layout: `src/components/layout/`
-- Truly shared components (3+ features): `src/components/shared/`
+- Reusable generic components (dropdowns, inputs, accordions, buttons, etc.): `src/components/shared/`
 - File naming: kebab-case for files (`invoice-card.tsx`), PascalCase for component exports (`InvoiceCard`)
 - Types co-located with their feature; global types in `src/types/`
 
 **Feature directory structure:**
 
-```
 src/features/invoices/
-  components/
-    invoices-page.tsx
-    invoice-card.tsx
-    invoice-form.tsx
-  hooks/
-    use-invoices.ts
-  actions/
-    get-invoices.ts
-    create-invoice.ts
-    delete-invoice.ts
-  types/
-    invoice-types.ts
-  index.ts
-```
+components/
+invoices-page.tsx
+invoice-card.tsx
+invoice-form.tsx
+hooks/
+use-invoices.ts
+actions/
+get-invoices.ts
+create-invoice.ts
+delete-invoice.ts
+types/
+invoice-types.ts
+index.ts
 
 ---
 
 ## Dependency Hygiene
 
-- **Mailchimp**: If any Mailchimp-related packages or code exist, remove them — they are no longer used.
-- Before adding any new package, check if the functionality already exists in an installed dependency.
-- Keep `package.json` accurate — if you remove a dependency from code, run `bun remove <package>`.
-- After removing unused dependencies, run `bun run build` to confirm nothing broke.
+- **Mailchimp**: If any Mailchimp-related packages or code exist, remove them — they are no longer used
+- Before adding any new package, check if the functionality already exists in an installed dependency
+- Keep `package.json` accurate — if you remove a dependency from code, run `bun remove <package>`
+- After removing unused dependencies, run `bun run build` to confirm nothing broke
 
 ---
 
@@ -388,18 +256,20 @@ Before considering any task complete, verify:
 
 ## What NOT to Do
 
-- ❌ Don't install packages with npm/yarn/pnpm — always `bun`
-- ❌ Don't use App Router patterns (`app/` dir, Server Components, `"use server"`, `metadata` export, `generateMetadata`)
-- ❌ Don't use `next/navigation` — use `next/router` (`useRouter`) for this Pages Router project
-- ❌ Don't put secrets in `NEXT_PUBLIC_` env vars
-- ❌ Don't expose API keys (Resend, Jira, S3) to the client — API routes only
-- ❌ Don't write custom CSS when Tailwind utilities exist
-- ❌ Don't skip loading and error states
-- ❌ Don't use `var` — always `const` or `let`
-- ❌ Don't use default exports except for page files, `_app.tsx`, `_document.tsx`, and React components
-- ❌ Don't create feature-specific components inside `src/components/` — use `src/features/<name>/components/`
-- ❌ Don't leave Mailchimp or other deprecated integrations in code
-- ❌ Don't leave the build broken — always verify `bun run build` passes
+- Do not install packages with npm/yarn/pnpm — always `bun`
+- Do not use App Router patterns (`app/` dir, Server Components, `'use server'`, `metadata` export, `generateMetadata`)
+- Do not use `next/navigation` — use `next/router` (`useRouter`) for this Pages Router project
+- Do not put secrets in `NEXT_PUBLIC_` env vars
+- Do not expose API keys (Resend, Jira, S3, Anthropic, Gemini, OpenAI) to the client — API routes only
+- Do not write custom CSS when Tailwind utilities exist
+- Do not skip loading and error states
+- Do not use `var` — always `const` or `let`
+- Do not use default exports except for page files, `_app.tsx`, `_document.tsx`, and React components
+- Do not create feature-specific components inside `src/components/` — use `src/features/<name>/components/`
+- Do not build one-off versions of standard UI elements inside feature directories — create reusable components in `src/components/shared/` first
+- Do not leave Mailchimp or other deprecated integrations in code
+- Do not leave the build broken — always verify `bun run build` passes
+- Do not use double quotes in commit messages — single quotes only if quoting is needed
 
 ---
 
@@ -430,13 +300,26 @@ AWS_ACCESS_KEY_ID=
 AWS_SECRET_ACCESS_KEY=
 AWS_REGION=
 AWS_BUCKET_NAME=
+
+# AI providers (FQD event research)
+ANTHROPIC_API_KEY=
+GEMINI_API_KEY=
 ```
 
 ---
 
 ## Git Commit Messages (MANDATORY)
 
-After completing ANY task that changes code, always end your response with a ready-to-copy commit message.
+After completing ANY task that changes code, always end your response with TWO commit messages in this exact format.
+
+### Rules
+
+- Single quotes only if quoting is needed inside a message — never double quotes (they break shell git commit -m)
+- No special characters that could escape shell quoting: no backticks, no parentheses in the subject line, no angle brackets
+- Use only letters, numbers, spaces, hyphens, colons, commas, and periods
+- Subject line under 72 characters
+- Prefix with scope when relevant: `feat(fqd):`, `fix(auth):`, `refactor(jira):`
+- Never wrap in `git commit -m` — just the raw message text in a fenced code block so the copy icon appears
 
 ### Prefixes
 
@@ -451,28 +334,22 @@ After completing ANY task that changes code, always end your response with a rea
 | `perf:`     | Performance improvements                              |
 | `test:`     | Tests                                                 |
 
-### Rules
+### Format (always provide both)
 
-- Include a scope when relevant: `feat(invoices):`, `fix(auth):`, `refactor(jira):`
-- Keep subject line under 72 characters
-- No hyphens or bullet points in the message body — use plain sentences or fragments separated by newlines
-- No `git commit -m` wrapper — just the raw message text
-- Always label it "Commit message:" on its own line, then a fenced code block so the copy icon appears
-- Never use inline backticks for the commit message — always a fenced code block
-- Always provide a commit message, no exceptions
+**Brief commit message:**
 
-### Example
+feat(fqd): add Gemini-first provider chain with model selector
 
-Commit message:
+**PR-style commit message:**
 
-```
-refactor(invoices): migrate to feature-based structure
-
-Move invoice components from src/components to src/features/invoices
-Add invoice actions module with get, create, delete functions
-Thin out pages/admin/invoices.tsx to shell import pattern
+feat(fqd): add Gemini-first provider chain with model selector
+Swap fallback order to Gemini then Anthropic, remove OpenAI from FQD chain
+Add top-level AI model dropdown on create-event page defaulting to Gemini
+Thread selected provider through all AI actions and API routes
+Add p-limit concurrency cap of 2 on all AI loops
+Switch generateText to generateObject using existing Zod schemas
+Show green for results, amber for quota and no results, red for errors
 Run bun run build confirmed passing
-```
 
 ---
 
@@ -480,16 +357,17 @@ Run bun run build confirmed passing
 
 When refactoring the project to feature-based structure, tackle in this order:
 
-1. **`src/features/admin/`** — shared admin layout, sidebar, nav items
-2. **`src/features/portfolio/`** — portfolio project display + admin CRUD
-3. **`src/features/experiences/`** — work experience display + admin CRUD
-4. **`src/features/skills/`** — skills display + admin management
-5. **`src/features/invoices/`** — PDF generation, invoice management
-6. **`src/features/jira/`** — Jira ticket integration
-7. **`src/features/contact/`** — contact form + email sending
-8. **`src/features/references/`** — references display + admin management
-9. **`src/features/profile/`** — bio, avatar, links
-10. **`src/features/jobs/`** — job/application tracking
-11. **`src/features/email/`** — React Email templates
+1. `src/features/admin/` — shared admin layout, sidebar, nav items
+2. `src/features/fqd/` — French Quarter Direct event CMS
+3. `src/features/portfolio/` — portfolio project display + admin CRUD
+4. `src/features/experiences/` — work experience display + admin CRUD
+5. `src/features/skills/` — skills display + admin management
+6. `src/features/invoices/` — PDF generation, invoice management
+7. `src/features/jira/` — Jira ticket integration
+8. `src/features/contact/` — contact form + email sending
+9. `src/features/references/` — references display + admin management
+10. `src/features/profile/` — bio, avatar, links
+11. `src/features/jobs/` — job/application tracking
+12. `src/features/email/` — React Email templates
 
 For each migration: create the feature directory, move components/hooks/types in, update imports, thin the page file to a shell, then run `bun run build` to confirm zero errors before moving to the next feature.
