@@ -20,7 +20,7 @@ import {
 } from "../types/fqd-types";
 import { splitListings, chunk } from "./split-listings";
 
-const GEMINI_MODEL = "gemini-2.0-flash";
+const GEMINI_MODEL = "gemini-2.5-flash";
 const ANTHROPIC_MODEL = "claude-sonnet-4-20250514";
 
 // Fallback order: Gemini first (free), then Anthropic. OpenAI is intentionally
