@@ -11,7 +11,7 @@ import { parseFqdProvider } from "@/features/fqd/types/fqd-types";
 
 // Web search can take a while (multiple tool calls). 300s is the max on Vercel
 // Pro (capped to the plan limit on Hobby) — a 60s cap was causing 504s.
-export const config = { maxDuration: 300 };
+export const config = { maxDuration: 60 };
 
 export default async function handler(
   req: NextApiRequest,
