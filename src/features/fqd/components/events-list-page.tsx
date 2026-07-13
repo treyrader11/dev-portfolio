@@ -423,7 +423,14 @@ export function EventsListPage({ data }: Props) {
       breadcrumbs={CRUMBS}
       headerActions={
         <>
-          <EventExportAll />
+          <EventExportAll
+            filters={{
+              missing,
+              search: debouncedSearch,
+              added,
+              newOnly,
+            }}
+          />
           <EventImport />
           <Link
             href="/admin/french-quarter-direct/create-event/new"

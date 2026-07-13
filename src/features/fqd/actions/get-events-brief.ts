@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import { fqdEventsListWhere, type FqdEventFilters } from "./get-events";
 
 export interface FqdEventBrief {
   id: string;
@@ -8,10 +9,15 @@ export interface FqdEventBrief {
   imageCount: number;
 }
 
-// Lightweight list of every event (for the export-selection modal) — enough to
-// identify and pick each event without loading images/details.
-export async function getAllFqdEventsBrief(): Promise<FqdEventBrief[]> {
+// Lightweight list of events for the export-selection modal — enough to
+// identify and pick each without loading images/details. Applies the same
+// filters (and not-expired guard) as the list, so the export respects whatever
+// filter/tab is active; no filters = every visible event.
+export async function getAllFqdEventsBrief(
+  filters: FqdEventFilters = {},
+): Promise<FqdEventBrief[]> {
   const rows = await prisma.fqdEvent.findMany({
+    where: fqdEventsListWhere(filters),
     orderBy: [{ startDate: "asc" }, { createdAt: "desc" }],
     select: {
       id: true,

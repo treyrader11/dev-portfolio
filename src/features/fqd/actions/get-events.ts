@@ -102,6 +102,28 @@ function buildWhere(
   return { AND: clauses };
 }
 
+// The active filters for the events list. Shared by the paginated list and the
+// export brief so exports respect whatever filter/tab is currently active.
+export interface FqdEventFilters {
+  missing?: string;
+  search?: string;
+  added?: string;
+  newOnly?: string;
+}
+
+// The full WHERE for the visible events list: the active filters plus the
+// always-on "not expired" guard. Reused by the export-list query so its results
+// match exactly what the list shows.
+export function fqdEventsListWhere(
+  f: FqdEventFilters = {},
+): Prisma.FqdEventWhereInput {
+  const filters = buildWhere(f.missing, f.search, f.added, f.newOnly);
+  const notExpired: Prisma.FqdEventWhereInput = {
+    NOT: expiredEventsWhere(expiredCutoff()),
+  };
+  return filters ? { AND: [filters, notExpired] } : notExpired;
+}
+
 // Total number of events in the database. The admin manages every event it
 // holds — past events are removed by the expiry cron, not hidden here.
 export async function getFqdEventCount(): Promise<number> {
@@ -123,13 +145,7 @@ export async function getFqdEvents(
   // Never show expired events (past their end date). They're emailed + removed
   // by the expiry cron / lazy pass, but hide them here too so they never linger
   // in the list before that runs.
-  const filters = buildWhere(missing, search, added, newOnly);
-  const notExpired: Prisma.FqdEventWhereInput = {
-    NOT: expiredEventsWhere(expiredCutoff()),
-  };
-  const where: Prisma.FqdEventWhereInput = filters
-    ? { AND: [filters, notExpired] }
-    : notExpired;
+  const where = fqdEventsListWhere({ missing, search, added, newOnly });
   const [rows, total] = await Promise.all([
     prisma.fqdEvent.findMany({
       where,

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   RiFolderZipLine,
@@ -15,10 +16,19 @@ import { fmtEventDate } from "../lib/format";
 import { EventExportEmailStep } from "./event-export-email-step";
 import type { FqdEventBrief } from "../actions/get-events-brief";
 
+// The active list filters, so the export modal loads only the filtered set.
+export interface EventExportFilters {
+  missing?: string;
+  search?: string;
+  added?: string;
+  newOnly?: string;
+}
+
 // Export events to a .zip (one folder per event slug, each with the listing
 // .docx + image PNGs). Opens a modal listing every event with checkboxes —
-// all selected by default, deselect individually.
-export function EventExportAll() {
+// all selected by default, deselect individually. Honors the active list
+// filters (via `filters`), so only the visible/filtered events are offered.
+export function EventExportAll({ filters }: { filters?: EventExportFilters }) {
   const { addNotification } = useNotificationsContext();
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -26,6 +36,10 @@ export function EventExportAll() {
   const [events, setEvents] = useState<FqdEventBrief[] | null>(null);
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [view, setView] = useState<"events" | "email">("events");
+  const [mounted, setMounted] = useState(false);
+
+  // Portaling to document.body needs a client-side mount (no SSR document).
+  useEffect(() => setMounted(true), []);
 
   function close() {
     setOpen(false);
@@ -38,7 +52,16 @@ export function EventExportAll() {
     setOpen(true);
     setLoading(true);
     try {
-      const res = await fetch("/api/fqd/events/export-list");
+      // Mirror the list's active filters so the modal offers the same set.
+      const params = new URLSearchParams();
+      if (filters?.missing) params.set("missing", filters.missing);
+      if (filters?.search?.trim()) params.set("search", filters.search.trim());
+      if (filters?.added) params.set("added", filters.added);
+      if (filters?.newOnly === "true") params.set("new", "true");
+      const qs = params.toString();
+      const res = await fetch(
+        `/api/fqd/events/export-list${qs ? `?${qs}` : ""}`,
+      );
       const data = await res.json();
       const list: FqdEventBrief[] = res.ok ? (data.events ?? []) : [];
       setEvents(list);
@@ -136,8 +159,12 @@ export function EventExportAll() {
         Export
       </button>
 
-      <AnimatePresence>
-        {open && (
+      {/* Portaled to <body> so the fixed overlay is centered on the viewport,
+          not on a transformed header/toolbar ancestor (which would offset it). */}
+      {mounted &&
+        createPortal(
+          <AnimatePresence>
+            {open && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -285,8 +312,10 @@ export function EventExportAll() {
               )}
             </motion.div>
           </motion.div>
+            )}
+          </AnimatePresence>,
+          document.body,
         )}
-      </AnimatePresence>
     </>
   );
 }

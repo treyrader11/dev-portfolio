@@ -12,6 +12,14 @@ export default async function handler(
     res.setHeader("Allow", ["GET"]);
     return res.status(405).json({ error: "Method not allowed" });
   }
-  const events = await getAllFqdEventsBrief();
+  // Respect the active list filters so the export only includes what's shown.
+  const one = (v: string | string[] | undefined) =>
+    Array.isArray(v) ? v[0] : v;
+  const events = await getAllFqdEventsBrief({
+    missing: one(req.query.missing),
+    search: one(req.query.search),
+    added: one(req.query.added),
+    newOnly: one(req.query.new),
+  });
   return res.status(200).json({ events });
 }
