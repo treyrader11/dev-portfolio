@@ -183,7 +183,7 @@ export function EventDetailPage({ event }: Props) {
           </Detail>
         </dl>
 
-        {/* Location map + directions — iPhone only. */}
+        {/* Location map on all devices; the directions button is mobile-only. */}
         <EventLocationMap
           locationName={event.locationName}
           address={event.address}

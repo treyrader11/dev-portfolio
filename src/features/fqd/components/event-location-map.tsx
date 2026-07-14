@@ -9,20 +9,25 @@ interface Props {
   address?: string | null;
 }
 
-// A location map + "Open maps" button, shown ONLY on iPhone. Tapping the button
-// prompts before externally opening Google Maps directions to the event from
-// the phone's current location. iPhone detection runs after mount (client-only)
-// so it never mismatches the server render.
+// A location map (shown on ALL devices) plus an "Open maps" button that only
+// appears on mobile — tapping it prompts before externally opening Google Maps
+// directions to the event from the device's current location (which only makes
+// sense on a phone). Mobile detection runs after mount (client-only) so it
+// never mismatches the server render.
 export function EventLocationMap({ locationName, address }: Props) {
-  const [isIphone, setIsIphone] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const [confirming, setConfirming] = useState(false);
 
   useEffect(() => {
-    setIsIphone(/iPhone|iPod/.test(navigator.userAgent));
+    setIsMobile(
+      /Android|iPhone|iPod|iPad|webOS|BlackBerry|IEMobile|Opera Mini|Mobile/i.test(
+        navigator.userAgent,
+      ),
+    );
   }, []);
 
   const query = [locationName, address].filter(Boolean).join(", ");
-  if (!isIphone || !query) return null;
+  if (!query) return null;
 
   const encoded = encodeURIComponent(query);
   const embedUrl = `https://maps.google.com/maps?q=${encoded}&z=15&output=embed`;
@@ -43,14 +48,18 @@ export function EventLocationMap({ locationName, address }: Props) {
           referrerPolicy="no-referrer-when-downgrade"
         />
       </div>
-      <button
-        type="button"
-        onClick={() => setConfirming(true)}
-        className="mt-3 inline-flex items-center gap-1.5 rounded-lg bg-secondary px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-secondary/90"
-      >
-        <RiNavigationLine className="size-4" />
-        Open maps
-      </button>
+      {/* Directions button only on mobile — it navigates from the device's
+          current location, which only makes sense on a phone. */}
+      {isMobile && (
+        <button
+          type="button"
+          onClick={() => setConfirming(true)}
+          className="mt-3 inline-flex items-center gap-1.5 rounded-lg bg-secondary px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-secondary/90"
+        >
+          <RiNavigationLine className="size-4" />
+          Open maps
+        </button>
+      )}
 
       <AnimatePresence>
         {confirming && (
